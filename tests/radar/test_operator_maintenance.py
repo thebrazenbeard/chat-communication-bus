@@ -28,3 +28,17 @@ def test_maintenance_is_exception_oriented():
     findings = m.audit({"required_lanes": {"yin", "seven"}, "observed_lanes": {"yin"}, "dlq_pending": 2, "stale_endpoints": 0})
     codes = {x.code for x in findings}
     assert codes == {"MISSING_LANE", "DLQ_PENDING"}
+
+
+def test_maintenance_surfaces_malformed_lane_separately_from_missing_lane():
+    _, m = _mods()
+    findings = m.audit(
+        {
+            "required_lanes": {"hephaestus"},
+            "observed_lanes": set(),
+            "malformed_lanes": {"bus/hephaestus-v1"},
+        }
+    )
+    pairs = {(x.code, x.detail) for x in findings}
+    assert ("MISSING_LANE", "hephaestus") in pairs
+    assert ("MALFORMED_LANE", "bus/hephaestus-v1") in pairs
