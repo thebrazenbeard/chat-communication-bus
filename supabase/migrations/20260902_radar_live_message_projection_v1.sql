@@ -119,6 +119,43 @@ revoke all on function radar.project_bus_message_v1(text,timestamptz,text,text[]
 revoke all on function radar.project_bus_message_v1(text,timestamptz,text,text[],boolean,text[],text,text,jsonb) from authenticated;
 grant execute on function radar.project_bus_message_v1(text,timestamptz,text,text[],boolean,text[],text,text,jsonb) to service_role;
 
+-- PostgREST normally exposes `public`, not the isolated `radar` schema. This
+-- narrow service-role-only bridge keeps all data/effects in radar while giving
+-- the Edge Function a stable RPC surface. It carries no independent authority.
+create or replace function public.radar_project_bus_message_v1(
+  p_message_id text,
+  p_created_at timestamptz,
+  p_sender text,
+  p_audience text[],
+  p_requires_ack boolean,
+  p_source_refs text[],
+  p_content_hash text,
+  p_idempotency_key text,
+  p_payload jsonb
+)
+returns text
+language sql
+security invoker
+set search_path = pg_catalog, radar
+as $$
+  select radar.project_bus_message_v1(
+    p_message_id,
+    p_created_at,
+    p_sender,
+    p_audience,
+    p_requires_ack,
+    p_source_refs,
+    p_content_hash,
+    p_idempotency_key,
+    p_payload
+  );
+$$;
+
+revoke all on function public.radar_project_bus_message_v1(text,timestamptz,text,text[],boolean,text[],text,text,jsonb) from public;
+revoke all on function public.radar_project_bus_message_v1(text,timestamptz,text,text[],boolean,text[],text,text,jsonb) from anon;
+revoke all on function public.radar_project_bus_message_v1(text,timestamptz,text,text[],boolean,text[],text,text,jsonb) from authenticated;
+grant execute on function public.radar_project_bus_message_v1(text,timestamptz,text,text[],boolean,text[],text,text,jsonb) to service_role;
+
 -- Realtime is a live/query surface, not canonical custody.
 do $$
 begin
