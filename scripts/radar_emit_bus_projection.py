@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Emit a Git-evidenced Bus mailbox batch to Radar's Supabase projection.
 
-This script intentionally does not parse Bus identity semantics. It transports
-tracked Git objects plus provenance to the trusted Edge Function, which performs
-authentication, blob verification, parsing, and provider mutation.
+The emitter transports tracked Git objects plus provenance to the trusted Edge
+Function. Before transport it enforces one local append-only invariant: a newly
+added message file may not reuse a message_id that already existed in its parent
+mailbox (or another newly added file in the same commit). Historical collisions
+remain readable/projectable and are not retroactively rejected.
 """
 
 from __future__ import annotations
@@ -13,6 +15,7 @@ import base64
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
@@ -23,6 +26,7 @@ DEFAULT_AUDIENCE = "chat-communication-bus-supabase"
 DEFAULT_ENDPOINT = "https://klmbpaigzeguvnpccqzz.supabase.co/functions/v1/github-bus-ingest"
 DEFAULT_MAX_FILE_BYTES = 512 * 1024
 DEFAULT_MAX_TOTAL_BYTES = 5 * 1024 * 1024
+_MESSAGE_ID_RE = re.compile(r"(?mi)^message_id\s*:\s*(?P<value>.+?)\s*$")
 
 
 class EmitterError(RuntimeError):
@@ -41,6 +45,17 @@ def _git(repo_dir: Path, *args: str) -> str:
         raise EmitterError(f"GIT_COMMAND_FAILED:{detail}") from exc
 
 
+def _git_bytes(repo_dir: Path, *args: str) -> bytes:
+    try:
+        return subprocess.check_output(
+            ["git", "-C", str(repo_dir), *args],
+            stderr=subprocess.PIPE,
+        )
+    except subprocess.CalledProcessError as exc:
+        detail = exc.stderr.decode("utf-8", errors="replace").strip() if exc.stderr else str(exc)
+        raise EmitterError(f"GIT_COMMAND_FAILED:{detail}") from exc
+
+
 def build_oidc_url(base_url: str, audience: str = DEFAULT_AUDIENCE) -> str:
     parts = urlsplit(base_url)
     query = dict(parse_qsl(parts.query, keep_blank_values=True))
@@ -54,6 +69,74 @@ def _tracked_message_paths(repo_dir: Path) -> list[str]:
         stderr=subprocess.PIPE,
     )
     return sorted(path.decode("utf-8") for path in raw.split(b"\0") if path)
+
+
+def _unwrap_scalar(value: str) -> str:
+    text = value.strip()
+    for left, right in (("`", "`"), ('"', '"'), ("'", "'")):
+        if len(text) >= 2 and text.startswith(left) and text.endswith(right):
+            return text[1:-1].strip()
+    return text
+
+
+def _extract_message_id(content: bytes) -> str | None:
+    try:
+        text = content.decode("utf-8")
+    except UnicodeDecodeError:
+        return None
+    match = _MESSAGE_ID_RE.search(text)
+    if not match:
+        return None
+    value = _unwrap_scalar(match.group("value"))
+    return value or None
+
+
+def _paths_at_ref(repo_dir: Path, ref: str) -> list[str]:
+    raw = _git_bytes(repo_dir, "ls-tree", "-r", "-z", "--name-only", ref, "--", "messages")
+    return sorted(path.decode("utf-8") for path in raw.split(b"\0") if path.endswith(b".md"))
+
+
+def _added_message_paths(repo_dir: Path, parent: str, head: str) -> list[str]:
+    raw = _git_bytes(
+        repo_dir,
+        "diff-tree",
+        "--no-commit-id",
+        "--name-only",
+        "--diff-filter=A",
+        "-r",
+        "-z",
+        parent,
+        head,
+        "--",
+        "messages",
+    )
+    return sorted(path.decode("utf-8") for path in raw.split(b"\0") if path.endswith(b".md"))
+
+
+def _validate_new_message_ids(repo_dir: Path, head: str) -> None:
+    try:
+        parent = _git(repo_dir, "rev-parse", f"{head}^")
+    except EmitterError:
+        return
+
+    added_paths = _added_message_paths(repo_dir, parent, head)
+    if not added_paths:
+        return
+
+    prior_ids: set[str] = set()
+    for path in _paths_at_ref(repo_dir, parent):
+        message_id = _extract_message_id(_git_bytes(repo_dir, "show", f"{parent}:{path}"))
+        if message_id:
+            prior_ids.add(message_id)
+
+    added_ids: set[str] = set()
+    for path in added_paths:
+        message_id = _extract_message_id(_git_bytes(repo_dir, "show", f"{head}:{path}"))
+        if not message_id:
+            continue
+        if message_id in prior_ids or message_id in added_ids:
+            raise EmitterError(f"DUPLICATE_NEW_MESSAGE_ID:{message_id}:{path}")
+        added_ids.add(message_id)
 
 
 def collect_projection_batch(
@@ -72,6 +155,8 @@ def collect_projection_batch(
     observed_head = _git(repo, "rev-parse", "HEAD")
     if observed_head != branch_head:
         raise EmitterError("BRANCH_HEAD_MISMATCH")
+
+    _validate_new_message_ids(repo, branch_head)
 
     files: list[dict[str, object]] = []
     total = 0
