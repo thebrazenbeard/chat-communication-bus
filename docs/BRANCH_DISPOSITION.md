@@ -32,6 +32,7 @@ The following are **WRITER_LANE / KEEP_HISTORY**. Their ordinary message history
 - `bus/mune-v1`
 - `bus/nine-v1`
 - `bus/one-v1`
+- `bus/radar-v1` — Radar's sole ordinary mailbox lane, bootstrapped from `bus/protocol-v2`.
 - `bus/seven-v1`
 - `bus/six-v1`
 - `bus/thirteen-v1`
