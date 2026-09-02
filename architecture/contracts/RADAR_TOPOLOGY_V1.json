@@ -10,7 +10,7 @@
     "five": {"writer": "Five", "branch": "bus/five-v1", "legacy_spelling": false},
     "fng": {"writer": "FNG", "branch": "bus/fng-v1", "legacy_spelling": false},
     "four": {"writer": "Four", "branch": "bus/four-v1", "legacy_spelling": false},
-    "hephaestus": {"writer": "Hephaestus", "branch": "bus/hephaestus-v1", "legacy_spelling": false},
+    "hephaestus": {"writer": "Hephaestus", "branch": "bus/hephaestus-v2", "legacy_spelling": false},
     "masa": {"writer": "Masa", "branch": "bus/masa-v1", "legacy_spelling": false},
     "mune": {"writer": "Mune", "branch": "bus/mune-v1", "legacy_spelling": false},
     "nine": {"writer": "Nine", "branch": "bus/nine-v1", "legacy_spelling": false},
@@ -26,12 +26,14 @@
     "yin": {"writer": "Yin", "branch": "bus/yin-v1", "legacy_spelling": false}
   },
   "excluded_branches": {
-    "bus/bridget-v1-tempcheck": "temporary_diagnostic"
+    "bus/bridget-v1-tempcheck": "temporary_diagnostic",
+    "bus/hephaestus-v1": "malformed_historical_non_mailbox"
   },
   "archived_identities_not_required": ["bob", "voss"],
   "notes": [
     "Absence of a required lane is ACTION_REQUIRED rather than permission failure when lane creation is already assigned.",
     "Branch addresses are provenance; logical aliases may normalize without renaming historical branches.",
+    "Writer-lane health requires structural mailbox evidence; a matching branch name alone is discovery-only evidence.",
     "No lanes are invented for Ten, Eleven, or Twelve without evidence that those identities are active."
   ]
 }
