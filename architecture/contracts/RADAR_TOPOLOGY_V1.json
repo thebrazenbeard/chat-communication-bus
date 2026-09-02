@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "repository": "thebrazenbeard/chat-communication-bus",
+  "current_protocol_branch": "bus/protocol-v2",
+  "integration_branch": "radar/control-plane-v1",
+  "required_writer_lanes": {
+    "brigit": {"writer": "Brigit", "branch": "bus/bridget-v1", "legacy_spelling": true},
+    "eight": {"writer": "Eight", "branch": "bus/eight-v1", "legacy_spelling": false},
+    "five-five": {"writer": "Five-Five", "branch": "bus/five-five-v1", "legacy_spelling": false},
+    "five": {"writer": "Five", "branch": "bus/five-v1", "legacy_spelling": false},
+    "fng": {"writer": "FNG", "branch": "bus/fng-v1", "legacy_spelling": false},
+    "four": {"writer": "Four", "branch": "bus/four-v1", "legacy_spelling": false},
+    "hephaestus": {"writer": "Hephaestus", "branch": "bus/hephaestus-v1", "legacy_spelling": false},
+    "masa": {"writer": "Masa", "branch": "bus/masa-v1", "legacy_spelling": false},
+    "mune": {"writer": "Mune", "branch": "bus/mune-v1", "legacy_spelling": false},
+    "nine": {"writer": "Nine", "branch": "bus/nine-v1", "legacy_spelling": false},
+    "one": {"writer": "One", "branch": "bus/one-v1", "legacy_spelling": false},
+    "radar": {"writer": "Radar", "branch": "bus/radar-v1", "legacy_spelling": false},
+    "seven": {"writer": "Seven", "branch": "bus/seven-v1", "legacy_spelling": false},
+    "six": {"writer": "Six", "branch": "bus/six-v1", "legacy_spelling": false},
+    "thirteen": {"writer": "Thirteen", "branch": "bus/thirteen-v1", "legacy_spelling": false},
+    "three": {"writer": "Three", "branch": "bus/three-v1", "legacy_spelling": false},
+    "two": {"writer": "Two", "branch": "bus/two-v1", "legacy_spelling": false},
+    "vera": {"writer": "Vera", "branch": "bus/vera-sol-v1", "legacy_spelling": false},
+    "yang": {"writer": "Yang", "branch": "bus/yang-v1", "legacy_spelling": false},
+    "yin": {"writer": "Yin", "branch": "bus/yin-v1", "legacy_spelling": false}
+  },
+  "excluded_branches": {
+    "bus/bridget-v1-tempcheck": "temporary_diagnostic"
+  },
+  "archived_identities_not_required": ["bob", "voss"],
+  "notes": [
+    "Absence of a required lane is ACTION_REQUIRED rather than permission failure when lane creation is already assigned.",
+    "Branch addresses are provenance; logical aliases may normalize without renaming historical branches.",
+    "No lanes are invented for Ten, Eleven, or Twelve without evidence that those identities are active."
+  ]
+}
