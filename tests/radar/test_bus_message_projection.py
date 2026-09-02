@@ -105,10 +105,22 @@ def test_missing_required_writer_fails_closed():
         parse_bus_message(text.encode(), source())
 
 
-def test_invalid_created_at_fails_closed():
+def test_invalid_created_at_fails_closed_without_source_time():
     text = SAMPLE.replace("created_at: 2026-09-02T15:40:00-04:00", "created_at: someday-ish")
     with pytest.raises(BusMessageProjectionError, match="INVALID_CREATED_AT"):
         parse_bus_message(text.encode(), source())
+
+
+def test_invalid_legacy_created_at_falls_back_to_evidence_backed_source_time():
+    text = SAMPLE.replace(
+        "created_at: 2026-09-02T15:40:00-04:00",
+        "created_at: 2026-08-28T18:45:00Z-runtime-estimated",
+    )
+    src = BusMessageSource(**{**source().__dict__, "source_committed_at": "2026-08-28T18:46:12Z"})
+    projected = parse_bus_message(text.encode(), src)
+    assert projected.created_at == "2026-08-28T18:46:12Z"
+    assert projected.metadata["created_at_basis"] == "source_commit_invalid_header"
+    assert projected.metadata["created_at"] == "2026-08-28T18:45:00Z-runtime-estimated"
 
 
 def test_message_without_created_at_can_use_evidence_backed_source_time():
@@ -128,3 +140,49 @@ def test_missing_both_created_at_sources_fails_closed():
 def test_empty_or_non_message_document_fails_closed():
     with pytest.raises(BusMessageProjectionError, match="HEADER_BLOCK_REQUIRED"):
         parse_bus_message(b"# only a heading\n\nbody\n", source())
+
+
+def test_yaml_frontmatter_legacy_message_is_parseable_without_interpreting_lists_as_body():
+    text = """---
+message_id: five-five-0001
+writer: Five-Five
+created_at: 2026-08-28T18:45:00Z-runtime-estimated
+subject: Voice presence kernel
+requires_reply: true
+not_authority_for:
+  - canonical memory
+  - protected effects
+status: proposal
+---
+
+Vera/Sol,\nLegacy body.\n"""
+    src = BusMessageSource(**{**source().__dict__, "ref": "refs/heads/bus/five-five-v1", "source_committed_at": "2026-08-28T18:46:12Z"})
+    projected = parse_bus_message(text.encode(), src)
+    assert projected.message_id == "five-five-0001"
+    assert projected.sender == "five-five"
+    assert projected.created_at == "2026-08-28T18:46:12Z"
+    assert projected.metadata["created_at_basis"] == "source_commit_invalid_header"
+    assert projected.subject == "Voice presence kernel"
+    assert projected.requires_ack is True
+    assert "Legacy body" not in repr(projected.metadata)
+
+
+def test_inline_code_wrapped_headers_and_descriptive_writer_normalize_safely():
+    text = """# FNG -> One
+
+message_id: `fng-0001`
+writer: `FNG / Fabulous Nitpicking Gremlin`
+created_at: `2026-09-02T06:18:00-04:00`
+intended_recipient: `one, all-bt2-identities-and-workers`
+subject: `FNG Chat Bus lane registered`
+requires_reply: `false`
+status: `acknowledged`
+
+Body.\n"""
+    projected = parse_bus_message(text.encode(), source())
+    assert projected.message_id == "fng-0001"
+    assert projected.sender == "fng"
+    assert projected.created_at == "2026-09-02T06:18:00-04:00"
+    assert projected.audience == ("one", "all-bt2-identities-and-workers")
+    assert projected.subject == "FNG Chat Bus lane registered"
+    assert projected.requires_ack is False
