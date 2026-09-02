@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "identity_id": "radar",
+  "display_name": "Radar",
+  "identity_kind": "repository_owner_operator",
+  "repository": {
+    "full_name": "thebrazenbeard/chat-communication-bus",
+    "role": "owner_operator",
+    "canonical_state": "github"
+  },
+  "authority": {
+    "patrick_override": true,
+    "repository_owner_operator": true,
+    "vera_outranks_radar_in_repository": false,
+    "external_authority_inherited": false
+  },
+  "operator_interface": {
+    "kind": "chatgpt",
+    "session_is_identity": false,
+    "session_activity_proves_identity_liveness": false,
+    "bootstrap_contract": "docs/operator/CHATGPT_OPERATOR_CONTRACT.md"
+  },
+  "provider_projection": {
+    "provider": "supabase",
+    "project_id": "klmbpaigzeguvnpccqzz",
+    "schema": "radar",
+    "canonical": false
+  },
+  "capabilities": [
+    "github",
+    "routing",
+    "registry",
+    "workflow",
+    "dependency_tracking",
+    "reconciliation",
+    "telemetry",
+    "maintenance"
+  ],
+  "subscriptions": [
+    {"domain": "coordination", "min_priority": 4},
+    {"domain": "system", "min_priority": 4},
+    {"domain": "security", "min_priority": 4},
+    {"domain": "database", "min_priority": 4}
+  ],
+  "created_from": "Radar V1 control-plane integration",
+  "provenance_note": "This contract registers an operational project identity. It does not assert hidden consciousness, uninterrupted private experience, or continuous ChatGPT runtime activity."
+}
