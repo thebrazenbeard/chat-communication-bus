@@ -86,6 +86,45 @@ def test_collect_batch_uses_last_touch_commit_not_current_unrelated_head(tmp_pat
     assert batch["files"][0]["source_commit"] == first_head
 
 
+def test_collect_batch_rejects_new_message_id_that_already_exists_in_parent(tmp_path):
+    emitter = load_emitter()
+    repo, _, _ = make_repo(tmp_path)
+    duplicate = b"# One -> Six\n\nmessage_id: one-9999\nwriter: One\ncreated_at: 2026-09-02T20:01:00Z\n\nduplicate id\n"
+    (repo / "messages" / "0002.md").write_bytes(duplicate)
+    subprocess.check_call(["git", "-C", str(repo), "add", "messages/0002.md"])
+    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "duplicate"])
+    head = git(repo, "rev-parse", "HEAD")
+
+    with pytest.raises(emitter.EmitterError, match="DUPLICATE_NEW_MESSAGE_ID:one-9999"):
+        emitter.collect_projection_batch(
+            repo,
+            repository="thebrazenbeard/chat-communication-bus",
+            ref="refs/heads/bus/one-v1",
+            branch_head=head,
+        )
+
+
+def test_collect_batch_tolerates_preexisting_duplicate_ids_when_head_adds_no_message(tmp_path):
+    emitter = load_emitter()
+    repo, _, _ = make_repo(tmp_path)
+    duplicate = b"# One -> Six\n\nmessage_id: one-9999\nwriter: One\ncreated_at: 2026-09-02T20:01:00Z\n\nhistorical duplicate\n"
+    (repo / "messages" / "0002.md").write_bytes(duplicate)
+    subprocess.check_call(["git", "-C", str(repo), "add", "messages/0002.md"])
+    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "historical duplicate"])
+    (repo / "README.md").write_text("non-message change")
+    subprocess.check_call(["git", "-C", str(repo), "add", "README.md"])
+    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "unrelated"])
+    head = git(repo, "rev-parse", "HEAD")
+
+    batch = emitter.collect_projection_batch(
+        repo,
+        repository="thebrazenbeard/chat-communication-bus",
+        ref="refs/heads/bus/one-v1",
+        branch_head=head,
+    )
+    assert len(batch["files"]) == 2
+
+
 def test_collect_batch_enforces_per_file_limit(tmp_path):
     emitter = load_emitter()
     repo, head, _ = make_repo(tmp_path)
