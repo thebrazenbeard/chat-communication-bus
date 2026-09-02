@@ -92,7 +92,7 @@ class DependencyGraph:
     def ready(self, assignment_id: str) -> bool:
         self._require(assignment_id)
         predecessors = self._predecessors[assignment_id]
-        return bool(predecessors) and predecessors.issubset(self._complete)
+        return predecessors.issubset(self._complete)
 
     def protected_authority(self, assignment_id: str) -> bool:
         self._require(assignment_id)
