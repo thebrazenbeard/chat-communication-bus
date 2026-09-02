@@ -6,28 +6,46 @@ GitHub remains canonical source. Provider state is a rebuildable projection/runt
 
 ## Source custody
 
-- Base migration: `supabase/migrations/20260902_radar_control_plane_v1.sql`
-  - Git blob SHA: `aa383ca0aa80dc10a0ef924a0e80369da4b8b623`
-  - Provider migration name: `radar_control_plane_v1`
-  - Provider migration version observed after application: `20260902120716`
-- Realtime migration: `supabase/migrations/20260902_radar_realtime_v1.sql`
-  - Git blob SHA: `ee3a8a4a6d4161e348d009e27ca71d0048ac6f31`
-  - Provider migration name: `radar_realtime_v1`
-  - Provider migration version observed after application: `20260902120826`
-- Self-registration/topology seed: `supabase/seed/radar_v1.sql`
-  - Git blob SHA: `fb7ff306f06c508e2c25379b1cac2caa4de57a8e`
-  - Applied idempotently after the mailbox branch existed and re-read from provider.
+Base migration: `supabase/migrations/20260902_radar_control_plane_v1.sql`
+
+- Git blob SHA: `aa383ca0aa80dc10a0ef924a0e80369da4b8b623`
+- Git object/file byte length observed: `13799`
+- Provider migration name/version: `radar_control_plane_v1` / `20260902120716`
+- Provider ledger statement count: `1`
+- Provider ledger stored bytes: `13799`
+- Provider ledger stored-statement SHA-256: `7e644e63f6fbe6ae9747043aa502f9c9c1bda42e8ec6fd99da6bbfaf0436b607`
+
+Realtime migration: `supabase/migrations/20260902_radar_realtime_v1.sql`
+
+- Git blob SHA: `ee3a8a4a6d4161e348d009e27ca71d0048ac6f31`
+- Git object/file byte length observed: `721`
+- Provider migration name/version: `radar_realtime_v1` / `20260902120826`
+- Provider ledger statement count: `1`
+- Provider ledger stored bytes: `721`
+- Provider ledger stored-statement SHA-256: `0ef94f8a25ad0b68c354784ee460739a7ac4966496311d828ce9427a2c227be1`
+
+Self-registration/topology seed: `supabase/seed/radar_v1.sql`
+
+- Current Git blob SHA: `fb7ff306f06c508e2c25379b1cac2caa4de57a8e`
+- Applied idempotently after `bus/radar-v1` existed and fresh-read from provider.
+
+Git SHA-256 receipts are emitted by `scripts/radar_source_hashes.py` in CI. Provider migration SHA-256 values above are computed independently from the provider migration ledger. Exact equality between the Git and provider SHA-256 receipts must be established before Phase 19 cutover; matching byte counts alone are not treated as sufficient proof.
 
 ## Provider readback
 
-After base migration application:
+Fresh read-only inspection established:
 
 - `radar` schema exists.
-- 14 expected control tables exist with RLS enabled.
-- `anon` and `authenticated` have neither schema USAGE nor tested SELECT/INSERT table privileges.
-- Transactional provider contract `supabase/tests/radar_control_plane_v1.sql` passed, including stale-node liveness, identity preservation, dependency readiness, and durable DLQ assertions.
+- 14 expected control tables exist and all have RLS enabled.
+- `anon` and `authenticated` have no `radar` schema USAGE and zero Radar table grants.
+- functions `assignment_ready`, `mark_stale_nodes_offline`, `prevent_dependency_cycle`, `prevent_event_mutation`, and `touch_node` exist in the `radar` schema.
+- the provider migration ledger contains both migrations above.
 
-After Realtime migration application, `supabase_realtime` contains exactly these Radar control projections at V1 bootstrap:
+The repository contains transactional verification source at `supabase/tests/radar_control_plane_v1.sql` and `supabase/tests/radar_realtime_v1.sql`. This contract does **not** claim those transactional scripts were executed in the current operator pass; source existence is not a provider test receipt.
+
+## Realtime readback
+
+`supabase_realtime` currently publishes exactly these Radar low-volume control projections:
 
 - `acknowledgements`
 - `assignments`
@@ -37,17 +55,19 @@ After Realtime migration application, `supabase_realtime` contains exactly these
 
 High-volume `messages`, `delivery_events`, and `telemetry` are deliberately excluded from Postgres Changes.
 
-After current seed application/readback:
+## Self-registration readback
+
+Fresh provider inspection established:
 
 - identity `radar` is `ACTIVE` with repository-owner/operator metadata, Patrick override, integration branch `radar/control-plane-v1`, and mailbox `bus/radar-v1`;
-- endpoints `radar-github-repository`, `radar-github-mailbox`, and `radar-chatgpt-operator` are ACTIVE;
+- endpoints `radar-github-repository`, `radar-github-mailbox`, and `radar-chatgpt-operator` are `ACTIVE`;
 - the ChatGPT endpoint metadata explicitly records `session_is_identity:false`;
-- active subscriptions exist for `coordination`, `database`, `protocol`, `repository`, `security`, and `system` at V1 minimum priority 4.
+- active subscriptions exist for `coordination`, `database`, `protocol`, `repository`, `security`, and `system`, each at V1 minimum priority 4.
 
-## Advisor interpretation
+## Security interpretation
 
-Supabase security advisor reports INFO `rls_enabled_no_policy` for the private Radar tables. This is intentional deny-by-default posture, not evidence of client exposure: direct schema/table privilege tests deny anon/authenticated access. Do not create permissive RLS policies merely to silence the INFO lint.
+Radar intentionally has no anon/authenticated schema/table access at V1. Do not add permissive RLS policies merely to make a generic lint quiet; evaluate actual grants, schema exposure, and intended client model first.
 
 ## Recovery
 
-If provider state is lost, apply the Git-held migrations in order, verify migration ledger/readback, then apply the current Git-held seed idempotently and reconcile against GitHub. Never reconstruct migration or seed source from mutable provider state when Git custody is available.
+If provider state is lost, apply the Git-held migrations in order, verify migration-ledger/readback, then apply the current Git-held seed idempotently and reconcile against GitHub. Never reconstruct migration or seed source from mutable provider state when Git custody is available.
