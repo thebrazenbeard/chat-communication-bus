@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "chat-communication-bus"
 version = "0.1.0"
-description = "Runnable, locally durable coordination primitives for the Build Team Two Chat Bus proof of concept."
+description = "Radar V1 control-plane and durable Chat Bus coordination primitives."
 requires-python = ">=3.11"
 dependencies = []
 
