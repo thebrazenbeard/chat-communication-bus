@@ -1,0 +1,48 @@
+name: Radar Bus Projection
+
+on:
+  push:
+    branches:
+      - "bus/**"
+    paths:
+      - "messages/**"
+      - ".github/workflows/radar-bus-projection.yml"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  project-mailbox:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact writer lane
+        uses: actions/checkout@v4
+        with:
+          path: lane
+          fetch-depth: 0
+
+      - name: Check out current Radar control code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: control
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Project full Bus mailbox
+        env:
+          RADAR_REPOSITORY: ${{ github.repository }}
+          RADAR_REF: ${{ github.ref }}
+          RADAR_HEAD: ${{ github.sha }}
+        run: |
+          python control/scripts/radar_emit_bus_projection.py \
+            --repo-dir lane \
+            --repository "$RADAR_REPOSITORY" \
+            --ref "$RADAR_REF" \
+            --head "$RADAR_HEAD"
