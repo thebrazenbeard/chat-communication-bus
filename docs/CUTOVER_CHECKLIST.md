@@ -21,8 +21,8 @@ This checklist prepares Phase 19. It is deliberately stricter about claiming eff
 
 ## Supabase source custody
 
-- [ ] Final control-plane migration bytes are stable and SHA-256 recorded in `architecture/contracts/RADAR_SUPABASE_V1.md`.
-- [ ] Final Realtime migration bytes are stable and SHA-256 recorded.
+- [ ] Final control-plane migration bytes are stable and exact Git blob SHA recorded in `architecture/contracts/RADAR_SUPABASE_V1.md`.
+- [ ] Final Realtime migration bytes are stable and exact Git blob SHA recorded.
 - [ ] SQL contract tests and seed source are Git-bound.
 - [ ] No secrets or service credentials are stored in Git.
 - [ ] Client roles have no unintended Radar schema/table privileges.
@@ -56,6 +56,6 @@ After cutover:
 
 - [ ] `main` exact merge/readback SHA recorded.
 - [ ] current pointers updated to the canonical head.
-- [ ] provider receipts bound to exact source/migration hashes.
+- [ ] provider receipts bound to exact source/migration identities.
 - [ ] historical branches have successor pointers where useful but remain preserved.
 - [ ] Radar performs a post-cutover reconciliation and reports only material exceptions.
