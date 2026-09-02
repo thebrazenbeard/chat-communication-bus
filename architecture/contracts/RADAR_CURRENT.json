@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "status": "PHASE_18_INTEGRATION",
+  "repository": "thebrazenbeard/chat-communication-bus",
+  "canonical_default_branch": "main",
+  "canonical_default_status": "HISTORICAL_STUB_PENDING_PHASE_19",
+  "integration_branch": "radar/control-plane-v1",
+  "integration_pull_request": 2,
+  "current_protocol": "docs/protocol/PROTOCOL_V2.md",
+  "authority_contract": "architecture/contracts/RADAR_AUTHORITY_V1.md",
+  "operator_contract": "docs/operator/CHATGPT_OPERATOR_CONTRACT.md",
+  "recovery_contract": "docs/operator/RECOVERY.md",
+  "provider": {
+    "project_id": "klmbpaigzeguvnpccqzz",
+    "schema": "radar",
+    "installed_migrations": ["radar_control_plane_v1", "radar_realtime_v1"],
+    "self_registration_seeded": true,
+    "canonical": false
+  },
+  "self_registration_contract": "architecture/contracts/RADAR_SELF_REGISTRATION_V1.json",
+  "phase_19_checklist": "docs/CUTOVER_CHECKLIST.md"
+}
