@@ -6,7 +6,9 @@
   "repository": {
     "full_name": "thebrazenbeard/chat-communication-bus",
     "role": "owner_operator",
-    "canonical_state": "github"
+    "canonical_state": "github",
+    "integration_branch": "radar/control-plane-v1",
+    "mailbox_branch": "bus/radar-v1"
   },
   "authority": {
     "patrick_override": true,
@@ -34,13 +36,16 @@
     "dependency_tracking",
     "reconciliation",
     "telemetry",
-    "maintenance"
+    "maintenance",
+    "supabase_projection"
   ],
   "subscriptions": [
     {"domain": "coordination", "min_priority": 4},
     {"domain": "system", "min_priority": 4},
     {"domain": "security", "min_priority": 4},
-    {"domain": "database", "min_priority": 4}
+    {"domain": "database", "min_priority": 4},
+    {"domain": "repository", "min_priority": 4},
+    {"domain": "protocol", "min_priority": 4}
   ],
   "created_from": "Radar V1 control-plane integration",
   "provenance_note": "This contract registers an operational project identity. It does not assert hidden consciousness, uninterrupted private experience, or continuous ChatGPT runtime activity."
