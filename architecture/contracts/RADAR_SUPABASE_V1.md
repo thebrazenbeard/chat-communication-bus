@@ -9,27 +9,31 @@ GitHub remains canonical source. Provider state is a rebuildable projection/runt
 Base migration: `supabase/migrations/20260902_radar_control_plane_v1.sql`
 
 - Git blob SHA: `aa383ca0aa80dc10a0ef924a0e80369da4b8b623`
-- Git object/file byte length observed: `13799`
+- Git byte length: `13799`
+- Git SHA-256 from CI run 91: `7e644e63f6fbe6ae9747043aa502f9c9c1bda42e8ec6fd99da6bbfaf0436b607`
 - Provider migration name/version: `radar_control_plane_v1` / `20260902120716`
 - Provider ledger statement count: `1`
 - Provider ledger stored bytes: `13799`
 - Provider ledger stored-statement SHA-256: `7e644e63f6fbe6ae9747043aa502f9c9c1bda42e8ec6fd99da6bbfaf0436b607`
+- Custody result: **EXACT_SHA256_MATCH**.
 
 Realtime migration: `supabase/migrations/20260902_radar_realtime_v1.sql`
 
 - Git blob SHA: `ee3a8a4a6d4161e348d009e27ca71d0048ac6f31`
-- Git object/file byte length observed: `721`
+- Git byte length: `721`
+- Git SHA-256 from CI run 91: `0ef94f8a25ad0b68c354784ee460739a7ac4966496311d828ce9427a2c227be1`
 - Provider migration name/version: `radar_realtime_v1` / `20260902120826`
 - Provider ledger statement count: `1`
 - Provider ledger stored bytes: `721`
 - Provider ledger stored-statement SHA-256: `0ef94f8a25ad0b68c354784ee460739a7ac4966496311d828ce9427a2c227be1`
+- Custody result: **EXACT_SHA256_MATCH**.
 
 Self-registration/topology seed: `supabase/seed/radar_v1.sql`
 
 - Current Git blob SHA: `fb7ff306f06c508e2c25379b1cac2caa4de57a8e`
+- Git byte length from CI run 91: `2728`
+- Git SHA-256 from CI run 91: `0f6b69c1bdef95dccf1eb353a98e8d80a327f7067fe94b70c85816c2dd8ea026`
 - Applied idempotently after `bus/radar-v1` existed and fresh-read from provider.
-
-Git SHA-256 receipts are emitted by `scripts/radar_source_hashes.py` in CI. Provider migration SHA-256 values above are computed independently from the provider migration ledger. Exact equality between the Git and provider SHA-256 receipts must be established before Phase 19 cutover; matching byte counts alone are not treated as sufficient proof.
 
 ## Provider readback
 
@@ -41,7 +45,7 @@ Fresh read-only inspection established:
 - functions `assignment_ready`, `mark_stale_nodes_offline`, `prevent_dependency_cycle`, `prevent_event_mutation`, and `touch_node` exist in the `radar` schema.
 - the provider migration ledger contains both migrations above.
 
-The repository contains transactional verification source at `supabase/tests/radar_control_plane_v1.sql` and `supabase/tests/radar_realtime_v1.sql`. This contract does **not** claim those transactional scripts were executed in the current operator pass; source existence is not a provider test receipt.
+The repository contains transactional verification source at `supabase/tests/radar_control_plane_v1.sql` and `supabase/tests/radar_realtime_v1.sql`. This contract does **not** claim those transactional scripts were executed in the current operator pass; source existence is not a provider test receipt. Those scripts contain temporary provider writes and remain a separately bounded provider-effect check.
 
 ## Realtime readback
 
