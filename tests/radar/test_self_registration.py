@@ -24,4 +24,5 @@ def test_seed_is_idempotent_and_does_not_create_session_identity():
     assert "on conflict" in seed
     assert "identity_id" in seed
     assert "'radar'" in seed
-    assert "session_is_identity" not in seed
+    assert '"session_is_identity":false' in seed
+    assert '"session_is_identity":true' not in seed
