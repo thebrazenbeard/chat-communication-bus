@@ -19,6 +19,10 @@ def audit(state: dict[str, object]) -> tuple[MaintenanceFinding, ...]:
     for identity in sorted(required - observed):
         findings.append(MaintenanceFinding("MISSING_LANE", identity))
 
+    malformed = tuple(sorted(state.get("malformed_lanes", ()) or ()))
+    for branch in malformed:
+        findings.append(MaintenanceFinding("MALFORMED_LANE", str(branch)))
+
     pending = int(state.get("dlq_pending", 0) or 0)
     if pending > 0:
         findings.append(MaintenanceFinding("DLQ_PENDING", str(pending)))
