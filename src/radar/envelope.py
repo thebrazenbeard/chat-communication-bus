@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 import uuid
-from typing import Mapping, Any
+from typing import Mapping
 
 from .model import EnvelopeClassification
 
@@ -131,8 +131,6 @@ class RadarEnvelope:
             if isinstance(idempotency_obj, str) and idempotency_obj.strip()
             else content_hash
         )
-        if not (isinstance(idempotency_obj, str) and idempotency_obj.strip()):
-            normalized = True
 
         envelope = cls(
             schema_version=schema_version,
