@@ -10,7 +10,7 @@ Base migration: `supabase/migrations/20260902_radar_control_plane_v1.sql`
 
 - Git blob SHA: `aa383ca0aa80dc10a0ef924a0e80369da4b8b623`
 - Git byte length: `13799`
-- Git SHA-256 from CI run 91: `7e644e63f6fbe6ae9747043aa502f9c9c1bda42e8ec6fd99da6bbfaf0436b607`
+- Git SHA-256 from CI run 101: `7e644e63f6fbe6ae9747043aa502f9c9c1bda42e8ec6fd99da6bbfaf0436b607`
 - Provider migration name/version: `radar_control_plane_v1` / `20260902120716`
 - Provider ledger statement count: `1`
 - Provider ledger stored bytes: `13799`
@@ -21,7 +21,7 @@ Realtime migration: `supabase/migrations/20260902_radar_realtime_v1.sql`
 
 - Git blob SHA: `ee3a8a4a6d4161e348d009e27ca71d0048ac6f31`
 - Git byte length: `721`
-- Git SHA-256 from CI run 91: `0ef94f8a25ad0b68c354784ee460739a7ac4966496311d828ce9427a2c227be1`
+- Git SHA-256 from CI run 101: `0ef94f8a25ad0b68c354784ee460739a7ac4966496311d828ce9427a2c227be1`
 - Provider migration name/version: `radar_realtime_v1` / `20260902120826`
 - Provider ledger statement count: `1`
 - Provider ledger stored bytes: `721`
@@ -31,8 +31,8 @@ Realtime migration: `supabase/migrations/20260902_radar_realtime_v1.sql`
 Self-registration/topology seed: `supabase/seed/radar_v1.sql`
 
 - Current Git blob SHA: `fb7ff306f06c508e2c25379b1cac2caa4de57a8e`
-- Git byte length from CI run 91: `2728`
-- Git SHA-256 from CI run 91: `0f6b69c1bdef95dccf1eb353a98e8d80a327f7067fe94b70c85816c2dd8ea026`
+- Git byte length from CI run 101: `2728`
+- Git SHA-256 from CI run 101: `0f6b69c1bdef95dccf1eb353a98e8d80a327f7067fe94b70c85816c2dd8ea026`
 - Applied idempotently after `bus/radar-v1` existed and fresh-read from provider.
 
 ## Provider readback
@@ -45,7 +45,10 @@ Fresh read-only inspection established:
 - functions `assignment_ready`, `mark_stale_nodes_offline`, `prevent_dependency_cycle`, `prevent_event_mutation`, and `touch_node` exist in the `radar` schema.
 - the provider migration ledger contains both migrations above.
 
-The repository contains transactional verification source at `supabase/tests/radar_control_plane_v1.sql` and `supabase/tests/radar_realtime_v1.sql`. This contract does **not** claim those transactional scripts were executed in the current operator pass; source existence is not a provider test receipt. Those scripts contain temporary provider writes and remain a separately bounded provider-effect check.
+Provider verification receipts:
+
+- `supabase/tests/radar_realtime_v1.sql` was executed against the provider on 2026-09-02 as a read-only assertion block and completed without exception: **PASS**.
+- `supabase/tests/radar_control_plane_v1.sql` has **NOT** been executed in the current operator pass because it inserts temporary fixtures before rolling them back. Source existence is not a provider test receipt; executing it remains a separately bounded provider-write effect.
 
 ## Realtime readback
 
@@ -67,6 +70,17 @@ Fresh provider inspection established:
 - endpoints `radar-github-repository`, `radar-github-mailbox`, and `radar-chatgpt-operator` are `ACTIVE`;
 - the ChatGPT endpoint metadata explicitly records `session_is_identity:false`;
 - active subscriptions exist for `coordination`, `database`, `protocol`, `repository`, `security`, and `system`, each at V1 minimum priority 4.
+
+## Known provider projection drift
+
+Fresh GitHub/provider reconciliation found one material but bounded drift:
+
+- GitHub topology: logical identity `vera`, historical mailbox branch `bus/vera-sol-v1`, route alias `vera-sol`.
+- Provider projection: active identity `vera-sol` and endpoint `lane-vera-sol` currently own `bus/vera-sol-v1`; logical `vera` is absent.
+- Reference audit: `vera-sol` has one identity reference (its lane endpoint) and zero node, subscription, acknowledgement, delivery-event identity, or health-event references; `lane-vera-sol` has zero delivery-event endpoint references.
+- Git-canonical future projection source has been corrected in `supabase/seed/radar_bus_lanes_20260902.sql`.
+- Idempotent provenance-preserving provider repair is prepared at `supabase/repairs/20260902_normalize_vera_identity.sql`; it performs no DELETE, creates/updates logical `vera`, preserves `vera-sol` and `lane-vera-sol` as archived provenance, and establishes active `lane-vera` for the unchanged historical branch.
+- Provider repair status: **PENDING_AUTHORIZED_PROVIDER_WRITE**.
 
 ## Security interpretation
 
