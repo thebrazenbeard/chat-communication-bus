@@ -20,9 +20,50 @@ def test_projection_commands_are_parameterized_and_schema_scoped():
     assert "Radar" not in command.sql
 
 
+def test_projection_generates_endpoint_and_subscription_repairs_without_literal_values():
+    m = _module()
+    commands = m.build_projection_commands(
+        {
+            "endpoints": [
+                {
+                    "endpoint_id": "radar-github-mailbox",
+                    "identity_id": "radar",
+                    "transport": "github_branch",
+                    "address": "bus/radar-v1",
+                    "status": "ACTIVE",
+                }
+            ],
+            "subscriptions": [
+                {
+                    "identity_id": "radar",
+                    "domain": "repository",
+                    "intent": None,
+                    "min_priority": 4,
+                    "active": True,
+                }
+            ],
+        }
+    )
+    operations = {c.operation for c in commands}
+    assert operations == {"UPSERT_ENDPOINT", "UPSERT_SUBSCRIPTION"}
+    assert all(c.schema == "radar" for c in commands)
+    rendered = "\n".join(c.sql for c in commands)
+    assert "bus/radar-v1" not in rendered
+    assert "repository" not in rendered
+    endpoint = next(c for c in commands if c.operation == "UPSERT_ENDPOINT")
+    subscription = next(c for c in commands if c.operation == "UPSERT_SUBSCRIPTION")
+    assert endpoint.parameters["address"] == "bus/radar-v1"
+    assert subscription.parameters["domain"] == "repository"
+
+
 def test_projection_contains_no_credentials():
     m = _module()
-    commands = m.build_projection_commands({"identities": [{"identity_id": "radar", "display_name": "Radar"}]})
+    commands = m.build_projection_commands(
+        {
+            "identities": [{"identity_id": "radar", "display_name": "Radar"}],
+            "endpoints": [{"endpoint_id": "e", "identity_id": "radar", "transport": "github", "address": "repo"}],
+        }
+    )
     rendered = "\n".join(c.sql for c in commands).lower()
     assert "service_role" not in rendered
     assert "apikey" not in rendered
