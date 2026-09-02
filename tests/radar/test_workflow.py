@@ -23,6 +23,13 @@ def test_isolated_branch_authority_does_not_imply_merge_authority():
     assert scope.allows("merge") is False
 
 
+def test_assignment_without_predecessors_is_ready():
+    m = _module()
+    g = m.DependencyGraph()
+    g.add_assignment("root-assignment")
+    assert g.ready("root-assignment") is True
+
+
 def test_dependency_completion_makes_successor_ready_without_protected_authority():
     m = _module()
     g = m.DependencyGraph()
