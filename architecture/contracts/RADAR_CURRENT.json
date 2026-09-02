@@ -1,11 +1,12 @@
 {
   "schema_version": 1,
-  "status": "PHASE_19_READY",
+  "status": "PHASE_20_FINAL_VERIFICATION_PENDING",
   "repository": "thebrazenbeard/chat-communication-bus",
   "canonical_default_branch": "main",
-  "canonical_default_status": "HISTORICAL_STUB_PENDING_PHASE_19",
+  "canonical_default_status": "RADAR_V1_CANONICAL",
   "integration_branch": "radar/control-plane-v1",
   "integration_pull_request": 2,
+  "cutover_pull_request": 3,
   "current_protocol": "docs/protocol/PROTOCOL_V2.md",
   "authority_contract": "architecture/contracts/RADAR_AUTHORITY_V1.md",
   "operator_contract": "docs/operator/CHATGPT_OPERATOR_CONTRACT.md",
@@ -21,15 +22,28 @@
     "realtime_contract": "PASS_2026-09-02",
     "base_transactional_contract": "PASS_AND_ROLLBACK_VERIFIED_2026-09-02",
     "vera_identity_reconciliation": "RESOLVED_WITH_PROVENANCE_PRESERVED",
+    "post_cutover_reconciliation": "PASS_2026-09-02",
     "canonical": false
   },
+  "cutover": {
+    "source_head": "e52639a25ce9b5f68831659c3c3500ba0384124c",
+    "merge_commit": "1b47b32b9d5a4badd2af5e9943be75be61e1c143",
+    "cutover_pr": 3,
+    "history_rewritten": false,
+    "historical_writer_lanes_preserved": true,
+    "receipt": "docs/PHASE_19_CUTOVER_2026-09-02.md"
+  },
   "verification": {
-    "readiness_gate_head": "f132c90c4c79b2292348d5f461ac2983e9ccb8ac",
-    "readiness_gate_ci_run": 113,
+    "premerge_review": "RADAR_OPERATOR_SELF_REVIEW",
+    "independent_subagent_review_available": false,
+    "tdd_red_ci_run": 117,
+    "premerge_green_ci_run": 119,
+    "cutover_pr_green_ci_run": 121,
     "python_versions": ["3.11", "3.12"],
-    "pytest_count": 85,
+    "pytest_count": 86,
     "compileall": "PASS",
-    "migration_hash_custody": "EXACT_SHA256_MATCH"
+    "migration_hash_custody": "EXACT_SHA256_MATCH",
+    "final_main_head_ci": "PENDING"
   },
   "known_provider_drift": [],
   "resolved_provider_reconciliations": [
@@ -43,8 +57,10 @@
     }
   ],
   "phase_19_blockers": [],
+  "phase_20_blockers": ["EXACT_FINAL_MAIN_HEAD_CI_READBACK_PENDING"],
   "self_registration_contract": "architecture/contracts/RADAR_SELF_REGISTRATION_V1.json",
   "phase_18_verification_receipt": "docs/PHASE_18_VERIFICATION_2026-09-02.md",
+  "phase_19_cutover_receipt": "docs/PHASE_19_CUTOVER_2026-09-02.md",
   "phase_19_checklist": "docs/CUTOVER_CHECKLIST.md",
-  "phase_19_note": "Ready to begin deliberate canonical cutover. main remains unchanged until Phase 19 executes and verifies it."
+  "phase_20_note": "Radar V1 is canonical on main. Final exact-head CI/readback remains before PHASE_20 verification may be declared complete."
 }
