@@ -8,7 +8,10 @@ from typing import Iterable
 
 
 _LANE_RE = re.compile(r"^bus/(?P<identity>[a-z0-9_-]+)-v\d+$")
-_ALIASES = {"bridget": "brigit"}
+_ALIASES = {
+    "bridget": "brigit",
+    "vera-sol": "vera",
+}
 
 
 @dataclass(frozen=True)
