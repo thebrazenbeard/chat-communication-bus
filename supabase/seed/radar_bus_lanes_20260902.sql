@@ -20,7 +20,7 @@ with lane(identity_id, display_name, branch_name) as (
     ('thirteen', 'Thirteen', 'bus/thirteen-v1'),
     ('three', 'Three', 'bus/three-v1'),
     ('two', 'Two', 'bus/two-v1'),
-    ('vera-sol', 'Vera / Sol', 'bus/vera-sol-v1'),
+    ('vera', 'Vera', 'bus/vera-sol-v1'),
     ('yang', 'Yang', 'bus/yang-v1'),
     ('yin', 'Yin', 'bus/yin-v1')
 )
@@ -28,7 +28,9 @@ insert into radar.identities(identity_id, display_name, aliases, lifecycle_statu
 select
   identity_id,
   display_name,
-  case when identity_id = 'brigit' then array['bridget']::text[] else '{}'::text[] end,
+  case when identity_id = 'brigit' then array['bridget']::text[]
+       else case when identity_id = 'vera' then array['vera-sol']::text[] else '{}'::text[] end
+  end,
   'ACTIVE',
   jsonb_build_object(
     'projection_basis', 'github_writer_lane_observed',
@@ -61,7 +63,7 @@ with lane(identity_id, branch_name) as (
     ('thirteen', 'bus/thirteen-v1'),
     ('three', 'bus/three-v1'),
     ('two', 'bus/two-v1'),
-    ('vera-sol', 'bus/vera-sol-v1'),
+    ('vera', 'bus/vera-sol-v1'),
     ('yang', 'bus/yang-v1'),
     ('yin', 'bus/yin-v1')
 )
