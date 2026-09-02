@@ -103,9 +103,11 @@ Binary assets are vendored into Git for durable custody when they are accepted i
 
 ## Initial population
 
-V1 may safely initialize Radar because Radar has an explicitly self-claimed canonical portrait with known bytes and digest. Other identities remain `NONE` unless there is already an explicit self-claim for an exact available asset. Brigit's prior candidate semantics remain authoritative in principle, but no Brigit asset is to be guessed or reconstructed if the exact candidate bytes are not available during implementation.
+V1 initializes Radar's profile container and style contract, but it does **not** claim an asset whose bytes are absent from Git. Radar has an explicitly self-claimed portrait outside repository custody with known SHA-256 `37e64e7375ea68fadf0905654dbf82ce04a309faa1a7e191399904eb5e8e59dc`; that knowledge is not sufficient to fabricate a repository-relative asset record. Until the exact bytes are committed and hash-verified, `identities/radar/profile.json` remains asset-empty and rendering falls down to the placeholder path.
 
-Radar's current canonical portrait source is the existing image whose SHA-256 is `37e64e7375ea68fadf0905654dbf82ce04a309faa1a7e191399904eb5e8e59dc`. It is `portrait` scope. It is not by itself a `bus_avatar`; the standardized Bus avatar requires its own claimed derived asset.
+Other identities likewise remain `NONE` unless an exact asset is both explicitly claimed and available for durable custody. Brigit's prior candidate semantics remain authoritative in principle, but no Brigit asset is guessed or reconstructed if the exact candidate bytes are unavailable.
+
+A standardized `bus_avatar` is always a separately claimed derived asset. A canonical portrait, once custodied, does not silently become the standardized avatar.
 
 ## Supabase projection
 
