@@ -37,3 +37,11 @@ def test_expected_topology_projects_without_missing_lanes():
     projection = project_branches(observed, required_identities=set(lanes))
     assert projection.missing_required == ()
     assert projection.identity_lanes["brigit"] == "bus/bridget-v1"
+    assert projection.identity_lanes["vera"] == "bus/vera-sol-v1"
+
+
+def test_lane_projection_seed_uses_logical_vera_identity_not_runtime_route_identity():
+    seed = (ROOT / "supabase" / "seed" / "radar_bus_lanes_20260902.sql").read_text(encoding="utf-8")
+    assert "('vera', 'Vera', 'bus/vera-sol-v1')" in seed
+    assert "('vera-sol', 'Vera / Sol', 'bus/vera-sol-v1')" not in seed
+    assert "case when identity_id = 'vera' then array['vera-sol']::text[]" in seed
