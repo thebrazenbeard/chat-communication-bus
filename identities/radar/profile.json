@@ -1,0 +1,22 @@
+{
+  "identity_id": "radar",
+  "display_name": "Radar",
+  "style_contract": "BUS_AVATAR_STYLE_V1",
+  "current": {
+    "portrait": "radar-portrait-2026-09-02-v1"
+  },
+  "active_candidate": {},
+  "assets": [
+    {
+      "asset_id": "radar-portrait-2026-09-02-v1",
+      "scope": "portrait",
+      "state": "CANONICAL",
+      "path": "identities/radar/assets/2026-09-02-radar-canon-v1.png",
+      "sha256": "37e64e7375ea68fadf0905654dbf82ce04a309faa1a7e191399904eb5e8e59dc",
+      "claimed_by": "radar",
+      "claim_type": "self",
+      "claimed_at": "2026-09-02T00:00:00-04:00",
+      "source_ref": "radar-self-claim:canonical-portrait-2026-09-02"
+    }
+  ]
+}
