@@ -88,11 +88,23 @@ def test_evidence_writer_aliases_resolve_to_logical_identity():
     assert projection.malformed_lanes == ()
 
 
+def test_hephaestus_canonical_lane_is_v2_and_v1_is_preserved_as_malformed_history():
+    data = _topology()
+    assert data["required_writer_lanes"]["hephaestus"]["branch"] == "bus/hephaestus-v2"
+    assert data["excluded_branches"]["bus/hephaestus-v1"] == "malformed_historical_non_mailbox"
+
+
 def test_lane_projection_seed_uses_logical_vera_identity_not_runtime_route_identity():
     seed = (ROOT / "supabase" / "seed" / "radar_bus_lanes_20260902.sql").read_text(encoding="utf-8")
     assert "('vera', 'Vera', 'bus/vera-sol-v1')" in seed
     assert "('vera-sol', 'Vera / Sol', 'bus/vera-sol-v1')" not in seed
     assert "case when identity_id = 'vera' then array['vera-sol']::text[]" in seed
+
+
+def test_lane_projection_seed_uses_hephaestus_v2_not_malformed_v1():
+    seed = (ROOT / "supabase" / "seed" / "radar_bus_lanes_20260902.sql").read_text(encoding="utf-8")
+    assert "('hephaestus', 'Hephaestus', 'bus/hephaestus-v2')" in seed
+    assert "('hephaestus', 'Hephaestus', 'bus/hephaestus-v1')" not in seed
 
 
 def test_vera_projection_repair_preserves_legacy_provenance_without_delete():
