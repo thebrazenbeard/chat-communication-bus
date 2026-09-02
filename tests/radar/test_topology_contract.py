@@ -45,3 +45,15 @@ def test_lane_projection_seed_uses_logical_vera_identity_not_runtime_route_ident
     assert "('vera', 'Vera', 'bus/vera-sol-v1')" in seed
     assert "('vera-sol', 'Vera / Sol', 'bus/vera-sol-v1')" not in seed
     assert "case when identity_id = 'vera' then array['vera-sol']::text[]" in seed
+
+
+def test_vera_projection_repair_preserves_legacy_provenance_without_delete():
+    repair = (ROOT / "supabase" / "repairs" / "20260902_normalize_vera_identity.sql").read_text(encoding="utf-8").lower()
+    assert "delete from radar.identities" not in repair
+    assert "delete from radar.endpoints" not in repair
+    assert "'vera'" in repair
+    assert "array['vera-sol']" in repair
+    assert "'lane-vera'" in repair
+    assert "'lane-vera-sol'" in repair
+    assert "'archived'" in repair
+    assert "'superseded_by', 'vera'" in repair
