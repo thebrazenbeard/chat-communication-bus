@@ -37,7 +37,7 @@ Self-registration/topology seed: `supabase/seed/radar_v1.sql`
 
 ## Provider readback
 
-Fresh read-only inspection established:
+Fresh inspection established:
 
 - `radar` schema exists.
 - 14 expected control tables exist and all have RLS enabled.
@@ -45,10 +45,11 @@ Fresh read-only inspection established:
 - functions `assignment_ready`, `mark_stale_nodes_offline`, `prevent_dependency_cycle`, `prevent_event_mutation`, and `touch_node` exist in the `radar` schema.
 - the provider migration ledger contains both migrations above.
 
-Provider verification receipts:
+Provider verification receipts on 2026-09-02:
 
-- `supabase/tests/radar_realtime_v1.sql` was executed against the provider on 2026-09-02 as a read-only assertion block and completed without exception: **PASS**.
-- `supabase/tests/radar_control_plane_v1.sql` has **NOT** been executed in the current operator pass because it inserts temporary fixtures before rolling them back. Source existence is not a provider test receipt; executing it remains a separately bounded provider-write effect.
+- exact Git-held `supabase/tests/radar_realtime_v1.sql` executed as a read-only assertion block and completed without exception: **PASS**.
+- exact Git-held `supabase/tests/radar_control_plane_v1.sql` executed under Patrick's authorization. Its temporary fixtures exercised stale-node handling, identity preservation, dependency readiness, privilege assertions, and DLQ state; the transaction completed and rolled back: **PASS**.
+- post-test readback found zero `radar-test-a`/`radar-test-b` identities, zero `radar-pred`/`radar-succ` assignments, and zero `radar-test-message` dead letters, confirming fixture rollback.
 
 ## Realtime readback
 
@@ -71,16 +72,18 @@ Fresh provider inspection established:
 - the ChatGPT endpoint metadata explicitly records `session_is_identity:false`;
 - active subscriptions exist for `coordination`, `database`, `protocol`, `repository`, `security`, and `system`, each at V1 minimum priority 4.
 
-## Known provider projection drift
+## Vera logical-identity reconciliation
 
-Fresh GitHub/provider reconciliation found one material but bounded drift:
+A GitHub/provider reconciliation found provider projection drift where historical route name `vera-sol` had been modeled as a separate active logical identity instead of logical `vera`.
 
-- GitHub topology: logical identity `vera`, historical mailbox branch `bus/vera-sol-v1`, route alias `vera-sol`.
-- Provider projection: active identity `vera-sol` and endpoint `lane-vera-sol` currently own `bus/vera-sol-v1`; logical `vera` is absent.
-- Reference audit: `vera-sol` has one identity reference (its lane endpoint) and zero node, subscription, acknowledgement, delivery-event identity, or health-event references; `lane-vera-sol` has zero delivery-event endpoint references.
-- Git-canonical future projection source has been corrected in `supabase/seed/radar_bus_lanes_20260902.sql`.
-- Idempotent provenance-preserving provider repair is prepared at `supabase/repairs/20260902_normalize_vera_identity.sql`; it performs no DELETE, creates/updates logical `vera`, preserves `vera-sol` and `lane-vera-sol` as archived provenance, and establishes active `lane-vera` for the unchanged historical branch.
-- Provider repair status: **PENDING_AUTHORIZED_PROVIDER_WRITE**.
+Source correction and provider repair:
+
+- `src/radar/github_projection.py`, `architecture/contracts/RADAR_TOPOLOGY_V1.json`, and `supabase/seed/radar_bus_lanes_20260902.sql` normalize historical branch `bus/vera-sol-v1` to logical identity `vera` while preserving `vera-sol` as an alias/route name.
+- exact Git-held repair `supabase/repairs/20260902_normalize_vera_identity.sql` was applied under Patrick's authorization. It performs no DELETE.
+- fresh readback: `vera` is `ACTIVE`, aliases include `vera-sol`, and `lane-vera` is `ACTIVE` at `bus/vera-sol-v1`.
+- fresh readback: historical `vera-sol` identity is `ARCHIVED` with `superseded_by: vera`; historical `lane-vera-sol` endpoint is `ARCHIVED`, preserves its original branch address in metadata, and points to `lane-vera` as successor.
+- no nodes, subscriptions, acknowledgements, delivery-event identity references, health-event references, or delivery-event endpoint references depended on the legacy identity/endpoint at repair time.
+- reconciliation result: **RESOLVED_WITH_PROVENANCE_PRESERVED**.
 
 ## Security interpretation
 
