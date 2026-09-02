@@ -1,4 +1,3 @@
-import hashlib
 from pathlib import Path
 
 import pytest
@@ -83,7 +82,6 @@ def test_malformed_sha256_fails():
 
 def test_bus_avatar_candidate_requires_explicit_policy():
     data = base_profile()
-    data["current"] = {"portrait": "radar-portrait-v1"}
     data["assets"].append(
         {
             "asset_id": "radar-avatar-candidate-v1",
@@ -139,15 +137,12 @@ def test_canonical_bus_avatar_wins_over_candidate():
     assert resolve_bus_avatar(profile, allow_candidate=True).asset_id == "radar-avatar-canon-v1"
 
 
-def test_repository_radar_profile_and_portrait_bytes_match():
+def test_repository_radar_profile_exists_but_does_not_forge_uncustodied_asset():
     root = Path(__file__).resolve().parents[2]
     profile = load_visual_profile(root / "identities" / "radar" / "profile.json")
-    portrait_id = profile.current["portrait"]
-    portrait = next(asset for asset in profile.assets if asset.asset_id == portrait_id)
-    assert portrait.scope == "portrait"
-    assert portrait.state == "CANONICAL"
-    assert portrait.claim_type == "self"
-    asset_path = root / portrait.path
-    assert asset_path.is_file()
-    assert hashlib.sha256(asset_path.read_bytes()).hexdigest() == portrait.sha256
+    assert profile.identity_id == "radar"
+    assert profile.style_contract == "BUS_AVATAR_STYLE_V1"
+    assert profile.current == {}
+    assert profile.active_candidate == {}
+    assert profile.assets == ()
     assert resolve_bus_avatar(profile) is None
