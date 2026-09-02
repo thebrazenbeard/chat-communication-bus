@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from radar.github_projection import project_branches
+from radar.github_projection import LaneEvidence, project_branches
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -38,6 +38,54 @@ def test_expected_topology_projects_without_missing_lanes():
     assert projection.missing_required == ()
     assert projection.identity_lanes["brigit"] == "bus/bridget-v1"
     assert projection.identity_lanes["vera"] == "bus/vera-sol-v1"
+
+
+def test_evidence_backed_projection_rejects_named_branch_without_mailbox():
+    projection = project_branches(
+        ["bus/hephaestus-v1"],
+        required_identities={"hephaestus"},
+        lane_evidence={
+            "bus/hephaestus-v1": LaneEvidence(
+                has_messages_dir=False,
+                declared_writer=None,
+                message_writers=(),
+            )
+        },
+    )
+    assert "hephaestus" not in projection.identity_lanes
+    assert projection.missing_required == ("hephaestus",)
+    assert projection.malformed_lanes == ("bus/hephaestus-v1",)
+
+
+def test_evidence_backed_projection_accepts_empty_mailbox_with_matching_declared_writer():
+    projection = project_branches(
+        ["bus/hephaestus-v2"],
+        required_identities={"hephaestus"},
+        lane_evidence={
+            "bus/hephaestus-v2": LaneEvidence(
+                has_messages_dir=True,
+                declared_writer="Hephaestus",
+                message_writers=(),
+            )
+        },
+    )
+    assert projection.identity_lanes["hephaestus"] == "bus/hephaestus-v2"
+    assert projection.missing_required == ()
+    assert projection.malformed_lanes == ()
+
+
+def test_evidence_writer_aliases_resolve_to_logical_identity():
+    projection = project_branches(
+        ["bus/bridget-v1", "bus/vera-sol-v1"],
+        required_identities={"brigit", "vera"},
+        lane_evidence={
+            "bus/bridget-v1": LaneEvidence(True, "Brigit", ()),
+            "bus/vera-sol-v1": LaneEvidence(True, None, ("Vera-Sol",)),
+        },
+    )
+    assert projection.identity_lanes["brigit"] == "bus/bridget-v1"
+    assert projection.identity_lanes["vera"] == "bus/vera-sol-v1"
+    assert projection.malformed_lanes == ()
 
 
 def test_lane_projection_seed_uses_logical_vera_identity_not_runtime_route_identity():
