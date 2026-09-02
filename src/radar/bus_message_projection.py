@@ -16,6 +16,7 @@ class BusMessageProjectionError(ValueError):
 _ALIASES = {
     "bridget": "brigit",
     "vera/sol": "vera",
+    "vera / sol": "vera",
     "vera-sol": "vera",
 }
 _HEADER_RE = re.compile(r"^(?P<key>[A-Za-z0-9_-]+)\s*:\s*(?P<value>.*)$")
@@ -49,15 +50,34 @@ class ProjectedBusMessage:
     metadata: dict[str, object]
 
 
+def _unwrap_scalar(value: str) -> str:
+    text = value.strip()
+    pairs = (("`", "`"), ('"', '"'), ("'", "'"))
+    for left, right in pairs:
+        if len(text) >= 2 and text.startswith(left) and text.endswith(right):
+            return text[1:-1].strip()
+    return text
+
+
 def _normalize_identity(value: str) -> str:
-    key = value.strip().casefold()
-    return _ALIASES.get(key, key)
+    key = _unwrap_scalar(value).strip().casefold()
+    mapped = _ALIASES.get(key)
+    if mapped:
+        return mapped
+    # Some early lanes used a display-name expansion after the logical writer,
+    # e.g. "FNG / Fabulous Nitpicking Gremlin". Preserve the durable logical
+    # identity rather than projecting the prose expansion as a new participant.
+    if " / " in key:
+        prefix = key.split(" / ", 1)[0].strip()
+        if prefix in {"fng", "radar", "brigit", "five-five", "five", "four", "six", "seven", "eight", "nine", "one", "two", "three", "thirteen", "masa", "mune", "yang", "yin", "hephaestus"}:
+            return prefix
+    return key
 
 
 def _parse_bool(value: str | None, *, field: str) -> bool:
     if value is None or value.strip() == "":
         return False
-    normalized = value.strip().casefold()
+    normalized = _unwrap_scalar(value).casefold()
     if normalized in _TRUE:
         return True
     if normalized in _FALSE:
@@ -66,7 +86,7 @@ def _parse_bool(value: str | None, *, field: str) -> bool:
 
 
 def _normalize_timestamp(value: str, *, error: str) -> str:
-    text = value.strip()
+    text = _unwrap_scalar(value)
     if not text:
         raise BusMessageProjectionError(error)
     candidate = text
@@ -82,10 +102,60 @@ def _normalize_timestamp(value: str, *, error: str) -> str:
     return candidate
 
 
+def _parse_header_line(raw: str, headers: dict[str, str]) -> bool:
+    match = _HEADER_RE.match(raw.rstrip("\r\n"))
+    if not match:
+        return False
+    key = match.group("key").strip().casefold().replace("-", "_")
+    if key in headers:
+        raise BusMessageProjectionError(f"DUPLICATE_HEADER_{key.upper()}")
+    headers[key] = match.group("value").strip()
+    return True
+
+
+def _split_yaml_frontmatter(lines: list[str]) -> tuple[dict[str, str], int] | None:
+    index = 0
+    while index < len(lines) and not lines[index].strip():
+        index += 1
+    if index >= len(lines) or lines[index].strip() != "---":
+        return None
+
+    headers: dict[str, str] = {}
+    index += 1
+    while index < len(lines):
+        raw = lines[index]
+        stripped = raw.strip()
+        if stripped == "---":
+            index += 1
+            while index < len(lines) and not lines[index].strip():
+                index += 1
+            if not headers:
+                raise BusMessageProjectionError("HEADER_BLOCK_REQUIRED")
+            return headers, index
+        # Only top-level scalar keys are needed for projection. YAML list or
+        # continuation lines remain provenance in the Git source and are not
+        # misclassified as message body.
+        if raw[:1].isspace() or stripped.startswith("-"):
+            index += 1
+            continue
+        if stripped and not _parse_header_line(raw, headers):
+            raise BusMessageProjectionError("INVALID_FRONTMATTER_HEADER")
+        index += 1
+
+    raise BusMessageProjectionError("UNTERMINATED_FRONTMATTER")
+
+
 def _split_document(text: str) -> tuple[dict[str, str], str]:
     lines = text.splitlines(keepends=True)
-    index = 0
 
+    frontmatter = _split_yaml_frontmatter(lines)
+    if frontmatter is not None:
+        headers, body_index = frontmatter
+        return headers, "".join(lines[body_index:])
+
+    index = 0
+    while index < len(lines) and not lines[index].strip():
+        index += 1
     if index < len(lines) and lines[index].lstrip().startswith("#"):
         index += 1
         while index < len(lines) and not lines[index].strip():
@@ -101,16 +171,11 @@ def _split_document(text: str) -> tuple[dict[str, str], str]:
                 break
             index += 1
             continue
-        match = _HEADER_RE.match(line.rstrip("\r\n"))
-        if not match:
+        if not _parse_header_line(line, headers):
             if not header_started:
                 raise BusMessageProjectionError("HEADER_BLOCK_REQUIRED")
             break
         header_started = True
-        key = match.group("key").strip().casefold().replace("-", "_")
-        if key in headers:
-            raise BusMessageProjectionError(f"DUPLICATE_HEADER_{key.upper()}")
-        headers[key] = match.group("value").strip()
         index += 1
 
     if not header_started:
@@ -128,28 +193,34 @@ def parse_bus_message(content: bytes, source: BusMessageSource) -> ProjectedBusM
 
     headers, body = _split_document(text)
 
-    message_id = headers.get("message_id", "").strip()
+    message_id = _unwrap_scalar(headers.get("message_id", ""))
     if not message_id:
         raise BusMessageProjectionError("MESSAGE_ID_REQUIRED")
-    writer = headers.get("writer", "").strip()
+    writer = _unwrap_scalar(headers.get("writer", ""))
     if not writer:
         raise BusMessageProjectionError("WRITER_REQUIRED")
 
     header_created = headers.get("created_at")
     if header_created:
-        created_at = _normalize_timestamp(header_created, error="INVALID_CREATED_AT")
-        created_at_basis = "message_header"
+        try:
+            created_at = _normalize_timestamp(header_created, error="INVALID_CREATED_AT")
+            created_at_basis = "message_header"
+        except BusMessageProjectionError:
+            if not source.source_committed_at:
+                raise
+            created_at = _normalize_timestamp(source.source_committed_at, error="INVALID_SOURCE_COMMITTED_AT")
+            created_at_basis = "source_commit_invalid_header"
     elif source.source_committed_at:
         created_at = _normalize_timestamp(source.source_committed_at, error="INVALID_SOURCE_COMMITTED_AT")
         created_at_basis = "source_commit"
     else:
         raise BusMessageProjectionError("CREATED_AT_REQUIRED")
 
-    intended = headers.get("intended_recipient", "")
+    intended = _unwrap_scalar(headers.get("intended_recipient", ""))
     audience = tuple(
         _normalize_identity(piece)
         for piece in intended.split(",")
-        if piece.strip()
+        if _unwrap_scalar(piece)
     )
 
     requires_reply = _parse_bool(headers.get("requires_reply"), field="requires_reply")
@@ -177,13 +248,16 @@ def parse_bus_message(content: bytes, source: BusMessageSource) -> ProjectedBusM
         }
     )
 
+    subject_raw = headers.get("subject")
+    subject = _unwrap_scalar(subject_raw) if subject_raw else None
+
     return ProjectedBusMessage(
         message_id=message_id,
         created_at=created_at,
         sender=_normalize_identity(writer),
         audience=audience,
         requires_ack=requires_ack,
-        subject=headers.get("subject") or None,
+        subject=subject,
         full_sha256=full_sha256,
         body_sha256=body_sha256,
         body_length=len(body_bytes),
