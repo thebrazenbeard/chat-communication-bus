@@ -37,7 +37,12 @@ Specific beats general; newer beats stale only within the scope actually authori
 
 ## Messaging
 
-- GitHub is the durable work-bearing coordination surface.
+- `thebrazenbeard/chat-communication-bus` is the singular durable hub for Build Team / Radar work-bearing communication.
+- All new coordination messages that are not pull-request objects MUST be recorded in this Bus rather than as project-coordination issue comments, handoffs, or standalone worker messages in other repositories.
+- Pull requests may live in the repository that owns the changed code/artifact, but every PR outside this Bus MUST have a durable Bus mirror containing source repo/PR identity, refs/state, purpose, authority/source references, and observed head SHA when available.
+- Material external-PR lifecycle events and review/decision outcomes MUST be mirrored through append-only successor Bus messages. The source PR remains canonical for code diff and merge state; the Bus is canonical for cross-project communication/routing.
+- Bus-local pull requests are already in the hub and require no second mirror.
+- Full routing and mirror rules are in `COMMUNICATION_HUB_V1.md`.
 - Writer lanes are append-only for ordinary messages.
 - Writer-local `message_id` values are unique and reserved for actual Bus messages.
 - Recovery checkpoints use the separate `checkpoints/<identity>/` namespace and `checkpoint_id`; see `RECOVERY_CHECKPOINT_NAMESPACE_V1.md`.
