@@ -185,6 +185,13 @@ def _split_document(text: str) -> tuple[dict[str, str], str]:
     return headers, body
 
 
+def _conversation_closed_by_sender(body: str) -> bool:
+    trimmed = body.rstrip()
+    if not trimmed:
+        return False
+    return trimmed.splitlines()[-1] == "#ENDTHREAD"
+
+
 def parse_bus_message(content: bytes, source: BusMessageSource) -> ProjectedBusMessage:
     try:
         text = content.decode("utf-8")
@@ -245,6 +252,7 @@ def parse_bus_message(content: bytes, source: BusMessageSource) -> ProjectedBusM
             "source_blob_sha": source.blob_sha,
             "body_sha256": body_sha256,
             "body_length": len(body_bytes),
+            "conversation_closed_by_sender": _conversation_closed_by_sender(body),
         }
     )
 
