@@ -104,6 +104,24 @@ def test_collect_batch_rejects_new_message_id_that_already_exists_in_parent(tmp_
         )
 
 
+def test_collect_batch_rejects_recovery_checkpoint_consuming_message_namespace(tmp_path):
+    emitter = load_emitter()
+    repo, _, _ = make_repo(tmp_path)
+    checkpoint = b"# One numerical identity checkpoint\n\nmessage_id: one-10000\nwriter: One\nstatus: recovery-checkpoint\nintended_recipient: replacement-instance / coordinator recovery\n\nidentity hint\n"
+    (repo / "messages" / "10000-one-numerical-identity-checkpoint.md").write_bytes(checkpoint)
+    subprocess.check_call(["git", "-C", str(repo), "add", "messages/10000-one-numerical-identity-checkpoint.md"])
+    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "checkpoint"])
+    head = git(repo, "rev-parse", "HEAD")
+
+    with pytest.raises(emitter.EmitterError, match="RECOVERY_CHECKPOINT_MESSAGE_NAMESPACE"):
+        emitter.collect_projection_batch(
+            repo,
+            repository="thebrazenbeard/chat-communication-bus",
+            ref="refs/heads/bus/one-v1",
+            branch_head=head,
+        )
+
+
 def test_collect_batch_tolerates_preexisting_duplicate_ids_when_head_adds_no_message(tmp_path):
     emitter = load_emitter()
     repo, _, _ = make_repo(tmp_path)
