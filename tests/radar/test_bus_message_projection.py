@@ -63,6 +63,16 @@ def test_exact_final_endthread_line_projects_sender_closure():
     assert projected.metadata["conversation_closed_by_sender"] is True
 
 
+def test_multi_recipient_endthread_closure_preserves_complete_audience():
+    text = SAMPLE + "#ENDTHREAD\n"
+    projected = parse_bus_message(text.encode(), source())
+    assert projected.audience == ("brigit", "bt2-participants")
+    assert projected.metadata["conversation_closed_by_sender"] is True
+    command = build_bus_projection_command(projected)
+    assert command.parameters["p_audience"] == ["brigit", "bt2-participants"]
+    assert command.parameters["p_payload"]["conversation_closed_by_sender"] is True
+
+
 def test_endthread_allows_terminal_whitespace_but_must_remain_exact_final_line():
     text = SAMPLE + "#ENDTHREAD   \n\n\t\n"
     projected = parse_bus_message(text.encode(), source())
