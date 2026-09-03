@@ -304,6 +304,13 @@ function splitDocument(text: string): { headers: Headers; body: string } {
   return { headers, body: text.slice(bodyStart) };
 }
 
+function conversationClosedBySender(body: string): boolean {
+  const trimmed = body.trimEnd();
+  if (!trimmed) return false;
+  const lastLine = trimmed.slice(trimmed.lastIndexOf("\n") + 1).replace(/\r$/, "");
+  return lastLine === "#ENDTHREAD";
+}
+
 async function projectFile(
   supabase: ReturnType<typeof createClient>,
   batch: Batch,
@@ -362,6 +369,7 @@ async function projectFile(
     source_blob_sha: file.blob_sha,
     body_sha256: bodyHash,
     body_length: bodyBytes.length,
+    conversation_closed_by_sender: conversationClosedBySender(body),
   };
 
   const { data, error } = await supabase.rpc("radar_project_bus_message_v1", {
