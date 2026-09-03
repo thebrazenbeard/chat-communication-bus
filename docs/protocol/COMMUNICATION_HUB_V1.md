@@ -2,68 +2,33 @@
 
 Authority basis: Patrick's direct instruction on 2026-09-03.
 
-## Hub
+## Authoritative directive
 
-The singular durable communication hub for Build Team / Radar project coordination is:
+Patrick's instruction is the authority for this policy:
 
-`thebrazenbeard/chat-communication-bus`
+> All messages that that are not pull requests need to be done via http://github.com/thebrazenbeard/chat-communication-bus
+>
+> Any pull requests in projects/repos done outside of http://github.com/thebrazenbeard/chat-communication-bus should be duplicated on http://github.com/thebrazenbeard/chat-communication-bus so that there is a singlular hub for all communications
 
-This rule governs where project communications are recorded. It does not move source code, repository ownership, provider state, or merge authority into the Bus.
+## Operational effect
 
-## Non-PR communication
+The directive has two rules and this document does not expand them:
 
-All new work-bearing communication that is not itself a pull-request object MUST be recorded in `thebrazenbeard/chat-communication-bus`.
+1. All messages/communications that are not pull requests go through `thebrazenbeard/chat-communication-bus`.
+2. Any pull requests in projects/repos done outside `thebrazenbeard/chat-communication-bus` are duplicated/mirrored on `thebrazenbeard/chat-communication-bus` so the Bus remains the singular communications hub.
 
-This includes coordination messages, handoffs, assignments, acknowledgements, review conclusions, blocker reports, currentness corrections, decisions, and status updates.
+A source pull request remains in the repository that owns it. The Bus duplicate is a communication mirror/reference; this policy does not move source code, repository ownership, provider state, review-state authority, or merge authority into the Bus.
 
-Do not create new project-coordination issue comments, handoff comments, or standalone worker messages in other repositories. Historical off-hub communication remains provenance and is not rewritten or deleted merely because this rule is now active.
+Discussion, review reasoning, decisions, requested changes, approvals, blockers, handoffs, acknowledgements, and status updates are messages/communications rather than pull-request objects, so those communications use the Bus.
 
-Machine-generated repository metadata such as commits, CI checks, branch refs, and release artifacts are evidence, not human/agent communication, and remain where the underlying repository owns them.
+Pull requests whose source repository is `thebrazenbeard/chat-communication-bus` are already in the hub and do not need a second duplicate.
 
-## Pull requests outside the Bus
+## No invented mirror contract
 
-A pull request may remain in the repository that owns the code or artifact being changed. Every pull request opened outside `thebrazenbeard/chat-communication-bus` MUST also have a durable mirror message in the Bus so the Bus remains the singular communications index.
+This V1 intentionally does **not** prescribe a required PR-mirror field schema, a mandatory lifecycle-successor schedule, a mandatory bootstrap process, a default writer-lane location, or a separate review workflow. Those would be implementation/design decisions and require their own current authority.
 
-The initial PR mirror MUST record at least:
-
-- `mirror_type: PR_MIRROR`
-- source repository
-- source PR number and URL
-- PR title
-- responsible identity/worker
-- head branch/ref and base branch/ref
-- observed source head SHA when available
-- open/draft/closed/merged state
-- purpose/scope
-- authority reference when applicable
-- source references needed to recover the work
-
-Material PR lifecycle events MUST be mirrored by successor Bus messages. This includes requested changes, review disposition, meaningful scope/currentness changes, merge readiness, merge, close, supersession, or abandonment.
-
-External PR discussion is not a second coordination channel. Review reasoning, decisions, requested changes, approvals, blocker discussion, and other human/agent work-bearing messages belong in the Bus. If GitHub's PR review mechanism technically requires an external review action or inline comment, duplicate the substantive content into the Bus immediately and continue coordination from the Bus. The source PR remains canonical for its code diff, native review-state metadata, and merge state; the Bus is canonical for cross-project communication and routing.
-
-Pull requests whose source repository is `thebrazenbeard/chat-communication-bus` are already in the hub and do not require a second mirror.
-
-### Existing open PR bootstrap
-
-Open external PRs that already existed when this policy became active are not grandfathered out of the hub requirement. A one-time Bus bootstrap registry MAY satisfy their initial mirror requirement, provided it records at least source repository, PR number/URL, title, and observed open state for each discovered PR. After bootstrap, every material lifecycle/review/decision update uses the normal append-only successor mirror rule.
-
-The bootstrap registry is discovery/currentness evidence only. It does not assign ownership, grant authority, accept the PR, or change the source PR's code/merge state.
-
-## Mirror location
-
-The default mirror location is the responsible writer's existing `bus/<identity>-v1` message lane using append-only successor messages. If a current Radar contract supplies a more specific Bus-native PR-mirror location later, that narrower current contract may replace this default without weakening the singular-hub requirement.
-
-## Recovery and enforcement
-
-On continuation/recovery:
-
-1. consult the Bus for current work-bearing communication;
-2. treat external repository PRs as source-code/merge evidence, not a substitute communication channel;
-3. if an external PR lacks a Bus mirror, create the mirror before further material coordination when the actor is already authorized to maintain its own Bus lane;
-4. if off-hub communication is discovered, do not continue the conversation there; mirror the material content into the Bus and continue from the Bus;
-5. do not infer new implementation, provider, merge, deployment, credential, or canonical-memory authority from this routing rule.
+Existing mirror or bootstrap artifacts created while the directive was being interpreted remain provenance. Their existence does not convert their extra fields, maintenance rules, or workflow assumptions into Patrick's directive.
 
 ## Existing authority order
 
-This routing policy does not alter the existing authority order. Patrick's current explicit instruction remains highest; Radar retains repository authority for the Bus; project/repository effect authority remains scoped to the underlying task and repository.
+This routing policy does not broaden implementation, provider, merge, deployment, credential, canonical-memory, or unrelated repository authority. Patrick's current explicit instruction remains highest; Radar retains repository authority for the Bus; project/repository effects remain scoped to their underlying authority.

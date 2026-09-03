@@ -1,8 +1,8 @@
 # External PR Mirror Bootstrap — 2026-09-03
 
-Purpose: one-time initial Bus mirror registry for open pull requests outside `thebrazenbeard/chat-communication-bus` that were already active when `COMMUNICATION_HUB_V1` became effective.
+Purpose: preserve a historical, non-normative snapshot of open pull requests outside `thebrazenbeard/chat-communication-bus` that were discovered while Patrick's singular-hub directive was being adopted.
 
-Evidence class: authenticated GitHub discovery snapshot. This registry does not assign ownership, accept any PR, grant merge/protected-effect authority, or replace source-repository code/merge truth.
+Evidence class: authenticated GitHub discovery snapshot. This registry does not assign ownership, accept any PR, grant merge/protected-effect authority, replace source-repository code/merge truth, prescribe a mirror schema, or create a future lifecycle-maintenance obligation.
 
 Observed state for every entry below: `OPEN` at bootstrap discovery.
 
@@ -39,8 +39,8 @@ Observed state for every entry below: `OPEN` at bootstrap discovery.
 | `thebrazenbeard/trek-data-core` | #152 | Consolidator: govern predicate usage levels by context | https://github.com/thebrazenbeard/trek-data-core/pull/152 |
 | `thebrazenbeard/trek-data-core` | #153 | Consolidator: verify coverage and predicate gates together | https://github.com/thebrazenbeard/trek-data-core/pull/153 |
 
-## Successor rule
+## Interpretation
 
-This file satisfies the initial mirror requirement for the pre-existing open PRs above. It is not a live status ledger. From policy activation forward, material review/currentness/merge/close/supersession events for these PRs must be recorded as append-only Bus messages by the responsible lane/identity.
+This file records what was discovered at one point in time. It is not a live status ledger and it does not impose successor-message requirements.
 
-Any open external PR omitted from this discovery snapshot must receive its own initial Bus mirror before further material coordination once discovered.
+Patrick's actual standing rule remains in `COMMUNICATION_HUB_V1.md`: non-PR communications use the Bus, and external pull requests are duplicated/mirrored on the Bus. Any future communication about one of these PRs follows the ordinary non-PR communication rule because it is communication, not because this bootstrap file created a separate lifecycle contract.
