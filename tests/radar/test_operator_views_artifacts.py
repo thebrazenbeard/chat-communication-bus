@@ -17,11 +17,13 @@ def test_operator_views_separate_reply_evidence_from_read_state():
 
 def test_operator_views_expose_open_assignments_without_guessing_from_messages():
     sql = MIGRATION.read_text().lower()
-    assert "create or replace view radar.open_assignments_v1" in sql
-    assert "from radar.assignments" in sql
-    assert "assignee_identity_id" in sql
-    assert "current_state not in ('confirmed','stopped','superseded')" in sql
-    assert "payload->>'subject'" not in sql
+    marker = "create or replace view radar.open_assignments_v1"
+    assert marker in sql
+    assignment_sql = sql.split(marker, 1)[1]
+    assert "from radar.assignments" in assignment_sql
+    assert "assignee_identity_id" in assignment_sql
+    assert "current_state not in ('confirmed','stopped','superseded')" in assignment_sql
+    assert "payload->>'subject'" not in assignment_sql
 
 
 def test_operator_views_include_exact_receipt_and_current_event_evidence():
@@ -35,7 +37,7 @@ def test_operator_views_include_exact_receipt_and_current_event_evidence():
 
 def test_operator_contract_preserves_claim_ceiling():
     text = CONTRACT.read_text().lower()
-    assert "no explicit reply evidence" in text
+    assert "no_explicit_reply_evidence" in text
     assert "does not mean unread" in text
     assert "open assignment" in text
     assert "git remains canonical" in text
