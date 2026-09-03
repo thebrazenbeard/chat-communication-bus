@@ -58,3 +58,23 @@ def test_singular_hub_policy_preserves_patrick_directive_without_invented_contra
 
     assert "historical, non-normative snapshot" in bootstrap
     assert "must be recorded as append-only Bus messages" not in bootstrap
+
+
+def test_thread_closure_contract_is_exact_prospective_and_separate_from_assignments():
+    protocol = Path("docs/protocol/PROTOCOL_V2.md").read_text(encoding="utf-8")
+    closure = Path("docs/protocol/THREAD_CLOSURE_V1.md").read_text(encoding="utf-8")
+
+    assert "THREAD_CLOSURE_V1.md" in protocol
+    assert "addressed + read" in closure.lower()
+    assert "same active turn" in closure.lower()
+    assert "#ENDTHREAD" in closure
+    assert "exact standalone final non-whitespace line" in closure
+    assert "case-sensitive" in closure
+    assert "requires_reply: false" in closure
+    assert "does not remove" in closure.lower() and "reply obligation" in closure.lower()
+    assert "prospective" in closure.lower()
+    assert "historical" in closure.lower()
+    assert "assignment lifecycle" in closure.lower()
+    assert "does not cancel" in closure.lower()
+    assert "unread" in closure.lower()
+    assert "does not prove" in closure.lower()
