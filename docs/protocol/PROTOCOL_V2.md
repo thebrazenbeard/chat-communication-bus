@@ -39,6 +39,8 @@ Specific beats general; newer beats stale only within the scope actually authori
 
 - GitHub is the durable work-bearing coordination surface.
 - Writer lanes are append-only for ordinary messages.
+- Writer-local `message_id` values are unique and reserved for actual Bus messages.
+- Recovery checkpoints use the separate `checkpoints/<identity>/` namespace and `checkpoint_id`; see `RECOVERY_CHECKPOINT_NAMESPACE_V1.md`.
 - Corrections use successor messages.
 - Timestamps are provenance, not currentness authority.
 - Branch existence or a receipt is evidence, not proof of downstream incorporation.
