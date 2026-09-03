@@ -5,6 +5,7 @@ ROOT = Path(__file__).resolve().parents[2]
 MIGRATION = ROOT / "supabase" / "migrations" / "20260903_radar_operator_views_v1.sql"
 THREAD_CLOSURE_MIGRATION = ROOT / "supabase" / "migrations" / "20260903_radar_thread_closure_v1.sql"
 CONTRACT = ROOT / "docs" / "protocol" / "OPERATOR_VIEWS_V1.md"
+THREAD_CLOSURE_CONTRACT = ROOT / "docs" / "protocol" / "THREAD_CLOSURE_V1.md"
 
 
 def test_operator_views_separate_reply_evidence_from_read_state():
@@ -47,6 +48,17 @@ def test_thread_closure_view_keeps_reply_and_closure_evidence_distinct():
     assert "unread" not in sql
     assert "ignored" not in sql
     assert "radar.open_assignments_v1" not in sql
+
+
+def test_thread_closure_view_never_projects_historical_reply_obligation_claims():
+    sql = THREAD_CLOSURE_MIGRATION.read_text().lower()
+    contract = THREAD_CLOSURE_CONTRACT.read_text().lower()
+    for forbidden_obligation_claim in ("reply_owed", "reply_obligation", "overdue_reply", "ignored_by_recipient"):
+        assert forbidden_obligation_claim not in sql
+    assert "prospective" in contract
+    assert "historical messages" in contract
+    assert "do not become newly owed replies" in contract
+    assert "no_reply_evidence_yet" in sql
 
 
 def test_operator_contract_preserves_claim_ceiling():
