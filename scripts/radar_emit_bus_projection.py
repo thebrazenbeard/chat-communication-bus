@@ -2,10 +2,15 @@
 """Emit a Git-evidenced Bus mailbox batch to Radar's Supabase projection.
 
 The emitter transports tracked Git objects plus provenance to the trusted Edge
-Function. Before transport it enforces one local append-only invariant: a newly
-added message file may not reuse a message_id that already existed in its parent
-mailbox (or another newly added file in the same commit). Historical collisions
-remain readable/projectable and are not retroactively rejected.
+Function. Before transport it enforces local append-only invariants:
+
+* a newly added message file may not reuse a message_id that already existed in
+  its parent mailbox (or another newly added file in the same commit);
+* recovery checkpoints are continuity artifacts, not Bus messages, and may not
+  consume the ordinary message_id namespace.
+
+Historical collisions remain readable/projectable and are not retroactively
+rejected.
 """
 
 from __future__ import annotations
@@ -27,6 +32,7 @@ DEFAULT_ENDPOINT = "https://klmbpaigzeguvnpccqzz.supabase.co/functions/v1/github
 DEFAULT_MAX_FILE_BYTES = 512 * 1024
 DEFAULT_MAX_TOTAL_BYTES = 5 * 1024 * 1024
 _MESSAGE_ID_RE = re.compile(r"(?mi)^message_id\s*:\s*(?P<value>.+?)\s*$")
+_STATUS_RE = re.compile(r"(?mi)^status\s*:\s*(?P<value>.+?)\s*$")
 
 
 class EmitterError(RuntimeError):
@@ -79,16 +85,24 @@ def _unwrap_scalar(value: str) -> str:
     return text
 
 
-def _extract_message_id(content: bytes) -> str | None:
+def _extract_scalar(content: bytes, pattern: re.Pattern[str]) -> str | None:
     try:
         text = content.decode("utf-8")
     except UnicodeDecodeError:
         return None
-    match = _MESSAGE_ID_RE.search(text)
+    match = pattern.search(text)
     if not match:
         return None
     value = _unwrap_scalar(match.group("value"))
     return value or None
+
+
+def _extract_message_id(content: bytes) -> str | None:
+    return _extract_scalar(content, _MESSAGE_ID_RE)
+
+
+def _extract_status(content: bytes) -> str | None:
+    return _extract_scalar(content, _STATUS_RE)
 
 
 def _paths_at_ref(repo_dir: Path, ref: str) -> list[str]:
@@ -131,7 +145,13 @@ def _validate_new_message_ids(repo_dir: Path, head: str) -> None:
 
     added_ids: set[str] = set()
     for path in added_paths:
-        message_id = _extract_message_id(_git_bytes(repo_dir, "show", f"{head}:{path}"))
+        content = _git_bytes(repo_dir, "show", f"{head}:{path}")
+        message_id = _extract_message_id(content)
+        status = (_extract_status(content) or "").strip().lower()
+
+        if status == "recovery-checkpoint" and message_id:
+            raise EmitterError(f"RECOVERY_CHECKPOINT_MESSAGE_NAMESPACE:{path}")
+
         if not message_id:
             continue
         if message_id in prior_ids or message_id in added_ids:
