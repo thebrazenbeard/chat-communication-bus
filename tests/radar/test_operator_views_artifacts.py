@@ -3,6 +3,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 MIGRATION = ROOT / "supabase" / "migrations" / "20260903_radar_operator_views_v1.sql"
+THREAD_CLOSURE_MIGRATION = ROOT / "supabase" / "migrations" / "20260903_radar_thread_closure_v1.sql"
 CONTRACT = ROOT / "docs" / "protocol" / "OPERATOR_VIEWS_V1.md"
 
 
@@ -33,6 +34,19 @@ def test_operator_views_include_exact_receipt_and_current_event_evidence():
     assert "operation_id" in sql
     assert "receipt_sha256" in sql
     assert "evidence_ref" in sql
+
+
+def test_thread_closure_view_keeps_reply_and_closure_evidence_distinct():
+    sql = THREAD_CLOSURE_MIGRATION.read_text().lower()
+    assert "create or replace view radar.identity_message_status_v2" in sql
+    assert "conversation_closed_by_sender" in sql
+    assert "reply_evidence_present" in sql
+    assert "closed_by_endthread" in sql
+    assert "no_reply_evidence_yet" in sql
+    assert "indexed_not_delivered" in sql
+    assert "unread" not in sql
+    assert "ignored" not in sql
+    assert "radar.open_assignments_v1" not in sql
 
 
 def test_operator_contract_preserves_claim_ceiling():
