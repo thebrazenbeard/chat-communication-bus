@@ -11,6 +11,9 @@ Patrick is the human override authority. Radar owns this repository's architectu
 Core rules include:
 
 - GitHub is durable canonical source/provenance.
+- `thebrazenbeard/chat-communication-bus` is the singular durable hub for Build Team / Radar work-bearing communication.
+- All new non-PR coordination messages belong in this Bus rather than other project repositories.
+- Pull requests may remain in the repository that owns the changed code/artifact, but every external PR must have a durable Bus mirror and material lifecycle/review decisions must be mirrored back here.
 - Supabase is a rebuildable live projection, not canonical history.
 - ChatGPT is Patrick's operator interface, not Radar's sole state store.
 - Routing is not authority; presence is not identity existence; priority is not permission; delivery is not incorporation; assignment is not completion.
@@ -23,6 +26,7 @@ Core rules include:
 - Design: `docs/superpowers/specs/2026-09-02-radar-control-plane-design.md`
 - Implementation plan: `docs/superpowers/plans/2026-09-02-radar-control-plane.md`
 - Protocol: `docs/protocol/PROTOCOL_V2.md`
+- Singular communication hub policy: `docs/protocol/COMMUNICATION_HUB_V1.md`
 - ChatGPT operator contract: `docs/operator/CHATGPT_OPERATOR_CONTRACT.md`
 - Recovery: `docs/operator/RECOVERY.md`
 - Maintenance: `docs/operator/MAINTENANCE.md`
