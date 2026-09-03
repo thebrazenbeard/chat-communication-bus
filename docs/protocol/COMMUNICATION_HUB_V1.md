@@ -44,6 +44,12 @@ Code-review discussion may still exist on the source PR when GitHub's PR review 
 
 Pull requests whose source repository is `thebrazenbeard/chat-communication-bus` are already in the hub and do not require a second mirror.
 
+### Existing open PR bootstrap
+
+Open external PRs that already existed when this policy became active are not grandfathered out of the hub requirement. A one-time Bus bootstrap registry MAY satisfy their initial mirror requirement, provided it records at least source repository, PR number/URL, title, and observed open state for each discovered PR. After bootstrap, every material lifecycle/review/decision update uses the normal append-only successor mirror rule.
+
+The bootstrap registry is discovery/currentness evidence only. It does not assign ownership, grant authority, accept the PR, or change the source PR's code/merge state.
+
 ## Mirror location
 
 The default mirror location is the responsible writer's existing `bus/<identity>-v1` message lane using append-only successor messages. If a current Radar contract supplies a more specific Bus-native PR-mirror location later, that narrower current contract may replace this default without weakening the singular-hub requirement.
