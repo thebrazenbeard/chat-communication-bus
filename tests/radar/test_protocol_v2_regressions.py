@@ -1,4 +1,6 @@
 import importlib
+from pathlib import Path
+
 import pytest
 
 
@@ -37,3 +39,22 @@ def test_protected_or_materially_ambiguous_effect_still_stops():
     m = _workflow()
     assert m.execution_decision(action="merge", explicitly_assigned=True, reversible=False, protected=True, ambiguous=False) == "REQUIRE_EXACT_AUTHORITY"
     assert m.execution_decision(action="unknown_external_write", explicitly_assigned=True, reversible=False, protected=False, ambiguous=True) == "REQUIRE_CLARIFICATION"
+
+
+def test_singular_hub_policy_preserves_patrick_directive_without_invented_contract():
+    policy = Path("docs/protocol/COMMUNICATION_HUB_V1.md").read_text(encoding="utf-8")
+    bootstrap = Path("docs/protocol/EXTERNAL_PR_MIRROR_BOOTSTRAP_2026-09-03.md").read_text(encoding="utf-8")
+
+    assert "All messages/communications that are not pull requests" in policy
+    assert "Any pull requests in projects/repos done outside" in policy
+
+    for invented_requirement in (
+        "mirror_type: PR_MIRROR",
+        "The initial PR mirror MUST record at least",
+        "Material PR lifecycle events MUST be mirrored",
+        "default mirror location",
+    ):
+        assert invented_requirement not in policy
+
+    assert "historical, non-normative snapshot" in bootstrap
+    assert "must be recorded as append-only Bus messages" not in bootstrap
