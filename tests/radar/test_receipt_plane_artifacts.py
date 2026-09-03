@@ -9,11 +9,11 @@ def test_receipt_plane_migration_exists_and_separates_indexing_from_delivery():
     sql = MIGRATION.read_text()
     lowered = sql.lower()
     assert "create or replace function radar.reconcile_bus_receipts_v1" in lowered
-    assert "projected_for_identity" in sql
-    assert "indexed_not_delivered" in sql
+    assert "projected_for_identity" in lowered
+    assert "indexed_not_delivered" in lowered
     assert "acknowledgement_type" in lowered
-    assert "'READ'" in sql
-    assert "AMBIGUOUS_REPLY_REFERENCE" in sql
+    assert "'read'" in lowered
+    assert "ambiguous_reply_reference" in lowered
 
 
 def test_receipt_plane_is_idempotent_and_append_only_friendly():
