@@ -2,10 +2,10 @@ begin;
 
 do $$
 declare
-  message_id_value text := '__radar_operator_view_message__';
-  reply_id_value text := '__radar_operator_view_reply__';
+  message_id_value text := 'operator-view-9001';
+  reply_id_value text := 'operator-view-9002';
   assignment_id_value text := '__radar_operator_view_assignment__';
-  assignment_message_value text := '__radar_operator_view_assignment_root__';
+  assignment_message_value text := 'operator-view-9003';
 begin
   insert into radar.identities(identity_id, display_name, lifecycle_status, metadata)
   values
