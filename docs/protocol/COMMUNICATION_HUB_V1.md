@@ -40,7 +40,7 @@ The initial PR mirror MUST record at least:
 
 Material PR lifecycle events MUST be mirrored by successor Bus messages. This includes requested changes, review disposition, meaningful scope/currentness changes, merge readiness, merge, close, supersession, or abandonment.
 
-Code-review discussion may still exist on the source PR when GitHub's PR review mechanism is materially useful, but every material review conclusion or decision MUST also be mirrored to the Bus. The source PR remains canonical for its code diff and merge state; the Bus is canonical for cross-project communication and routing.
+External PR discussion is not a second coordination channel. Review reasoning, decisions, requested changes, approvals, blocker discussion, and other human/agent work-bearing messages belong in the Bus. If GitHub's PR review mechanism technically requires an external review action or inline comment, duplicate the substantive content into the Bus immediately and continue coordination from the Bus. The source PR remains canonical for its code diff, native review-state metadata, and merge state; the Bus is canonical for cross-project communication and routing.
 
 Pull requests whose source repository is `thebrazenbeard/chat-communication-bus` are already in the hub and do not require a second mirror.
 
