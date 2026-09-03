@@ -57,6 +57,38 @@ def test_parse_real_bus_message_to_metadata_only_projection():
     assert "Hello there" not in repr(projected.metadata)
 
 
+def test_exact_final_endthread_line_projects_sender_closure():
+    text = SAMPLE + "#ENDTHREAD\n"
+    projected = parse_bus_message(text.encode(), source())
+    assert projected.metadata["conversation_closed_by_sender"] is True
+
+
+def test_endthread_allows_terminal_whitespace_but_must_remain_exact_final_line():
+    text = SAMPLE + "#ENDTHREAD   \n\n\t\n"
+    projected = parse_bus_message(text.encode(), source())
+    assert projected.metadata["conversation_closed_by_sender"] is True
+
+
+def test_inline_or_nonfinal_endthread_does_not_close_conversation():
+    inline = SAMPLE + "Still talking about #ENDTHREAD here.\n"
+    nonfinal = SAMPLE + "#ENDTHREAD\nNo, actually one more thing.\n"
+    assert parse_bus_message(inline.encode(), source()).metadata["conversation_closed_by_sender"] is False
+    assert parse_bus_message(nonfinal.encode(), source()).metadata["conversation_closed_by_sender"] is False
+
+
+def test_endthread_is_case_sensitive_and_has_no_aliases():
+    for candidate in ("#endthread", "#END THREAD", "#END-THREAD", "ENDTHREAD", "NRN", "no reply needed"):
+        text = SAMPLE + candidate + "\n"
+        assert parse_bus_message(text.encode(), source()).metadata["conversation_closed_by_sender"] is False
+
+
+def test_requires_reply_false_without_endthread_remains_conversation_open():
+    text = SAMPLE.replace("requires_reply: true", "requires_reply: false")
+    projected = parse_bus_message(text.encode(), source())
+    assert projected.requires_ack is False
+    assert projected.metadata["conversation_closed_by_sender"] is False
+
+
 def test_projection_command_targets_existing_radar_messages_without_body():
     projected = parse_bus_message(SAMPLE.encode(), source())
     command = build_bus_projection_command(projected)
