@@ -16,20 +16,36 @@ jobs:
       - name: Check out exact writer lane
         uses: actions/checkout@v4
         with:
+          path: lane
           fetch-depth: 0
+
+      - name: Check out current Radar control code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: control
+          fetch-depth: 1
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install Radar source package
-        run: python -m pip install -e .
+      - name: Install current Radar control package
+        run: python -m pip install -e control
 
-      - name: Validate mailbox-only append
-        run: >-
-          python scripts/radar_validate_writer_lane.py
-          --repo-dir .
-          --ref "${{ github.ref }}"
-          --head "${{ github.sha }}"
-          --base "${{ github.event.before }}"
+      - name: Validate mailbox transition
+        env:
+          RADAR_REF: ${{ github.ref }}
+          RADAR_HEAD: ${{ github.sha }}
+          RADAR_BASE: ${{ github.event.before }}
+        run: |
+          RADAR_BOOTSTRAP_MAIN="$(git -C control rev-parse HEAD)"
+          python control/scripts/radar_validate_writer_lane.py \
+            --repo-dir lane \
+            --ref "$RADAR_REF" \
+            --head "$RADAR_HEAD" \
+            --base "$RADAR_BASE" \
+            --topology control/architecture/contracts/RADAR_TOPOLOGY_V1.json \
+            --cutover control/architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json \
+            --bootstrap-main "$RADAR_BOOTSTRAP_MAIN"
