@@ -52,7 +52,7 @@ def test_edge_function_accepts_legacy_frontmatter_and_wrapped_scalars_with_evide
     assert "Fabulous Nitpicking Gremlin" in source
 
 
-def test_writer_lane_workflow_is_secretless_and_oidc_scoped():
+def test_writer_lane_workflow_is_secretless_oidc_scoped_and_range_bound():
     workflow = (ROOT / ".github" / "workflows" / "radar-bus-projection.yml").read_text()
     lowered = workflow.lower()
     assert "id-token: write" in lowered
@@ -61,6 +61,8 @@ def test_writer_lane_workflow_is_secretless_and_oidc_scoped():
     assert "scripts/radar_emit_bus_projection.py" in workflow
     assert "radar/live-message-projection-v1" not in workflow
     assert "refs/heads/bus/" not in workflow  # runtime ref comes from github.ref
+    assert "github.event.before" in workflow
+    assert "--base" in workflow
 
 
 def test_current_writer_lanes_have_fail_closed_path_guard():
@@ -70,7 +72,10 @@ def test_current_writer_lanes_have_fail_closed_path_guard():
     assert "python scripts/radar_validate_writer_lane.py" in workflow
     assert "github.ref" in workflow
     assert "github.sha" in workflow
-    assert "fetch-depth: 2" in workflow
+    assert "github.event.before" in workflow
+    assert "--base" in workflow
+    assert "fetch-depth: 0" in workflow
     assert "validate_writer_lane_commit" in script
     assert "RADAR_TOPOLOGY_V1.json" in script
+    assert 'parser.add_argument("--base")' in script
     assert "WRITER_LANE_VALID" in script
