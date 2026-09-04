@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "repository": "thebrazenbeard/chat-communication-bus",
+  "status": "PRE_MERGE_PLANNED",
+  "cutover_main_sha": null,
+  "successor_branches_created": false,
+  "planned_current_writer_lanes": {
+    "brigit": "bus/brigit-v2",
+    "eight": "bus/eight-v2",
+    "five-five": "bus/five-five-v2",
+    "five": "bus/five-v2",
+    "fng": "bus/fng-v2",
+    "four": "bus/four-v2",
+    "hephaestus": "bus/hephaestus-v3",
+    "masa": "bus/masa-v2",
+    "mune": "bus/mune-v2",
+    "nine": "bus/nine-v2",
+    "one": "bus/one-v2",
+    "radar": "bus/radar-v2",
+    "seven": "bus/seven-v2",
+    "six": "bus/six-v2",
+    "thirteen": "bus/thirteen-v2",
+    "three": "bus/three-v2",
+    "two": "bus/two-v2",
+    "vera": "bus/vera-v2",
+    "yang": "bus/yang-v2",
+    "yin": "bus/yin-v2"
+  },
+  "historical_writer_lanes": {
+    "brigit": {"branch": "bus/bridget-v1", "head_sha": null},
+    "eight": {"branch": "bus/eight-v1", "head_sha": null},
+    "five-five": {"branch": "bus/five-five-v1", "head_sha": null},
+    "five": {"branch": "bus/five-v1", "head_sha": null},
+    "fng": {"branch": "bus/fng-v1", "head_sha": null},
+    "four": {"branch": "bus/four-v1", "head_sha": null},
+    "hephaestus": {"branch": "bus/hephaestus-v2", "head_sha": null},
+    "masa": {"branch": "bus/masa-v1", "head_sha": null},
+    "mune": {"branch": "bus/mune-v1", "head_sha": null},
+    "nine": {"branch": "bus/nine-v1", "head_sha": null},
+    "one": {"branch": "bus/one-v1", "head_sha": null},
+    "radar": {"branch": "bus/radar-v1", "head_sha": null},
+    "seven": {"branch": "bus/seven-v1", "head_sha": null},
+    "six": {"branch": "bus/six-v1", "head_sha": null},
+    "thirteen": {"branch": "bus/thirteen-v1", "head_sha": null},
+    "three": {"branch": "bus/three-v1", "head_sha": null},
+    "two": {"branch": "bus/two-v1", "head_sha": null},
+    "vera": {"branch": "bus/vera-sol-v1", "head_sha": null},
+    "yang": {"branch": "bus/yang-v1", "head_sha": null},
+    "yin": {"branch": "bus/yin-v1", "head_sha": null}
+  },
+  "protected_effects": {
+    "merge": false,
+    "provider_cutover": false,
+    "ruleset_change": false
+  },
+  "notes": [
+    "Null SHAs are truthful pre-merge state markers and must not be filled by inference.",
+    "Historical lane heads are snapshotted fresh immediately before an authorized cutover.",
+    "All successor branches must be created from the same exact post-merge canonical main SHA.",
+    "No historical writer lane is renamed, rebased, force-pushed, deleted, or merged merely to perform this migration."
+  ]
+}
