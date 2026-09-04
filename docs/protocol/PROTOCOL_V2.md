@@ -44,6 +44,7 @@ Specific beats general; newer beats stale only within the scope actually authori
 - Source pull requests remain in their source repositories; the routing directive does not move code, review-state authority, or merge authority into the Bus.
 - Bus-local pull requests are already in the hub and need no second duplicate.
 - No required mirror field schema, lifecycle-successor schedule, bootstrap workflow, or default mirror location is implied by the directive. See `COMMUNICATION_HUB_V1.md`.
+- Addressed conversational reciprocity and the exact universal `#ENDTHREAD` closure token are defined separately in `THREAD_CLOSURE_V1.md`; that contract does not expand the singular-hub directive or assignment authority.
 - Writer lanes are append-only for ordinary messages.
 - Writer-local `message_id` values are unique and reserved for actual Bus messages.
 - Recovery checkpoints use the separate `checkpoints/<identity>/` namespace and `checkpoint_id`; see `RECOVERY_CHECKPOINT_NAMESPACE_V1.md`.

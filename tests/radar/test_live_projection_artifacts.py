@@ -54,7 +54,15 @@ def test_edge_function_accepts_legacy_frontmatter_and_wrapped_scalars_with_evide
     assert "Fabulous Nitpicking Gremlin" in source
 
 
-def test_writer_lane_workflow_is_secretless_oidc_scoped_range_bound_and_import_ready():
+def test_edge_function_derives_exact_endthread_sender_closure_without_storing_body():
+    source = (ROOT / "supabase" / "functions" / "github-bus-ingest" / "handler.ts").read_text()
+    assert "conversationClosedBySender" in source
+    assert '"#ENDTHREAD"' in source
+    assert "conversation_closed_by_sender" in source
+    assert "body: body" not in source
+
+
+def test_writer_lane_workflow_is_secretless_and_oidc_scoped():
     workflow = (ROOT / ".github" / "workflows" / "radar-bus-projection.yml").read_text()
     lowered = workflow.lower()
     assert "id-token: write" in lowered
