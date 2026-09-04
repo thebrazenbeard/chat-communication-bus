@@ -5,7 +5,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 import json
 from pathlib import Path
+import re
 import subprocess
+
+
+_WRITER_RE = re.compile(r"(?mi)^writer\s*:\s*(?P<value>.+?)\s*$")
+_ZERO_SHA = "0" * 40
 
 
 class WriterLaneError(ValueError):
@@ -76,31 +81,66 @@ def _git_bytes(repo_dir: Path, *args: str) -> bytes:
         raise WriterLaneError(f"GIT_COMMAND_FAILED:{detail}") from exc
 
 
-def validate_writer_lane_commit(
-    repo_dir: str | Path,
-    ref: str,
-    head: str,
-    topology_path: str | Path,
-) -> str:
-    identity = identity_for_ref(ref, topology_path)
-    repo = Path(repo_dir)
-    if _git(repo, "rev-parse", "HEAD") != head:
-        raise WriterLaneError("BRANCH_HEAD_MISMATCH")
+def _unwrap_scalar(value: str) -> str:
+    text = value.strip()
+    for left, right in (("`", "`"), ('"', '"'), ("'", "'")):
+        if len(text) >= 2 and text.startswith(left) and text.endswith(right):
+            return text[1:-1].strip()
+    return text
 
+
+def _declared_writer(repo_dir: Path, commit: str, path: str) -> str | None:
+    content = _git_bytes(repo_dir, "show", f"{commit}:{path}")
     try:
-        parent = _git(repo, "rev-parse", f"{head}^")
-    except WriterLaneError as exc:
-        raise WriterLaneError("WRITER_LANE_PARENT_REQUIRED") from exc
+        text = content.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise WriterLaneError(f"WRITER_LANE_MESSAGE_NOT_UTF8:{path}") from exc
+    match = _WRITER_RE.search(text)
+    if not match:
+        return None
+    value = _unwrap_scalar(match.group("value"))
+    return value or None
+
+
+def _assert_ancestor(repo_dir: Path, base: str, head: str) -> None:
+    result = subprocess.run(
+        ["git", "-C", str(repo_dir), "merge-base", "--is-ancestor", base, head],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise WriterLaneError("WRITER_LANE_BASE_NOT_ANCESTOR")
+
+
+def _commits_to_validate(repo_dir: Path, head: str, base: str | None) -> list[str]:
+    if not base or base == _ZERO_SHA:
+        try:
+            base = _git(repo_dir, "rev-parse", f"{head}^")
+        except WriterLaneError as exc:
+            raise WriterLaneError("WRITER_LANE_PARENT_REQUIRED") from exc
+    _assert_ancestor(repo_dir, base, head)
+    commits = [line for line in _git(repo_dir, "rev-list", "--reverse", f"{base}..{head}").splitlines() if line]
+    if not commits:
+        raise WriterLaneError("WRITER_LANE_NO_NEW_COMMITS")
+    return commits
+
+
+def _validate_commit_paths(repo_dir: Path, commit: str, expected_writer: str) -> None:
+    parent_line = _git(repo_dir, "rev-list", "--parents", "-n", "1", commit).split()
+    if len(parent_line) != 2:
+        raise WriterLaneError("WRITER_LANE_MERGE_COMMIT_FORBIDDEN")
+    parent = parent_line[1]
 
     raw = _git_bytes(
-        repo,
+        repo_dir,
         "diff-tree",
         "--no-commit-id",
         "--name-status",
         "-r",
         "-z",
         parent,
-        head,
+        commit,
     )
     fields = [value.decode("utf-8") for value in raw.split(b"\0") if value]
     if len(fields) % 2 != 0:
@@ -112,6 +152,30 @@ def validate_writer_lane_commit(
             raise WriterLaneError(f"WRITER_LANE_PATH_FORBIDDEN:{path}")
         if status != "A":
             raise WriterLaneError(f"WRITER_LANE_MESSAGE_NOT_APPEND_ONLY:{path}")
+        declared = _declared_writer(repo_dir, commit, path)
+        if declared is not None and declared.casefold() != expected_writer.casefold():
+            raise WriterLaneError(
+                f"WRITER_LANE_WRITER_MISMATCH:{path}:{declared}:{expected_writer}"
+            )
+
+
+def validate_writer_lane_commit(
+    repo_dir: str | Path,
+    ref: str,
+    head: str,
+    topology_path: str | Path,
+    *,
+    base: str | None = None,
+) -> str:
+    lanes = load_writer_lanes(topology_path)
+    identity = identity_for_ref(ref, topology_path)
+    lane = lanes[identity]
+    repo = Path(repo_dir)
+    if _git(repo, "rev-parse", "HEAD") != head:
+        raise WriterLaneError("BRANCH_HEAD_MISMATCH")
+
+    for commit in _commits_to_validate(repo, head, base):
+        _validate_commit_paths(repo, commit, lane.writer)
 
     return identity
 
