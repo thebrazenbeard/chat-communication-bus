@@ -35,6 +35,7 @@
     "Branch addresses are provenance; logical aliases may normalize without renaming historical branches.",
     "Writer-lane health requires structural mailbox evidence; a matching branch name alone is discovery-only evidence.",
     "No lanes are invented for Ten, Eleven, or Twelve without evidence that those identities are active.",
-    "Brigit remains on bus/bridget-v1 until the duplicate-message-id cutover block recorded in RADAR_WRITER_LANE_V2_CUTOVER.json is reconciled."
+    "required_writer_lanes is the authoritative current write-routing registry. A historical lane may remain readable provenance but does not count as current-route compliance when this registry names a different branch.",
+    "Brigit remains on bus/bridget-v1 as an explicit legacy exception after append-only correction of the duplicate-message-id failure; bus/brigit-v2 remains inert until a separate topology activation."
   ]
 }

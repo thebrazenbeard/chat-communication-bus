@@ -1,10 +1,12 @@
 {
   "schema_version": 1,
   "repository": "thebrazenbeard/chat-communication-bus",
-  "status": "PARTIAL_TOPOLOGY_SWITCH_PROPOSED",
+  "status": "TOPOLOGY_SWITCH_EFFECTIVE_WITH_BRIGIT_LEGACY_EXCEPTION",
   "cutover_main_sha": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+  "topology_switch_merge_sha": "0dc9f821be363c2862309c166ec2eb43b4879b37",
+  "topology_switch_merged_at": "2026-09-04T11:37:28Z",
   "successor_branches_created": true,
-  "topology_switched": false,
+  "topology_switched": true,
   "sequence": [
     "MERGE_SOURCE_READINESS",
     "SNAPSHOT_PREDECESSOR_HEADS",
@@ -15,6 +17,28 @@
   ],
   "planned_current_writer_lanes": {
     "brigit": "bus/brigit-v2",
+    "eight": "bus/eight-v2",
+    "five-five": "bus/five-five-v2",
+    "five": "bus/five-v2",
+    "fng": "bus/fng-v2",
+    "four": "bus/four-v2",
+    "hephaestus": "bus/hephaestus-v3",
+    "masa": "bus/masa-v2",
+    "mune": "bus/mune-v2",
+    "nine": "bus/nine-v2",
+    "one": "bus/one-v2",
+    "radar": "bus/radar-v2",
+    "seven": "bus/seven-v2",
+    "six": "bus/six-v2",
+    "thirteen": "bus/thirteen-v2",
+    "three": "bus/three-v2",
+    "two": "bus/two-v2",
+    "vera": "bus/vera-v2",
+    "yang": "bus/yang-v2",
+    "yin": "bus/yin-v2"
+  },
+  "current_writer_lanes": {
+    "brigit": "bus/bridget-v1",
     "eight": "bus/eight-v2",
     "five-five": "bus/five-five-v2",
     "five": "bus/five-v2",
@@ -79,30 +103,44 @@
     "yang": "b332ca4969b11ac0af3436a33f3c42908356fb88",
     "yin": "b332ca4969b11ac0af3436a33f3c42908356fb88"
   },
-  "blocked_identities": {
+  "blocked_identities": {},
+  "historical_blocks": {
     "brigit": {
-      "current_branch": "bus/bridget-v1",
-      "current_head_sha": "45b964a2f20ff10818496b87ae30a701070d5dd2",
+      "snapshot_current_branch": "bus/bridget-v1",
+      "snapshot_current_head_sha": "45b964a2f20ff10818496b87ae30a701070d5dd2",
       "planned_successor_branch": "bus/brigit-v2",
       "planned_successor_head_sha": "b332ca4969b11ac0af3436a33f3c42908356fb88",
       "reason": "DUPLICATE_NEW_MESSAGE_ID",
       "failed_projection_run_id": 33866555843,
       "correction_requested_message_id": "radar-0039",
-      "topology_switch_allowed": false
+      "resolved": true,
+      "resolved_by_message_id": "brigit-0025"
+    }
+  },
+  "legacy_exceptions": {
+    "brigit": {
+      "current_branch": "bus/bridget-v1",
+      "planned_successor_branch": "bus/brigit-v2",
+      "correction_message_id": "brigit-0025",
+      "correction_commit": "de65639382b310819bc649abf3d12c42d0f23194",
+      "correction_readback_blob": "7f26cbd019238bb4a95b67220e0005c4b8b028b9",
+      "correction_ack_message_id": "brigit-0026",
+      "correction_ack_commit": "ac02fe3e77c0db3da90b1a4105fe69dc30a8e76d",
+      "successor_activation_performed": false
     }
   },
   "protected_effects": {
-    "merge": false,
+    "topology_switch_merge_observed": true,
     "provider_cutover": false,
     "ruleset_change": false
   },
   "notes": [
     "PR #11 source-readiness merged at b332ca4969b11ac0af3436a33f3c42908356fb88.",
     "All twenty planned successor branches were created from and verified at that exact canonical main SHA.",
-    "Eighteen non-Brigit/non-Radar predecessor lanes remained identical to the initial snapshot; Radar advanced by radar-0039, radar-0040, and radar-0041, all append-only messages reflected in its final predecessor head.",
-    "Brigit advanced during the snapshot window with a valid mailbox append whose declared message_id duplicated an existing accepted brigit-0024; the new control failed closed before provider projection.",
-    "This topology-switch proposal therefore moves nineteen clean identities prospectively and deliberately leaves Brigit on bus/bridget-v1 until an append-only correction with a fresh message_id is verified.",
-    "The existence of bus/brigit-v2 does not make it current while Brigit is blocked.",
-    "No provider deployment, routing cutover, ruleset mutation, credential change, predecessor rewrite, rename, rebase, force-push, or deletion is performed by this receipt."
+    "PR #12 merged the 19-lane topology switch at 0dc9f821be363c2862309c166ec2eb43b4879b37 on 2026-09-04T11:37:28Z.",
+    "Current write routing is determined by RADAR_TOPOLOGY_V1.json. A historical lane remains durable provenance but does not count as current-route compliance when topology names a different branch.",
+    "Brigit's duplicate-message-id failure was corrected append-only by brigit-0025 and acknowledged by brigit-0026. No separate Brigit successor activation has been performed, so bus/bridget-v1 remains current and bus/brigit-v2 remains inert.",
+    "The historical predecessor and verified-successor snapshots are retained as cutover evidence and are not live lane-head claims.",
+    "This reconciliation records the already-merged source effect; it performs no provider deployment, routing mutation beyond canonical source review, ruleset mutation, credential change, predecessor rewrite, rename, rebase, force-push, or deletion."
   ]
 }
