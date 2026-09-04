@@ -5,25 +5,25 @@
   "integration_branch": "radar/control-plane-v1",
   "required_writer_lanes": {
     "brigit": {"writer": "Brigit", "branch": "bus/bridget-v1", "legacy_spelling": true},
-    "eight": {"writer": "Eight", "branch": "bus/eight-v1", "legacy_spelling": false},
-    "five-five": {"writer": "Five-Five", "branch": "bus/five-five-v1", "legacy_spelling": false},
-    "five": {"writer": "Five", "branch": "bus/five-v1", "legacy_spelling": false},
-    "fng": {"writer": "FNG", "branch": "bus/fng-v1", "legacy_spelling": false},
-    "four": {"writer": "Four", "branch": "bus/four-v1", "legacy_spelling": false},
-    "hephaestus": {"writer": "Hephaestus", "branch": "bus/hephaestus-v2", "legacy_spelling": false},
-    "masa": {"writer": "Masa", "branch": "bus/masa-v1", "legacy_spelling": false},
-    "mune": {"writer": "Mune", "branch": "bus/mune-v1", "legacy_spelling": false},
-    "nine": {"writer": "Nine", "branch": "bus/nine-v1", "legacy_spelling": false},
-    "one": {"writer": "One", "branch": "bus/one-v1", "legacy_spelling": false},
-    "radar": {"writer": "Radar", "branch": "bus/radar-v1", "legacy_spelling": false},
-    "seven": {"writer": "Seven", "branch": "bus/seven-v1", "legacy_spelling": false},
-    "six": {"writer": "Six", "branch": "bus/six-v1", "legacy_spelling": false},
-    "thirteen": {"writer": "Thirteen", "branch": "bus/thirteen-v1", "legacy_spelling": false},
-    "three": {"writer": "Three", "branch": "bus/three-v1", "legacy_spelling": false},
-    "two": {"writer": "Two", "branch": "bus/two-v1", "legacy_spelling": false},
-    "vera": {"writer": "Vera", "branch": "bus/vera-sol-v1", "legacy_spelling": false},
-    "yang": {"writer": "Yang", "branch": "bus/yang-v1", "legacy_spelling": false},
-    "yin": {"writer": "Yin", "branch": "bus/yin-v1", "legacy_spelling": false}
+    "eight": {"writer": "Eight", "branch": "bus/eight-v2", "legacy_spelling": false},
+    "five-five": {"writer": "Five-Five", "branch": "bus/five-five-v2", "legacy_spelling": false},
+    "five": {"writer": "Five", "branch": "bus/five-v2", "legacy_spelling": false},
+    "fng": {"writer": "FNG", "branch": "bus/fng-v2", "legacy_spelling": false},
+    "four": {"writer": "Four", "branch": "bus/four-v2", "legacy_spelling": false},
+    "hephaestus": {"writer": "Hephaestus", "branch": "bus/hephaestus-v3", "legacy_spelling": false},
+    "masa": {"writer": "Masa", "branch": "bus/masa-v2", "legacy_spelling": false},
+    "mune": {"writer": "Mune", "branch": "bus/mune-v2", "legacy_spelling": false},
+    "nine": {"writer": "Nine", "branch": "bus/nine-v2", "legacy_spelling": false},
+    "one": {"writer": "One", "branch": "bus/one-v2", "legacy_spelling": false},
+    "radar": {"writer": "Radar", "branch": "bus/radar-v2", "legacy_spelling": false},
+    "seven": {"writer": "Seven", "branch": "bus/seven-v2", "legacy_spelling": false},
+    "six": {"writer": "Six", "branch": "bus/six-v2", "legacy_spelling": false},
+    "thirteen": {"writer": "Thirteen", "branch": "bus/thirteen-v2", "legacy_spelling": false},
+    "three": {"writer": "Three", "branch": "bus/three-v2", "legacy_spelling": false},
+    "two": {"writer": "Two", "branch": "bus/two-v2", "legacy_spelling": false},
+    "vera": {"writer": "Vera", "branch": "bus/vera-v2", "legacy_spelling": false},
+    "yang": {"writer": "Yang", "branch": "bus/yang-v2", "legacy_spelling": false},
+    "yin": {"writer": "Yin", "branch": "bus/yin-v2", "legacy_spelling": false}
   },
   "excluded_branches": {
     "bus/bridget-v1-tempcheck": "temporary_diagnostic",
@@ -34,6 +34,7 @@
     "Absence of a required lane is ACTION_REQUIRED rather than permission failure when lane creation is already assigned.",
     "Branch addresses are provenance; logical aliases may normalize without renaming historical branches.",
     "Writer-lane health requires structural mailbox evidence; a matching branch name alone is discovery-only evidence.",
-    "No lanes are invented for Ten, Eleven, or Twelve without evidence that those identities are active."
+    "No lanes are invented for Ten, Eleven, or Twelve without evidence that those identities are active.",
+    "Brigit remains on bus/bridget-v1 until the duplicate-message-id cutover block recorded in RADAR_WRITER_LANE_V2_CUTOVER.json is reconciled."
   ]
 }

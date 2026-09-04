@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "repository": "thebrazenbeard/chat-communication-bus",
-  "status": "PRE_MERGE_PLANNED",
-  "cutover_main_sha": null,
-  "successor_branches_created": false,
+  "status": "PARTIAL_TOPOLOGY_SWITCH_PROPOSED",
+  "cutover_main_sha": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+  "successor_branches_created": true,
   "topology_switched": false,
   "sequence": [
     "MERGE_SOURCE_READINESS",
@@ -36,26 +36,60 @@
     "yin": "bus/yin-v2"
   },
   "historical_writer_lanes": {
-    "brigit": {"branch": "bus/bridget-v1", "head_sha": null},
-    "eight": {"branch": "bus/eight-v1", "head_sha": null},
-    "five-five": {"branch": "bus/five-five-v1", "head_sha": null},
-    "five": {"branch": "bus/five-v1", "head_sha": null},
-    "fng": {"branch": "bus/fng-v1", "head_sha": null},
-    "four": {"branch": "bus/four-v1", "head_sha": null},
-    "hephaestus": {"branch": "bus/hephaestus-v2", "head_sha": null},
-    "masa": {"branch": "bus/masa-v1", "head_sha": null},
-    "mune": {"branch": "bus/mune-v1", "head_sha": null},
-    "nine": {"branch": "bus/nine-v1", "head_sha": null},
-    "one": {"branch": "bus/one-v1", "head_sha": null},
-    "radar": {"branch": "bus/radar-v1", "head_sha": null},
-    "seven": {"branch": "bus/seven-v1", "head_sha": null},
-    "six": {"branch": "bus/six-v1", "head_sha": null},
-    "thirteen": {"branch": "bus/thirteen-v1", "head_sha": null},
-    "three": {"branch": "bus/three-v1", "head_sha": null},
-    "two": {"branch": "bus/two-v1", "head_sha": null},
-    "vera": {"branch": "bus/vera-sol-v1", "head_sha": null},
-    "yang": {"branch": "bus/yang-v1", "head_sha": null},
-    "yin": {"branch": "bus/yin-v1", "head_sha": null}
+    "brigit": {"branch": "bus/bridget-v1", "head_sha": "45b964a2f20ff10818496b87ae30a701070d5dd2"},
+    "eight": {"branch": "bus/eight-v1", "head_sha": "a44b155bea42518e487545f528c3335edb6dbbb9"},
+    "five-five": {"branch": "bus/five-five-v1", "head_sha": "6b8692bf99d7db199245205650cdfc0903820379"},
+    "five": {"branch": "bus/five-v1", "head_sha": "fd68226259a1b470fae41df69f53961d04c97cc7"},
+    "fng": {"branch": "bus/fng-v1", "head_sha": "e2e39892173d8672377eddf5acc2c4f648f769e5"},
+    "four": {"branch": "bus/four-v1", "head_sha": "92ec8ef7c5bc1b1f4052f7f59f71fbdcf6ca9c2d"},
+    "hephaestus": {"branch": "bus/hephaestus-v2", "head_sha": "a46254fd1639d825cbcabbffb8361d700b7d6879"},
+    "masa": {"branch": "bus/masa-v1", "head_sha": "ac12e741286c6a20b1aa3bd35c7c58c0ad86ccb8"},
+    "mune": {"branch": "bus/mune-v1", "head_sha": "bcd6ca910745dfa616147fb88b775a97542d59b1"},
+    "nine": {"branch": "bus/nine-v1", "head_sha": "e7e7570a9923b499b4d6944894a7569101d90ab6"},
+    "one": {"branch": "bus/one-v1", "head_sha": "be98d05ff0d37790706b92bfd6080d96ba1374f4"},
+    "radar": {"branch": "bus/radar-v1", "head_sha": "b25416b3f16d20d1fc1cbe862bf8b0f7d719f724"},
+    "seven": {"branch": "bus/seven-v1", "head_sha": "07afdbad89b97fe03dada4fa855484d062f4caae"},
+    "six": {"branch": "bus/six-v1", "head_sha": "6ffceb2a0e4762f151d1565837bf04af9b04bffc"},
+    "thirteen": {"branch": "bus/thirteen-v1", "head_sha": "d797777dcb841c1e5ecb8212ecef37e12eb3f3a0"},
+    "three": {"branch": "bus/three-v1", "head_sha": "a7eea44f56ad453b91f1125d18f471ec4fbb45e0"},
+    "two": {"branch": "bus/two-v1", "head_sha": "58957bd3c7ba552dd45f60552daafd7b11d55d60"},
+    "vera": {"branch": "bus/vera-sol-v1", "head_sha": "2e00a89b1757e34b9d1bd8ea35d787a9fc795cb8"},
+    "yang": {"branch": "bus/yang-v1", "head_sha": "536b2adbd7841ab7e1ae143acbce77d38c9cf84a"},
+    "yin": {"branch": "bus/yin-v1", "head_sha": "8829aa640ebda277d03534075eefd2d27824ad74"}
+  },
+  "verified_successor_heads": {
+    "brigit": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "eight": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "five-five": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "five": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "fng": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "four": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "hephaestus": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "masa": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "mune": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "nine": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "one": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "radar": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "seven": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "six": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "thirteen": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "three": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "two": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "vera": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "yang": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+    "yin": "b332ca4969b11ac0af3436a33f3c42908356fb88"
+  },
+  "blocked_identities": {
+    "brigit": {
+      "current_branch": "bus/bridget-v1",
+      "current_head_sha": "45b964a2f20ff10818496b87ae30a701070d5dd2",
+      "planned_successor_branch": "bus/brigit-v2",
+      "planned_successor_head_sha": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+      "reason": "DUPLICATE_NEW_MESSAGE_ID",
+      "failed_projection_run_id": 33866555843,
+      "correction_requested_message_id": "radar-0039",
+      "topology_switch_allowed": false
+    }
   },
   "protected_effects": {
     "merge": false,
@@ -63,11 +97,12 @@
     "ruleset_change": false
   },
   "notes": [
-    "Null SHAs are truthful pre-merge state markers and must not be filled by inference.",
-    "Source readiness merges before successor branch creation; canonical topology remains on the current predecessor lanes during that stage.",
-    "Historical/predecessor lane heads are snapshotted fresh immediately before an authorized cutover.",
-    "All successor branches must be created from the same exact post-source-readiness canonical main SHA.",
-    "Successor branches remain inert until verified and a separate topology-switch change is merged.",
-    "No historical writer lane is renamed, rebased, force-pushed, deleted, or merged merely to perform this migration."
+    "PR #11 source-readiness merged at b332ca4969b11ac0af3436a33f3c42908356fb88.",
+    "All twenty planned successor branches were created from and verified at that exact canonical main SHA.",
+    "Eighteen non-Brigit/non-Radar predecessor lanes remained identical to the initial snapshot; Radar advanced by radar-0039, radar-0040, and radar-0041, all append-only messages reflected in its final predecessor head.",
+    "Brigit advanced during the snapshot window with a valid mailbox append whose declared message_id duplicated an existing accepted brigit-0024; the new control failed closed before provider projection.",
+    "This topology-switch proposal therefore moves nineteen clean identities prospectively and deliberately leaves Brigit on bus/bridget-v1 until an append-only correction with a fresh message_id is verified.",
+    "The existence of bus/brigit-v2 does not make it current while Brigit is blocked.",
+    "No provider deployment, routing cutover, ruleset mutation, credential change, predecessor rewrite, rename, rebase, force-push, or deletion is performed by this receipt."
   ]
 }

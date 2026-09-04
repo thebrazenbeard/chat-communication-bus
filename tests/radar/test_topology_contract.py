@@ -17,12 +17,12 @@ def test_topology_has_unique_required_identities_and_current_radar_lane():
     data = _topology()
     lanes = data["required_writer_lanes"]
     assert len(lanes) == len(set(lanes))
-    assert lanes["radar"]["branch"] == "bus/radar-v1"
+    assert lanes["radar"]["branch"] == "bus/radar-v2"
     assert lanes["radar"]["writer"] == "Radar"
     assert data["excluded_branches"]["bus/bridget-v1-tempcheck"] == "temporary_diagnostic"
 
 
-def test_topology_preserves_brigit_legacy_current_branch_until_cutover():
+def test_topology_preserves_brigit_legacy_current_branch_while_duplicate_id_is_blocked():
     data = _topology()
     brigit = data["required_writer_lanes"]["brigit"]
     assert brigit["branch"] == "bus/bridget-v1"
@@ -37,7 +37,8 @@ def test_expected_current_topology_projects_without_missing_lanes():
     projection = project_branches(observed, required_identities=set(lanes))
     assert projection.missing_required == ()
     assert projection.identity_lanes["brigit"] == "bus/bridget-v1"
-    assert projection.identity_lanes["vera"] == "bus/vera-sol-v1"
+    assert projection.identity_lanes["vera"] == "bus/vera-v2"
+    assert projection.identity_lanes["radar"] == "bus/radar-v2"
 
 
 def test_evidence_backed_projection_rejects_named_branch_without_mailbox():
@@ -59,53 +60,46 @@ def test_evidence_backed_projection_rejects_named_branch_without_mailbox():
 
 def test_evidence_backed_projection_accepts_empty_mailbox_with_matching_declared_writer():
     projection = project_branches(
-        ["bus/hephaestus-v2"],
+        ["bus/hephaestus-v3"],
         required_identities={"hephaestus"},
         lane_evidence={
-            "bus/hephaestus-v2": LaneEvidence(
+            "bus/hephaestus-v3": LaneEvidence(
                 has_messages_dir=True,
                 declared_writer="Hephaestus",
                 message_writers=(),
             )
         },
     )
-    assert projection.identity_lanes["hephaestus"] == "bus/hephaestus-v2"
+    assert projection.identity_lanes["hephaestus"] == "bus/hephaestus-v3"
     assert projection.missing_required == ()
     assert projection.malformed_lanes == ()
 
 
 def test_evidence_writer_aliases_resolve_to_logical_identity():
     projection = project_branches(
-        ["bus/bridget-v1", "bus/vera-sol-v1"],
+        ["bus/bridget-v1", "bus/vera-v2"],
         required_identities={"brigit", "vera"},
         lane_evidence={
             "bus/bridget-v1": LaneEvidence(True, "Brigit", ()),
-            "bus/vera-sol-v1": LaneEvidence(True, None, ("Vera-Sol",)),
+            "bus/vera-v2": LaneEvidence(True, "Vera", ()),
         },
     )
     assert projection.identity_lanes["brigit"] == "bus/bridget-v1"
-    assert projection.identity_lanes["vera"] == "bus/vera-sol-v1"
+    assert projection.identity_lanes["vera"] == "bus/vera-v2"
     assert projection.malformed_lanes == ()
 
 
-def test_hephaestus_current_lane_is_v2_and_v1_is_preserved_as_malformed_history():
+def test_hephaestus_current_lane_is_v3_and_older_lanes_are_preserved_history():
     data = _topology()
     hephaestus = data["required_writer_lanes"]["hephaestus"]
-    assert hephaestus["branch"] == "bus/hephaestus-v2"
+    assert hephaestus["branch"] == "bus/hephaestus-v3"
     assert data["excluded_branches"]["bus/hephaestus-v1"] == "malformed_historical_non_mailbox"
 
 
-def test_lane_projection_seed_uses_logical_vera_identity_not_runtime_route_identity():
+def test_lane_projection_seed_remains_historical_bootstrap_not_current_topology_authority():
     seed = (ROOT / "supabase" / "seed" / "radar_bus_lanes_20260902.sql").read_text(encoding="utf-8")
     assert "('vera', 'Vera', 'bus/vera-sol-v1')" in seed
-    assert "('vera-sol', 'Vera / Sol', 'bus/vera-sol-v1')" not in seed
     assert "case when identity_id = 'vera' then array['vera-sol']::text[]" in seed
-
-
-def test_lane_projection_seed_uses_hephaestus_v2_not_malformed_v1():
-    seed = (ROOT / "supabase" / "seed" / "radar_bus_lanes_20260902.sql").read_text(encoding="utf-8")
-    assert "('hephaestus', 'Hephaestus', 'bus/hephaestus-v2')" in seed
-    assert "('hephaestus', 'Hephaestus', 'bus/hephaestus-v1')" not in seed
 
 
 def test_vera_projection_repair_preserves_legacy_provenance_without_delete():

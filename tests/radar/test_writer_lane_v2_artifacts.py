@@ -3,6 +3,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
+CUTOVER_MAIN_SHA = "b332ca4969b11ac0af3436a33f3c42908356fb88"
 
 
 def _topology():
@@ -17,25 +18,29 @@ def _cutover():
     )
 
 
-def test_source_readiness_pr_does_not_switch_current_topology_before_successors_exist():
+def test_topology_switch_proposal_routes_verified_successors_except_blocked_brigit():
     lanes = _topology()["required_writer_lanes"]
-    assert lanes["radar"]["branch"] == "bus/radar-v1"
+    assert lanes["radar"]["branch"] == "bus/radar-v2"
     assert lanes["brigit"]["branch"] == "bus/bridget-v1"
-    assert lanes["one"]["branch"] == "bus/one-v1"
-    assert lanes["hephaestus"]["branch"] == "bus/hephaestus-v2"
-    assert lanes["vera"]["branch"] == "bus/vera-sol-v1"
+    assert lanes["one"]["branch"] == "bus/one-v2"
+    assert lanes["hephaestus"]["branch"] == "bus/hephaestus-v3"
+    assert lanes["vera"]["branch"] == "bus/vera-v2"
 
 
-def test_cutover_contract_covers_current_fleet_without_pretending_it_is_historical_yet():
+def test_cutover_contract_records_verified_successor_fleet_and_predecessor_heads():
     topology = _topology()
     cutover = _cutover()
-    assert cutover["status"] == "PRE_MERGE_PLANNED"
-    assert cutover["cutover_main_sha"] is None
+    assert cutover["status"] == "PARTIAL_TOPOLOGY_SWITCH_PROPOSED"
+    assert cutover["cutover_main_sha"] == CUTOVER_MAIN_SHA
+    assert cutover["successor_branches_created"] is True
+    assert cutover["topology_switched"] is False
     assert set(cutover["historical_writer_lanes"]) == set(topology["required_writer_lanes"])
-    for identity, record in topology["required_writer_lanes"].items():
-        predecessor = cutover["historical_writer_lanes"][identity]
-        assert predecessor["branch"] == record["branch"]
-        assert predecessor["head_sha"] is None
+    assert set(cutover["verified_successor_heads"]) == set(topology["required_writer_lanes"])
+    assert set(cutover["historical_writer_lanes"]) == set(cutover["planned_current_writer_lanes"])
+    for identity, head in cutover["verified_successor_heads"].items():
+        assert head == CUTOVER_MAIN_SHA, identity
+    for identity, predecessor in cutover["historical_writer_lanes"].items():
+        assert predecessor["head_sha"] is not None, identity
     assert cutover["protected_effects"] == {
         "merge": False,
         "provider_cutover": False,
@@ -43,14 +48,22 @@ def test_cutover_contract_covers_current_fleet_without_pretending_it_is_historic
     }
 
 
-def test_cutover_contract_declares_successors_without_claiming_creation_or_switch():
+def test_brigit_block_is_explicit_and_topology_does_not_claim_her_successor_current():
+    topology = _topology()
     cutover = _cutover()
-    assert cutover["planned_current_writer_lanes"]["radar"] == "bus/radar-v2"
+    blocked = cutover["blocked_identities"]["brigit"]
+    assert topology["required_writer_lanes"]["brigit"]["branch"] == "bus/bridget-v1"
+    assert blocked["current_branch"] == "bus/bridget-v1"
+    assert blocked["current_head_sha"] == "45b964a2f20ff10818496b87ae30a701070d5dd2"
+    assert blocked["reason"] == "DUPLICATE_NEW_MESSAGE_ID"
+    assert blocked["failed_projection_run_id"] == 33866555843
+    assert blocked["correction_requested_message_id"] == "radar-0039"
     assert cutover["planned_current_writer_lanes"]["brigit"] == "bus/brigit-v2"
-    assert cutover["planned_current_writer_lanes"]["hephaestus"] == "bus/hephaestus-v3"
-    assert cutover["planned_current_writer_lanes"]["vera"] == "bus/vera-v2"
-    assert cutover["successor_branches_created"] is False
-    assert cutover["topology_switched"] is False
+
+
+def test_cutover_contract_records_latest_radar_predecessor_message_in_final_snapshot():
+    cutover = _cutover()
+    assert cutover["historical_writer_lanes"]["radar"]["head_sha"] == "b25416b3f16d20d1fc1cbe862bf8b0f7d719f724"
 
 
 def test_cutover_sequence_requires_branch_creation_before_topology_switch():
