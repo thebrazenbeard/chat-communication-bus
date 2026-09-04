@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail closed when a current writer-lane commit is not mailbox-only append."""
+"""Fail closed when a current writer-lane push is not mailbox-only append."""
 
 from __future__ import annotations
 
@@ -18,6 +18,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repo-dir", default=".")
     parser.add_argument("--ref", required=True)
     parser.add_argument("--head", required=True)
+    parser.add_argument("--base")
     parser.add_argument("--topology", default=str(DEFAULT_TOPOLOGY))
     args = parser.parse_args(argv)
 
@@ -27,6 +28,7 @@ def main(argv: list[str] | None = None) -> int:
             args.ref,
             args.head,
             args.topology,
+            base=args.base,
         )
     except WriterLaneError as exc:
         print(str(exc))
