@@ -58,6 +58,66 @@ def identity_for_ref(ref: str, topology_path: str | Path) -> str:
     return matches[0]
 
 
+def _planned_successor_map(cutover_path: str | Path) -> dict[str, str]:
+    try:
+        raw = json.loads(Path(cutover_path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise WriterLaneError("WRITER_LANE_CUTOVER_INVALID") from exc
+    planned = raw.get("planned_current_writer_lanes") if isinstance(raw, dict) else None
+    if not isinstance(planned, dict) or not planned:
+        raise WriterLaneError("WRITER_LANE_CUTOVER_PLANNED_MISSING")
+
+    result: dict[str, str] = {}
+    seen: set[str] = set()
+    for identity, branch in planned.items():
+        if not isinstance(identity, str) or not identity or not isinstance(branch, str) or not branch:
+            raise WriterLaneError("WRITER_LANE_CUTOVER_PLANNED_INVALID")
+        if branch in seen:
+            raise WriterLaneError("DUPLICATE_PLANNED_WRITER_LANE_BRANCH")
+        seen.add(branch)
+        result[identity] = branch
+    return result
+
+
+def planned_successor_bootstrap_identity(
+    ref: str,
+    head: str,
+    topology_path: str | Path,
+    *,
+    base: str | None,
+    cutover_path: str | Path | None,
+    bootstrap_main: str | None,
+) -> str | None:
+    """Return a planned successor identity only for its exact creation event.
+
+    A successor is deliberately *not* active until the later topology-switch
+    stage. The sole pre-switch exception is branch creation (zero ``before``
+    SHA) from the exact canonical main commit supplied by the control checkout.
+    """
+    if base != _ZERO_SHA or cutover_path is None:
+        return None
+
+    branch = ref.removeprefix("refs/heads/")
+    planned = _planned_successor_map(cutover_path)
+    matches = [identity for identity, candidate in planned.items() if candidate == branch]
+    if not matches:
+        return None
+    if len(matches) != 1:
+        raise WriterLaneError("DUPLICATE_PLANNED_WRITER_LANE_BRANCH")
+
+    identity = matches[0]
+    lanes = load_writer_lanes(topology_path)
+    if identity not in lanes:
+        raise WriterLaneError("WRITER_LANE_CUTOVER_IDENTITY_UNKNOWN")
+    if lanes[identity].branch == branch:
+        return None
+    if not bootstrap_main:
+        raise WriterLaneError("WRITER_LANE_BOOTSTRAP_MAIN_REQUIRED")
+    if head != bootstrap_main:
+        raise WriterLaneError("WRITER_LANE_BOOTSTRAP_MAIN_MISMATCH")
+    return identity
+
+
 def _git(repo_dir: Path, *args: str) -> str:
     try:
         return subprocess.check_output(
@@ -166,14 +226,27 @@ def validate_writer_lane_commit(
     topology_path: str | Path,
     *,
     base: str | None = None,
+    cutover_path: str | Path | None = None,
+    bootstrap_main: str | None = None,
 ) -> str:
     lanes = load_writer_lanes(topology_path)
-    identity = identity_for_ref(ref, topology_path)
-    lane = lanes[identity]
     repo = Path(repo_dir)
     if _git(repo, "rev-parse", "HEAD") != head:
         raise WriterLaneError("BRANCH_HEAD_MISMATCH")
 
+    bootstrap_identity = planned_successor_bootstrap_identity(
+        ref,
+        head,
+        topology_path,
+        base=base,
+        cutover_path=cutover_path,
+        bootstrap_main=bootstrap_main,
+    )
+    if bootstrap_identity is not None:
+        return bootstrap_identity
+
+    identity = identity_for_ref(ref, topology_path)
+    lane = lanes[identity]
     for commit in _commits_to_validate(repo, head, base):
         _validate_commit_paths(repo, commit, lane.writer)
 
@@ -185,5 +258,6 @@ __all__ = [
     "WriterLaneError",
     "identity_for_ref",
     "load_writer_lanes",
+    "planned_successor_bootstrap_identity",
     "validate_writer_lane_commit",
 ]
