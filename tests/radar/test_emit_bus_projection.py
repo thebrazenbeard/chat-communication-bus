@@ -81,6 +81,20 @@ def test_build_oidc_url_preserves_existing_query_and_sets_audience():
     assert "audience=chat-communication-bus-supabase" in url
 
 
+def test_resolve_base_commit_prefers_explicit_cli_base(tmp_path):
+    emitter = load_emitter()
+    event = tmp_path / "event.json"
+    event.write_text(json.dumps({"before": "b" * 40}), encoding="utf-8")
+    assert emitter.resolve_base_commit("a" * 40, event) == "a" * 40
+
+
+def test_resolve_base_commit_recovers_github_push_before_for_legacy_workflow(tmp_path):
+    emitter = load_emitter()
+    event = tmp_path / "event.json"
+    event.write_text(json.dumps({"before": "b" * 40}), encoding="utf-8")
+    assert emitter.resolve_base_commit(None, event) == "b" * 40
+
+
 def test_collect_batch_carries_git_evidence_raw_bytes_and_lane_identity(tmp_path):
     emitter = load_emitter()
     topology = write_topology(tmp_path)
