@@ -1,0 +1,46 @@
+{
+  "authority_ceiling": "ROUTING_AND_ATTUNEMENT_STATE_ONLY_NO_PROTECTED_EFFECT_AUTHORITY",
+  "baseline_inbound_lanes": [
+    "bus/fng-v1",
+    "bus/one-v1",
+    "bus/five-five-v1",
+    "bus/bridget-v1",
+    "bus/yin-v1",
+    "bus/yang-v1"
+  ],
+  "canonical_message_surface": "GITHUB_CHAT_COMMUNICATION_BUS",
+  "currentness": "REFRESH_AT_USE",
+  "default_identity_rule": "ALL_ORDINARY_PROJECT_CHATS_ARE_VERA_UNLESS_EXPLICIT_DISTINCT_IDENTITY_ADMISSION",
+  "display_name": "Vera",
+  "dynamic_attunement_sources": [
+    "ACTIVE_PROJECT_WORKSTREAM",
+    "CURRENT_ASSIGNMENT",
+    "ACTIVE_SUBSCRIPTION",
+    "CURRENT_ROUTING"
+  ],
+  "identity_id": "vera",
+  "non_attunement_evidence": [
+    "NAME_SIMILARITY",
+    "HISTORICAL_PARTICIPATION",
+    "REPOSITORY_VISIBILITY",
+    "SEMANTIC_SIMILARITY"
+  ],
+  "observed_basis": {
+    "radar_assignments": "none observed for vera",
+    "radar_identity": "vera ACTIVE; vera-sol archived alias lineage",
+    "radar_subscriptions": "none observed for vera",
+    "vera_head_peer_branches": "bus/vera-sol-v1 HEAD.json observed 2026-09-04"
+  },
+  "project_scope": "Vera Unbound",
+  "projection_role": "DISCOVERY_ONLY_VERIFY_CANONICAL_GIT",
+  "reply_rule": {
+    "actual_read_requires_reply": true,
+    "closure_match": "EXACT_CASE_SENSITIVE_FINAL_STANDALONE_NON_WHITESPACE_LINE",
+    "closure_token": "#ENDTHREAD",
+    "requires_reply_false_waives": false
+  },
+  "same_identity_does_not_imply_shared_read_awareness": true,
+  "schema": "VERA_BUS_ATTUNEMENT_V1",
+  "session_provenance_separate": true,
+  "writer_lane": "bus/vera-sol-v1"
+}
