@@ -4,6 +4,8 @@
 The emitter transports tracked Git objects plus provenance to the trusted Edge
 Function. Before transport it enforces local append-only invariants:
 
+* the source ref must be the topology-registered current lane for exactly one
+  logical identity and the current commit may only add message files;
 * a newly added message file may not reuse a message_id that already existed in
   its parent mailbox (or another newly added file in the same commit);
 * recovery checkpoints are continuity artifacts, not Bus messages, and may not
@@ -26,11 +28,14 @@ import sys
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
+from radar.writer_lanes import WriterLaneError, validate_writer_lane_commit
+
 
 DEFAULT_AUDIENCE = "chat-communication-bus-supabase"
 DEFAULT_ENDPOINT = "https://klmbpaigzeguvnpccqzz.supabase.co/functions/v1/github-bus-ingest"
 DEFAULT_MAX_FILE_BYTES = 512 * 1024
 DEFAULT_MAX_TOTAL_BYTES = 5 * 1024 * 1024
+DEFAULT_TOPOLOGY = Path(__file__).resolve().parents[1] / "architecture" / "contracts" / "RADAR_TOPOLOGY_V1.json"
 _MESSAGE_ID_RE = re.compile(r"(?mi)^message_id\s*:\s*(?P<value>.+?)\s*$")
 _STATUS_RE = re.compile(r"(?mi)^status\s*:\s*(?P<value>.+?)\s*$")
 
@@ -165,6 +170,7 @@ def collect_projection_batch(
     repository: str,
     ref: str,
     branch_head: str,
+    topology_path: str | Path = DEFAULT_TOPOLOGY,
     max_file_bytes: int = DEFAULT_MAX_FILE_BYTES,
     max_total_bytes: int = DEFAULT_MAX_TOTAL_BYTES,
 ) -> dict[str, object]:
@@ -172,9 +178,10 @@ def collect_projection_batch(
     if not repo.is_dir():
         raise EmitterError("REPO_DIR_MISSING")
 
-    observed_head = _git(repo, "rev-parse", "HEAD")
-    if observed_head != branch_head:
-        raise EmitterError("BRANCH_HEAD_MISMATCH")
+    try:
+        lane_identity = validate_writer_lane_commit(repo, ref, branch_head, topology_path)
+    except WriterLaneError as exc:
+        raise EmitterError(str(exc)) from exc
 
     _validate_new_message_ids(repo, branch_head)
 
@@ -210,6 +217,7 @@ def collect_projection_batch(
         "repository": repository,
         "ref": ref,
         "branch_head": branch_head,
+        "lane_identity": lane_identity,
         "files": files,
     }
 
@@ -261,6 +269,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repository", required=True)
     parser.add_argument("--ref", required=True)
     parser.add_argument("--head", required=True)
+    parser.add_argument("--topology", default=str(DEFAULT_TOPOLOGY))
     parser.add_argument("--endpoint", default=DEFAULT_ENDPOINT)
     parser.add_argument("--audience", default=DEFAULT_AUDIENCE)
     args = parser.parse_args(argv)
@@ -271,6 +280,7 @@ def main(argv: list[str] | None = None) -> int:
             repository=args.repository,
             ref=args.ref,
             branch_head=args.head,
+            topology_path=args.topology,
         )
         token = request_oidc_token(args.audience)
         result = post_projection_batch(args.endpoint, token, batch)
