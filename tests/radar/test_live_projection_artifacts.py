@@ -1,4 +1,6 @@
 from pathlib import Path
+import subprocess
+import sys
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -64,6 +66,18 @@ def test_writer_lane_workflow_is_secretless_oidc_scoped_range_bound_and_import_r
     assert "refs/heads/bus/" not in workflow  # runtime ref comes from github.ref
     assert "github.event.before" in workflow
     assert "--base" in workflow
+
+
+def test_projection_script_bootstraps_local_src_for_legacy_lane_workflow(tmp_path):
+    script = ROOT / "scripts" / "radar_emit_bus_projection.py"
+    result = subprocess.run(
+        [sys.executable, "-S", str(script), "--help"],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
 
 
 def test_current_writer_lanes_have_fail_closed_path_guard():
