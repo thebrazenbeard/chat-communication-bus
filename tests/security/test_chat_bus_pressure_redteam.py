@@ -8,7 +8,9 @@ import subprocess
 import pytest
 
 from radar.envelope import EnvelopeClassification, RadarEnvelope
-from radar.routing import DedupeWindow, PriorityQueue
+from radar.model import NodeStatus
+from radar.registry import IdentityRegistry
+from radar.routing import DedupeWindow, PriorityQueue, Router
 from radar.writer_lanes import WriterLaneError, validate_writer_lane_commit
 
 
@@ -90,6 +92,24 @@ def envelope(*, priority: int, idempotency_key: str | None = None) -> RadarEnvel
     return result.envelope
 
 
+def routed_envelope(*, audience: list[str], domain: str = "database", priority: int = 3) -> RadarEnvelope:
+    result = RadarEnvelope.from_mapping(
+        {
+            "schema_version": 1,
+            "message_id": "pressure-route-0001",
+            "created_at": "2026-09-04T20:00:00Z",
+            "sender": "radar",
+            "audience": audience,
+            "domain": domain,
+            "intent": "event",
+            "priority": priority,
+            "payload": {"pressure": "routing"},
+        }
+    )
+    assert result.envelope is not None
+    return result.envelope
+
+
 def test_unrecognized_domain_and_intent_fail_closed_at_envelope_boundary():
     result = RadarEnvelope.from_mapping(
         {
@@ -124,6 +144,28 @@ def test_priority_zero_is_not_blocked_by_background_queue_saturation():
     assert queue.pop().priority == 0
 
 
+def test_explicit_audience_cannot_bypass_domain_subscription_authorization():
+    registry = IdentityRegistry()
+    registry.register_identity("one", display_name="One")
+    registry.register_identity("two", display_name="Two")
+    registry.subscribe("one", domain="database", min_priority=4)
+
+    decision = Router(registry).route(routed_envelope(audience=["two"]))
+
+    assert decision.recipients == ()
+
+
+def test_offline_identity_is_not_routed_subscription_traffic():
+    registry = IdentityRegistry()
+    registry.register_identity("one", display_name="One")
+    registry.register_node("one-node", identity_id="one", status=NodeStatus.OFFLINE)
+    registry.subscribe("one", domain="database", min_priority=4)
+
+    decision = Router(registry).route(routed_envelope(audience=[]))
+
+    assert decision.recipients == ()
+
+
 def test_writer_lane_rejects_message_missing_writer_before_projection(tmp_path):
     repo, base = make_lane_repo(tmp_path)
     topology = write_topology(tmp_path)
@@ -144,6 +186,40 @@ def test_writer_lane_rejects_message_missing_message_id_before_projection(tmp_pa
         repo,
         "missing-id.md",
         "# One -> Radar\n\nwriter: One\n\nhello\n",
+    )
+
+    with pytest.raises(WriterLaneError):
+        validate_writer_lane_commit(repo, CURRENT_REF, head, topology, base=base)
+
+
+def test_writer_lane_does_not_accept_writer_marker_hidden_only_in_body(tmp_path):
+    repo, base = make_lane_repo(tmp_path)
+    topology = write_topology(tmp_path)
+    head = commit_message(
+        repo,
+        "body-writer.md",
+        "# One -> Radar\n\n"
+        "message_id: one-pressure-0002\n"
+        "created_at: 2026-09-04T20:00:00Z\n\n"
+        "payload starts here\n"
+        "writer: One\n",
+    )
+
+    with pytest.raises(WriterLaneError):
+        validate_writer_lane_commit(repo, CURRENT_REF, head, topology, base=base)
+
+
+def test_writer_lane_rejects_foreign_identity_message_id_namespace(tmp_path):
+    repo, base = make_lane_repo(tmp_path)
+    topology = write_topology(tmp_path)
+    head = commit_message(
+        repo,
+        "foreign-id.md",
+        "# One -> Radar\n\n"
+        "message_id: radar-pressure-9999\n"
+        "writer: One\n"
+        "created_at: 2026-09-04T20:00:00Z\n\n"
+        "namespace collision attempt\n",
     )
 
     with pytest.raises(WriterLaneError):
@@ -179,6 +255,49 @@ def test_full_mailbox_projection_stays_inside_edge_500_file_limit(tmp_path):
     )
 
     assert len(batch["files"]) <= 500
+
+
+def test_projection_conflict_causes_emitter_nonzero_exit(monkeypatch, tmp_path):
+    emitter = load_emitter()
+    topology = write_topology(tmp_path)
+    cutover = tmp_path / "cutover.json"
+    cutover.write_text(
+        json.dumps({"planned_current_writer_lanes": {"one": "bus/one-v2"}}),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(emitter, "planned_successor_bootstrap_identity", lambda *args, **kwargs: None)
+    monkeypatch.setattr(emitter, "collect_projection_batch", lambda *args, **kwargs: {"files": []})
+    monkeypatch.setattr(emitter, "request_oidc_token", lambda *args, **kwargs: "test-token")
+    monkeypatch.setattr(
+        emitter,
+        "post_projection_batch",
+        lambda *args, **kwargs: {
+            "ok": True,
+            "results": [{"path": "messages/conflict.md", "result": "CONFLICT"}],
+        },
+    )
+
+    exit_code = emitter.main(
+        [
+            "--repo-dir",
+            str(tmp_path),
+            "--repository",
+            "thebrazenbeard/chat-communication-bus",
+            "--ref",
+            CURRENT_REF,
+            "--head",
+            "1" * 40,
+            "--base",
+            "2" * 40,
+            "--topology",
+            str(topology),
+            "--cutover",
+            str(cutover),
+        ]
+    )
+
+    assert exit_code != 0
 
 
 def test_edge_authentication_is_bound_to_trusted_reusable_workflow_not_branch_copy():
