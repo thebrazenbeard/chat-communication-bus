@@ -4,6 +4,9 @@
 The emitter transports tracked Git objects plus provenance to the trusted Edge
 Function. Before transport it enforces local append-only invariants:
 
+* the source ref must be the topology-registered current lane for exactly one
+  logical identity and every commit in the observed push range may only add
+  message files;
 * a newly added message file may not reuse a message_id that already existed in
   its parent mailbox (or another newly added file in the same commit);
 * recovery checkpoints are continuity artifacts, not Bus messages, and may not
@@ -27,10 +30,29 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
 
+# Existing v1 writer-lane workflows execute this script directly from a separate
+# `control/` checkout without installing the package. Prefer the sibling source
+# tree so post-merge control code remains executable during the zero-gap cutover.
+_CONTROL_ROOT = Path(__file__).resolve().parents[1]
+_SRC_ROOT = _CONTROL_ROOT / "src"
+if str(_SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(_SRC_ROOT))
+
+from radar.writer_lanes import (
+    WriterLaneError,
+    planned_successor_bootstrap_identity,
+    validate_writer_lane_commit,
+)
+
+
 DEFAULT_AUDIENCE = "chat-communication-bus-supabase"
 DEFAULT_ENDPOINT = "https://klmbpaigzeguvnpccqzz.supabase.co/functions/v1/github-bus-ingest"
 DEFAULT_MAX_FILE_BYTES = 512 * 1024
 DEFAULT_MAX_TOTAL_BYTES = 5 * 1024 * 1024
+DEFAULT_TOPOLOGY = _CONTROL_ROOT / "architecture" / "contracts" / "RADAR_TOPOLOGY_V1.json"
+DEFAULT_CUTOVER = _CONTROL_ROOT / "architecture" / "contracts" / "RADAR_WRITER_LANE_V2_CUTOVER.json"
+_ZERO_SHA = "0" * 40
+_SHA_RE = re.compile(r"^[0-9a-fA-F]{40}$")
 _MESSAGE_ID_RE = re.compile(r"(?mi)^message_id\s*:\s*(?P<value>.+?)\s*$")
 _STATUS_RE = re.compile(r"(?mi)^status\s*:\s*(?P<value>.+?)\s*$")
 
@@ -67,6 +89,36 @@ def build_oidc_url(base_url: str, audience: str = DEFAULT_AUDIENCE) -> str:
     query = dict(parse_qsl(parts.query, keep_blank_values=True))
     query["audience"] = audience
     return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment))
+
+
+def resolve_base_commit(
+    explicit_base: str | None,
+    event_path: str | Path | None = None,
+) -> str | None:
+    """Resolve the pushed range base, preferring explicit successor-workflow input.
+
+    Historical v1 workflows do not pass ``--base``. On GitHub Actions, recover
+    the same authoritative push ``before`` SHA from ``GITHUB_EVENT_PATH`` so
+    those lanes receive full-range validation during the staged migration.
+    """
+    if explicit_base:
+        return explicit_base
+
+    raw_path = event_path if event_path is not None else os.environ.get("GITHUB_EVENT_PATH")
+    if not raw_path:
+        return None
+
+    try:
+        payload = json.loads(Path(raw_path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise EmitterError("GITHUB_EVENT_INVALID") from exc
+
+    before = payload.get("before") if isinstance(payload, dict) else None
+    if before is None:
+        return None
+    if not isinstance(before, str) or not _SHA_RE.fullmatch(before):
+        raise EmitterError("GITHUB_EVENT_BEFORE_INVALID")
+    return before
 
 
 def _tracked_message_paths(repo_dir: Path) -> list[str]:
@@ -159,12 +211,20 @@ def _validate_new_message_ids(repo_dir: Path, head: str) -> None:
         added_ids.add(message_id)
 
 
+def _push_commits(repo_dir: Path, head: str, base: str | None) -> list[str]:
+    if not base or base == _ZERO_SHA:
+        return [head]
+    return [line for line in _git(repo_dir, "rev-list", "--reverse", f"{base}..{head}").splitlines() if line]
+
+
 def collect_projection_batch(
     repo_dir: str | Path,
     *,
     repository: str,
     ref: str,
     branch_head: str,
+    base_commit: str | None = None,
+    topology_path: str | Path = DEFAULT_TOPOLOGY,
     max_file_bytes: int = DEFAULT_MAX_FILE_BYTES,
     max_total_bytes: int = DEFAULT_MAX_TOTAL_BYTES,
 ) -> dict[str, object]:
@@ -172,11 +232,19 @@ def collect_projection_batch(
     if not repo.is_dir():
         raise EmitterError("REPO_DIR_MISSING")
 
-    observed_head = _git(repo, "rev-parse", "HEAD")
-    if observed_head != branch_head:
-        raise EmitterError("BRANCH_HEAD_MISMATCH")
+    try:
+        lane_identity = validate_writer_lane_commit(
+            repo,
+            ref,
+            branch_head,
+            topology_path,
+            base=base_commit,
+        )
+    except WriterLaneError as exc:
+        raise EmitterError(str(exc)) from exc
 
-    _validate_new_message_ids(repo, branch_head)
+    for commit in _push_commits(repo, branch_head, base_commit):
+        _validate_new_message_ids(repo, commit)
 
     files: list[dict[str, object]] = []
     total = 0
@@ -210,6 +278,7 @@ def collect_projection_batch(
         "repository": repository,
         "ref": ref,
         "branch_head": branch_head,
+        "lane_identity": lane_identity,
         "files": files,
     }
 
@@ -261,16 +330,48 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repository", required=True)
     parser.add_argument("--ref", required=True)
     parser.add_argument("--head", required=True)
+    parser.add_argument("--base")
+    parser.add_argument("--topology", default=str(DEFAULT_TOPOLOGY))
+    parser.add_argument("--cutover", default=str(DEFAULT_CUTOVER))
+    parser.add_argument("--bootstrap-main")
     parser.add_argument("--endpoint", default=DEFAULT_ENDPOINT)
     parser.add_argument("--audience", default=DEFAULT_AUDIENCE)
     args = parser.parse_args(argv)
 
     try:
+        base_commit = resolve_base_commit(args.base)
+        try:
+            bootstrap_identity = planned_successor_bootstrap_identity(
+                args.ref,
+                args.head,
+                args.topology,
+                base=base_commit,
+                cutover_path=args.cutover,
+                bootstrap_main=args.bootstrap_main,
+            )
+        except WriterLaneError as exc:
+            raise EmitterError(str(exc)) from exc
+
+        if bootstrap_identity is not None:
+            print(
+                json.dumps(
+                    {
+                        "status": "PLANNED_SUCCESSOR_BOOTSTRAP_SKIPPED",
+                        "lane_identity": bootstrap_identity,
+                        "branch_head": args.head,
+                    },
+                    sort_keys=True,
+                )
+            )
+            return 0
+
         batch = collect_projection_batch(
             args.repo_dir,
             repository=args.repository,
             ref=args.ref,
             branch_head=args.head,
+            base_commit=base_commit,
+            topology_path=args.topology,
         )
         token = request_oidc_token(args.audience)
         result = post_projection_batch(args.endpoint, token, batch)
