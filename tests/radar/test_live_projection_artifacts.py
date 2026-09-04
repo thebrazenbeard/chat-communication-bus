@@ -66,6 +66,8 @@ def test_writer_lane_workflow_is_secretless_oidc_scoped_range_bound_and_import_r
     assert "refs/heads/bus/" not in workflow  # runtime ref comes from github.ref
     assert "github.event.before" in workflow
     assert "--base" in workflow
+    assert "--cutover" in workflow
+    assert "--bootstrap-main" in workflow
 
 
 def test_projection_script_bootstraps_local_src_for_legacy_lane_workflow(tmp_path):
@@ -80,17 +82,26 @@ def test_projection_script_bootstraps_local_src_for_legacy_lane_workflow(tmp_pat
     assert result.returncode == 0, result.stderr
 
 
-def test_current_writer_lanes_have_fail_closed_path_guard():
+def test_current_writer_lanes_have_fail_closed_path_guard_from_fresh_main_control():
     workflow = (ROOT / ".github" / "workflows" / "writer-lane-guard.yml").read_text()
     script = (ROOT / "scripts" / "radar_validate_writer_lane.py").read_text()
     assert 'branches:\n      - "bus/**"' in workflow
-    assert "python scripts/radar_validate_writer_lane.py" in workflow
+    assert "path: lane" in workflow
+    assert "ref: main" in workflow
+    assert "path: control" in workflow
+    assert "python -m pip install -e control" in workflow
+    assert "python control/scripts/radar_validate_writer_lane.py" in workflow
     assert "github.ref" in workflow
     assert "github.sha" in workflow
     assert "github.event.before" in workflow
     assert "--base" in workflow
+    assert "--cutover" in workflow
+    assert "--bootstrap-main" in workflow
+    assert "git -C control rev-parse HEAD" in workflow
     assert "fetch-depth: 0" in workflow
     assert "validate_writer_lane_commit" in script
     assert "RADAR_TOPOLOGY_V1.json" in script
+    assert "RADAR_WRITER_LANE_V2_CUTOVER.json" in script
     assert 'parser.add_argument("--base")' in script
+    assert 'parser.add_argument("--bootstrap-main")' in script
     assert "WRITER_LANE_VALID" in script
