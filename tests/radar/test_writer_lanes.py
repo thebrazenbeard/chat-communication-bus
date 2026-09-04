@@ -38,6 +38,38 @@ def write_topology(tmp_path: Path) -> Path:
     return path
 
 
+def write_staged_topology_and_cutover(tmp_path: Path) -> tuple[Path, Path]:
+    topology = tmp_path / "staged-topology.json"
+    topology.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "required_writer_lanes": {
+                    "one": {
+                        "writer": "One",
+                        "branch": "bus/one-v1",
+                        "legacy_spelling": False,
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    cutover = tmp_path / "cutover.json"
+    cutover.write_text(
+        json.dumps(
+            {
+                "status": "PRE_MERGE_PLANNED",
+                "successor_branches_created": False,
+                "topology_switched": False,
+                "planned_current_writer_lanes": {"one": "bus/one-v2"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    return topology, cutover
+
+
 def git(repo: Path, *args: str) -> str:
     return subprocess.check_output(["git", "-C", str(repo), *args], text=True).strip()
 
@@ -167,3 +199,54 @@ def test_current_lane_accepts_wrapped_matching_writer(tmp_path):
     repo = make_lane_repo(tmp_path)
     head = commit_file(repo, "messages/0001.md", "message_id: one-0001\nwriter: `One`\n", "wrapped writer")
     assert m.validate_writer_lane_commit(repo, "refs/heads/bus/one-v2", head, topology) == "one"
+
+
+def test_planned_successor_branch_creation_accepts_exact_main_bootstrap_only(tmp_path):
+    m = _writer_lanes()
+    topology, cutover = write_staged_topology_and_cutover(tmp_path)
+    repo = make_lane_repo(tmp_path)
+    head = git(repo, "rev-parse", "HEAD")
+    assert m.validate_writer_lane_commit(
+        repo,
+        "refs/heads/bus/one-v2",
+        head,
+        topology,
+        base="0" * 40,
+        cutover_path=cutover,
+        bootstrap_main=head,
+    ) == "one"
+
+
+def test_planned_successor_bootstrap_rejects_noncanonical_head(tmp_path):
+    m = _writer_lanes()
+    topology, cutover = write_staged_topology_and_cutover(tmp_path)
+    repo = make_lane_repo(tmp_path)
+    head = git(repo, "rev-parse", "HEAD")
+    with pytest.raises(m.WriterLaneError, match="WRITER_LANE_BOOTSTRAP_MAIN_MISMATCH"):
+        m.validate_writer_lane_commit(
+            repo,
+            "refs/heads/bus/one-v2",
+            head,
+            topology,
+            base="0" * 40,
+            cutover_path=cutover,
+            bootstrap_main="f" * 40,
+        )
+
+
+def test_planned_successor_cannot_accept_messages_before_topology_switch(tmp_path):
+    m = _writer_lanes()
+    topology, cutover = write_staged_topology_and_cutover(tmp_path)
+    repo = make_lane_repo(tmp_path)
+    base = git(repo, "rev-parse", "HEAD")
+    head = commit_file(repo, "messages/0001.md", "message_id: one-0001\nwriter: One\n", "too early")
+    with pytest.raises(m.WriterLaneError, match="UNREGISTERED_WRITER_LANE"):
+        m.validate_writer_lane_commit(
+            repo,
+            "refs/heads/bus/one-v2",
+            head,
+            topology,
+            base=base,
+            cutover_path=cutover,
+            bootstrap_main=base,
+        )
