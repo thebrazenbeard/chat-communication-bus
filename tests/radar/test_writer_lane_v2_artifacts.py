@@ -63,7 +63,7 @@ def test_brigit_block_is_explicit_and_topology_does_not_claim_her_successor_curr
 
 def test_cutover_contract_records_latest_radar_predecessor_message_in_final_snapshot():
     cutover = _cutover()
-    assert cutover["historical_writer_lanes"]["radar"]["head_sha"] == "bebe04ea25a4a6f4ee7fb89033cdc1355bd2ac91"
+    assert cutover["historical_writer_lanes"]["radar"]["head_sha"] == "b25416b3f16d20d1fc1cbe862bf8b0f7d719f724"
 
 
 def test_cutover_sequence_requires_branch_creation_before_topology_switch():
