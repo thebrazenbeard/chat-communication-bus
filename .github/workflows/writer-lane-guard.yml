@@ -1,0 +1,34 @@
+name: Writer Lane Guard
+
+on:
+  push:
+    branches:
+      - "bus/**"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-current-lane:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact writer lane
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Radar source package
+        run: python -m pip install -e .
+
+      - name: Validate mailbox-only append
+        run: >-
+          python scripts/radar_validate_writer_lane.py
+          --repo-dir .
+          --ref "${{ github.ref }}"
+          --head "${{ github.sha }}"
