@@ -133,3 +133,37 @@ def test_current_lane_rejects_deleted_existing_message(tmp_path):
     head = git(repo, "rev-parse", "HEAD")
     with pytest.raises(m.WriterLaneError, match="WRITER_LANE_MESSAGE_NOT_APPEND_ONLY:messages/0001.md"):
         m.validate_writer_lane_commit(repo, "refs/heads/bus/one-v2", head, topology)
+
+
+def test_multi_commit_push_rejects_earlier_shared_change_even_if_head_is_message(tmp_path):
+    m = _writer_lanes()
+    topology = write_topology(tmp_path)
+    repo = make_lane_repo(tmp_path)
+    base = git(repo, "rev-parse", "HEAD")
+    commit_file(repo, "README.md", "forbidden intermediate change\n", "bad intermediate")
+    head = commit_file(repo, "messages/0001.md", "message_id: one-0001\nwriter: One\n", "clean-looking head")
+    with pytest.raises(m.WriterLaneError, match="WRITER_LANE_PATH_FORBIDDEN:README.md"):
+        m.validate_writer_lane_commit(
+            repo,
+            "refs/heads/bus/one-v2",
+            head,
+            topology,
+            base=base,
+        )
+
+
+def test_current_lane_rejects_declared_writer_mismatch(tmp_path):
+    m = _writer_lanes()
+    topology = write_topology(tmp_path)
+    repo = make_lane_repo(tmp_path)
+    head = commit_file(repo, "messages/0001.md", "message_id: one-0001\nwriter: Two\n", "spoofed writer")
+    with pytest.raises(m.WriterLaneError, match="WRITER_LANE_WRITER_MISMATCH:messages/0001.md"):
+        m.validate_writer_lane_commit(repo, "refs/heads/bus/one-v2", head, topology)
+
+
+def test_current_lane_accepts_wrapped_matching_writer(tmp_path):
+    m = _writer_lanes()
+    topology = write_topology(tmp_path)
+    repo = make_lane_repo(tmp_path)
+    head = commit_file(repo, "messages/0001.md", "message_id: one-0001\nwriter: `One`\n", "wrapped writer")
+    assert m.validate_writer_lane_commit(repo, "refs/heads/bus/one-v2", head, topology) == "one"
