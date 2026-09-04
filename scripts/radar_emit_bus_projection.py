@@ -38,7 +38,11 @@ _SRC_ROOT = _CONTROL_ROOT / "src"
 if str(_SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(_SRC_ROOT))
 
-from radar.writer_lanes import WriterLaneError, validate_writer_lane_commit
+from radar.writer_lanes import (
+    WriterLaneError,
+    planned_successor_bootstrap_identity,
+    validate_writer_lane_commit,
+)
 
 
 DEFAULT_AUDIENCE = "chat-communication-bus-supabase"
@@ -46,6 +50,7 @@ DEFAULT_ENDPOINT = "https://klmbpaigzeguvnpccqzz.supabase.co/functions/v1/github
 DEFAULT_MAX_FILE_BYTES = 512 * 1024
 DEFAULT_MAX_TOTAL_BYTES = 5 * 1024 * 1024
 DEFAULT_TOPOLOGY = _CONTROL_ROOT / "architecture" / "contracts" / "RADAR_TOPOLOGY_V1.json"
+DEFAULT_CUTOVER = _CONTROL_ROOT / "architecture" / "contracts" / "RADAR_WRITER_LANE_V2_CUTOVER.json"
 _ZERO_SHA = "0" * 40
 _SHA_RE = re.compile(r"^[0-9a-fA-F]{40}$")
 _MESSAGE_ID_RE = re.compile(r"(?mi)^message_id\s*:\s*(?P<value>.+?)\s*$")
@@ -327,12 +332,39 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--head", required=True)
     parser.add_argument("--base")
     parser.add_argument("--topology", default=str(DEFAULT_TOPOLOGY))
+    parser.add_argument("--cutover", default=str(DEFAULT_CUTOVER))
+    parser.add_argument("--bootstrap-main")
     parser.add_argument("--endpoint", default=DEFAULT_ENDPOINT)
     parser.add_argument("--audience", default=DEFAULT_AUDIENCE)
     args = parser.parse_args(argv)
 
     try:
         base_commit = resolve_base_commit(args.base)
+        try:
+            bootstrap_identity = planned_successor_bootstrap_identity(
+                args.ref,
+                args.head,
+                args.topology,
+                base=base_commit,
+                cutover_path=args.cutover,
+                bootstrap_main=args.bootstrap_main,
+            )
+        except WriterLaneError as exc:
+            raise EmitterError(str(exc)) from exc
+
+        if bootstrap_identity is not None:
+            print(
+                json.dumps(
+                    {
+                        "status": "PLANNED_SUCCESSOR_BOOTSTRAP_SKIPPED",
+                        "lane_identity": bootstrap_identity,
+                        "branch_head": args.head,
+                    },
+                    sort_keys=True,
+                )
+            )
+            return 0
+
         batch = collect_projection_batch(
             args.repo_dir,
             repository=args.repository,
