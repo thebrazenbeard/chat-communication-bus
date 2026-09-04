@@ -61,3 +61,16 @@ def test_writer_lane_workflow_is_secretless_and_oidc_scoped():
     assert "scripts/radar_emit_bus_projection.py" in workflow
     assert "radar/live-message-projection-v1" not in workflow
     assert "refs/heads/bus/" not in workflow  # runtime ref comes from github.ref
+
+
+def test_current_writer_lanes_have_fail_closed_path_guard():
+    workflow = (ROOT / ".github" / "workflows" / "writer-lane-guard.yml").read_text()
+    script = (ROOT / "scripts" / "radar_validate_writer_lane.py").read_text()
+    assert 'branches:\n      - "bus/**"' in workflow
+    assert "python scripts/radar_validate_writer_lane.py" in workflow
+    assert "github.ref" in workflow
+    assert "github.sha" in workflow
+    assert "fetch-depth: 2" in workflow
+    assert "validate_writer_lane_commit" in script
+    assert "RADAR_TOPOLOGY_V1.json" in script
+    assert "WRITER_LANE_VALID" in script
