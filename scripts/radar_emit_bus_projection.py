@@ -29,6 +29,15 @@ import sys
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
+
+# Existing v1 writer-lane workflows execute this script directly from a separate
+# `control/` checkout without installing the package. Prefer the sibling source
+# tree so post-merge control code remains executable during the zero-gap cutover.
+_CONTROL_ROOT = Path(__file__).resolve().parents[1]
+_SRC_ROOT = _CONTROL_ROOT / "src"
+if str(_SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(_SRC_ROOT))
+
 from radar.writer_lanes import WriterLaneError, validate_writer_lane_commit
 
 
@@ -36,7 +45,7 @@ DEFAULT_AUDIENCE = "chat-communication-bus-supabase"
 DEFAULT_ENDPOINT = "https://klmbpaigzeguvnpccqzz.supabase.co/functions/v1/github-bus-ingest"
 DEFAULT_MAX_FILE_BYTES = 512 * 1024
 DEFAULT_MAX_TOTAL_BYTES = 5 * 1024 * 1024
-DEFAULT_TOPOLOGY = Path(__file__).resolve().parents[1] / "architecture" / "contracts" / "RADAR_TOPOLOGY_V1.json"
+DEFAULT_TOPOLOGY = _CONTROL_ROOT / "architecture" / "contracts" / "RADAR_TOPOLOGY_V1.json"
 _ZERO_SHA = "0" * 40
 _MESSAGE_ID_RE = re.compile(r"(?mi)^message_id\s*:\s*(?P<value>.+?)\s*$")
 _STATUS_RE = re.compile(r"(?mi)^status\s*:\s*(?P<value>.+?)\s*$")
