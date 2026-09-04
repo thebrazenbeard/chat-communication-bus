@@ -13,7 +13,7 @@ def _topology():
     )
 
 
-def test_topology_has_unique_required_identities_and_radar_lane():
+def test_topology_has_unique_required_identities_and_current_radar_lane():
     data = _topology()
     lanes = data["required_writer_lanes"]
     assert len(lanes) == len(set(lanes))
@@ -22,7 +22,7 @@ def test_topology_has_unique_required_identities_and_radar_lane():
     assert data["excluded_branches"]["bus/bridget-v1-tempcheck"] == "temporary_diagnostic"
 
 
-def test_topology_preserves_brigit_legacy_branch_without_second_identity():
+def test_topology_preserves_brigit_legacy_current_branch_until_cutover():
     data = _topology()
     brigit = data["required_writer_lanes"]["brigit"]
     assert brigit["branch"] == "bus/bridget-v1"
@@ -30,7 +30,7 @@ def test_topology_preserves_brigit_legacy_branch_without_second_identity():
     assert "bridget" not in data["required_writer_lanes"]
 
 
-def test_expected_topology_projects_without_missing_lanes():
+def test_expected_current_topology_projects_without_missing_lanes():
     data = _topology()
     lanes = data["required_writer_lanes"]
     observed = [entry["branch"] for entry in lanes.values()]
@@ -88,9 +88,10 @@ def test_evidence_writer_aliases_resolve_to_logical_identity():
     assert projection.malformed_lanes == ()
 
 
-def test_hephaestus_canonical_lane_is_v2_and_v1_is_preserved_as_malformed_history():
+def test_hephaestus_current_lane_is_v2_and_v1_is_preserved_as_malformed_history():
     data = _topology()
-    assert data["required_writer_lanes"]["hephaestus"]["branch"] == "bus/hephaestus-v2"
+    hephaestus = data["required_writer_lanes"]["hephaestus"]
+    assert hephaestus["branch"] == "bus/hephaestus-v2"
     assert data["excluded_branches"]["bus/hephaestus-v1"] == "malformed_historical_non_mailbox"
 
 
