@@ -44,6 +44,38 @@ def write_topology(tmp_path: Path) -> Path:
     return path
 
 
+def write_staged_topology_and_cutover(tmp_path: Path) -> tuple[Path, Path]:
+    topology = tmp_path / "staged-topology.json"
+    topology.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "required_writer_lanes": {
+                    "one": {
+                        "writer": "One",
+                        "branch": "bus/one-v1",
+                        "legacy_spelling": False,
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    cutover = tmp_path / "cutover.json"
+    cutover.write_text(
+        json.dumps(
+            {
+                "status": "PRE_MERGE_PLANNED",
+                "successor_branches_created": False,
+                "topology_switched": False,
+                "planned_current_writer_lanes": {"one": "bus/one-v2"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    return topology, cutover
+
+
 def make_repo(tmp_path: Path) -> tuple[Path, str, bytes]:
     repo = tmp_path / "lane"
     repo.mkdir()
@@ -93,6 +125,34 @@ def test_resolve_base_commit_recovers_github_push_before_for_legacy_workflow(tmp
     event = tmp_path / "event.json"
     event.write_text(json.dumps({"before": "b" * 40}), encoding="utf-8")
     assert emitter.resolve_base_commit(None, event) == "b" * 40
+
+
+def test_planned_successor_bootstrap_skips_provider_projection(tmp_path, capsys):
+    emitter = load_emitter()
+    topology, cutover = write_staged_topology_and_cutover(tmp_path)
+    repo, head, _ = make_repo(tmp_path)
+    rc = emitter.main(
+        [
+            "--repo-dir",
+            str(repo),
+            "--repository",
+            "thebrazenbeard/chat-communication-bus",
+            "--ref",
+            CURRENT_REF,
+            "--head",
+            head,
+            "--base",
+            "0" * 40,
+            "--topology",
+            str(topology),
+            "--cutover",
+            str(cutover),
+            "--bootstrap-main",
+            head,
+        ]
+    )
+    assert rc == 0
+    assert "PLANNED_SUCCESSOR_BOOTSTRAP_SKIPPED" in capsys.readouterr().out
 
 
 def test_collect_batch_carries_git_evidence_raw_bytes_and_lane_identity(tmp_path):
