@@ -40,9 +40,11 @@ jobs:
           RADAR_REPOSITORY: ${{ github.repository }}
           RADAR_REF: ${{ github.ref }}
           RADAR_HEAD: ${{ github.sha }}
+          RADAR_BASE: ${{ github.event.before }}
         run: |
           python control/scripts/radar_emit_bus_projection.py \
             --repo-dir lane \
             --repository "$RADAR_REPOSITORY" \
             --ref "$RADAR_REF" \
-            --head "$RADAR_HEAD"
+            --head "$RADAR_HEAD" \
+            --base "$RADAR_BASE"
