@@ -1,5 +1,6 @@
 import base64
 import importlib.util
+import json
 import subprocess
 from pathlib import Path
 
@@ -36,6 +37,26 @@ def make_repo(tmp_path: Path) -> tuple[Path, str, bytes]:
     subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "seed"])
     head = git(repo, "rev-parse", "HEAD")
     return repo, head, content
+
+
+def write_topology(tmp_path: Path) -> Path:
+    path = tmp_path / "topology.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "required_writer_lanes": {
+                    "one": {
+                        "writer": "One",
+                        "branch": "bus/one-v2",
+                        "legacy_spelling": False,
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    return path
 
 
 def test_build_oidc_url_preserves_existing_query_and_sets_audience():
@@ -166,4 +187,40 @@ def test_collect_batch_enforces_total_limit(tmp_path):
             ref="refs/heads/bus/one-v1",
             branch_head=head,
             max_total_bytes=len(content) - 1,
+        )
+
+
+def test_collect_batch_carries_topology_derived_lane_identity(tmp_path):
+    emitter = load_emitter()
+    repo, _, _ = make_repo(tmp_path)
+    content = b"# One -> Radar\n\nmessage_id: one-10000\nwriter: One\ncreated_at: 2026-09-03T20:00:00Z\n\nnext\n"
+    (repo / "messages" / "0002.md").write_bytes(content)
+    subprocess.check_call(["git", "-C", str(repo), "add", "messages/0002.md"])
+    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "message"])
+    head = git(repo, "rev-parse", "HEAD")
+    batch = emitter.collect_projection_batch(
+        repo,
+        repository="thebrazenbeard/chat-communication-bus",
+        ref="refs/heads/bus/one-v2",
+        branch_head=head,
+        topology_path=write_topology(tmp_path),
+    )
+    assert batch["lane_identity"] == "one"
+
+
+def test_collect_batch_rejects_unregistered_lookalike_lane(tmp_path):
+    emitter = load_emitter()
+    repo, _, _ = make_repo(tmp_path)
+    content = b"# One -> Radar\n\nmessage_id: one-10000\nwriter: One\ncreated_at: 2026-09-03T20:00:00Z\n\nnext\n"
+    (repo / "messages" / "0002.md").write_bytes(content)
+    subprocess.check_call(["git", "-C", str(repo), "add", "messages/0002.md"])
+    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "message"])
+    head = git(repo, "rev-parse", "HEAD")
+    with pytest.raises(emitter.EmitterError, match="UNREGISTERED_WRITER_LANE"):
+        emitter.collect_projection_batch(
+            repo,
+            repository="thebrazenbeard/chat-communication-bus",
+            ref="refs/heads/bus/one-v2-lookalike",
+            branch_head=head,
+            topology_path=write_topology(tmp_path),
         )
