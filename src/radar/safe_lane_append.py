@@ -1,9 +1,9 @@
 """Topology-bound, exact-head Git append primitive for Radar writer lanes.
 
-The module is deliberately transport-neutral.  Concrete runtimes inject three
-small sources/backends: canonical control state, complete identity history, and
-Git object/ref operations.  The public append operation itself accepts only the
-logical identity, exact expected current-lane head, and exact message bytes.
+Concrete runtimes inject canonical control state, complete cross-generation
+identity history, and Git object/ref operations.  The public append operation
+itself accepts only logical identity, exact expected current-lane head, and
+exact message bytes/text.
 """
 
 from __future__ import annotations
@@ -17,6 +17,11 @@ from typing import Mapping, Protocol
 _SHA40_RE = re.compile(r"^[0-9a-fA-F]{40}$")
 _IDENTITY_RE = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
 _MESSAGE_ID_RE = re.compile(r"^[a-z0-9][a-z0-9_-]*-[A-Za-z0-9][A-Za-z0-9._-]*$")
+
+_PREWRITE_RETRY = "REFRESH_OR_CORRECT_INPUT"
+_OBJECT_RETRY = "RECONCILE_THEN_RETRY"
+_REF_RETRY = "RECONCILE_EFFECT_FIRST"
+_READBACK_RETRY = "RECONCILE_EFFECT_FIRST"
 
 
 @dataclass(frozen=True)
@@ -146,12 +151,6 @@ class _ParsedMessage:
     prev_message_id: str | None
 
 
-_PREWRITE_RETRY = "REFRESH_OR_CORRECT_INPUT"
-_OBJECT_RETRY = "RECONCILE_THEN_RETRY"
-_REF_RETRY = "RECONCILE_EFFECT_FIRST"
-_READBACK_RETRY = "RECONCILE_EFFECT_FIRST"
-
-
 def _error(
     code: str,
     *,
@@ -181,7 +180,7 @@ def _as_exact_utf8(message_utf8: str | bytes) -> tuple[str, bytes]:
 
 
 def _parse_message(text: str) -> _ParsedMessage:
-    """Parse the Bus header block without rewriting or normalizing source bytes."""
+    """Parse the metadata block while preserving submitted bytes unchanged."""
 
     wanted = {"message_id", "writer", "prev_message_id"}
     values: dict[str, str] = {}
@@ -200,22 +199,30 @@ def _parse_message(text: str) -> _ParsedMessage:
             if not line.strip():
                 break
             if ":" not in line:
-                raise _error("MESSAGE_ENVELOPE_INVALID", detail="non-header line inside header block")
+                raise _error(
+                    "MESSAGE_ENVELOPE_INVALID",
+                    detail="non-header line inside header block",
+                )
             key, value = line.split(":", 1)
             key = key.strip().casefold()
             if key not in wanted:
-                # Other Bus metadata headers are allowed and left byte-exact.
                 continue
 
         value = value.strip()
         if key in values:
-            raise _error("MESSAGE_ENVELOPE_INVALID", detail=f"duplicate {key} header")
+            raise _error(
+                "MESSAGE_ENVELOPE_INVALID",
+                detail=f"duplicate {key} header",
+            )
         values[key] = value
 
     message_id = values.get("message_id")
     writer = values.get("writer")
     if not message_id:
-        raise _error("MESSAGE_ENVELOPE_INVALID", detail="message_id header missing")
+        raise _error(
+            "MESSAGE_ENVELOPE_INVALID",
+            detail="message_id header missing",
+        )
     if not writer:
         raise _error("WRITER_MISSING")
 
@@ -233,7 +240,10 @@ def _validate_identity(identity: str) -> str:
 
 
 def _validate_expected_head(expected_lane_head: str) -> str:
-    if not isinstance(expected_lane_head, str) or not _SHA40_RE.fullmatch(expected_lane_head):
+    if (
+        not isinstance(expected_lane_head, str)
+        or not _SHA40_RE.fullmatch(expected_lane_head)
+    ):
         raise _error("EXPECTED_HEAD_INVALID")
     return expected_lane_head.lower()
 
@@ -242,13 +252,23 @@ def _validate_message_id(identity: str, message_id: str) -> None:
     if not _MESSAGE_ID_RE.fullmatch(message_id):
         raise _error("MESSAGE_ID_INVALID")
     if not message_id.startswith(f"{identity}-"):
-        raise _error("MESSAGE_ID_INVALID", detail="message id is not writer-local to logical identity")
+        raise _error(
+            "MESSAGE_ID_INVALID",
+            detail="message id is not writer-local to logical identity",
+        )
 
 
-def _same_binding(a: ControlSnapshot, b: ControlSnapshot, identity: str) -> bool:
-    if a.repository != b.repository or a.topology_digest != b.topology_digest:
+def _same_binding(
+    first: ControlSnapshot,
+    second: ControlSnapshot,
+    identity: str,
+) -> bool:
+    if (
+        first.repository != second.repository
+        or first.topology_digest != second.topology_digest
+    ):
         return False
-    return a.lanes.get(identity) == b.lanes.get(identity)
+    return first.lanes.get(identity) == second.lanes.get(identity)
 
 
 class SafeLaneAppender:
@@ -277,15 +297,12 @@ class SafeLaneAppender:
         parsed = _parse_message(text)
         _validate_message_id(identity, parsed.message_id)
         message_digest = sha256(message_bytes).hexdigest()
-        operation_key = f"radar-safe-append-v1:{identity}:{parsed.message_id}:{message_digest}"
+        operation_key = (
+            f"radar-safe-append-v1:{identity}:"
+            f"{parsed.message_id}:{message_digest}"
+        )
 
-        try:
-            control = self._control.read()
-        except Exception as exc:
-            if isinstance(exc, SafeAppendError):
-                raise
-            raise _error("TOPOLOGY_UNAVAILABLE", detail=str(exc)) from exc
-
+        control = self._read_control_preflight()
         binding = control.lanes.get(identity)
         if binding is None:
             raise _error("IDENTITY_UNKNOWN")
@@ -301,18 +318,17 @@ class SafeLaneAppender:
         if observed_head is None:
             raise _error("LANE_MISSING_BOOTSTRAP_REQUIRED")
 
-        try:
-            history = self._history.read_identity(identity)
-        except Exception as exc:
-            if isinstance(exc, SafeAppendError):
-                raise
-            raise _error("MESSAGE_ID_HISTORY_UNRESOLVED", detail=str(exc)) from exc
-        if not history.complete:
-            raise _error("MESSAGE_ID_HISTORY_UNRESOLVED")
-
-        duplicates = [item for item in history.messages if item.message_id == parsed.message_id]
+        history = self._read_history(identity)
+        duplicates = [
+            item
+            for item in history.messages
+            if item.message_id == parsed.message_id
+        ]
         if duplicates:
-            if len(duplicates) != 1 or duplicates[0].message_sha256 != message_digest:
+            if (
+                len(duplicates) != 1
+                or duplicates[0].message_sha256 != message_digest
+            ):
                 raise _error("MESSAGE_ID_COLLISION")
             return self._reconstruct_existing(
                 control=control,
@@ -329,127 +345,35 @@ class SafeLaneAppender:
         if observed_head.lower() != expected_head:
             raise _error("STALE_LANE_HEAD")
 
-        if len(history.tip_message_ids) > 1:
-            raise _error("PREDECESSOR_UNRESOLVED")
-        if history.messages and len(history.tip_message_ids) != 1:
-            raise _error("PREDECESSOR_UNRESOLVED")
-        if history.tip_message_ids:
-            expected_prev = history.tip_message_ids[0]
-            if parsed.prev_message_id is None:
-                raise _error("PREDECESSOR_MISSING")
-            if parsed.prev_message_id != expected_prev:
-                raise _error("PREDECESSOR_MISMATCH")
-        elif parsed.prev_message_id is not None:
-            # A source-backed genesis has no predecessor; caller cannot invent one.
-            raise _error("PREDECESSOR_MISMATCH")
-
+        self._validate_predecessor(history, parsed)
         path = f"messages/{parsed.message_id}.md"
         try:
-            preexisting_path = self._git.read_file_at_commit(expected_head, path)
+            preexisting_path = self._git.read_file_at_commit(
+                expected_head,
+                path,
+            )
         except Exception as exc:
             raise _error("MESSAGE_PATH_COLLISION", detail=str(exc)) from exc
         if preexisting_path is not None:
             raise _error("MESSAGE_PATH_COLLISION")
 
-        try:
-            blob_sha = self._git.create_blob(message_bytes)
-        except Exception as exc:
-            raise _error(
-                "BLOB_CREATE_FAILED",
-                phase="OBJECT_CONSTRUCTION",
-                retry_class=_OBJECT_RETRY,
-                detail=str(exc),
-            ) from exc
-        try:
-            tree_sha = self._git.create_tree(expected_head, path, blob_sha)
-        except Exception as exc:
-            raise _error(
-                "TREE_CREATE_FAILED",
-                phase="OBJECT_CONSTRUCTION",
-                retry_class=_OBJECT_RETRY,
-                detail=str(exc),
-            ) from exc
-        try:
-            candidate_sha = self._git.create_commit(
-                f"bus: append {parsed.message_id}",
-                tree_sha,
-                expected_head,
-            )
-        except Exception as exc:
-            raise _error(
-                "COMMIT_CREATE_FAILED",
-                phase="OBJECT_CONSTRUCTION",
-                retry_class=_OBJECT_RETRY,
-                detail=str(exc),
-            ) from exc
+        blob_sha = self._create_blob(message_bytes)
+        tree_sha = self._create_tree(expected_head, path, blob_sha)
+        candidate_sha = self._create_commit(
+            parsed.message_id,
+            tree_sha,
+            expected_head,
+        )
 
-        try:
-            rebound = self._control.read()
-        except Exception as exc:
-            raise _error("TOPOLOGY_CHANGED_DURING_APPEND", detail=str(exc)) from exc
+        rebound = self._read_control_before_ref()
         if not _same_binding(control, rebound, identity):
             raise _error("TOPOLOGY_CHANGED_DURING_APPEND")
 
-        update_error: Exception | None = None
-        try:
-            moved = self._git.update_ref_non_force(binding.branch, candidate_sha)
-        except Exception as exc:  # ambiguous transport outcome: reconcile first
-            moved = False
-            update_error = exc
-
-        try:
-            after_update_head = self._git.read_branch_head(binding.branch)
-        except Exception as exc:
-            raise _error(
-                "WRITE_OUTCOME_UNKNOWN",
-                phase="REF_TRANSITION",
-                retry_class=_REF_RETRY,
-                effect_state="UNKNOWN",
-                detail=str(exc),
-            ) from exc
-
-        if update_error is not None:
-            if after_update_head != candidate_sha:
-                reachability = self._candidate_reachability(candidate_sha, after_update_head)
-                if reachability is True:
-                    raise _error(
-                        "POSTWRITE_HEAD_MISMATCH",
-                        phase="READBACK",
-                        retry_class=_READBACK_RETRY,
-                        effect_state="PRESENT_UNVERIFIED",
-                        detail="candidate became reachable but is no longer lane head",
-                    ) from update_error
-                if reachability is False and after_update_head != expected_head:
-                    raise _error(
-                        "REF_UPDATE_STALE",
-                        phase="REF_TRANSITION",
-                        retry_class=_REF_RETRY,
-                        effect_state="NONE_ESTABLISHED",
-                    ) from update_error
-                raise _error(
-                    "WRITE_OUTCOME_UNKNOWN",
-                    phase="REF_TRANSITION",
-                    retry_class=_REF_RETRY,
-                    effect_state="UNKNOWN",
-                    detail=str(update_error),
-                ) from update_error
-        elif not moved:
-            if after_update_head == candidate_sha:
-                moved = True
-            elif after_update_head != expected_head:
-                raise _error(
-                    "REF_UPDATE_STALE",
-                    phase="REF_TRANSITION",
-                    retry_class=_REF_RETRY,
-                    effect_state="NONE_ESTABLISHED",
-                )
-            else:
-                raise _error(
-                    "REF_UPDATE_REJECTED",
-                    phase="REF_TRANSITION",
-                    retry_class=_REF_RETRY,
-                    effect_state="NONE_ESTABLISHED",
-                )
+        self._move_ref_or_reconcile(
+            binding.branch,
+            candidate_sha,
+            expected_head,
+        )
 
         return self._verify_new_append(
             control=control,
@@ -466,7 +390,197 @@ class SafeLaneAppender:
             operation_key=operation_key,
         )
 
-    def _candidate_reachability(self, candidate_sha: str, head_sha: str | None) -> bool | None:
+    def _read_control_preflight(self) -> ControlSnapshot:
+        try:
+            return self._control.read()
+        except Exception as exc:
+            if isinstance(exc, SafeAppendError):
+                raise
+            raise _error("TOPOLOGY_UNAVAILABLE", detail=str(exc)) from exc
+
+    def _read_control_before_ref(self) -> ControlSnapshot:
+        try:
+            return self._control.read()
+        except Exception as exc:
+            raise _error(
+                "TOPOLOGY_CHANGED_DURING_APPEND",
+                detail=str(exc),
+            ) from exc
+
+    def _read_control_after_verified_effect(self) -> ControlSnapshot:
+        try:
+            return self._control.read()
+        except Exception as exc:
+            # The Git effect is already byte/shape verified.  Current-routing
+            # status is still unknown, so do not collapse UNKNOWN into False.
+            raise _error(
+                "RECEIPT_INCOMPLETE",
+                phase="READBACK",
+                retry_class=_READBACK_RETRY,
+                effect_state="PRESENT_VERIFIED",
+                detail=f"current topology readback unavailable: {exc}",
+            ) from exc
+
+    def _read_history(self, identity: str) -> IdentityHistory:
+        try:
+            history = self._history.read_identity(identity)
+        except Exception as exc:
+            if isinstance(exc, SafeAppendError):
+                raise
+            raise _error(
+                "MESSAGE_ID_HISTORY_UNRESOLVED",
+                detail=str(exc),
+            ) from exc
+        if not history.complete:
+            raise _error("MESSAGE_ID_HISTORY_UNRESOLVED")
+        return history
+
+    def _validate_predecessor(
+        self,
+        history: IdentityHistory,
+        parsed: _ParsedMessage,
+    ) -> None:
+        if len(history.tip_message_ids) > 1:
+            raise _error("PREDECESSOR_UNRESOLVED")
+        if history.messages and len(history.tip_message_ids) != 1:
+            raise _error("PREDECESSOR_UNRESOLVED")
+        if history.tip_message_ids:
+            expected_prev = history.tip_message_ids[0]
+            if parsed.prev_message_id is None:
+                raise _error("PREDECESSOR_MISSING")
+            if parsed.prev_message_id != expected_prev:
+                raise _error("PREDECESSOR_MISMATCH")
+        elif parsed.prev_message_id is not None:
+            raise _error("PREDECESSOR_MISMATCH")
+
+    def _create_blob(self, content: bytes) -> str:
+        try:
+            return self._git.create_blob(content)
+        except Exception as exc:
+            raise _error(
+                "BLOB_CREATE_FAILED",
+                phase="OBJECT_CONSTRUCTION",
+                retry_class=_OBJECT_RETRY,
+                detail=str(exc),
+            ) from exc
+
+    def _create_tree(
+        self,
+        expected_head: str,
+        path: str,
+        blob_sha: str,
+    ) -> str:
+        try:
+            return self._git.create_tree(
+                expected_head,
+                path,
+                blob_sha,
+            )
+        except Exception as exc:
+            raise _error(
+                "TREE_CREATE_FAILED",
+                phase="OBJECT_CONSTRUCTION",
+                retry_class=_OBJECT_RETRY,
+                detail=str(exc),
+            ) from exc
+
+    def _create_commit(
+        self,
+        message_id: str,
+        tree_sha: str,
+        expected_head: str,
+    ) -> str:
+        try:
+            return self._git.create_commit(
+                f"bus: append {message_id}",
+                tree_sha,
+                expected_head,
+            )
+        except Exception as exc:
+            raise _error(
+                "COMMIT_CREATE_FAILED",
+                phase="OBJECT_CONSTRUCTION",
+                retry_class=_OBJECT_RETRY,
+                detail=str(exc),
+            ) from exc
+
+    def _move_ref_or_reconcile(
+        self,
+        branch: str,
+        candidate_sha: str,
+        expected_head: str,
+    ) -> None:
+        update_error: Exception | None = None
+        try:
+            moved = self._git.update_ref_non_force(branch, candidate_sha)
+        except Exception as exc:
+            moved = False
+            update_error = exc
+
+        try:
+            after_update_head = self._git.read_branch_head(branch)
+        except Exception as exc:
+            raise _error(
+                "WRITE_OUTCOME_UNKNOWN",
+                phase="REF_TRANSITION",
+                retry_class=_REF_RETRY,
+                effect_state="UNKNOWN",
+                detail=str(exc),
+            ) from exc
+
+        if update_error is not None:
+            if after_update_head == candidate_sha:
+                return
+            reachability = self._candidate_reachability(
+                candidate_sha,
+                after_update_head,
+            )
+            if reachability is True:
+                raise _error(
+                    "POSTWRITE_HEAD_MISMATCH",
+                    phase="READBACK",
+                    retry_class=_READBACK_RETRY,
+                    effect_state="PRESENT_UNVERIFIED",
+                    detail="candidate became reachable but is no longer lane head",
+                ) from update_error
+            if reachability is False and after_update_head != expected_head:
+                raise _error(
+                    "REF_UPDATE_STALE",
+                    phase="REF_TRANSITION",
+                    retry_class=_REF_RETRY,
+                    effect_state="NONE_ESTABLISHED",
+                ) from update_error
+            raise _error(
+                "WRITE_OUTCOME_UNKNOWN",
+                phase="REF_TRANSITION",
+                retry_class=_REF_RETRY,
+                effect_state="UNKNOWN",
+                detail=str(update_error),
+            ) from update_error
+
+        if moved:
+            return
+        if after_update_head == candidate_sha:
+            return
+        if after_update_head != expected_head:
+            raise _error(
+                "REF_UPDATE_STALE",
+                phase="REF_TRANSITION",
+                retry_class=_REF_RETRY,
+                effect_state="NONE_ESTABLISHED",
+            )
+        raise _error(
+            "REF_UPDATE_REJECTED",
+            phase="REF_TRANSITION",
+            retry_class=_REF_RETRY,
+            effect_state="NONE_ESTABLISHED",
+        )
+
+    def _candidate_reachability(
+        self,
+        candidate_sha: str,
+        head_sha: str | None,
+    ) -> bool | None:
         if head_sha is None:
             return None
         method = getattr(self._git, "is_ancestor", None)
@@ -491,15 +605,26 @@ class SafeLaneAppender:
         existing: CommittedMessage,
     ) -> SafeAppendReceipt:
         commit = self._git.read_commit(existing.commit_sha)
-        file_record = self._git.read_file_at_commit(existing.commit_sha, existing.path)
-        if commit is None or file_record is None or len(commit.parent_shas) != 1:
+        file_record = self._git.read_file_at_commit(
+            existing.commit_sha,
+            existing.path,
+        )
+        if (
+            commit is None
+            or file_record is None
+            or len(commit.parent_shas) != 1
+            or existing.path not in commit.changed_paths
+        ):
             raise _error(
                 "RECEIPT_INCOMPLETE",
                 phase="READBACK",
                 retry_class=_READBACK_RETRY,
                 effect_state="PRESENT_UNVERIFIED",
             )
-        if file_record.content != message_bytes or sha256(file_record.content).hexdigest() != message_digest:
+        if (
+            file_record.content != message_bytes
+            or sha256(file_record.content).hexdigest() != message_digest
+        ):
             raise _error(
                 "POSTWRITE_CONTENT_MISMATCH",
                 phase="READBACK",
@@ -514,7 +639,18 @@ class SafeLaneAppender:
                 effect_state="PRESENT_UNVERIFIED",
                 detail="history blob differs from Git readback",
             )
-        readback_parsed = _parse_message(file_record.content.decode("utf-8"))
+        try:
+            readback_parsed = _parse_message(
+                file_record.content.decode("utf-8")
+            )
+        except Exception as exc:
+            raise _error(
+                "POSTWRITE_METADATA_MISMATCH",
+                phase="READBACK",
+                retry_class=_READBACK_RETRY,
+                effect_state="PRESENT_UNVERIFIED",
+                detail=str(exc),
+            ) from exc
         if readback_parsed != parsed:
             raise _error(
                 "POSTWRITE_METADATA_MISMATCH",
@@ -523,10 +659,13 @@ class SafeLaneAppender:
                 effect_state="PRESENT_UNVERIFIED",
             )
 
-        final_control = self._control.read()
-        final_binding = final_control.lanes.get(parsed.message_id.split("-", 1)[0])
+        final_control = self._read_control_after_verified_effect()
+        final_binding = final_control.lanes.get(current_binding.identity)
         lane_used = existing.branch or current_binding.branch
-        current_lane = final_binding is not None and final_binding.branch == lane_used
+        current_lane = (
+            final_binding is not None
+            and final_binding.branch == lane_used
+        )
 
         return SafeAppendReceipt(
             schema="RADAR_SAFE_LANE_APPEND_RECEIPT_V1",
@@ -569,7 +708,16 @@ class SafeLaneAppender:
         message_digest: str,
         operation_key: str,
     ) -> SafeAppendReceipt:
-        head = self._git.read_branch_head(binding.branch)
+        try:
+            head = self._git.read_branch_head(binding.branch)
+        except Exception as exc:
+            raise _error(
+                "POSTWRITE_HEAD_MISMATCH",
+                phase="READBACK",
+                retry_class=_READBACK_RETRY,
+                effect_state="PRESENT_UNVERIFIED",
+                detail=str(exc),
+            ) from exc
         if head != candidate_sha:
             raise _error(
                 "POSTWRITE_HEAD_MISMATCH",
@@ -606,14 +754,11 @@ class SafeLaneAppender:
                 retry_class=_READBACK_RETRY,
                 effect_state="PRESENT_UNVERIFIED",
             )
-        if file_record.content != message_bytes or file_record.blob_sha != blob_sha:
-            raise _error(
-                "POSTWRITE_CONTENT_MISMATCH",
-                phase="READBACK",
-                retry_class=_READBACK_RETRY,
-                effect_state="PRESENT_UNVERIFIED",
-            )
-        if sha256(file_record.content).hexdigest() != message_digest:
+        if (
+            file_record.content != message_bytes
+            or file_record.blob_sha != blob_sha
+            or sha256(file_record.content).hexdigest() != message_digest
+        ):
             raise _error(
                 "POSTWRITE_CONTENT_MISMATCH",
                 phase="READBACK",
@@ -621,7 +766,9 @@ class SafeLaneAppender:
                 effect_state="PRESENT_UNVERIFIED",
             )
         try:
-            readback_parsed = _parse_message(file_record.content.decode("utf-8"))
+            readback_parsed = _parse_message(
+                file_record.content.decode("utf-8")
+            )
         except Exception as exc:
             raise _error(
                 "POSTWRITE_METADATA_MISMATCH",
@@ -638,12 +785,12 @@ class SafeLaneAppender:
                 effect_state="PRESENT_UNVERIFIED",
             )
 
-        try:
-            final_control = self._control.read()
-        except Exception:
-            final_control = None
-        final_binding = final_control.lanes.get(binding.identity) if final_control else None
-        current_lane = final_binding is not None and final_binding.branch == binding.branch
+        final_control = self._read_control_after_verified_effect()
+        final_binding = final_control.lanes.get(binding.identity)
+        current_lane = (
+            final_binding is not None
+            and final_binding.branch == binding.branch
+        )
 
         return SafeAppendReceipt(
             schema="RADAR_SAFE_LANE_APPEND_RECEIPT_V1",
