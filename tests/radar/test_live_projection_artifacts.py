@@ -52,12 +52,13 @@ def test_edge_function_accepts_legacy_frontmatter_and_wrapped_scalars_with_evide
     assert "Fabulous Nitpicking Gremlin" in source
 
 
-def test_writer_lane_workflow_is_secretless_oidc_scoped_and_range_bound():
+def test_writer_lane_workflow_is_secretless_oidc_scoped_range_bound_and_import_ready():
     workflow = (ROOT / ".github" / "workflows" / "radar-bus-projection.yml").read_text()
     lowered = workflow.lower()
     assert "id-token: write" in lowered
     assert "contents: read" in lowered
     assert "secrets." not in lowered
+    assert "python -m pip install -e control" in workflow
     assert "scripts/radar_emit_bus_projection.py" in workflow
     assert "radar/live-message-projection-v1" not in workflow
     assert "refs/heads/bus/" not in workflow  # runtime ref comes from github.ref
