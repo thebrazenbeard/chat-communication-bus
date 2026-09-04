@@ -45,9 +45,13 @@ jobs:
           RADAR_HEAD: ${{ github.sha }}
           RADAR_BASE: ${{ github.event.before }}
         run: |
+          RADAR_BOOTSTRAP_MAIN="$(git -C control rev-parse HEAD)"
           python control/scripts/radar_emit_bus_projection.py \
             --repo-dir lane \
             --repository "$RADAR_REPOSITORY" \
             --ref "$RADAR_REF" \
             --head "$RADAR_HEAD" \
-            --base "$RADAR_BASE"
+            --base "$RADAR_BASE" \
+            --topology control/architecture/contracts/RADAR_TOPOLOGY_V1.json \
+            --cutover control/architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json \
+            --bootstrap-main "$RADAR_BOOTSTRAP_MAIN"
