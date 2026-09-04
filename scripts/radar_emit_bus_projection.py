@@ -47,6 +47,7 @@ DEFAULT_MAX_FILE_BYTES = 512 * 1024
 DEFAULT_MAX_TOTAL_BYTES = 5 * 1024 * 1024
 DEFAULT_TOPOLOGY = _CONTROL_ROOT / "architecture" / "contracts" / "RADAR_TOPOLOGY_V1.json"
 _ZERO_SHA = "0" * 40
+_SHA_RE = re.compile(r"^[0-9a-fA-F]{40}$")
 _MESSAGE_ID_RE = re.compile(r"(?mi)^message_id\s*:\s*(?P<value>.+?)\s*$")
 _STATUS_RE = re.compile(r"(?mi)^status\s*:\s*(?P<value>.+?)\s*$")
 
@@ -83,6 +84,36 @@ def build_oidc_url(base_url: str, audience: str = DEFAULT_AUDIENCE) -> str:
     query = dict(parse_qsl(parts.query, keep_blank_values=True))
     query["audience"] = audience
     return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment))
+
+
+def resolve_base_commit(
+    explicit_base: str | None,
+    event_path: str | Path | None = None,
+) -> str | None:
+    """Resolve the pushed range base, preferring explicit successor-workflow input.
+
+    Historical v1 workflows do not pass ``--base``. On GitHub Actions, recover
+    the same authoritative push ``before`` SHA from ``GITHUB_EVENT_PATH`` so
+    those lanes receive full-range validation during the staged migration.
+    """
+    if explicit_base:
+        return explicit_base
+
+    raw_path = event_path if event_path is not None else os.environ.get("GITHUB_EVENT_PATH")
+    if not raw_path:
+        return None
+
+    try:
+        payload = json.loads(Path(raw_path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise EmitterError("GITHUB_EVENT_INVALID") from exc
+
+    before = payload.get("before") if isinstance(payload, dict) else None
+    if before is None:
+        return None
+    if not isinstance(before, str) or not _SHA_RE.fullmatch(before):
+        raise EmitterError("GITHUB_EVENT_BEFORE_INVALID")
+    return before
 
 
 def _tracked_message_paths(repo_dir: Path) -> list[str]:
@@ -301,12 +332,13 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     try:
+        base_commit = resolve_base_commit(args.base)
         batch = collect_projection_batch(
             args.repo_dir,
             repository=args.repository,
             ref=args.ref,
             branch_head=args.head,
-            base_commit=args.base,
+            base_commit=base_commit,
             topology_path=args.topology,
         )
         token = request_oidc_token(args.audience)
