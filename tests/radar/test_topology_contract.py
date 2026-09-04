@@ -13,34 +13,31 @@ def _topology():
     )
 
 
-def test_topology_has_unique_required_identities_and_radar_lane():
+def test_topology_has_unique_required_identities_and_current_radar_lane():
     data = _topology()
     lanes = data["required_writer_lanes"]
     assert len(lanes) == len(set(lanes))
-    assert lanes["radar"]["branch"] == "bus/radar-v2"
-    assert lanes["radar"]["historical_branch"] == "bus/radar-v1"
+    assert lanes["radar"]["branch"] == "bus/radar-v1"
     assert lanes["radar"]["writer"] == "Radar"
     assert data["excluded_branches"]["bus/bridget-v1-tempcheck"] == "temporary_diagnostic"
 
 
-def test_topology_preserves_brigit_legacy_branch_without_second_identity():
+def test_topology_preserves_brigit_legacy_current_branch_until_cutover():
     data = _topology()
     brigit = data["required_writer_lanes"]["brigit"]
-    assert brigit["branch"] == "bus/brigit-v2"
-    assert brigit["legacy_spelling"] is False
-    assert brigit["historical_branch"] == "bus/bridget-v1"
-    assert brigit["historical_legacy_spelling"] is True
+    assert brigit["branch"] == "bus/bridget-v1"
+    assert brigit["legacy_spelling"] is True
     assert "bridget" not in data["required_writer_lanes"]
 
 
-def test_expected_topology_projects_without_missing_lanes():
+def test_expected_current_topology_projects_without_missing_lanes():
     data = _topology()
     lanes = data["required_writer_lanes"]
     observed = [entry["branch"] for entry in lanes.values()]
     projection = project_branches(observed, required_identities=set(lanes))
     assert projection.missing_required == ()
-    assert projection.identity_lanes["brigit"] == "bus/brigit-v2"
-    assert projection.identity_lanes["vera"] == "bus/vera-v2"
+    assert projection.identity_lanes["brigit"] == "bus/bridget-v1"
+    assert projection.identity_lanes["vera"] == "bus/vera-sol-v1"
 
 
 def test_evidence_backed_projection_rejects_named_branch_without_mailbox():
@@ -91,11 +88,10 @@ def test_evidence_writer_aliases_resolve_to_logical_identity():
     assert projection.malformed_lanes == ()
 
 
-def test_hephaestus_current_lane_advances_to_v3_and_preserves_both_predecessors():
+def test_hephaestus_current_lane_is_v2_and_v1_is_preserved_as_malformed_history():
     data = _topology()
     hephaestus = data["required_writer_lanes"]["hephaestus"]
-    assert hephaestus["branch"] == "bus/hephaestus-v3"
-    assert hephaestus["historical_branch"] == "bus/hephaestus-v2"
+    assert hephaestus["branch"] == "bus/hephaestus-v2"
     assert data["excluded_branches"]["bus/hephaestus-v1"] == "malformed_historical_non_mailbox"
 
 
