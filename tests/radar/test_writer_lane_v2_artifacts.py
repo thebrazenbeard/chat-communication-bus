@@ -61,9 +61,9 @@ def test_brigit_block_is_explicit_and_topology_does_not_claim_her_successor_curr
     assert cutover["planned_current_writer_lanes"]["brigit"] == "bus/brigit-v2"
 
 
-def test_cutover_contract_records_radar_reconciliation_message_in_final_predecessor_snapshot():
+def test_cutover_contract_records_latest_radar_predecessor_message_in_final_snapshot():
     cutover = _cutover()
-    assert cutover["historical_writer_lanes"]["radar"]["head_sha"] == "041cd0ffd151b776e63bca1f76e2946a2ec59b72"
+    assert cutover["historical_writer_lanes"]["radar"]["head_sha"] == "bebe04ea25a4a6f4ee7fb89033cdc1355bd2ac91"
 
 
 def test_cutover_sequence_requires_branch_creation_before_topology_switch():
