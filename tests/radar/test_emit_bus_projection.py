@@ -9,6 +9,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "radar_emit_bus_projection.py"
+CURRENT_REF = "refs/heads/bus/one-v2"
 
 
 def load_emitter():
@@ -21,22 +22,6 @@ def load_emitter():
 
 def git(repo: Path, *args: str) -> str:
     return subprocess.check_output(["git", "-C", str(repo), *args], text=True).strip()
-
-
-def make_repo(tmp_path: Path) -> tuple[Path, str, bytes]:
-    repo = tmp_path / "lane"
-    repo.mkdir()
-    subprocess.check_call(["git", "-C", str(repo), "init", "-q"])
-    subprocess.check_call(["git", "-C", str(repo), "config", "user.email", "test@example.com"])
-    subprocess.check_call(["git", "-C", str(repo), "config", "user.name", "Test"])
-    (repo / "messages").mkdir()
-    content = b"# One -> Radar\n\nmessage_id: one-9999\nwriter: One\ncreated_at: 2026-09-02T20:00:00Z\n\nhello\n"
-    (repo / "messages" / "0001.md").write_bytes(content)
-    (repo / "README.md").write_text("ignore me")
-    subprocess.check_call(["git", "-C", str(repo), "add", "."])
-    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "seed"])
-    head = git(repo, "rev-parse", "HEAD")
-    return repo, head, content
 
 
 def write_topology(tmp_path: Path) -> Path:
@@ -59,6 +44,36 @@ def write_topology(tmp_path: Path) -> Path:
     return path
 
 
+def make_repo(tmp_path: Path) -> tuple[Path, str, bytes]:
+    repo = tmp_path / "lane"
+    repo.mkdir()
+    subprocess.check_call(["git", "-C", str(repo), "init", "-q"])
+    subprocess.check_call(["git", "-C", str(repo), "config", "user.email", "test@example.com"])
+    subprocess.check_call(["git", "-C", str(repo), "config", "user.name", "Test"])
+    (repo / "messages").mkdir()
+    (repo / "README.md").write_text("canonical inherited file\n", encoding="utf-8")
+    subprocess.check_call(["git", "-C", str(repo), "add", "."])
+    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "canonical cut"])
+
+    content = b"# One -> Radar\n\nmessage_id: one-9999\nwriter: One\ncreated_at: 2026-09-02T20:00:00Z\n\nhello\n"
+    (repo / "messages" / "0001.md").write_bytes(content)
+    subprocess.check_call(["git", "-C", str(repo), "add", "messages/0001.md"])
+    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "message"])
+    head = git(repo, "rev-parse", "HEAD")
+    return repo, head, content
+
+
+def collect(emitter, repo: Path, head: str, topology: Path, **limits):
+    return emitter.collect_projection_batch(
+        repo,
+        repository="thebrazenbeard/chat-communication-bus",
+        ref=CURRENT_REF,
+        branch_head=head,
+        topology_path=topology,
+        **limits,
+    )
+
+
 def test_build_oidc_url_preserves_existing_query_and_sets_audience():
     emitter = load_emitter()
     url = emitter.build_oidc_url("https://oidc.example/token?foo=bar", "chat-communication-bus-supabase")
@@ -66,18 +81,15 @@ def test_build_oidc_url_preserves_existing_query_and_sets_audience():
     assert "audience=chat-communication-bus-supabase" in url
 
 
-def test_collect_batch_carries_git_evidence_and_raw_bytes_only(tmp_path):
+def test_collect_batch_carries_git_evidence_raw_bytes_and_lane_identity(tmp_path):
     emitter = load_emitter()
+    topology = write_topology(tmp_path)
     repo, head, content = make_repo(tmp_path)
-    batch = emitter.collect_projection_batch(
-        repo,
-        repository="thebrazenbeard/chat-communication-bus",
-        ref="refs/heads/bus/one-v1",
-        branch_head=head,
-    )
+    batch = collect(emitter, repo, head, topology)
     assert batch["repository"] == "thebrazenbeard/chat-communication-bus"
-    assert batch["ref"] == "refs/heads/bus/one-v1"
+    assert batch["ref"] == CURRENT_REF
     assert batch["branch_head"] == head
+    assert batch["lane_identity"] == "one"
     assert len(batch["files"]) == 1
     item = batch["files"][0]
     assert item["path"] == "messages/0001.md"
@@ -90,137 +102,84 @@ def test_collect_batch_carries_git_evidence_and_raw_bytes_only(tmp_path):
     assert "body" not in item
 
 
-def test_collect_batch_uses_last_touch_commit_not_current_unrelated_head(tmp_path):
+def test_collect_batch_keeps_prior_message_source_commit_when_new_message_is_added(tmp_path):
     emitter = load_emitter()
+    topology = write_topology(tmp_path)
     repo, first_head, _ = make_repo(tmp_path)
-    (repo / "README.md").write_text("unrelated change")
-    subprocess.check_call(["git", "-C", str(repo), "add", "README.md"])
-    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "unrelated"])
+    second = b"# One -> Six\n\nmessage_id: one-10000\nwriter: One\ncreated_at: 2026-09-02T20:01:00Z\n\nsecond\n"
+    (repo / "messages" / "0002.md").write_bytes(second)
+    subprocess.check_call(["git", "-C", str(repo), "add", "messages/0002.md"])
+    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "second message"])
     current_head = git(repo, "rev-parse", "HEAD")
-    assert current_head != first_head
-    batch = emitter.collect_projection_batch(
-        repo,
-        repository="thebrazenbeard/chat-communication-bus",
-        ref="refs/heads/bus/one-v1",
-        branch_head=current_head,
-    )
-    assert batch["files"][0]["source_commit"] == first_head
+    batch = collect(emitter, repo, current_head, topology)
+    by_path = {item["path"]: item for item in batch["files"]}
+    assert by_path["messages/0001.md"]["source_commit"] == first_head
+    assert by_path["messages/0002.md"]["source_commit"] == current_head
+
+
+def test_collect_batch_rejects_shared_file_change_on_current_lane(tmp_path):
+    emitter = load_emitter()
+    topology = write_topology(tmp_path)
+    repo, _, _ = make_repo(tmp_path)
+    (repo / "README.md").write_text("writer changed this\n", encoding="utf-8")
+    subprocess.check_call(["git", "-C", str(repo), "add", "README.md"])
+    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "bad shared change"])
+    head = git(repo, "rev-parse", "HEAD")
+    with pytest.raises(emitter.EmitterError, match="WRITER_LANE_PATH_FORBIDDEN:README.md"):
+        collect(emitter, repo, head, topology)
 
 
 def test_collect_batch_rejects_new_message_id_that_already_exists_in_parent(tmp_path):
     emitter = load_emitter()
+    topology = write_topology(tmp_path)
     repo, _, _ = make_repo(tmp_path)
     duplicate = b"# One -> Six\n\nmessage_id: one-9999\nwriter: One\ncreated_at: 2026-09-02T20:01:00Z\n\nduplicate id\n"
     (repo / "messages" / "0002.md").write_bytes(duplicate)
     subprocess.check_call(["git", "-C", str(repo), "add", "messages/0002.md"])
     subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "duplicate"])
     head = git(repo, "rev-parse", "HEAD")
-
     with pytest.raises(emitter.EmitterError, match="DUPLICATE_NEW_MESSAGE_ID:one-9999"):
-        emitter.collect_projection_batch(
-            repo,
-            repository="thebrazenbeard/chat-communication-bus",
-            ref="refs/heads/bus/one-v1",
-            branch_head=head,
-        )
+        collect(emitter, repo, head, topology)
 
 
 def test_collect_batch_rejects_recovery_checkpoint_consuming_message_namespace(tmp_path):
     emitter = load_emitter()
+    topology = write_topology(tmp_path)
     repo, _, _ = make_repo(tmp_path)
     checkpoint = b"# One numerical identity checkpoint\n\nmessage_id: one-10000\nwriter: One\nstatus: recovery-checkpoint\nintended_recipient: replacement-instance / coordinator recovery\n\nidentity hint\n"
     (repo / "messages" / "10000-one-numerical-identity-checkpoint.md").write_bytes(checkpoint)
     subprocess.check_call(["git", "-C", str(repo), "add", "messages/10000-one-numerical-identity-checkpoint.md"])
     subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "checkpoint"])
     head = git(repo, "rev-parse", "HEAD")
-
     with pytest.raises(emitter.EmitterError, match="RECOVERY_CHECKPOINT_MESSAGE_NAMESPACE"):
-        emitter.collect_projection_batch(
-            repo,
-            repository="thebrazenbeard/chat-communication-bus",
-            ref="refs/heads/bus/one-v1",
-            branch_head=head,
-        )
-
-
-def test_collect_batch_tolerates_preexisting_duplicate_ids_when_head_adds_no_message(tmp_path):
-    emitter = load_emitter()
-    repo, _, _ = make_repo(tmp_path)
-    duplicate = b"# One -> Six\n\nmessage_id: one-9999\nwriter: One\ncreated_at: 2026-09-02T20:01:00Z\n\nhistorical duplicate\n"
-    (repo / "messages" / "0002.md").write_bytes(duplicate)
-    subprocess.check_call(["git", "-C", str(repo), "add", "messages/0002.md"])
-    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "historical duplicate"])
-    (repo / "README.md").write_text("non-message change")
-    subprocess.check_call(["git", "-C", str(repo), "add", "README.md"])
-    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "unrelated"])
-    head = git(repo, "rev-parse", "HEAD")
-
-    batch = emitter.collect_projection_batch(
-        repo,
-        repository="thebrazenbeard/chat-communication-bus",
-        ref="refs/heads/bus/one-v1",
-        branch_head=head,
-    )
-    assert len(batch["files"]) == 2
+        collect(emitter, repo, head, topology)
 
 
 def test_collect_batch_enforces_per_file_limit(tmp_path):
     emitter = load_emitter()
+    topology = write_topology(tmp_path)
     repo, head, _ = make_repo(tmp_path)
     with pytest.raises(emitter.EmitterError, match="MESSAGE_FILE_TOO_LARGE"):
-        emitter.collect_projection_batch(
-            repo,
-            repository="thebrazenbeard/chat-communication-bus",
-            ref="refs/heads/bus/one-v1",
-            branch_head=head,
-            max_file_bytes=8,
-        )
+        collect(emitter, repo, head, topology, max_file_bytes=8)
 
 
 def test_collect_batch_enforces_total_limit(tmp_path):
     emitter = load_emitter()
+    topology = write_topology(tmp_path)
     repo, head, content = make_repo(tmp_path)
     with pytest.raises(emitter.EmitterError, match="BATCH_TOO_LARGE"):
-        emitter.collect_projection_batch(
-            repo,
-            repository="thebrazenbeard/chat-communication-bus",
-            ref="refs/heads/bus/one-v1",
-            branch_head=head,
-            max_total_bytes=len(content) - 1,
-        )
-
-
-def test_collect_batch_carries_topology_derived_lane_identity(tmp_path):
-    emitter = load_emitter()
-    repo, _, _ = make_repo(tmp_path)
-    content = b"# One -> Radar\n\nmessage_id: one-10000\nwriter: One\ncreated_at: 2026-09-03T20:00:00Z\n\nnext\n"
-    (repo / "messages" / "0002.md").write_bytes(content)
-    subprocess.check_call(["git", "-C", str(repo), "add", "messages/0002.md"])
-    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "message"])
-    head = git(repo, "rev-parse", "HEAD")
-    batch = emitter.collect_projection_batch(
-        repo,
-        repository="thebrazenbeard/chat-communication-bus",
-        ref="refs/heads/bus/one-v2",
-        branch_head=head,
-        topology_path=write_topology(tmp_path),
-    )
-    assert batch["lane_identity"] == "one"
+        collect(emitter, repo, head, topology, max_total_bytes=len(content) - 1)
 
 
 def test_collect_batch_rejects_unregistered_lookalike_lane(tmp_path):
     emitter = load_emitter()
-    repo, _, _ = make_repo(tmp_path)
-    content = b"# One -> Radar\n\nmessage_id: one-10000\nwriter: One\ncreated_at: 2026-09-03T20:00:00Z\n\nnext\n"
-    (repo / "messages" / "0002.md").write_bytes(content)
-    subprocess.check_call(["git", "-C", str(repo), "add", "messages/0002.md"])
-    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "message"])
-    head = git(repo, "rev-parse", "HEAD")
+    topology = write_topology(tmp_path)
+    repo, head, _ = make_repo(tmp_path)
     with pytest.raises(emitter.EmitterError, match="UNREGISTERED_WRITER_LANE"):
         emitter.collect_projection_batch(
             repo,
             repository="thebrazenbeard/chat-communication-bus",
             ref="refs/heads/bus/one-v2-lookalike",
             branch_head=head,
-            topology_path=write_topology(tmp_path),
+            topology_path=topology,
         )
