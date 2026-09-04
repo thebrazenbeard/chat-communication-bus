@@ -10,7 +10,10 @@ The source-readiness PR contains:
 - mailbox-only append validation across the full observed Git push range;
 - declared `writer:` mismatch rejection;
 - projection-emitter integration using topology identity and GitHub pre-push SHA;
-- an inherited writer-lane guard workflow for future successor branches;
+- legacy-v1 push-base recovery from `GITHUB_EVENT_PATH` when `--base` is absent;
+- a writer-lane guard workflow that evaluates lane pushes using fresh canonical `main` control code;
+- a creation-only planned-successor bootstrap that requires zero `before` SHA plus exact equality to the fresh canonical `main` SHA;
+- provider-silent handling of that bootstrap before OIDC acquisition/submission;
 - the planned successor map and zero-gap cutover sequence;
 - documentation/tests.
 
@@ -38,15 +41,24 @@ Only after the source-readiness PR is merged with explicit authority:
    - Hephaestus `bus/hephaestus-v3`
    - Vera `bus/vera-v2`
    - all other active predecessor v1 lanes -> corresponding v2.
-5. Verify every successor:
+5. Treat each successor creation as a bootstrap-only event:
+   - GitHub push `before` must be the all-zero SHA;
+   - successor head must equal the fresh `main` control checkout SHA;
+   - the inherited guard validates through `control/scripts/radar_validate_writer_lane.py` using topology and cutover contracts from that fresh `main` checkout;
+   - if the projection workflow runs, it must report `PLANNED_SUCCESSOR_BOOTSTRAP_SKIPPED` and return before requesting OIDC or submitting to the provider;
+   - any non-bootstrap push to the successor before the topology switch must remain `UNREGISTERED_WRITER_LANE` and fail closed.
+6. Verify every successor:
 
 ```text
 successor_head == cutover_main_sha
 merge_base(successor, cutover_main_sha) == cutover_main_sha
+creation_guard == success
 ```
 
-6. Verify every predecessor remains at the snapshotted head. Any movement requires reconciliation before proceeding.
-7. Do not send ordinary messages to successor lanes yet.
+7. Verify every predecessor remains at the snapshotted head. Any movement requires reconciliation before proceeding.
+8. Do not send ordinary messages to successor lanes yet.
+
+If `main` advances between branch creation and the successor's Actions execution, the exact-head bootstrap check is expected to fail. Re-read canonical state and recreate/re-verify from the exact intended cut; do not weaken the equality requirement.
 
 ## Protected post-merge stage B — topology switch PR
 
