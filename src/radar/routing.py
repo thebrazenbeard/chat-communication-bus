@@ -21,6 +21,13 @@ class Router:
     def __init__(self, registry: IdentityRegistry) -> None:
         self.registry = registry
 
+    def _authorized_and_routable(self, identity_id: str, envelope: RadarEnvelope) -> bool:
+        return self.registry.identity_is_subscribed(
+            identity_id,
+            domain=envelope.domain,
+            priority=envelope.priority,
+        ) and self.registry.identity_has_routable_node(identity_id)
+
     def route(self, envelope: RadarEnvelope) -> RouteDecision:
         if envelope.audience:
             recipients: list[str] = []
@@ -29,15 +36,20 @@ class Router:
                     identity_id = self.registry.resolve_identity_id(audience)
                 except RegistryError:
                     continue
-                if identity_id not in recipients:
+                if (
+                    identity_id not in recipients
+                    and self._authorized_and_routable(identity_id, envelope)
+                ):
                     recipients.append(identity_id)
         else:
             recipients = sorted(
                 {
                     sub.identity_id
                     for sub in self.registry.subscriptions_for_domain(
-                        envelope.domain, envelope.priority
+                        envelope.domain,
+                        envelope.priority,
                     )
+                    if self.registry.identity_has_routable_node(sub.identity_id)
                 }
             )
         return RouteDecision(tuple(recipients), envelope.priority, envelope.authority_ref)
@@ -54,9 +66,21 @@ class PriorityQueue:
         self._heap: list[tuple[int, int, RadarEnvelope]] = []
 
     def push(self, envelope: RadarEnvelope) -> None:
+        counter = next(self._counter)
         if len(self._heap) >= self.max_size:
-            raise OverflowError("RADAR_QUEUE_FULL")
-        heapq.heappush(self._heap, (envelope.priority, next(self._counter), envelope))
+            if envelope.priority != 0:
+                raise OverflowError("RADAR_QUEUE_FULL")
+
+            # Priority zero is reserved for halt/security-class dispatch and may
+            # displace less urgent queued work. The deterministic victim is the
+            # numerically lowest-urgency item; ties evict the newest admission.
+            victim = max(self._heap, key=lambda item: (item[0], item[1]))
+            if victim[0] == 0:
+                raise OverflowError("RADAR_QUEUE_FULL")
+            self._heap.remove(victim)
+            heapq.heapify(self._heap)
+
+        heapq.heappush(self._heap, (envelope.priority, counter, envelope))
 
     def pop(self) -> RadarEnvelope:
         if not self._heap:
