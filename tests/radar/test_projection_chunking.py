@@ -189,6 +189,31 @@ def test_main_posts_every_chunk_and_reports_combined_success(monkeypatch, tmp_pa
     assert [row["path"] for row in result["results"]] == ["messages/a.md", "messages/b.md"]
 
 
+def test_main_requests_fresh_oidc_token_for_each_chunk(monkeypatch, tmp_path):
+    emitter = load_emitter()
+    monkeypatch.setattr(emitter, "planned_successor_bootstrap_identity", lambda *args, **kwargs: None)
+    batches = _two_batches()
+    monkeypatch.setattr(emitter, "collect_projection_batches", lambda *args, **kwargs: batches)
+    requested: list[str] = []
+    posted_tokens: list[str] = []
+
+    def request(_audience):
+        token = f"token-{len(requested) + 1}"
+        requested.append(token)
+        return token
+
+    def post(_endpoint, token, batch):
+        posted_tokens.append(token)
+        return {"ok": True, "projected": 1, "results": [{"path": batch["files"][0]["path"], "result": "INSERTED"}]}
+
+    monkeypatch.setattr(emitter, "request_oidc_token", request)
+    monkeypatch.setattr(emitter, "post_projection_batch", post)
+
+    assert emitter.main(_main_args(tmp_path)) == 0
+    assert requested == ["token-1", "token-2"]
+    assert posted_tokens == ["token-1", "token-2"]
+
+
 def test_main_stops_and_returns_failure_when_any_chunk_conflicts(monkeypatch, tmp_path):
     emitter = load_emitter()
     monkeypatch.setattr(emitter, "planned_successor_bootstrap_identity", lambda *args, **kwargs: None)
