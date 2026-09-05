@@ -7,6 +7,17 @@ from dataclasses import replace
 from .model import Endpoint, Identity, Node, NodeStatus, Subscription
 
 
+ROUTABLE_NODE_STATUSES = frozenset(
+    {
+        NodeStatus.ONLINE,
+        NodeStatus.IDLE,
+        NodeStatus.WORKING,
+        NodeStatus.WAITING_DEPENDENCY,
+        NodeStatus.DEGRADED,
+    }
+)
+
+
 class RegistryError(ValueError):
     pass
 
@@ -92,6 +103,20 @@ class IdentityRegistry:
         except KeyError as exc:
             raise RegistryError("UNKNOWN_NODE") from exc
 
+    def nodes_for_identity(self, identity_id: str) -> tuple[Node, ...]:
+        canonical = self.resolve_identity_id(identity_id)
+        return tuple(
+            self._nodes[key]
+            for key in sorted(self._nodes)
+            if self._nodes[key].identity_id == canonical
+        )
+
+    def identity_has_routable_node(self, identity_id: str) -> bool:
+        return any(
+            node.status in ROUTABLE_NODE_STATUSES
+            for node in self.nodes_for_identity(identity_id)
+        )
+
     def set_node_status(self, node_id: str, status: NodeStatus) -> Node:
         current = self.node(node_id)
         if not isinstance(status, NodeStatus):
@@ -132,18 +157,32 @@ class IdentityRegistry:
         except KeyError as exc:
             raise RegistryError("UNKNOWN_ENDPOINT") from exc
 
-    def subscribe(self, identity_id: str, *, domain: str, min_priority: int = 3) -> Subscription:
+    def subscribe(
+        self,
+        identity_id: str,
+        *,
+        domain: str,
+        min_priority: int = 3,
+    ) -> Subscription:
         canonical_identity = self.resolve_identity_id(identity_id)
         if not isinstance(domain, str) or not domain.strip():
             raise RegistryError("DOMAIN_REQUIRED")
         if not 0 <= int(min_priority) <= 4:
             raise RegistryError("INVALID_PRIORITY")
-        sub = Subscription(canonical_identity, domain.strip().casefold(), int(min_priority))
+        sub = Subscription(
+            canonical_identity,
+            domain.strip().casefold(),
+            int(min_priority),
+        )
         if sub not in self._subscriptions:
             self._subscriptions.append(sub)
         return sub
 
-    def subscriptions_for_domain(self, domain: str, priority: int) -> tuple[Subscription, ...]:
+    def subscriptions_for_domain(
+        self,
+        domain: str,
+        priority: int,
+    ) -> tuple[Subscription, ...]:
         key = domain.strip().casefold()
         return tuple(
             sub
@@ -151,8 +190,27 @@ class IdentityRegistry:
             if sub.domain == key and priority <= sub.min_priority
         )
 
+    def identity_is_subscribed(
+        self,
+        identity_id: str,
+        *,
+        domain: str,
+        priority: int,
+    ) -> bool:
+        canonical = self.resolve_identity_id(identity_id)
+        return any(
+            sub.identity_id == canonical
+            for sub in self.subscriptions_for_domain(domain, priority)
+        )
+
     def identities(self) -> tuple[Identity, ...]:
         return tuple(self._identities[key] for key in sorted(self._identities))
 
 
-__all__ = ["IdentityRegistry", "NodeStatus", "RegistryError", "normalize_identifier"]
+__all__ = [
+    "IdentityRegistry",
+    "NodeStatus",
+    "ROUTABLE_NODE_STATUSES",
+    "RegistryError",
+    "normalize_identifier",
+]
