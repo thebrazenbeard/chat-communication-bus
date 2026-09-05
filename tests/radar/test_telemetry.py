@@ -1,3 +1,7 @@
+import inspect
+
+import pytest
+
 from radar.telemetry import HEARTBEAT_INTERVAL_MS, TelemetryStore
 
 
@@ -36,15 +40,40 @@ def test_heartbeat_includes_last_source_and_provider_evidence(tmp_path):
 
 def test_invalid_counter_and_time_fail_closed(tmp_path):
     store = TelemetryStore(tmp_path / "telemetry.sqlite")
-    try:
+    with pytest.raises(ValueError, match="UNKNOWN_TELEMETRY_COUNTER"):
         store.increment("unknown")
-    except ValueError as exc:
-        assert str(exc) == "UNKNOWN_TELEMETRY_COUNTER"
-    else:
-        raise AssertionError("unknown counter accepted")
-    try:
+    with pytest.raises(ValueError, match="INVALID_TELEMETRY_INCREMENT"):
+        store.increment("routed", True)
+    with pytest.raises(ValueError, match="INVALID_HEARTBEAT_TIME"):
         store.emit_heartbeat(-1)
-    except ValueError as exc:
-        assert str(exc) == "INVALID_HEARTBEAT_TIME"
-    else:
-        raise AssertionError("negative heartbeat time accepted")
+    with pytest.raises(ValueError, match="INVALID_HEARTBEAT_TIME"):
+        store.emit_heartbeat(True)
+
+
+def test_thread_sharing_is_explicit_opt_in():
+    default = inspect.signature(TelemetryStore).parameters["check_same_thread"].default
+    assert default is True
+
+
+def test_wal_mode_does_not_weaken_durable_synchronous_setting(tmp_path):
+    store = TelemetryStore(tmp_path / "telemetry.sqlite")
+    synchronous = int(store.connection.execute("PRAGMA synchronous").fetchone()[0])
+    assert synchronous == 2  # SQLite FULL
+
+
+def test_clock_regression_fails_closed_instead_of_suppressing_indefinitely(tmp_path):
+    store = TelemetryStore(tmp_path / "telemetry.sqlite")
+    assert store.emit_heartbeat(100_000) is not None
+    with pytest.raises(ValueError, match="HEARTBEAT_CLOCK_REGRESSION"):
+        store.emit_heartbeat(99_999)
+
+
+def test_recent_heartbeats_are_newest_first_and_limit_is_validated(tmp_path):
+    store = TelemetryStore(tmp_path / "telemetry.sqlite")
+    assert store.emit_heartbeat(1_000) is not None
+    assert store.emit_heartbeat(1_000 + HEARTBEAT_INTERVAL_MS) is not None
+    rows = store.recent_heartbeats(1)
+    assert len(rows) == 1
+    assert rows[0].emitted_at_ms == 1_000 + HEARTBEAT_INTERVAL_MS
+    with pytest.raises(ValueError, match="limit must be > 0"):
+        store.recent_heartbeats(0)
