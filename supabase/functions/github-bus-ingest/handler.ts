@@ -11,6 +11,9 @@ const MAX_FILE_BYTES = 512 * 1024;
 const MAX_BATCH_BYTES = 5 * 1024 * 1024;
 
 let jwksCache: { expiresAt: number; keys: JsonWebKey[] } | null = null;
+let jwksFetchPromise: Promise<JsonWebKey[] | null> | null = null;
+
+const PATH_SEGMENT_RE = /^[A-Za-z0-9._-]+$/;
 
 type Claims = Record<string, unknown>;
 type Headers = Record<string, string>;
@@ -69,12 +72,27 @@ function b64urlJson(value: string): Record<string, unknown> {
 async function getJwks(): Promise<JsonWebKey[]> {
   const now = Date.now();
   if (jwksCache && jwksCache.expiresAt > now) return jwksCache.keys;
-  const result = await fetch(JWKS_URL, { headers: { accept: "application/json" } });
-  if (!result.ok) throw new HttpError(503, "OIDC_JWKS_UNAVAILABLE");
-  const data = await result.json();
-  if (!data || !Array.isArray(data.keys)) throw new HttpError(503, "OIDC_JWKS_INVALID");
-  jwksCache = { expiresAt: now + 10 * 60 * 1000, keys: data.keys as JsonWebKey[] };
-  return jwksCache.keys;
+  if (jwksFetchPromise) {
+    const keys = await jwksFetchPromise;
+    if (keys) return keys;
+    // otherwise continue to attempt fetching below
+  }
+
+  jwksFetchPromise = (async () => {
+    try {
+      const result = await fetch(JWKS_URL, { headers: { accept: "application/json" } });
+      if (!result.ok) throw new HttpError(503, "OIDC_JWKS_UNAVAILABLE");
+      const data = await result.json();
+      if (!data || !Array.isArray(data.keys)) throw new HttpError(503, "OIDC_JWKS_INVALID");
+      jwksCache = { expiresAt: Date.now() + 10 * 60 * 1000, keys: data.keys as JsonWebKey[] };
+      return jwksCache.keys;
+    } finally {
+      // clear the in-flight promise so future callers will either get the cache or retry
+      jwksFetchPromise = null;
+    }
+  })();
+
+  return jwksFetchPromise!;
 }
 
 function stringClaim(claims: Claims, name: string): string {
@@ -150,7 +168,17 @@ function parseBatch(value: unknown, claims: Claims): Batch {
     if (!item || typeof item !== "object") throw new HttpError(422, "SOURCE_FILE_INVALID");
     const file = item as Record<string, unknown>;
     const path = requireString(file.path, "SOURCE_PATH_REQUIRED");
-    if (!/^messages\/[A-Za-z0-9._/-]+\.md$/.test(path) || path.includes("..")) throw new HttpError(422, "SOURCE_PATH_INVALID");
+    // Basic layout checks
+    if (!path.startsWith("messages/") || !path.endsWith(".md") || path.includes("..")) {
+      throw new HttpError(422, "SOURCE_PATH_INVALID");
+    }
+    // Validate each segment after messages/
+    const segments = path.split("/").slice(1); // skip 'messages'
+    if (segments.length === 0) throw new HttpError(422, "SOURCE_PATH_INVALID");
+    for (const seg of segments) {
+      if (!PATH_SEGMENT_RE.test(seg)) throw new HttpError(422, "SOURCE_PATH_INVALID");
+    }
+
     const sourceCommit = requireString(file.source_commit, "SOURCE_COMMIT_REQUIRED");
     const sourceCommittedAt = requireString(file.source_committed_at, "SOURCE_COMMITTED_AT_REQUIRED");
     const blobSha = requireString(file.blob_sha, "SOURCE_BLOB_REQUIRED");
@@ -168,6 +196,13 @@ function base64Bytes(value: string): Uint8Array {
   } catch {
     throw new HttpError(422, "SOURCE_CONTENT_BASE64_INVALID");
   }
+}
+
+function estimatedBase64Size(base64: string): number {
+  const len = base64.length;
+  if (len === 0) return 0;
+  const padding = base64.endsWith("==") ? 2 : base64.endsWith("=") ? 1 : 0;
+  return Math.floor((len * 3) / 4) - padding;
 }
 
 function hex(buffer: ArrayBuffer): string {
@@ -387,6 +422,21 @@ async function projectFile(
   return { path: file.path, result: String(data) };
 }
 
+// small concurrency helper to process files with bounded parallelism
+async function mapWithConcurrency<T, R>(items: T[], fn: (t: T, i: number) => Promise<R>, concurrency = 4): Promise<R[]> {
+  const results = new Array<R>(items.length);
+  let i = 0;
+  const workers = new Array(Math.min(concurrency, items.length)).fill(0).map(async () => {
+    while (true) {
+      const idx = i++;
+      if (idx >= items.length) break;
+      results[idx] = await fn(items[idx], idx);
+    }
+  });
+  await Promise.all(workers);
+  return results;
+}
+
 Deno.serve(async (req: Request) => {
   try {
     if (req.method !== "POST") throw new HttpError(405, "METHOD_NOT_ALLOWED");
@@ -405,7 +455,7 @@ Deno.serve(async (req: Request) => {
 
     let totalBytes = 0;
     for (const file of batch.files) {
-      totalBytes += base64Bytes(file.content_base64).length;
+      totalBytes += estimatedBase64Size(file.content_base64);
       if (totalBytes > MAX_BATCH_BYTES) throw new HttpError(413, "BATCH_TOO_LARGE");
     }
 
@@ -416,8 +466,9 @@ Deno.serve(async (req: Request) => {
       auth: { persistSession: false, autoRefreshToken: false },
     });
 
-    const results: { path: string; result: string }[] = [];
-    for (const file of batch.files) results.push(await projectFile(supabase, batch, file));
+    const CONCURRENCY = Number(Deno.env.get("PROJECT_CONCURRENCY") ?? "4");
+    const results = await mapWithConcurrency(batch.files, async (file) => projectFile(supabase, batch, file), CONCURRENCY);
+
     return response(200, { ok: true, repository: batch.repository, ref: batch.ref, head: batch.branch_head, projected: results.length, results });
   } catch (error) {
     if (error instanceof HttpError) return response(error.status, { ok: false, error: error.code });
