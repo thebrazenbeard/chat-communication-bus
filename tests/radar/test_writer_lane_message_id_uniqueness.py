@@ -33,7 +33,7 @@ def test_current_lane_rejects_reused_message_id_under_new_path(tmp_path):
         "reuse id under different path",
     )
 
-    with pytest.raises(m.WriterLaneError, match="WRITER_LANE_MESSAGE_ID_DUPLICATE"):
+    with pytest.raises(m.WriterLaneError, match="DUPLICATE_NEW_MESSAGE_ID:one-0001"):
         m.validate_writer_lane_commit(
             repo,
             "refs/heads/bus/one-v2",
