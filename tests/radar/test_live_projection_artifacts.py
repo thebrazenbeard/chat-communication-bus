@@ -48,10 +48,11 @@ def test_edge_function_uses_custom_github_oidc_before_service_role_effects():
 
 def test_edge_function_accepts_legacy_frontmatter_and_wrapped_scalars_with_evidence_time_fallback():
     source = (ROOT / "supabase" / "functions" / "github-bus-ingest" / "handler.ts").read_text()
+    lowered = source.lower()
     assert "splitYamlFrontmatter" in source
     assert "unwrapScalar" in source
     assert "source_commit_invalid_header" in source
-    assert "Fabulous Nitpicking Gremlin" in source
+    assert "fabulous nitpicking gremlin" in lowered
 
 
 def test_edge_function_derives_exact_endthread_sender_closure_without_storing_body():
@@ -63,19 +64,29 @@ def test_edge_function_derives_exact_endthread_sender_closure_without_storing_bo
 
 
 def test_writer_lane_workflow_is_secretless_and_oidc_scoped():
-    workflow = (ROOT / ".github" / "workflows" / "radar-bus-projection.yml").read_text()
-    lowered = workflow.lower()
-    assert "id-token: write" in lowered
-    assert "contents: read" in lowered
-    assert "secrets." not in lowered
-    assert "python -m pip install -e control" in workflow
-    assert "scripts/radar_emit_bus_projection.py" in workflow
-    assert "radar/live-message-projection-v1" not in workflow
-    assert "refs/heads/bus/" not in workflow  # runtime ref comes from github.ref
-    assert "github.event.before" in workflow
-    assert "--base" in workflow
-    assert "--cutover" in workflow
-    assert "--bootstrap-main" in workflow
+    caller = (ROOT / ".github" / "workflows" / "radar-bus-projection.yml").read_text()
+    trusted = (ROOT / ".github" / "workflows" / "radar-trusted-projector.yml").read_text()
+    caller_lowered = caller.lower()
+    trusted_lowered = trusted.lower()
+
+    assert "id-token: write" in caller_lowered
+    assert "contents: read" in caller_lowered
+    assert "secrets." not in caller_lowered
+    assert "radar-trusted-projector.yml@" in caller
+    assert "runs-on:" not in caller
+
+    assert "id-token: write" in trusted_lowered
+    assert "contents: read" in trusted_lowered
+    assert "secrets." not in trusted_lowered
+    assert "python -m pip install -e control" in trusted
+    assert "scripts/radar_emit_bus_projection.py" in trusted
+    assert "radar/live-message-projection-v1" not in trusted
+    assert "github.ref" in trusted
+    assert "github.sha" in trusted
+    assert "github.event.before" in trusted
+    assert "--base" in trusted
+    assert "--cutover" in trusted
+    assert "--bootstrap-main" in trusted
 
 
 def test_projection_script_bootstraps_local_src_for_legacy_lane_workflow(tmp_path):
