@@ -475,6 +475,31 @@ def projection_result_failed(result: dict[str, object]) -> bool:
     return False
 
 
+def _partial_failure(
+    *,
+    batch: dict[str, object],
+    chunk_count: int,
+    completed_chunks: int,
+    provider_result: dict[str, object] | None = None,
+    error: str | None = None,
+) -> dict[str, object]:
+    evidence: dict[str, object] = {
+        "ok": False,
+        "completed_chunks": completed_chunks,
+        "failed_chunk": batch.get("projection_chunk_index"),
+        "chunk_count": chunk_count,
+        "replay_scope": "FULL_DELTA",
+        # The provider handles files concurrently. A transport/provider failure
+        # can therefore occur after some writes in this chunk have committed.
+        "failed_chunk_commit_state": "UNKNOWN",
+    }
+    if provider_result is not None:
+        evidence["provider_result"] = provider_result
+    if error is not None:
+        evidence["error"] = error
+    return evidence
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-dir", required=True)
@@ -529,17 +554,32 @@ def main(argv: list[str] | None = None) -> int:
 
         all_results: list[dict[str, object]] = []
         total_projected = 0
+        completed_chunks = 0
         for batch in batches:
-            result = post_projection_batch(args.endpoint, token, batch)
+            try:
+                result = post_projection_batch(args.endpoint, token, batch)
+            except EmitterError as exc:
+                print(
+                    json.dumps(
+                        _partial_failure(
+                            batch=batch,
+                            chunk_count=len(batches),
+                            completed_chunks=completed_chunks,
+                            error=str(exc),
+                        ),
+                        sort_keys=True,
+                    )
+                )
+                return 1
             if projection_result_failed(result):
                 print(
                     json.dumps(
-                        {
-                            "ok": False,
-                            "failed_chunk": batch.get("projection_chunk_index"),
-                            "chunk_count": len(batches),
-                            "provider_result": result,
-                        },
+                        _partial_failure(
+                            batch=batch,
+                            chunk_count=len(batches),
+                            completed_chunks=completed_chunks,
+                            provider_result=result,
+                        ),
                         sort_keys=True,
                     )
                 )
@@ -549,6 +589,7 @@ def main(argv: list[str] | None = None) -> int:
             all_results.extend(row for row in rows if isinstance(row, dict))
             projected = result.get("projected")
             total_projected += projected if isinstance(projected, int) else len(rows)
+            completed_chunks += 1
     except EmitterError as exc:
         print(str(exc), file=sys.stderr)
         return 1
