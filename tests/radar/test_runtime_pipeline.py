@@ -212,6 +212,90 @@ def test_concurrent_retry_cannot_observe_uncommitted_dedupe_reservation(tmp_path
     }
 
 
+def test_priority_zero_dispatch_is_atomic_against_external_dispatch(tmp_path):
+    telemetry = TelemetryStore(
+        tmp_path / "priority-threaded-telemetry.sqlite",
+        check_same_thread=False,
+    )
+    runtime = RadarRuntime(
+        _registry(),
+        telemetry=telemetry,
+        dlq=DeadLetterStore(tmp_path / "priority-threaded-dlq.sqlite"),
+        queue_size=2,
+    )
+    assert runtime.admit(
+        _raw(
+            "radar-priority-bg-0001",
+            domain="system",
+            intent="telemetry",
+            priority=4,
+            payload={"background": True},
+        ),
+        now_ms=17_000,
+    ).state == "QUEUED"
+
+    real_queue = runtime.queue
+    urgent_reached_queue = threading.Event()
+    release_urgent = threading.Event()
+
+    class PausingQueue:
+        def push(self, envelope):
+            evicted = real_queue.push(envelope)
+            if envelope.message_id == "radar-priority-urgent-0001":
+                urgent_reached_queue.set()
+                assert release_urgent.wait(5), "timed out waiting to release urgent admission"
+            return evicted
+
+        def pop(self):
+            return real_queue.pop()
+
+    runtime.queue = PausingQueue()
+    receipts = {}
+    external_done = threading.Event()
+
+    def admit_urgent():
+        receipts["urgent"] = runtime.admit(
+            _raw(
+                "radar-priority-urgent-0001",
+                domain="system",
+                intent="command",
+                priority=0,
+                payload={"halt": True},
+            ),
+            now_ms=17_600,
+        )
+
+    def dispatch_external():
+        try:
+            receipts["external"] = runtime.dispatch_next()
+        finally:
+            external_done.set()
+
+    urgent_thread = threading.Thread(target=admit_urgent)
+    external_thread = threading.Thread(target=dispatch_external)
+    urgent_thread.start()
+    assert urgent_reached_queue.wait(5), "urgent admission did not reach queue"
+    external_thread.start()
+
+    external_finished_before_urgent_dispatch = external_done.wait(0.25)
+    release_urgent.set()
+    urgent_thread.join(5)
+    external_thread.join(5)
+
+    assert not urgent_thread.is_alive()
+    assert not external_thread.is_alive()
+    assert external_finished_before_urgent_dispatch is False
+    assert receipts["urgent"].state == "DISPATCHED"
+    assert receipts["urgent"].message_id == "radar-priority-urgent-0001"
+    assert receipts["external"].state == "DISPATCHED"
+    assert receipts["external"].message_id == "radar-priority-bg-0001"
+    assert telemetry.snapshot().as_dict() == {
+        "routed": 2,
+        "dropped": 0,
+        "dlq": 0,
+    }
+
+
 def test_priority_zero_evicts_background_counts_drop_and_dispatches_immediately(tmp_path):
     runtime = _runtime(tmp_path, queue_size=2)
 
