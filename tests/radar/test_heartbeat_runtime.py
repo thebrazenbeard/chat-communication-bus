@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from radar.envelope import EnvelopeClassification, RadarEnvelope
 from radar.heartbeat import HeartbeatRuntime
 from radar.telemetry import HEARTBEAT_INTERVAL_MS, TelemetryStore
 
@@ -18,6 +19,32 @@ def test_heartbeat_message_is_radar_background_telemetry(tmp_path):
     assert heartbeat["intent"] == "telemetry"
     assert heartbeat["priority"] == 4
     assert heartbeat["counts"] == {"routed": 2, "dropped": 1, "dlq": 3}
+
+
+def test_heartbeat_is_a_canonical_radar_envelope_not_an_out_of_band_shape(tmp_path):
+    store = TelemetryStore(tmp_path / "telemetry.sqlite")
+    store.increment("routed", 4)
+
+    heartbeat = store.emit_heartbeat(
+        1_000,
+        source_ref="main@abc",
+        provider_state="DEGRADED",
+    )
+
+    assert heartbeat is not None
+    result = RadarEnvelope.from_mapping(heartbeat)
+    assert result.classification is EnvelopeClassification.VALID
+    assert result.envelope is not None
+    assert result.envelope.message_id == "radar-heartbeat-1000"
+    assert result.envelope.created_at == "1970-01-01T00:00:01Z"
+    assert result.envelope.audience == ()
+    assert result.envelope.priority == 4
+    assert result.envelope.payload == {
+        "emitted_at_ms": 1_000,
+        "counts": {"routed": 4, "dropped": 0, "dlq": 0},
+        "source_ref": "main@abc",
+        "provider_state": "DEGRADED",
+    }
 
 
 def test_runtime_resumes_from_persisted_due_time_without_sixty_second_lag(tmp_path):
