@@ -3,7 +3,7 @@ from __future__ import annotations
 import threading
 
 from radar.envelope import EnvelopeClassification, RadarEnvelope
-from radar.heartbeat import HeartbeatRuntime
+from radar.heartbeat import HeartbeatRuntime, HeartbeatSinkError
 from radar.telemetry import HEARTBEAT_INTERVAL_MS, TelemetryStore
 
 
@@ -137,3 +137,47 @@ def test_duplicate_emitters_share_one_durable_interval_claim(tmp_path):
     rows = first.recent_heartbeats()
     assert len(rows) == 1
     assert rows[0].emitted_at_ms == 10_000
+
+
+def test_sink_failure_is_durable_and_scheduler_recovers_next_interval(tmp_path):
+    store = TelemetryStore(tmp_path / "sink-failure.sqlite")
+    clock = {"now_ms": 0}
+    attempts = []
+    successful = []
+    sleeps = []
+
+    def sink(message):
+        attempts.append(message["message_id"])
+        if len(attempts) == 1:
+            raise RuntimeError("transient sink failure")
+        successful.append(message["message_id"])
+
+    def sleep(seconds):
+        sleeps.append(seconds)
+        clock["now_ms"] += round(seconds * 1_000)
+
+    runtime = HeartbeatRuntime(
+        store,
+        sink=sink,
+        clock_ms=lambda: clock["now_ms"],
+        sleep=sleep,
+    )
+    runtime.run_forever(should_stop=lambda: len(successful) == 1)
+
+    assert attempts == ["radar-heartbeat-0", f"radar-heartbeat-{HEARTBEAT_INTERVAL_MS}"]
+    assert successful == [f"radar-heartbeat-{HEARTBEAT_INTERVAL_MS}"]
+    assert sleeps == [60.0]
+    records = store.recent_heartbeats()
+    assert [record.delivery_state for record in records] == ["DELIVERED", "UNCONFIRMED"]
+
+
+def test_tick_wraps_sink_failure_without_misclassifying_store_failure(tmp_path):
+    store = TelemetryStore(tmp_path / "sink-error.sqlite")
+    runtime = HeartbeatRuntime(store, sink=lambda message: (_ for _ in ()).throw(RuntimeError("boom")))
+
+    try:
+        runtime.tick()
+    except HeartbeatSinkError as exc:
+        assert isinstance(exc.__cause__, RuntimeError)
+    else:
+        raise AssertionError("expected HeartbeatSinkError")
