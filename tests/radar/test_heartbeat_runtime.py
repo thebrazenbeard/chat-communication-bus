@@ -199,3 +199,25 @@ def test_tick_wraps_sink_failure_without_misclassifying_store_failure(tmp_path):
         raise AssertionError("expected HeartbeatSinkError")
 
     assert store.recent_heartbeats()[0].delivery_state == "UNCONFIRMED"
+
+
+def test_crash_after_claim_remains_pending_and_preserves_due_time(tmp_path):
+    path = tmp_path / "crash-after-claim.sqlite"
+    first = TelemetryStore(path)
+    claimed = first.claim_heartbeat(1_000)
+    assert claimed is not None
+    assert claimed["heartbeat_sequence"] == 1
+    first.close()
+
+    reopened = TelemetryStore(path)
+    record = reopened.recent_heartbeats()[0]
+    assert record.delivery_state == "PENDING"
+    assert record.missed_intervals == 0
+    assert reopened.milliseconds_until_heartbeat(11_000) == 50_000
+
+    second = reopened.claim_heartbeat(1_000 + HEARTBEAT_INTERVAL_MS)
+    assert second is not None
+    assert second["heartbeat_sequence"] == 2
+    assert second["missed_intervals"] == 0
+    records = reopened.recent_heartbeats()
+    assert [item.delivery_state for item in records] == ["PENDING", "PENDING"]
