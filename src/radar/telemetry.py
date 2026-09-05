@@ -15,7 +15,7 @@ Typed HeartbeatRecord and helper to read recent heartbeats.
 Basic logging for operational visibility.
 """
 
-from future import annotations
+from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
