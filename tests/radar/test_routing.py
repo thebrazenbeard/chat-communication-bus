@@ -15,20 +15,25 @@ def _env(e, **overrides):
     return e.RadarEnvelope.from_mapping(raw).envelope
 
 
-def test_direct_audience_routes_only_to_named_identity():
+def _activate(reg, rmod, identity, *, min_priority=4):
+    reg.register_identity(identity, display_name=identity.title())
+    reg.register_node(f"{identity}-node", identity_id=identity, status=rmod.NodeStatus.ONLINE)
+    reg.subscribe(identity, domain="database", min_priority=min_priority)
+
+
+def test_direct_audience_routes_only_to_named_authorized_live_identity():
     e, rmod, rt = _modules()
     reg = rmod.IdentityRegistry()
-    reg.register_identity("yin", display_name="Yin")
-    reg.register_identity("yang", display_name="Yang")
+    _activate(reg, rmod, "yin")
+    _activate(reg, rmod, "yang")
     decision = rt.Router(reg).route(_env(e, audience=["yin"]))
     assert decision.recipients == ("yin",)
 
 
-def test_subscription_route_respects_domain_and_min_priority():
+def test_subscription_route_respects_domain_min_priority_and_live_registration():
     e, rmod, rt = _modules()
     reg = rmod.IdentityRegistry()
-    reg.register_identity("mune", display_name="Mune")
-    reg.subscribe("mune", domain="database", min_priority=2)
+    _activate(reg, rmod, "mune", min_priority=2)
     assert rt.Router(reg).route(_env(e, priority=1)).recipients == ("mune",)
     assert rt.Router(reg).route(_env(e, priority=3)).recipients == ()
 
