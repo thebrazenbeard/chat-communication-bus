@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import threading
+
 from radar.dlq import DeadLetterStore
 from radar.registry import IdentityRegistry
 from radar.runtime import RadarRuntime
@@ -134,6 +136,78 @@ def test_failed_queue_admission_does_not_poison_dedupe_retry(tmp_path):
     assert runtime.telemetry.snapshot().as_dict() == {
         "routed": 1,
         "dropped": 1,
+        "dlq": 0,
+    }
+
+
+def test_concurrent_retry_cannot_observe_uncommitted_dedupe_reservation(tmp_path):
+    telemetry = TelemetryStore(
+        tmp_path / "threaded-telemetry.sqlite",
+        check_same_thread=False,
+    )
+    runtime = RadarRuntime(
+        _registry(),
+        telemetry=telemetry,
+        dlq=DeadLetterStore(tmp_path / "threaded-dlq.sqlite"),
+        queue_size=1,
+    )
+    assert runtime.admit(
+        _raw("radar-race-blocker-0001", payload={"blocker": True}),
+        now_ms=16_000,
+    ).state == "QUEUED"
+
+    real_queue = runtime.queue
+    first_reached_queue = threading.Event()
+    release_first = threading.Event()
+
+    class PausingQueue:
+        def push(self, envelope):
+            if envelope.message_id == "radar-race-0001":
+                first_reached_queue.set()
+                assert release_first.wait(5), "timed out waiting to release first admission"
+            return real_queue.push(envelope)
+
+        def pop(self):
+            return real_queue.pop()
+
+    runtime.queue = PausingQueue()
+    receipts = {}
+    retry_done = threading.Event()
+
+    def admit_first():
+        receipts["first"] = runtime.admit(
+            _raw("radar-race-0001", payload={"retry": True}),
+            now_ms=16_100,
+        )
+
+    def admit_retry():
+        try:
+            receipts["retry"] = runtime.admit(
+                _raw("radar-race-0002", payload={"retry": True}),
+                now_ms=16_200,
+            )
+        finally:
+            retry_done.set()
+
+    first_thread = threading.Thread(target=admit_first)
+    retry_thread = threading.Thread(target=admit_retry)
+    first_thread.start()
+    assert first_reached_queue.wait(5), "first admission did not reach queue"
+    retry_thread.start()
+
+    retry_finished_before_first_rollback = retry_done.wait(0.25)
+    release_first.set()
+    first_thread.join(5)
+    retry_thread.join(5)
+
+    assert not first_thread.is_alive()
+    assert not retry_thread.is_alive()
+    assert retry_finished_before_first_rollback is False
+    assert receipts["first"].state == "DROPPED_QUEUE_FULL"
+    assert receipts["retry"].state == "DROPPED_QUEUE_FULL"
+    assert telemetry.snapshot().as_dict() == {
+        "routed": 0,
+        "dropped": 2,
         "dlq": 0,
     }
 
