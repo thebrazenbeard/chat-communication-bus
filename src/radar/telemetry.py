@@ -24,7 +24,7 @@ import threading
 import logging
 from typing import Optional, Dict, Any, List
 
-logger = logging.getLogger(name)
+logger = logging.getLogger(__name__)
 
 HEARTBEAT_INTERVAL_MS = 60_000
 _COUNTER_NAMES = ("routed", "dropped", "dlq")
@@ -266,4 +266,4 @@ class TelemetryStore:
                 for r in rows
             ]
 
-all = ["HEARTBEAT_INTERVAL_MS", "TelemetrySnapshot", "TelemetryStore", "HeartbeatRecord"]
+__all__ = ["HEARTBEAT_INTERVAL_MS", "TelemetrySnapshot", "TelemetryStore", "HeartbeatRecord"]
