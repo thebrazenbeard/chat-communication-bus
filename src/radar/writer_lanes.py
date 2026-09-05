@@ -250,11 +250,42 @@ def _commits_to_validate(repo_dir: Path, head: str, base: str | None) -> list[st
     return commits
 
 
+def _message_ids_at_commit(repo_dir: Path, commit: str) -> set[str]:
+    """Collect declared message ids already present under messages/ at commit."""
+    paths = [
+        path
+        for path in _git(
+            repo_dir,
+            "ls-tree",
+            "-r",
+            "--name-only",
+            commit,
+            "--",
+            "messages",
+        ).splitlines()
+        if path.startswith("messages/") and path.endswith(".md")
+    ]
+    ids: set[str] = set()
+    for path in paths:
+        content = _git_bytes(repo_dir, "show", f"{commit}:{path}")
+        message_id = _message_headers(content, path).get("message_id", "")
+        if not message_id:
+            raise WriterLaneError(f"WRITER_LANE_MESSAGE_ID_REQUIRED:{path}")
+        folded = message_id.casefold()
+        if folded in ids:
+            raise WriterLaneError(
+                f"WRITER_LANE_MESSAGE_ID_DUPLICATE:{path}:{message_id}"
+            )
+        ids.add(folded)
+    return ids
+
+
 def _validate_commit_paths(repo_dir: Path, commit: str, lane: WriterLane) -> None:
     parent_line = _git(repo_dir, "rev-list", "--parents", "-n", "1", commit).split()
     if len(parent_line) != 2:
         raise WriterLaneError("WRITER_LANE_MERGE_COMMIT_FORBIDDEN")
     parent = parent_line[1]
+    seen_message_ids = _message_ids_at_commit(repo_dir, parent)
 
     raw = _git_bytes(
         repo_dir,
@@ -294,6 +325,12 @@ def _validate_commit_paths(repo_dir: Path, commit: str, lane: WriterLane) -> Non
             raise WriterLaneError(
                 f"WRITER_LANE_MESSAGE_ID_NAMESPACE:{path}:{message_id}:{lane.identity}"
             )
+        folded_message_id = message_id.casefold()
+        if folded_message_id in seen_message_ids:
+            raise WriterLaneError(
+                f"WRITER_LANE_MESSAGE_ID_DUPLICATE:{path}:{message_id}"
+            )
+        seen_message_ids.add(folded_message_id)
 
 
 def validate_writer_lane_commit(
