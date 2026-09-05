@@ -1,0 +1,5 @@
+This empty file was created by GitHub Copilot to trigger CI workflows.
+
+Timestamp: 2026-09-05T18:30:47Z
+
+If you don't want this file, you can delete it later.
