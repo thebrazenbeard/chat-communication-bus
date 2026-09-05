@@ -38,6 +38,7 @@ class HeartbeatRecord:
     source_ref: str | None
     provider_state: str | None
     delivery_state: str
+    missed_intervals: int | None
 
     def as_dict(self) -> dict[str, Any]:
         return {
@@ -51,6 +52,7 @@ class HeartbeatRecord:
             "source_ref": self.source_ref,
             "provider_state": self.provider_state,
             "delivery_state": self.delivery_state,
+            "missed_intervals": self.missed_intervals,
         }
 
 
@@ -106,7 +108,8 @@ class TelemetryStore:
                     dlq INTEGER NOT NULL,
                     source_ref TEXT,
                     provider_state TEXT,
-                    delivery_state TEXT NOT NULL DEFAULT 'LEGACY_UNKNOWN'
+                    delivery_state TEXT NOT NULL DEFAULT 'LEGACY_UNKNOWN',
+                    missed_intervals INTEGER CHECK (missed_intervals IS NULL OR missed_intervals >= 0)
                 )
                 """
             )
@@ -132,6 +135,12 @@ class TelemetryStore:
             self.connection.execute(
                 "ALTER TABLE radar_telemetry_heartbeats "
                 "ADD COLUMN delivery_state TEXT NOT NULL DEFAULT 'LEGACY_UNKNOWN'"
+            )
+        if "missed_intervals" not in columns:
+            # Existing rows do not contain enough evidence to reconstruct how many
+            # scheduled boundaries were missed before each historical heartbeat.
+            self.connection.execute(
+                "ALTER TABLE radar_telemetry_heartbeats ADD COLUMN missed_intervals INTEGER"
             )
 
     def close(self) -> None:
@@ -210,6 +219,11 @@ class TelemetryStore:
                     self.connection.rollback()
                     return None
 
+                missed_intervals = 0
+                if last is not None:
+                    elapsed_intervals = (now_ms - last) // HEARTBEAT_INTERVAL_MS
+                    missed_intervals = max(0, elapsed_intervals - 1)
+
                 snapshot = self._snapshot_unlocked()
                 cursor = self.connection.execute(
                     """
@@ -221,9 +235,10 @@ class TelemetryStore:
                             dlq,
                             source_ref,
                             provider_state,
-                            delivery_state
+                            delivery_state,
+                            missed_intervals
                         )
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         now_ms,
@@ -233,6 +248,7 @@ class TelemetryStore:
                         source_ref,
                         provider_state,
                         delivery_state,
+                        missed_intervals,
                     ),
                 )
                 heartbeat_id = int(cursor.lastrowid)
@@ -246,6 +262,7 @@ class TelemetryStore:
         payload = {
             "heartbeat_sequence": heartbeat_id,
             "emitted_at_ms": now_ms,
+            "missed_intervals": missed_intervals,
             "counts": counts,
             "source_ref": source_ref,
             "provider_state": provider_state,
@@ -267,6 +284,7 @@ class TelemetryStore:
             # canonical transport body is the payload above.
             "heartbeat_sequence": heartbeat_id,
             "emitted_at_ms": now_ms,
+            "missed_intervals": missed_intervals,
             "counts": counts,
             "source_ref": source_ref,
             "provider_state": provider_state,
@@ -337,7 +355,7 @@ class TelemetryStore:
         with self._lock:
             rows = self.connection.execute(
                 "SELECT heartbeat_id, emitted_at_ms, routed, dropped, dlq, "
-                "source_ref, provider_state, delivery_state "
+                "source_ref, provider_state, delivery_state, missed_intervals "
                 "FROM radar_telemetry_heartbeats "
                 "ORDER BY emitted_at_ms DESC, heartbeat_id DESC LIMIT ?",
                 (limit,),
@@ -352,6 +370,9 @@ class TelemetryStore:
                     source_ref=row["source_ref"],
                     provider_state=row["provider_state"],
                     delivery_state=row["delivery_state"],
+                    missed_intervals=(
+                        None if row["missed_intervals"] is None else int(row["missed_intervals"])
+                    ),
                 )
                 for row in rows
             ]
