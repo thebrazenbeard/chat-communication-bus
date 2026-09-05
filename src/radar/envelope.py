@@ -20,6 +20,9 @@ ALLOWED_DOMAINS = frozenset(
         "database",
         "coordination",
         "security",
+        "chat_bus",
+        "protocol",
+        "repository",
     }
 )
 ALLOWED_INTENTS = frozenset(
@@ -30,6 +33,7 @@ ALLOWED_INTENTS = frozenset(
         "error",
         "telemetry",
         "verification",
+        "bus_message",
     }
 )
 
