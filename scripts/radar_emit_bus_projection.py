@@ -224,6 +224,7 @@ def _collect_projection_source(
     branch_head: str,
     base_commit: str | None,
     topology_path: str | Path,
+    cutover_path: str | Path | None,
     max_file_bytes: int,
 ) -> tuple[dict[str, object], list[tuple[dict[str, object], int]]]:
     repo = Path(repo_dir)
@@ -237,6 +238,7 @@ def _collect_projection_source(
             branch_head,
             topology_path,
             base=base_commit,
+            cutover_path=cutover_path,
         )
     except WriterLaneError as exc:
         raise EmitterError(str(exc)) from exc
@@ -297,6 +299,7 @@ def collect_projection_batch(
     branch_head: str,
     base_commit: str | None = None,
     topology_path: str | Path = DEFAULT_TOPOLOGY,
+    cutover_path: str | Path | None = None,
     max_files: int = DEFAULT_MAX_FILES,
     max_file_bytes: int = DEFAULT_MAX_FILE_BYTES,
     max_total_bytes: int = DEFAULT_MAX_TOTAL_BYTES,
@@ -310,6 +313,7 @@ def collect_projection_batch(
         branch_head=branch_head,
         base_commit=base_commit,
         topology_path=topology_path,
+        cutover_path=cutover_path,
         max_file_bytes=max_file_bytes,
     )
     if len(files_with_sizes) > max_files:
@@ -327,6 +331,7 @@ def collect_projection_batches(
     branch_head: str,
     base_commit: str | None = None,
     topology_path: str | Path = DEFAULT_TOPOLOGY,
+    cutover_path: str | Path | None = None,
     max_files: int = DEFAULT_MAX_FILES,
     max_file_bytes: int = DEFAULT_MAX_FILE_BYTES,
     max_total_bytes: int = DEFAULT_MAX_TOTAL_BYTES,
@@ -344,6 +349,7 @@ def collect_projection_batches(
             branch_head=branch_head,
             base_commit=base_commit,
             topology_path=topology_path,
+            cutover_path=cutover_path,
             max_files=max_files,
             max_file_bytes=max_file_bytes,
             max_total_bytes=max_total_bytes,
@@ -367,6 +373,7 @@ def collect_projection_batches(
         branch_head=branch_head,
         base_commit=base_commit,
         topology_path=topology_path,
+        cutover_path=cutover_path,
         max_file_bytes=max_file_bytes,
     )
 
@@ -516,6 +523,7 @@ def main(argv: list[str] | None = None) -> int:
             branch_head=args.head,
             base_commit=base_commit,
             topology_path=args.topology,
+            cutover_path=args.cutover,
         )
         token = request_oidc_token(args.audience)
 
