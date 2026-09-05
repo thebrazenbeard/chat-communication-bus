@@ -12,6 +12,28 @@ from typing import Mapping
 from .model import EnvelopeClassification
 
 
+ALLOWED_DOMAINS = frozenset(
+    {
+        "system",
+        "llm",
+        "ui",
+        "database",
+        "coordination",
+        "security",
+    }
+)
+ALLOWED_INTENTS = frozenset(
+    {
+        "command",
+        "query",
+        "event",
+        "error",
+        "telemetry",
+        "verification",
+    }
+)
+
+
 @dataclass(frozen=True)
 class RadarEnvelope:
     schema_version: int
@@ -54,6 +76,24 @@ class RadarEnvelope:
         sender = _required_text(raw.get("sender"), "sender", errors)
         domain = _required_text(raw.get("domain"), "domain", errors)
         intent = _required_text(raw.get("intent"), "intent", errors)
+        if errors:
+            return EnvelopeResult(
+                EnvelopeClassification.REJECTED,
+                None,
+                tuple(dict.fromkeys(errors)),
+            )
+
+        taxonomy_errors: list[str] = []
+        if domain not in ALLOWED_DOMAINS:
+            taxonomy_errors.append("domain")
+        if intent not in ALLOWED_INTENTS:
+            taxonomy_errors.append("intent")
+        if taxonomy_errors:
+            return EnvelopeResult(
+                EnvelopeClassification.DLQ,
+                None,
+                tuple(taxonomy_errors),
+            )
 
         normalized = False
         message_id_obj = raw.get("message_id")
@@ -74,7 +114,9 @@ class RadarEnvelope:
         if audience_obj is None:
             audience: tuple[str, ...] = ()
             normalized = True
-        elif isinstance(audience_obj, (list, tuple)) and all(isinstance(v, str) and v.strip() for v in audience_obj):
+        elif isinstance(audience_obj, (list, tuple)) and all(
+            isinstance(v, str) and v.strip() for v in audience_obj
+        ):
             audience = tuple(v.strip().casefold() for v in audience_obj)
         else:
             errors.append("audience")
@@ -98,14 +140,20 @@ class RadarEnvelope:
         requires_ack = bool(requires_ack_obj)
 
         source_refs_obj = raw.get("source_refs", ())
-        if isinstance(source_refs_obj, (list, tuple)) and all(isinstance(v, str) for v in source_refs_obj):
+        if isinstance(source_refs_obj, (list, tuple)) and all(
+            isinstance(v, str) for v in source_refs_obj
+        ):
             source_refs = tuple(source_refs_obj)
         else:
             errors.append("source_refs")
             source_refs = ()
 
         if errors:
-            return EnvelopeResult(EnvelopeClassification.REJECTED, None, tuple(dict.fromkeys(errors)))
+            return EnvelopeResult(
+                EnvelopeClassification.REJECTED,
+                None,
+                tuple(dict.fromkeys(errors)),
+            )
 
         payload = raw["payload"]
         canonical = {
@@ -125,12 +173,10 @@ class RadarEnvelope:
         ).encode("utf-8")
         content_hash = hashlib.sha256(canonical_bytes).hexdigest()
 
-        idempotency_obj = raw.get("idempotency_key")
-        idempotency_key = (
-            idempotency_obj.strip()
-            if isinstance(idempotency_obj, str) and idempotency_obj.strip()
-            else content_hash
-        )
+        # The duplicate-suppression key is owned by Radar. Caller-provided
+        # idempotency values are intentionally not authoritative because two
+        # identical messages must collide inside the deterministic window.
+        idempotency_key = content_hash
 
         envelope = cls(
             schema_version=schema_version,
@@ -152,7 +198,9 @@ class RadarEnvelope:
             authority_ref=_optional_text(raw.get("authority_ref")),
             source_refs=source_refs,
         )
-        classification = EnvelopeClassification.NORMALIZED if normalized else EnvelopeClassification.VALID
+        classification = (
+            EnvelopeClassification.NORMALIZED if normalized else EnvelopeClassification.VALID
+        )
         return EnvelopeResult(classification, envelope, ())
 
 
@@ -178,4 +226,10 @@ def _optional_text(value: object) -> str | None:
     return None
 
 
-__all__ = ["EnvelopeClassification", "EnvelopeResult", "RadarEnvelope"]
+__all__ = [
+    "ALLOWED_DOMAINS",
+    "ALLOWED_INTENTS",
+    "EnvelopeClassification",
+    "EnvelopeResult",
+    "RadarEnvelope",
+]
