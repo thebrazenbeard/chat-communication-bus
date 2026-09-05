@@ -112,5 +112,22 @@ def test_legacy_heartbeat_rows_migrate_without_fabricating_delivery_state(tmp_pa
     store = TelemetryStore(path)
     record = store.recent_heartbeats()[0]
     assert record.delivery_state == "LEGACY_UNKNOWN"
+    assert record.missed_intervals is None
     assert record.heartbeat_id == 1
     assert record.emitted_at_ms == 1_000
+
+
+def test_overdue_heartbeat_durably_reports_missed_intervals(tmp_path):
+    store = TelemetryStore(tmp_path / "missed.sqlite")
+    first = store.emit_heartbeat(1_000)
+    assert first is not None
+    assert first["missed_intervals"] == 0
+
+    second = store.emit_heartbeat(1_000 + (3 * HEARTBEAT_INTERVAL_MS))
+    assert second is not None
+    assert second["missed_intervals"] == 2
+    assert second["payload"]["missed_intervals"] == 2
+
+    records = store.recent_heartbeats()
+    assert records[0].missed_intervals == 2
+    assert records[1].missed_intervals == 0
