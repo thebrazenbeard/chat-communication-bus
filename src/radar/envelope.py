@@ -160,6 +160,11 @@ class RadarEnvelope:
             )
 
         payload = raw["payload"]
+        try:
+            payload_json = json.dumps(payload, sort_keys=True)
+        except (TypeError, ValueError):
+            return EnvelopeResult(EnvelopeClassification.REJECTED, None, ("payload",))
+
         canonical = {
             "schema_version": schema_version,
             "sender": sender,
@@ -173,7 +178,6 @@ class RadarEnvelope:
             sort_keys=True,
             separators=(",", ":"),
             ensure_ascii=False,
-            default=str,
         ).encode("utf-8")
         content_hash = hashlib.sha256(canonical_bytes).hexdigest()
 
@@ -181,8 +185,7 @@ class RadarEnvelope:
         # duplicate hash. The original Radar middleware hashes only the sorted
         # payload JSON, so caller metadata or caller-selected idempotency values
         # cannot manufacture a different dedupe key for the same payload.
-        payload_bytes = json.dumps(payload, sort_keys=True, default=str).encode("utf-8")
-        idempotency_key = hashlib.sha256(payload_bytes).hexdigest()
+        idempotency_key = hashlib.sha256(payload_json.encode("utf-8")).hexdigest()
 
         envelope = cls(
             schema_version=schema_version,
