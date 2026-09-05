@@ -1,0 +1,4 @@
+[functions.github-bus-ingest]
+# GitHub Actions presents a GitHub OIDC token; handler.ts performs the
+# issuer, audience, repository, workflow, ref, and commit checks.
+verify_jwt = false

@@ -20,6 +20,8 @@ class DeadLetterItem:
     failure_code: str
     envelope: dict[str, object]
     diagnostic: str
+    reason_category: str
+    source_locator: str | None
     applicability: str
     replay_state: str
     retry_count: int
@@ -39,6 +41,8 @@ class DeadLetterStore:
                 failure_code TEXT NOT NULL,
                 envelope_json TEXT NOT NULL,
                 diagnostic TEXT NOT NULL,
+                reason_category TEXT NOT NULL DEFAULT 'UNCLASSIFIED',
+                source_locator TEXT,
                 applicability TEXT NOT NULL DEFAULT 'UNKNOWN'
                     CHECK (applicability IN ('UNKNOWN','APPLICABLE','NOT_APPLICABLE')),
                 replay_state TEXT NOT NULL DEFAULT 'PENDING'
@@ -47,7 +51,23 @@ class DeadLetterStore:
             )
             """
         )
+        self._migrate_evidence_columns()
         self.connection.commit()
+
+    def _migrate_evidence_columns(self) -> None:
+        columns = {
+            row["name"]
+            for row in self.connection.execute("PRAGMA table_info(radar_dead_letters)")
+        }
+        if "reason_category" not in columns:
+            self.connection.execute(
+                "ALTER TABLE radar_dead_letters "
+                "ADD COLUMN reason_category TEXT NOT NULL DEFAULT 'UNCLASSIFIED'"
+            )
+        if "source_locator" not in columns:
+            self.connection.execute(
+                "ALTER TABLE radar_dead_letters ADD COLUMN source_locator TEXT"
+            )
 
     def close(self) -> None:
         self.connection.close()
@@ -60,13 +80,30 @@ class DeadLetterStore:
         failure_code: str,
         envelope: dict[str, object],
         diagnostic: str,
+        reason_category: str = "UNCLASSIFIED",
+        source_locator: str | None = None,
     ) -> int:
+        if not isinstance(reason_category, str) or not reason_category.strip():
+            raise DeadLetterError("REASON_CATEGORY_REQUIRED")
+        if source_locator is not None and (
+            not isinstance(source_locator, str) or not source_locator.strip()
+        ):
+            raise DeadLetterError("INVALID_SOURCE_LOCATOR")
+
         with self.connection:
             cursor = self.connection.execute(
                 """
                 INSERT INTO radar_dead_letters
-                    (message_id, failure_stage, failure_code, envelope_json, diagnostic)
-                VALUES (?, ?, ?, ?, ?)
+                    (
+                        message_id,
+                        failure_stage,
+                        failure_code,
+                        envelope_json,
+                        diagnostic,
+                        reason_category,
+                        source_locator
+                    )
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     message_id,
@@ -74,6 +111,8 @@ class DeadLetterStore:
                     failure_code,
                     json.dumps(envelope, sort_keys=True, separators=(",", ":")),
                     diagnostic,
+                    reason_category.strip().upper(),
+                    None if source_locator is None else source_locator.strip(),
                 ),
             )
         return int(cursor.lastrowid)
@@ -91,6 +130,8 @@ class DeadLetterStore:
             failure_code=row["failure_code"],
             envelope=json.loads(row["envelope_json"]),
             diagnostic=row["diagnostic"],
+            reason_category=row["reason_category"],
+            source_locator=row["source_locator"],
             applicability=row["applicability"],
             replay_state=row["replay_state"],
             retry_count=int(row["retry_count"]),

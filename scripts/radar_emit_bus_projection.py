@@ -179,6 +179,18 @@ def _added_message_paths(repo_dir: Path, parent: str, head: str) -> list[str]:
     return sorted(path.decode("utf-8") for path in raw.split(b"\0") if path.endswith(b".md"))
 
 
+def _added_message_paths_for_commits(repo_dir: Path, commits: list[str]) -> list[str]:
+    """Return the exact message-file delta for one observed push range."""
+    paths: set[str] = set()
+    for commit in commits:
+        try:
+            parent = _git(repo_dir, "rev-parse", f"{commit}^")
+        except EmitterError:
+            continue
+        paths.update(_added_message_paths(repo_dir, parent, commit))
+    return sorted(paths)
+
+
 def _validate_new_message_ids(repo_dir: Path, head: str) -> None:
     try:
         parent = _git(repo_dir, "rev-parse", f"{head}^")
@@ -243,12 +255,23 @@ def collect_projection_batch(
     except WriterLaneError as exc:
         raise EmitterError(str(exc)) from exc
 
-    for commit in _push_commits(repo, branch_head, base_commit):
+    push_commits = _push_commits(repo, branch_head, base_commit)
+    for commit in push_commits:
         _validate_new_message_ids(repo, commit)
+
+    # A real push supplies its before-SHA; project only the exact added-message
+    # delta so mailbox size cannot turn every append into a 500-file request.
+    # Callers without a base retain the historical full-mailbox behavior.
+    if base_commit and base_commit != _ZERO_SHA:
+        projection_paths = _added_message_paths_for_commits(repo, push_commits)
+        projection_mode = "DELTA"
+    else:
+        projection_paths = _tracked_message_paths(repo)
+        projection_mode = "FULL_COMPAT"
 
     files: list[dict[str, object]] = []
     total = 0
-    for path in _tracked_message_paths(repo):
+    for path in projection_paths:
         file_path = repo / path
         content = file_path.read_bytes()
         if len(content) > max_file_bytes:
@@ -279,6 +302,7 @@ def collect_projection_batch(
         "ref": ref,
         "branch_head": branch_head,
         "lane_identity": lane_identity,
+        "projection_mode": projection_mode,
         "files": files,
     }
 
