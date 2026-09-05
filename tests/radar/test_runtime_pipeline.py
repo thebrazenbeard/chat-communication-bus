@@ -71,6 +71,25 @@ def test_unknown_taxonomy_is_durably_dlq_accounted(tmp_path):
     }
 
 
+def test_unknown_taxonomy_with_unserializable_payload_still_reaches_durable_dlq(tmp_path):
+    runtime = _runtime(tmp_path)
+    opaque_payload = object()
+
+    receipt = runtime.admit(
+        _raw("radar-unknown-opaque-0001", domain="not-a-domain", payload=opaque_payload),
+        now_ms=1_500,
+        source_locator="bus/radar-v2@def:messages/radar-unknown-opaque-0001.md",
+    )
+
+    assert receipt.state == "DLQ"
+    assert receipt.dlq_item_id is not None
+    item = runtime.dlq.inspect(receipt.dlq_item_id)
+    assert item.message_id == "radar-unknown-opaque-0001"
+    assert item.failure_code == "UNKNOWN_TAXONOMY"
+    assert item.envelope["payload"] == "<object>"
+    assert runtime.telemetry.snapshot().dlq == 1
+
+
 def test_dedupe_is_scoped_to_route_context_not_payload_globally(tmp_path):
     runtime = _runtime(tmp_path)
     payload = {"same": "payload"}
