@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 import hashlib
 import json
+import threading
 from typing import Mapping
 
 from .dlq import DeadLetterStore
@@ -49,6 +50,7 @@ class RadarRuntime:
         self.router = Router(registry)
         self.queue = PriorityQueue(max_size=queue_size)
         self.dedupe = DedupeWindow(window_ms=dedupe_window_ms)
+        self._admission_lock = threading.RLock()
 
     def _route_context(self, envelope: RadarEnvelope) -> tuple[str, ...]:
         if not envelope.audience:
@@ -165,32 +167,33 @@ class RadarRuntime:
 
         envelope = result.envelope
         message_id = envelope.message_id
-        dedupe_key = self._dedupe_key(envelope)
-        if not self.dedupe.accept(dedupe_key, now_ms):
-            self.telemetry.increment("dropped")
-            return RuntimeReceipt(state="DROPPED_DUPLICATE", message_id=message_id)
+        with self._admission_lock:
+            dedupe_key = self._dedupe_key(envelope)
+            if not self.dedupe.accept(dedupe_key, now_ms):
+                self.telemetry.increment("dropped")
+                return RuntimeReceipt(state="DROPPED_DUPLICATE", message_id=message_id)
 
-        try:
-            evicted = self.queue.push(envelope)
-        except OverflowError:
-            self.dedupe.rollback_accept(dedupe_key, now_ms)
-            self.telemetry.increment("dropped")
-            return RuntimeReceipt(state="DROPPED_QUEUE_FULL", message_id=message_id)
+            try:
+                evicted = self.queue.push(envelope)
+            except OverflowError:
+                self.dedupe.rollback_accept(dedupe_key, now_ms)
+                self.telemetry.increment("dropped")
+                return RuntimeReceipt(state="DROPPED_QUEUE_FULL", message_id=message_id)
 
-        evicted_message_id = None
-        if evicted is not None:
-            evicted_message_id = evicted.message_id
-            self.telemetry.increment("dropped")
+            evicted_message_id = None
+            if evicted is not None:
+                evicted_message_id = evicted.message_id
+                self.telemetry.increment("dropped")
 
-        if envelope.priority == 0:
-            dispatched = self.dispatch_next()
-            return replace(dispatched, evicted_message_id=evicted_message_id)
+            if envelope.priority == 0:
+                dispatched = self.dispatch_next()
+                return replace(dispatched, evicted_message_id=evicted_message_id)
 
-        return RuntimeReceipt(
-            state="QUEUED",
-            message_id=message_id,
-            evicted_message_id=evicted_message_id,
-        )
+            return RuntimeReceipt(
+                state="QUEUED",
+                message_id=message_id,
+                evicted_message_id=evicted_message_id,
+            )
 
     def dispatch_next(self) -> RuntimeReceipt:
         """Route the highest-priority queued message and account its disposition."""
