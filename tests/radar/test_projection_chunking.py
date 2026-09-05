@@ -81,6 +81,25 @@ def _decoded_bytes(batch: dict[str, object]) -> int:
     return sum(len(base64.b64decode(item["content_base64"])) for item in batch["files"])
 
 
+def _two_batches() -> tuple[dict[str, object], ...]:
+    return (
+        {"files": [{"path": "messages/a.md"}], "projection_chunk_index": 1, "projection_chunk_count": 2},
+        {"files": [{"path": "messages/b.md"}], "projection_chunk_index": 2, "projection_chunk_count": 2},
+    )
+
+
+def _main_args(tmp_path: Path) -> list[str]:
+    return [
+        "--repo-dir", str(tmp_path),
+        "--repository", "thebrazenbeard/chat-communication-bus",
+        "--ref", CURRENT_REF,
+        "--head", "1" * 40,
+        "--base", "2" * 40,
+        "--topology", str(tmp_path / "topology.json"),
+        "--cutover", str(tmp_path / "cutover.json"),
+    ]
+
+
 def test_501_message_push_is_split_losslessly_inside_edge_file_limit(tmp_path):
     emitter = load_emitter()
     repo, base = make_repo(tmp_path)
@@ -148,10 +167,7 @@ def test_projection_chunks_honor_total_decoded_byte_limit_without_dropping_files
 def test_main_posts_every_chunk_and_reports_combined_success(monkeypatch, tmp_path, capsys):
     emitter = load_emitter()
     monkeypatch.setattr(emitter, "planned_successor_bootstrap_identity", lambda *args, **kwargs: None)
-    batches = (
-        {"files": [{"path": "messages/a.md"}], "projection_chunk_index": 1, "projection_chunk_count": 2},
-        {"files": [{"path": "messages/b.md"}], "projection_chunk_index": 2, "projection_chunk_count": 2},
-    )
+    batches = _two_batches()
     monkeypatch.setattr(emitter, "collect_projection_batches", lambda *args, **kwargs: batches)
     monkeypatch.setattr(emitter, "request_oidc_token", lambda *args, **kwargs: "test-token")
     posted: list[dict[str, object]] = []
@@ -162,17 +178,7 @@ def test_main_posts_every_chunk_and_reports_combined_success(monkeypatch, tmp_pa
 
     monkeypatch.setattr(emitter, "post_projection_batch", post)
 
-    rc = emitter.main(
-        [
-            "--repo-dir", str(tmp_path),
-            "--repository", "thebrazenbeard/chat-communication-bus",
-            "--ref", CURRENT_REF,
-            "--head", "1" * 40,
-            "--base", "2" * 40,
-            "--topology", str(tmp_path / "topology.json"),
-            "--cutover", str(tmp_path / "cutover.json"),
-        ]
-    )
+    rc = emitter.main(_main_args(tmp_path))
 
     assert rc == 0
     assert posted == list(batches)
@@ -186,10 +192,7 @@ def test_main_posts_every_chunk_and_reports_combined_success(monkeypatch, tmp_pa
 def test_main_stops_and_returns_failure_when_any_chunk_conflicts(monkeypatch, tmp_path):
     emitter = load_emitter()
     monkeypatch.setattr(emitter, "planned_successor_bootstrap_identity", lambda *args, **kwargs: None)
-    batches = (
-        {"files": [{"path": "messages/a.md"}], "projection_chunk_index": 1, "projection_chunk_count": 2},
-        {"files": [{"path": "messages/b.md"}], "projection_chunk_index": 2, "projection_chunk_count": 2},
-    )
+    batches = _two_batches()
     monkeypatch.setattr(emitter, "collect_projection_batches", lambda *args, **kwargs: batches)
     monkeypatch.setattr(emitter, "request_oidc_token", lambda *args, **kwargs: "test-token")
     calls = 0
@@ -203,17 +206,67 @@ def test_main_stops_and_returns_failure_when_any_chunk_conflicts(monkeypatch, tm
 
     monkeypatch.setattr(emitter, "post_projection_batch", post)
 
-    rc = emitter.main(
-        [
-            "--repo-dir", str(tmp_path),
-            "--repository", "thebrazenbeard/chat-communication-bus",
-            "--ref", CURRENT_REF,
-            "--head", "1" * 40,
-            "--base", "2" * 40,
-            "--topology", str(tmp_path / "topology.json"),
-            "--cutover", str(tmp_path / "cutover.json"),
-        ]
-    )
+    rc = emitter.main(_main_args(tmp_path))
 
     assert rc == 1
     assert calls == 2
+
+
+def test_whole_delta_retry_accepts_idempotent_earlier_chunks(monkeypatch, tmp_path, capsys):
+    emitter = load_emitter()
+    monkeypatch.setattr(emitter, "planned_successor_bootstrap_identity", lambda *args, **kwargs: None)
+    batches = _two_batches()
+    monkeypatch.setattr(emitter, "collect_projection_batches", lambda *args, **kwargs: batches)
+    monkeypatch.setattr(emitter, "request_oidc_token", lambda *args, **kwargs: "test-token")
+    attempt = {"number": 1}
+    posted: list[tuple[int, int]] = []
+
+    def post(_endpoint, _token, batch):
+        chunk = int(batch["projection_chunk_index"])
+        posted.append((attempt["number"], chunk))
+        if attempt["number"] == 1 and chunk == 2:
+            raise emitter.EmitterError("PROJECTION_POST_FAILED:transient")
+        status = "IDEMPOTENT" if attempt["number"] == 2 and chunk == 1 else "INSERTED"
+        return {
+            "ok": True,
+            "projected": 1,
+            "results": [{"path": batch["files"][0]["path"], "result": status}],
+        }
+
+    monkeypatch.setattr(emitter, "post_projection_batch", post)
+
+    assert emitter.main(_main_args(tmp_path)) == 1
+    capsys.readouterr()
+    attempt["number"] = 2
+    assert emitter.main(_main_args(tmp_path)) == 0
+    result = json.loads(capsys.readouterr().out)
+
+    assert posted == [(1, 1), (1, 2), (2, 1), (2, 2)]
+    assert [row["result"] for row in result["results"]] == ["IDEMPOTENT", "INSERTED"]
+
+
+def test_post_failure_after_completed_chunk_reports_safe_replay_contract(monkeypatch, tmp_path, capsys):
+    emitter = load_emitter()
+    monkeypatch.setattr(emitter, "planned_successor_bootstrap_identity", lambda *args, **kwargs: None)
+    batches = _two_batches()
+    monkeypatch.setattr(emitter, "collect_projection_batches", lambda *args, **kwargs: batches)
+    monkeypatch.setattr(emitter, "request_oidc_token", lambda *args, **kwargs: "test-token")
+
+    def post(_endpoint, _token, batch):
+        if batch["projection_chunk_index"] == 2:
+            raise emitter.EmitterError("PROJECTION_POST_FAILED:ambiguous-network-error")
+        return {"ok": True, "projected": 1, "results": [{"path": "messages/a.md", "result": "INSERTED"}]}
+
+    monkeypatch.setattr(emitter, "post_projection_batch", post)
+
+    rc = emitter.main(_main_args(tmp_path))
+    captured = capsys.readouterr()
+    assert rc == 1
+    failure = json.loads(captured.out)
+    assert failure["ok"] is False
+    assert failure["completed_chunks"] == 1
+    assert failure["failed_chunk"] == 2
+    assert failure["chunk_count"] == 2
+    assert failure["replay_scope"] == "FULL_DELTA"
+    assert failure["failed_chunk_commit_state"] == "UNKNOWN"
+    assert "PROJECTION_POST_FAILED" in failure["error"]
