@@ -10,6 +10,7 @@ import subprocess
 
 
 _HEADER_RE = re.compile(r"^([A-Za-z0-9_-]+)\s*:\s*(.*?)\s*$")
+_SHA40_RE = re.compile(r"^[0-9a-fA-F]{40}$")
 _ZERO_SHA = "0" * 40
 
 
@@ -58,12 +59,19 @@ def identity_for_ref(ref: str, topology_path: str | Path) -> str:
     return matches[0]
 
 
-def _planned_successor_map(cutover_path: str | Path) -> dict[str, str]:
+def _load_cutover(cutover_path: str | Path) -> dict[str, object]:
     try:
         raw = json.loads(Path(cutover_path).read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise WriterLaneError("WRITER_LANE_CUTOVER_INVALID") from exc
-    planned = raw.get("planned_current_writer_lanes") if isinstance(raw, dict) else None
+    if not isinstance(raw, dict):
+        raise WriterLaneError("WRITER_LANE_CUTOVER_INVALID")
+    return raw
+
+
+def _planned_successor_map(cutover_path: str | Path) -> dict[str, str]:
+    raw = _load_cutover(cutover_path)
+    planned = raw.get("planned_current_writer_lanes")
     if not isinstance(planned, dict) or not planned:
         raise WriterLaneError("WRITER_LANE_CUTOVER_PLANNED_MISSING")
 
@@ -251,7 +259,12 @@ def _commits_to_validate(repo_dir: Path, head: str, base: str | None) -> list[st
 
 
 def _message_ids_at_commit(repo_dir: Path, commit: str) -> set[str]:
-    """Collect declared message ids already present under messages/ at commit."""
+    """Collect message ids already present at a pinned commit.
+
+    Existing duplicate ids are tolerated as immutable/grandfathered history;
+    admission only forbids a newly-added message from consuming an id that was
+    already present in current or pinned historical state.
+    """
     paths = [
         path
         for path in _git(
@@ -271,19 +284,60 @@ def _message_ids_at_commit(repo_dir: Path, commit: str) -> set[str]:
         message_id = _message_headers(content, path).get("message_id", "")
         if not message_id:
             raise WriterLaneError(f"WRITER_LANE_MESSAGE_ID_REQUIRED:{path}")
-        folded = message_id.casefold()
-        if folded in ids:
-            raise WriterLaneError(f"DUPLICATE_NEW_MESSAGE_ID:{message_id}:{path}")
-        ids.add(folded)
+        ids.add(message_id.casefold())
     return ids
 
 
-def _validate_commit_paths(repo_dir: Path, commit: str, lane: WriterLane) -> None:
+def _historical_message_ids(
+    repo_dir: Path,
+    cutover_path: str | Path | None,
+    identity: str,
+) -> set[str]:
+    """Return ids pinned by the identity's historical-lane cutover snapshot."""
+    if cutover_path is None:
+        return set()
+
+    raw = _load_cutover(cutover_path)
+    historical = raw.get("historical_writer_lanes")
+    # Pre-switch/staged cutover fixtures may legitimately have no predecessor
+    # snapshot yet. Once present, malformed identity records fail closed.
+    if historical is None:
+        return set()
+    if not isinstance(historical, dict):
+        raise WriterLaneError("WRITER_LANE_CUTOVER_HISTORICAL_INVALID")
+
+    record = historical.get(identity)
+    if record is None:
+        return set()
+    if not isinstance(record, dict):
+        raise WriterLaneError("WRITER_LANE_CUTOVER_HISTORICAL_INVALID")
+
+    branch = record.get("branch")
+    head_sha = record.get("head_sha")
+    if (
+        not isinstance(branch, str)
+        or not branch
+        or not isinstance(head_sha, str)
+        or not _SHA40_RE.fullmatch(head_sha)
+    ):
+        raise WriterLaneError("WRITER_LANE_CUTOVER_HISTORICAL_INVALID")
+
+    return _message_ids_at_commit(repo_dir, head_sha.lower())
+
+
+def _validate_commit_paths(
+    repo_dir: Path,
+    commit: str,
+    lane: WriterLane,
+    *,
+    reserved_message_ids: set[str] | None = None,
+) -> None:
     parent_line = _git(repo_dir, "rev-list", "--parents", "-n", "1", commit).split()
     if len(parent_line) != 2:
         raise WriterLaneError("WRITER_LANE_MERGE_COMMIT_FORBIDDEN")
     parent = parent_line[1]
-    seen_message_ids = _message_ids_at_commit(repo_dir, parent)
+    seen_message_ids = set(reserved_message_ids or ())
+    seen_message_ids.update(_message_ids_at_commit(repo_dir, parent))
 
     raw = _git_bytes(
         repo_dir,
@@ -357,8 +411,14 @@ def validate_writer_lane_commit(
 
     identity = identity_for_ref(ref, topology_path)
     lane = lanes[identity]
+    historical_ids = _historical_message_ids(repo, cutover_path, identity)
     for commit in _commits_to_validate(repo, head, base):
-        _validate_commit_paths(repo, commit, lane)
+        _validate_commit_paths(
+            repo,
+            commit,
+            lane,
+            reserved_message_ids=historical_ids,
+        )
 
     return identity
 
