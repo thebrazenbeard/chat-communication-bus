@@ -197,23 +197,24 @@ class RadarRuntime:
 
     def dispatch_next(self) -> RuntimeReceipt:
         """Route the highest-priority queued message and account its disposition."""
-        envelope = self.queue.pop()
-        decision = self.router.route(envelope)
-        if not decision.recipients:
-            self.telemetry.increment("dropped")
-            return RuntimeReceipt(
-                state="DROPPED_NO_ROUTE",
-                message_id=envelope.message_id,
-            )
+        with self._admission_lock:
+            envelope = self.queue.pop()
+            decision = self.router.route(envelope)
+            if not decision.recipients:
+                self.telemetry.increment("dropped")
+                return RuntimeReceipt(
+                    state="DROPPED_NO_ROUTE",
+                    message_id=envelope.message_id,
+                )
 
-        # Heartbeat semantics count messages, not recipient fanout. Delivery/ACK
-        # accounting is a separate state surface in the target architecture.
-        self.telemetry.increment("routed")
-        return RuntimeReceipt(
-            state="DISPATCHED",
-            message_id=envelope.message_id,
-            recipients=decision.recipients,
-        )
+            # Heartbeat semantics count messages, not recipient fanout. Delivery/ACK
+            # accounting is a separate state surface in the target architecture.
+            self.telemetry.increment("routed")
+            return RuntimeReceipt(
+                state="DISPATCHED",
+                message_id=envelope.message_id,
+                recipients=decision.recipients,
+            )
 
 
 __all__ = ["RadarRuntime", "RuntimeReceipt"]
