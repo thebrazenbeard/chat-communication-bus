@@ -20,12 +20,19 @@ def _cutover():
     )
 
 
+def _onboarding():
+    return json.loads(
+        (ROOT / "architecture" / "contracts" / "RADAR_WRITER_LANE_ONBOARDING_V1.json").read_text(encoding="utf-8")
+    )
+
+
 def _pending_topology_identities(topology):
-    return {
-        identity
-        for identity, record in topology["required_writer_lanes"].items()
-        if record.get("onboarding_status") == "TOPOLOGY_PR_PENDING"
-    }
+    onboarding = _onboarding()
+    if onboarding["status"] != "TOPOLOGY_PR_PENDING":
+        return set()
+    identity = onboarding["identity"]
+    assert identity in topology["required_writer_lanes"]
+    return {identity}
 
 
 def test_effective_topology_routes_verified_successors_except_brigit_legacy_exception():
