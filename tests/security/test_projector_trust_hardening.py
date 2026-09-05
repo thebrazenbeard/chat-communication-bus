@@ -49,8 +49,23 @@ def test_trusted_projector_uses_caller_event_context_but_trusted_control_source(
     assert "github.ref" in source
     assert "path: lane" in source
     assert "path: control" in source
-    control_ref = re.search(r"path:\s*control.*?ref:\s*([0-9a-f]{40})", source, flags=re.S)
-    assert control_ref, "trusted control checkout must be pinned to the reusable-workflow source cut"
+
+    control_block = re.search(
+        r"- name: Check out trusted Radar control source\n(?P<body>(?:\s+.*\n)+?)\n\s+- name:",
+        source,
+    )
+    assert control_block, "trusted control checkout step must exist"
+    control_ref = re.search(r"(?m)^\s*ref:\s*([0-9a-f]{40})\s*$", control_block.group("body"))
+    assert control_ref, "trusted control checkout must be pinned to an immutable source cut"
+
+
+def test_caller_pin_and_edge_expected_reusable_workflow_sha_match():
+    caller = _source(CALLER)
+    handler = _source(HANDLER)
+    caller_match = re.search(r"radar-trusted-projector\.yml@([0-9a-f]{40})", caller)
+    handler_match = re.search(r'EXPECTED_JOB_WORKFLOW_SHA\s*=\s*"([0-9a-f]{40})"', handler)
+    assert caller_match and handler_match
+    assert caller_match.group(1) == handler_match.group(1)
 
 
 def test_edge_binds_oidc_to_exact_reusable_workflow_ref_and_sha():
@@ -79,8 +94,6 @@ def test_edge_requires_lane_identity_to_match_authenticated_ref_shape():
     topology = json.loads(_source(TOPOLOGY))
     for identity, lane in topology["required_writer_lanes"].items():
         branch = lane["branch"]
-        # All currently supported lane refs have a generation suffix; Brigit's
-        # historical spelling is normalized by the Edge identity normalizer.
         assert re.fullmatch(r"bus/[a-z0-9-]+-v\d+", branch)
         if identity == "brigit":
             assert branch.startswith("bus/bridget-")
