@@ -107,7 +107,8 @@
     "parallax": {
       "writer": "Parallax",
       "branch": "bus/parallax-v1",
-      "legacy_spelling": false
+      "legacy_spelling": false,
+      "onboarding_status": "TOPOLOGY_PR_PENDING"
     }
   },
   "excluded_branches": {
