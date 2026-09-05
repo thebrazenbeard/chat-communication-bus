@@ -42,3 +42,28 @@ def test_conflicting_writer_claim_is_not_auto_repaired():
     )
     f = next(x for x in findings if x.code == "MULTIPLE_WRITER_CLAIMS")
     assert f.repair_class == "AMBIGUOUS_DURABLE_CONFLICT"
+
+
+def test_empty_provider_writer_claims_do_not_crash_reconciliation():
+    _, r = _mods()
+    findings = r.Reconciler().compare(
+        github_state={"protocol_head": "abc", "lanes": {"yin": "bus/yin-v1"}},
+        provider_state={"protocol_head": "abc", "lanes": {"yin": []}},
+    )
+    finding = next(x for x in findings if x.code == "LANE_PROJECTION_DRIFT")
+    assert finding.repair_class == "SAFE_PROJECTION_REPAIR"
+
+
+def test_unhashable_provider_writer_claims_are_reported_not_crashed():
+    _, r = _mods()
+    findings = r.Reconciler().compare(
+        github_state={"protocol_head": "abc", "lanes": {"yin": "bus/yin-v1"}},
+        provider_state={
+            "protocol_head": "abc",
+            "lanes": {"yin": [{"branch": "bus/yin-v1"}, {"branch": "bus/other-v1"}]},
+        },
+    )
+    finding = next(x for x in findings if x.code == "MULTIPLE_WRITER_CLAIMS")
+    assert finding.repair_class == "AMBIGUOUS_DURABLE_CONFLICT"
+    assert "bus/other-v1" in finding.detail
+    assert "bus/yin-v1" in finding.detail
