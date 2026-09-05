@@ -46,6 +46,36 @@ def test_replay_requires_applicability_refresh(tmp_path):
     assert store.inspect(item_id).replay_state == "REPLAYED"
 
 
+def test_completed_replay_cannot_be_counted_twice(tmp_path):
+    m = _module()
+    store = m.DeadLetterStore(tmp_path / "replay-once.sqlite")
+    item_id = store.record(
+        message_id="m-replay",
+        failure_stage="delivery",
+        failure_code="OFFLINE",
+        envelope={"message_id": "m-replay"},
+        diagnostic="target offline",
+    )
+    store.set_applicability(item_id, "APPLICABLE")
+    store.mark_replay(item_id)
+
+    with pytest.raises(m.DeadLetterError, match="REPLAY_ALREADY_COMPLETED"):
+        store.mark_replay(item_id)
+
+    item = store.inspect(item_id)
+    assert item.replay_state == "REPLAYED"
+    assert item.retry_count == 1
+
+
+def test_pending_list_rejects_non_positive_limit(tmp_path):
+    m = _module()
+    store = m.DeadLetterStore(tmp_path / "limit.sqlite")
+    with pytest.raises(m.DeadLetterError, match="INVALID_LIMIT"):
+        store.list_pending_applicable(0)
+    with pytest.raises(m.DeadLetterError, match="INVALID_LIMIT"):
+        store.list_pending_applicable(-1)
+
+
 def test_dead_letter_preserves_source_locator_and_reason_category(tmp_path):
     m = _module()
     path = tmp_path / "evidence.sqlite"
