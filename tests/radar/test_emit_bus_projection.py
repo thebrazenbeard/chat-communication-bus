@@ -180,7 +180,7 @@ def test_collect_batch_projects_only_added_delta_when_base_is_supplied(tmp_path)
     emitter = load_emitter()
     topology = write_topology(tmp_path)
     repo, first_head, _ = make_repo(tmp_path)
-    second = b"# One -> Six\\n\\nmessage_id: one-10000\\nwriter: One\\ncreated_at: 2026-09-02T20:01:00Z\\n\\nsecond\\n"
+    second = b"# One -> Six\n\nmessage_id: one-10000\nwriter: One\ncreated_at: 2026-09-02T20:01:00Z\n\nsecond\n"
     (repo / "messages" / "0002.md").write_bytes(second)
     subprocess.check_call(["git", "-C", str(repo), "add", "messages/0002.md"])
     subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "second message"])
