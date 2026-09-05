@@ -6,9 +6,13 @@ const JWKS_URL = `${OIDC_ISSUER}/.well-known/jwks`;
 const EXPECTED_AUDIENCE = "chat-communication-bus-supabase";
 const EXPECTED_REPOSITORY = "thebrazenbeard/chat-communication-bus";
 const EXPECTED_WORKFLOW_PREFIX = `${EXPECTED_REPOSITORY}/.github/workflows/radar-bus-projection.yml@refs/heads/bus/`;
+const EXPECTED_JOB_WORKFLOW_SHA = "634bb8d5af3d7577ccb6092e48349d4c197e3843";
+const EXPECTED_JOB_WORKFLOW_REF = `${EXPECTED_REPOSITORY}/.github/workflows/radar-trusted-projector.yml@${EXPECTED_JOB_WORKFLOW_SHA}`;
 const MAX_FILES = 500;
 const MAX_FILE_BYTES = 512 * 1024;
 const MAX_BATCH_BYTES = 5 * 1024 * 1024;
+const DEFAULT_PROJECT_CONCURRENCY = 4;
+const MAX_PROJECT_CONCURRENCY = 16;
 
 let jwksCache: { expiresAt: number; keys: JsonWebKey[] } | null = null;
 let jwksFetchPromise: Promise<JsonWebKey[] | null> | null = null;
@@ -29,6 +33,7 @@ type Batch = {
   repository: string;
   ref: string;
   branch_head: string;
+  lane_identity: string;
   files: SourceFile[];
 };
 
@@ -75,7 +80,6 @@ async function getJwks(): Promise<JsonWebKey[]> {
   if (jwksFetchPromise) {
     const keys = await jwksFetchPromise;
     if (keys) return keys;
-    // otherwise continue to attempt fetching below
   }
 
   jwksFetchPromise = (async () => {
@@ -87,7 +91,6 @@ async function getJwks(): Promise<JsonWebKey[]> {
       jwksCache = { expiresAt: Date.now() + 10 * 60 * 1000, keys: data.keys as JsonWebKey[] };
       return jwksCache.keys;
     } finally {
-      // clear the in-flight promise so future callers will either get the cache or retry
       jwksFetchPromise = null;
     }
   })();
@@ -136,12 +139,22 @@ async function verifyGithubOidc(token: string): Promise<Claims> {
   if (!audienceIncludes(claims.aud, EXPECTED_AUDIENCE)) throw new HttpError(403, "OIDC_AUDIENCE_INVALID");
   if (typeof claims.exp !== "number" || claims.exp <= now) throw new HttpError(403, "OIDC_EXPIRED");
   if (typeof claims.nbf === "number" && claims.nbf > now + 30) throw new HttpError(403, "OIDC_NOT_YET_VALID");
+  if (typeof claims.iat !== "number" || claims.iat > now + 30 || claims.iat < now - 15 * 60) {
+    throw new HttpError(403, "OIDC_ISSUED_AT_INVALID");
+  }
+  stringClaim(claims, "jti");
   if (stringClaim(claims, "repository") !== EXPECTED_REPOSITORY) throw new HttpError(403, "OIDC_REPOSITORY_INVALID");
   if (stringClaim(claims, "event_name") !== "push") throw new HttpError(403, "OIDC_EVENT_INVALID");
   const ref = stringClaim(claims, "ref");
-  if (!ref.startsWith("refs/heads/bus/")) throw new HttpError(403, "OIDC_REF_INVALID");
+  if (!laneIdentityFromRef(ref)) throw new HttpError(403, "OIDC_REF_INVALID");
   if (!stringClaim(claims, "workflow_ref").startsWith(EXPECTED_WORKFLOW_PREFIX)) {
     throw new HttpError(403, "OIDC_WORKFLOW_INVALID");
+  }
+  if (stringClaim(claims, "job_workflow_ref") !== EXPECTED_JOB_WORKFLOW_REF) {
+    throw new HttpError(403, "OIDC_JOB_WORKFLOW_INVALID");
+  }
+  if (stringClaim(claims, "job_workflow_sha") !== EXPECTED_JOB_WORKFLOW_SHA) {
+    throw new HttpError(403, "OIDC_JOB_WORKFLOW_SHA_INVALID");
   }
   stringClaim(claims, "sha");
   return claims;
@@ -159,21 +172,22 @@ function parseBatch(value: unknown, claims: Claims): Batch {
   const repository = requireString(raw.repository, "BATCH_REPOSITORY_REQUIRED");
   const ref = requireString(raw.ref, "BATCH_REF_REQUIRED");
   const branchHead = requireString(raw.branch_head, "BATCH_HEAD_REQUIRED");
+  const laneIdentity = normalizeIdentity(requireString(raw.lane_identity, "LANE_IDENTITY_REQUIRED"));
   if (repository !== stringClaim(claims, "repository")) throw new HttpError(403, "BATCH_REPOSITORY_MISMATCH");
   if (ref !== stringClaim(claims, "ref")) throw new HttpError(403, "BATCH_REF_MISMATCH");
   if (branchHead !== stringClaim(claims, "sha")) throw new HttpError(403, "BATCH_HEAD_MISMATCH");
+  const refIdentity = laneIdentityFromRef(ref);
+  if (!refIdentity || laneIdentity !== refIdentity) throw new HttpError(403, "LANE_IDENTITY_REF_MISMATCH");
   if (!Array.isArray(raw.files) || raw.files.length > MAX_FILES) throw new HttpError(422, "BATCH_FILES_INVALID");
 
   const files = raw.files.map((item): SourceFile => {
     if (!item || typeof item !== "object") throw new HttpError(422, "SOURCE_FILE_INVALID");
     const file = item as Record<string, unknown>;
     const path = requireString(file.path, "SOURCE_PATH_REQUIRED");
-    // Basic layout checks
     if (!path.startsWith("messages/") || !path.endsWith(".md") || path.includes("..")) {
       throw new HttpError(422, "SOURCE_PATH_INVALID");
     }
-    // Validate each segment after messages/
-    const segments = path.split("/").slice(1); // skip 'messages'
+    const segments = path.split("/").slice(1);
     if (segments.length === 0) throw new HttpError(422, "SOURCE_PATH_INVALID");
     for (const seg of segments) {
       if (!PATH_SEGMENT_RE.test(seg)) throw new HttpError(422, "SOURCE_PATH_INVALID");
@@ -186,7 +200,7 @@ function parseBatch(value: unknown, claims: Claims): Batch {
     if (!/^[0-9a-f]{40}$/.test(sourceCommit) || !/^[0-9a-f]{40}$/.test(blobSha)) throw new HttpError(422, "SOURCE_GIT_SHA_INVALID");
     return { path, source_commit: sourceCommit, source_committed_at: sourceCommittedAt, blob_sha: blobSha, content_base64: contentBase64 };
   });
-  return { projection_version: 1, repository, ref, branch_head: branchHead, files };
+  return { projection_version: 1, repository, ref, branch_head: branchHead, lane_identity: laneIdentity, files };
 }
 
 function base64Bytes(value: string): Uint8Array {
@@ -233,9 +247,16 @@ function normalizeIdentity(value: string): string {
   const key = unwrapScalar(value).toLowerCase();
   if (["bridget"].includes(key)) return "brigit";
   if (["vera/sol", "vera / sol", "vera-sol"].includes(key)) return "vera";
-  // Historical descriptive writer form: FNG / Fabulous Nitpicking Gremlin.
   if (key.startsWith("fng / fabulous nitpicking gremlin")) return "fng";
   return key;
+}
+
+function laneIdentityFromRef(ref: string): string | null {
+  const match = /^refs\/heads\/bus\/(.+)-v\d+$/.exec(ref);
+  if (!match) return null;
+  const rawIdentity = match[1];
+  if (!/^[a-z0-9-]+$/.test(rawIdentity)) return null;
+  return normalizeIdentity(rawIdentity);
 }
 
 function parseBool(value: string | undefined, code: string): boolean {
@@ -365,6 +386,8 @@ async function projectFile(
   const { headers, body } = splitDocument(text);
   const messageId = unwrapScalar(requireString(headers.message_id, "MESSAGE_ID_REQUIRED"));
   const writer = normalizeIdentity(requireString(headers.writer, "WRITER_REQUIRED"));
+  const laneIdentity = batch.lane_identity;
+  if (writer !== laneIdentity) throw new HttpError(422, "WRITER_LANE_MISMATCH");
 
   const sourceTime = normalizedTimestamp(file.source_committed_at);
   if (!sourceTime) throw new HttpError(422, "INVALID_SOURCE_COMMITTED_AT");
@@ -395,6 +418,7 @@ async function projectFile(
   ];
   const metadata: Record<string, unknown> = {
     ...headers,
+    admitted_lane_identity: laneIdentity,
     created_at_basis: createdAtBasis,
     source_repository: batch.repository,
     source_ref: batch.ref,
@@ -410,7 +434,7 @@ async function projectFile(
   const { data, error } = await supabase.rpc("radar_project_bus_message_v1", {
     p_message_id: messageId,
     p_created_at: createdAt,
-    p_sender: writer,
+    p_sender: laneIdentity,
     p_audience: audience,
     p_requires_ack: requiresAck,
     p_source_refs: sourceRefs,
@@ -422,8 +446,20 @@ async function projectFile(
   return { path: file.path, result: String(data) };
 }
 
-// small concurrency helper to process files with bounded parallelism
-async function mapWithConcurrency<T, R>(items: T[], fn: (t: T, i: number) => Promise<R>, concurrency = 4): Promise<R[]> {
+function parseProjectConcurrency(value: string | undefined): number {
+  const raw = (value ?? String(DEFAULT_PROJECT_CONCURRENCY)).trim();
+  if (!/^\d+$/.test(raw)) throw new HttpError(503, "PROJECT_CONCURRENCY_INVALID");
+  const parsed = Number(raw);
+  if (!Number.isSafeInteger(parsed) || parsed < 1 || parsed > MAX_PROJECT_CONCURRENCY) {
+    throw new HttpError(503, "PROJECT_CONCURRENCY_INVALID");
+  }
+  return parsed;
+}
+
+async function mapWithConcurrency<T, R>(items: T[], fn: (t: T, i: number) => Promise<R>, concurrency: number): Promise<R[]> {
+  if (!Number.isSafeInteger(concurrency) || concurrency < 1 || concurrency > MAX_PROJECT_CONCURRENCY) {
+    throw new HttpError(503, "PROJECT_CONCURRENCY_INVALID");
+  }
   const results = new Array<R>(items.length);
   let i = 0;
   const workers = new Array(Math.min(concurrency, items.length)).fill(0).map(async () => {
@@ -466,10 +502,22 @@ Deno.serve(async (req: Request) => {
       auth: { persistSession: false, autoRefreshToken: false },
     });
 
-    const CONCURRENCY = Number(Deno.env.get("PROJECT_CONCURRENCY") ?? "4");
-    const results = await mapWithConcurrency(batch.files, async (file) => projectFile(supabase, batch, file), CONCURRENCY);
+    const concurrency = parseProjectConcurrency(Deno.env.get("PROJECT_CONCURRENCY"));
+    const results = await mapWithConcurrency(
+      batch.files,
+      async (file) => projectFile(supabase, batch, file),
+      concurrency,
+    );
 
-    return response(200, { ok: true, repository: batch.repository, ref: batch.ref, head: batch.branch_head, projected: results.length, results });
+    return response(200, {
+      ok: true,
+      repository: batch.repository,
+      ref: batch.ref,
+      head: batch.branch_head,
+      lane_identity: batch.lane_identity,
+      projected: results.length,
+      results,
+    });
   } catch (error) {
     if (error instanceof HttpError) return response(error.status, { ok: false, error: error.code });
     console.error(error);
