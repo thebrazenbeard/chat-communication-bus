@@ -1,4 +1,5 @@
 import inspect
+import sqlite3
 
 import pytest
 
@@ -15,6 +16,7 @@ def test_counters_and_heartbeat_survive_reopen(tmp_path):
     assert first is not None
     assert first["domain"] == "system"
     assert first["intent"] == "telemetry"
+    assert first["heartbeat_sequence"] == 1
     assert first["counts"] == {"routed": 2, "dropped": 1, "dlq": 3}
     store.close()
 
@@ -23,6 +25,7 @@ def test_counters_and_heartbeat_survive_reopen(tmp_path):
     assert reopened.emit_heartbeat(1_000 + HEARTBEAT_INTERVAL_MS - 1) is None
     second = reopened.emit_heartbeat(1_000 + HEARTBEAT_INTERVAL_MS)
     assert second is not None
+    assert second["heartbeat_sequence"] == 2
     assert second["counts"] == {"routed": 2, "dropped": 1, "dlq": 3}
 
 
@@ -75,5 +78,39 @@ def test_recent_heartbeats_are_newest_first_and_limit_is_validated(tmp_path):
     rows = store.recent_heartbeats(1)
     assert len(rows) == 1
     assert rows[0].emitted_at_ms == 1_000 + HEARTBEAT_INTERVAL_MS
+    assert rows[0].delivery_state == "DELIVERED"
     with pytest.raises(ValueError, match="limit must be > 0"):
         store.recent_heartbeats(0)
+
+
+def test_legacy_heartbeat_rows_migrate_without_fabricating_delivery_state(tmp_path):
+    path = tmp_path / "legacy-telemetry.sqlite"
+    connection = sqlite3.connect(path)
+    connection.execute(
+        """
+        CREATE TABLE radar_telemetry_heartbeats (
+            heartbeat_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            emitted_at_ms INTEGER NOT NULL,
+            routed INTEGER NOT NULL,
+            dropped INTEGER NOT NULL,
+            dlq INTEGER NOT NULL,
+            source_ref TEXT,
+            provider_state TEXT
+        )
+        """
+    )
+    connection.execute(
+        """
+        INSERT INTO radar_telemetry_heartbeats
+            (emitted_at_ms, routed, dropped, dlq, source_ref, provider_state)
+        VALUES (1000, 1, 2, 3, 'main@legacy', 'UNKNOWN')
+        """
+    )
+    connection.commit()
+    connection.close()
+
+    store = TelemetryStore(path)
+    record = store.recent_heartbeats()[0]
+    assert record.delivery_state == "LEGACY_UNKNOWN"
+    assert record.heartbeat_id == 1
+    assert record.emitted_at_ms == 1_000
