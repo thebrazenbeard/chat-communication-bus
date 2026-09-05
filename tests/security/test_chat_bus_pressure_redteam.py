@@ -247,7 +247,7 @@ def test_full_mailbox_projection_stays_inside_edge_500_file_limit(tmp_path):
     subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "501-message pressure fixture"])
     head = git(repo, "rev-parse", "HEAD")
 
-    batch = emitter.collect_projection_batch(
+    batches = emitter.collect_projection_batches(
         repo,
         repository="thebrazenbeard/chat-communication-bus",
         ref=CURRENT_REF,
@@ -256,7 +256,11 @@ def test_full_mailbox_projection_stays_inside_edge_500_file_limit(tmp_path):
         topology_path=topology,
     )
 
-    assert len(batch["files"]) <= 500
+    assert len(batches) == 2
+    assert all(len(batch["files"]) <= 500 for batch in batches)
+    paths = [item["path"] for batch in batches for item in batch["files"]]
+    assert len(paths) == 501
+    assert len(set(paths)) == 501
 
 
 def test_projection_conflict_causes_emitter_nonzero_exit(monkeypatch, tmp_path):
