@@ -155,6 +155,19 @@ class TelemetryStore:
         ).fetchone()
         return None if row is None else int(row["emitted_at_ms"])
 
+    def milliseconds_until_heartbeat(self, now_ms: int) -> int:
+        """Return the exact remaining wait until the next durable heartbeat."""
+        if type(now_ms) is not int or now_ms < 0:
+            raise ValueError("INVALID_HEARTBEAT_TIME")
+
+        with self._lock:
+            last = self._last_heartbeat_ms()
+            if last is None:
+                return 0
+            if now_ms < last:
+                raise ValueError("HEARTBEAT_CLOCK_REGRESSION")
+            return max(0, HEARTBEAT_INTERVAL_MS - (now_ms - last))
+
     def emit_heartbeat(
         self,
         now_ms: int,
@@ -204,8 +217,10 @@ class TelemetryStore:
                 raise
 
         return {
+            "sender": "radar",
             "domain": "system",
             "intent": "telemetry",
+            "priority": 4,
             "emitted_at_ms": now_ms,
             "counts": snapshot.as_dict(),
             "source_ref": source_ref,
