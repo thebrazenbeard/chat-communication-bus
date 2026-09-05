@@ -58,16 +58,23 @@ class LogicalEndpoint:
         if canonical != self.endpoint_id:
             raise IdentityError("ENDPOINT_ID_MUST_BE_CANONICAL")
 
-        if not self.display_name or not self.display_name.strip():
+        if not isinstance(self.display_name, str) or not self.display_name.strip():
             raise IdentityError("DISPLAY_NAME_REQUIRED")
-        if not self.project_scope or not self.project_scope.strip():
+        if not isinstance(self.project_scope, str) or not self.project_scope.strip():
             raise IdentityError("PROJECT_SCOPE_REQUIRED")
 
-        if self.slack_user_id is not None and not _SLACK_USER_RE.fullmatch(self.slack_user_id):
+        if self.slack_user_id is not None and (
+            not isinstance(self.slack_user_id, str)
+            or _SLACK_USER_RE.fullmatch(self.slack_user_id) is None
+        ):
             raise IdentityError("INVALID_SLACK_USER_ID")
 
         if self.icon_emoji is not None:
-            if not (len(self.icon_emoji) >= 3 and self.icon_emoji.startswith(":") and self.icon_emoji.endswith(":")):
+            if not isinstance(self.icon_emoji, str) or not (
+                len(self.icon_emoji) >= 3
+                and self.icon_emoji.startswith(":")
+                and self.icon_emoji.endswith(":")
+            ):
                 raise IdentityError("INVALID_ICON_EMOJI")
 
         seen: set[str] = set()
