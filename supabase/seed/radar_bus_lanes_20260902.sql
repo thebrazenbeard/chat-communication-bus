@@ -1,89 +1,85 @@
 -- Radar GitHub writer-lane projection snapshot, observed 2026-09-02.
--- GitHub branch existence is durable routing/provenance evidence, not node liveness.
--- Radar itself is seeded by radar_v1.sql; this snapshot projects the other current lanes.
+-- Consolidated & parameterized version:
+--  - single lane CTE reused for both identity and endpoint inserts
+--  - observed_date is parameterized via the params CTE
+--  - transaction wrapper for atomicity
+-- Change the observed_date in params if you need a different snapshot date.
 
-with lane(identity_id, display_name, branch_name) as (
-  values
-    ('brigit', 'Brigit', 'bus/bridget-v1'),
-    ('eight', 'Eight', 'bus/eight-v1'),
-    ('five-five', 'Five-Five', 'bus/five-five-v1'),
-    ('five', 'Five', 'bus/five-v1'),
-    ('fng', 'FNG', 'bus/fng-v1'),
-    ('four', 'Four', 'bus/four-v1'),
-    ('hephaestus', 'Hephaestus', 'bus/hephaestus-v2'),
-    ('masa', 'Masa', 'bus/masa-v1'),
-    ('mune', 'Mune', 'bus/mune-v1'),
-    ('nine', 'Nine', 'bus/nine-v1'),
-    ('one', 'One', 'bus/one-v1'),
-    ('seven', 'Seven', 'bus/seven-v1'),
-    ('six', 'Six', 'bus/six-v1'),
-    ('thirteen', 'Thirteen', 'bus/thirteen-v1'),
-    ('three', 'Three', 'bus/three-v1'),
-    ('two', 'Two', 'bus/two-v1'),
-    ('vera', 'Vera', 'bus/vera-sol-v1'),
-    ('yang', 'Yang', 'bus/yang-v1'),
-    ('yin', 'Yin', 'bus/yin-v1')
+BEGIN;
+
+WITH
+params AS (
+  -- Change here if you want to set a different observed_date for the whole file
+  SELECT '2026-09-02'::date AS observed_date
+),
+lane(identity_id, display_name, branch_name, aliases) AS (
+  VALUES
+    ('brigit', 'Brigit', 'bus/bridget-v1', ARRAY['bridget']::text[]),
+    ('eight', 'Eight', 'bus/eight-v1', '{}'::text[]),
+    ('five-five', 'Five-Five', 'bus/five-five-v1', '{}'::text[]),
+    ('five', 'Five', 'bus/five-v1', '{}'::text[]),
+    ('fng', 'FNG', 'bus/fng-v1', '{}'::text[]),
+    ('four', 'Four', 'bus/four-v1', '{}'::text[]),
+    ('hephaestus', 'Hephaestus', 'bus/hephaestus-v2', '{}'::text[]),
+    ('masa', 'Masa', 'bus/masa-v1', '{}'::text[]),
+    ('mune', 'Mune', 'bus/mune-v1', '{}'::text[]),
+    ('nine', 'Nine', 'bus/nine-v1', '{}'::text[]),
+    ('one', 'One', 'bus/one-v1', '{}'::text[]),
+    ('seven', 'Seven', 'bus/seven-v1', '{}'::text[]),
+    ('six', 'Six', 'bus/six-v1', '{}'::text[]),
+    ('thirteen', 'Thirteen', 'bus/thirteen-v1', '{}'::text[]),
+    ('three', 'Three', 'bus/three-v1', '{}'::text[]),
+    ('two', 'Two', 'bus/two-v1', '{}'::text[]),
+    ('vera', 'Vera', 'bus/vera-sol-v1', ARRAY['vera-sol']::text[]),
+    ('yang', 'Yang', 'bus/yang-v1', '{}'::text[]),
+    ('yin', 'Yin', 'bus/yin-v1', '{}'::text[])
 )
-insert into radar.identities(identity_id, display_name, aliases, lifecycle_status, metadata)
-select
-  identity_id,
-  display_name,
-  case when identity_id = 'brigit' then array['bridget']::text[]
-       else case when identity_id = 'vera' then array['vera-sol']::text[] else '{}'::text[] end
-  end,
+
+-- Insert / upsert identities
+INSERT INTO radar.identities (identity_id, display_name, aliases, lifecycle_status, metadata)
+SELECT
+  l.identity_id,
+  l.display_name,
+  l.aliases,
   'ACTIVE',
   jsonb_build_object(
     'projection_basis', 'github_writer_lane_observed',
-    'observed_branch', branch_name,
-    'observed_date', '2026-09-02',
+    'observed_branch', l.branch_name,
+    'observed_date', p.observed_date,
     'liveness_claimed', false
   )
-from lane
-on conflict (identity_id) do update
-set display_name = excluded.display_name,
-    aliases = excluded.aliases,
-    metadata = excluded.metadata,
-    updated_at = now();
+FROM lane l
+CROSS JOIN params p
+ON CONFLICT (identity_id) DO UPDATE
+SET
+  display_name = EXCLUDED.display_name,
+  aliases = EXCLUDED.aliases,
+  metadata = EXCLUDED.metadata,
+  updated_at = now();
 
-with lane(identity_id, branch_name) as (
-  values
-    ('brigit', 'bus/bridget-v1'),
-    ('eight', 'bus/eight-v1'),
-    ('five-five', 'bus/five-five-v1'),
-    ('five', 'bus/five-v1'),
-    ('fng', 'bus/fng-v1'),
-    ('four', 'bus/four-v1'),
-    ('hephaestus', 'bus/hephaestus-v2'),
-    ('masa', 'bus/masa-v1'),
-    ('mune', 'bus/mune-v1'),
-    ('nine', 'bus/nine-v1'),
-    ('one', 'bus/one-v1'),
-    ('seven', 'bus/seven-v1'),
-    ('six', 'bus/six-v1'),
-    ('thirteen', 'bus/thirteen-v1'),
-    ('three', 'bus/three-v1'),
-    ('two', 'bus/two-v1'),
-    ('vera', 'bus/vera-sol-v1'),
-    ('yang', 'bus/yang-v1'),
-    ('yin', 'bus/yin-v1')
-)
-insert into radar.endpoints(endpoint_id, identity_id, transport, address, status, metadata)
-select
-  'lane-' || identity_id,
-  identity_id,
+-- Insert / upsert endpoints
+INSERT INTO radar.endpoints (endpoint_id, identity_id, transport, address, status, metadata)
+SELECT
+  'lane-' || l.identity_id,
+  l.identity_id,
   'github_branch',
-  branch_name,
+  l.branch_name,
   'ACTIVE',
   jsonb_build_object(
     'role', 'sole_writer_mailbox_projection',
     'projection_basis', 'github_writer_lane_observed',
-    'liveness_claimed', false
+    'liveness_claimed', false,
+    'observed_date', p.observed_date
   )
-from lane
-on conflict (endpoint_id) do update
-set identity_id = excluded.identity_id,
-    transport = excluded.transport,
-    address = excluded.address,
-    status = excluded.status,
-    metadata = excluded.metadata,
-    updated_at = now();
+FROM lane l
+CROSS JOIN params p
+ON CONFLICT (endpoint_id) DO UPDATE
+SET
+  identity_id = EXCLUDED.identity_id,
+  transport = EXCLUDED.transport,
+  address = EXCLUDED.address,
+  status = EXCLUDED.status,
+  metadata = EXCLUDED.metadata,
+  updated_at = now();
+
+COMMIT;
