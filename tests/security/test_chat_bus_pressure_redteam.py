@@ -121,7 +121,9 @@ def test_unrecognized_domain_and_intent_fail_closed_at_envelope_boundary():
         }
     )
 
-    assert result.classification is EnvelopeClassification.REJECTED
+    assert result.classification is EnvelopeClassification.DLQ
+    assert result.envelope is None
+    assert result.errors == ("domain", "intent")
 
 
 def test_caller_cannot_bypass_deterministic_500ms_dedupe_with_custom_key():
