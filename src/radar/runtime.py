@@ -165,13 +165,15 @@ class RadarRuntime:
 
         envelope = result.envelope
         message_id = envelope.message_id
-        if not self.dedupe.accept(self._dedupe_key(envelope), now_ms):
+        dedupe_key = self._dedupe_key(envelope)
+        if not self.dedupe.accept(dedupe_key, now_ms):
             self.telemetry.increment("dropped")
             return RuntimeReceipt(state="DROPPED_DUPLICATE", message_id=message_id)
 
         try:
             evicted = self.queue.push(envelope)
         except OverflowError:
+            self.dedupe.rollback_accept(dedupe_key, now_ms)
             self.telemetry.increment("dropped")
             return RuntimeReceipt(state="DROPPED_QUEUE_FULL", message_id=message_id)
 
