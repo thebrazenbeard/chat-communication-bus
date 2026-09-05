@@ -21,6 +21,7 @@ def test_heartbeat_message_is_radar_background_telemetry(tmp_path):
     assert heartbeat["intent"] == "telemetry"
     assert heartbeat["priority"] == 4
     assert heartbeat["heartbeat_sequence"] == 1
+    assert heartbeat["missed_intervals"] == 0
     assert heartbeat["counts"] == {"routed": 2, "dropped": 1, "dlq": 3}
 
 
@@ -45,6 +46,7 @@ def test_heartbeat_is_a_canonical_radar_envelope_not_an_out_of_band_shape(tmp_pa
     assert result.envelope.payload == {
         "heartbeat_sequence": 1,
         "emitted_at_ms": 1_000,
+        "missed_intervals": 0,
         "counts": {"routed": 4, "dropped": 0, "dlq": 0},
         "source_ref": "main@abc",
         "provider_state": "DEGRADED",
@@ -75,6 +77,7 @@ def test_runtime_resumes_from_persisted_due_time_without_sixty_second_lag(tmp_pa
     assert len(emitted) == 1
     assert emitted[0]["emitted_at_ms"] == 1_000 + HEARTBEAT_INTERVAL_MS
     assert emitted[0]["heartbeat_sequence"] == 2
+    assert emitted[0]["missed_intervals"] == 0
 
 
 def test_runtime_emits_on_exact_sixty_second_cadence_and_stops_cleanly(tmp_path):
@@ -99,6 +102,7 @@ def test_runtime_emits_on_exact_sixty_second_cadence_and_stops_cleanly(tmp_path)
 
     assert [item["emitted_at_ms"] for item in emitted] == [0, HEARTBEAT_INTERVAL_MS]
     assert [item["heartbeat_sequence"] for item in emitted] == [1, 2]
+    assert [item["missed_intervals"] for item in emitted] == [0, 0]
     assert sleeps == [60.0]
     assert emitted[-1]["source_ref"] == "main@abc"
     assert emitted[-1]["provider_state"] == "DEGRADED"
@@ -143,6 +147,7 @@ def test_duplicate_emitters_share_one_durable_interval_claim(tmp_path):
     assert len(emitted) == 1
     assert emitted[0]["message_id"] == "radar-heartbeat-10000"
     assert emitted[0]["heartbeat_sequence"] == 1
+    assert emitted[0]["missed_intervals"] == 0
     rows = first.recent_heartbeats()
     assert len(rows) == 1
     assert rows[0].emitted_at_ms == 10_000
