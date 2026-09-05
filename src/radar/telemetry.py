@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime, timezone
 import logging
 from pathlib import Path
 import sqlite3
@@ -216,13 +217,30 @@ class TelemetryStore:
                     self.connection.rollback()
                 raise
 
+        counts = snapshot.as_dict()
+        payload = {
+            "emitted_at_ms": now_ms,
+            "counts": counts,
+            "source_ref": source_ref,
+            "provider_state": provider_state,
+        }
+        created_at = datetime.fromtimestamp(now_ms / 1_000, tz=timezone.utc).isoformat().replace(
+            "+00:00", "Z"
+        )
         return {
+            "schema_version": 1,
+            "message_id": f"radar-heartbeat-{now_ms}",
+            "created_at": created_at,
             "sender": "radar",
+            "audience": [],
             "domain": "system",
             "intent": "telemetry",
             "priority": 4,
+            "payload": payload,
+            # Retain these convenience fields for existing telemetry consumers;
+            # the canonical transport body is the payload above.
             "emitted_at_ms": now_ms,
-            "counts": snapshot.as_dict(),
+            "counts": counts,
             "source_ref": source_ref,
             "provider_state": provider_state,
         }
