@@ -550,13 +550,15 @@ def main(argv: list[str] | None = None) -> int:
             topology_path=args.topology,
             cutover_path=args.cutover,
         )
-        token = request_oidc_token(args.audience)
 
         all_results: list[dict[str, object]] = []
         total_projected = 0
         completed_chunks = 0
         for batch in batches:
             try:
+                # GitHub OIDC jti is a one-time credential at the Edge. Each
+                # HTTP chunk therefore needs its own freshly minted token.
+                token = request_oidc_token(args.audience)
                 result = post_projection_batch(args.endpoint, token, batch)
             except EmitterError as exc:
                 print(
