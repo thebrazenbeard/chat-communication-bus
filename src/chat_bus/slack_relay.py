@@ -59,7 +59,7 @@ class RelayEnvelope:
             raise RelayError("MESSAGE_BODY_REQUIRED")
         if len(self.body) > 40_000:
             raise RelayError("MESSAGE_BODY_TOO_LARGE")
-        if not isinstance(self.created_at_ms, int) or self.created_at_ms < 0:
+        if type(self.created_at_ms) is not int or self.created_at_ms < 0:
             raise RelayError("INVALID_CREATED_AT_MS")
         if self.thread_ts is not None and _TS_RE.fullmatch(self.thread_ts) is None:
             raise RelayError("INVALID_THREAD_TS")
