@@ -13,6 +13,7 @@ from radar.safe_lane_append import (
     LaneBinding,
     SafeAppendError,
     SafeLaneAppender,
+    _parse_message,
 )
 
 
@@ -77,6 +78,48 @@ class SequenceControl:
         return item
 
 
+def test_safe_append_parser_rejects_metadata_hidden_only_in_message_body():
+    text = (
+        "# Four -> Radar\n\n"
+        "created_at: 2026-09-05T20:00:00Z\n"
+        "requires_reply: true\n\n"
+        "body starts here\n"
+        "message_id: four-9999\n"
+        "writer: Four\n"
+    )
+    with pytest.raises(SafeAppendError) as exc:
+        _parse_message(text)
+    assert exc.value.code == "MESSAGE_ENVELOPE_INVALID"
+
+
+def test_safe_append_parser_accepts_yaml_frontmatter_like_writer_lane_guard():
+    parsed = _parse_message(
+        "---\n"
+        "message_id: four-0010\n"
+        "writer: Four\n"
+        "prev_message_id: four-0009\n"
+        "requires_reply: true\n"
+        "---\n\n"
+        "hello\n"
+    )
+    assert parsed.message_id == "four-0010"
+    assert parsed.writer == "Four"
+    assert parsed.prev_message_id == "four-0009"
+
+
+def test_safe_append_parser_unwraps_canonical_scalar_wrappers():
+    parsed = _parse_message(
+        "# Four -> Radar\n\n"
+        "message_id: `four-0010`\n"
+        "writer: \"Four\"\n"
+        "prev_message_id: 'four-0009'\n\n"
+        "hello\n"
+    )
+    assert parsed.message_id == "four-0010"
+    assert parsed.writer == "Four"
+    assert parsed.prev_message_id == "four-0009"
+
+
 def test_hyphenated_identity_idempotent_readback_uses_logical_identity_not_prefix_split():
     text = (
         "# Five-Five -> Radar\n\n"
@@ -131,7 +174,6 @@ def test_hyphenated_identity_idempotent_readback_uses_logical_identity_not_prefi
 
 
 def test_postwrite_control_unavailable_does_not_turn_unknown_currentness_into_false():
-    # Reuse the primary suite's behavior shape with a tiny write-capable fake.
     from tests.radar.test_safe_lane_append import FakeGit, _history, _message, _snapshot
 
     controls = SequenceControl(_snapshot(), _snapshot(), RuntimeError("control unavailable"))
