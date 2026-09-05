@@ -19,6 +19,7 @@ def _repo_with_cross_generation_reuse(tmp_path):
     base = git(repo, "rev-parse", "HEAD")
 
     subprocess.check_call(["git", "-C", str(repo), "checkout", "-qb", "bus/one-v1", base])
+    (repo / "messages").mkdir(exist_ok=True)
     (repo / "messages" / "historical.md").write_text(
         "message_id: one-0042\nwriter: One\n", encoding="utf-8"
     )
@@ -27,6 +28,7 @@ def _repo_with_cross_generation_reuse(tmp_path):
     historical_head = git(repo, "rev-parse", "HEAD")
 
     subprocess.check_call(["git", "-C", str(repo), "checkout", "-qb", "bus/one-v2", base])
+    (repo / "messages").mkdir(exist_ok=True)
     (repo / "messages" / "current.md").write_text(
         "message_id: one-0042\nwriter: One\n", encoding="utf-8"
     )
