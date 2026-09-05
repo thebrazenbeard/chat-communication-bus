@@ -177,10 +177,12 @@ class RadarEnvelope:
         ).encode("utf-8")
         content_hash = hashlib.sha256(canonical_bytes).hexdigest()
 
-        # The duplicate-suppression key is owned by Radar. Caller-provided
-        # idempotency values are intentionally not authoritative because two
-        # identical messages must collide inside the deterministic window.
-        idempotency_key = content_hash
+        # Keep provenance hashing separate from the middleware's deterministic
+        # duplicate hash. The original Radar middleware hashes only the sorted
+        # payload JSON, so caller metadata or caller-selected idempotency values
+        # cannot manufacture a different dedupe key for the same payload.
+        payload_bytes = json.dumps(payload, sort_keys=True, default=str).encode("utf-8")
+        idempotency_key = hashlib.sha256(payload_bytes).hexdigest()
 
         envelope = cls(
             schema_version=schema_version,
