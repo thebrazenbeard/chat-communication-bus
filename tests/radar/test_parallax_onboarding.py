@@ -19,7 +19,7 @@ def _onboarding():
 
 def test_parallax_is_registered_to_exact_inert_lane():
     lane = _topology()["required_writer_lanes"]["parallax"]
-    assert lane == {"writer": "Parallax", "branch": "bus/parallax-v1", "legacy_spelling": False}
+    assert lane == {"writer": "Parallax", "branch": "bus/parallax-v1", "legacy_spelling": False, "onboarding_status": "TOPOLOGY_PR_PENDING"}
     onboarding = _onboarding()
     assert onboarding["identity"] == "parallax"
     assert onboarding["branch"] == "bus/parallax-v1"
