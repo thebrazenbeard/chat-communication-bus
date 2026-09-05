@@ -159,6 +159,8 @@ class Ledger:
         *,
         created_at_ms: int | None = None,
     ) -> int:
+        if type(readback_confirmed) is not bool:
+            raise LedgerError("READBACK_CONFIRMED_MUST_BE_BOOL")
         digest = require_sha256(evidence_sha256, field="evidence_sha256")
         created = int(time.time() * 1000) if created_at_ms is None else created_at_ms
         try:
