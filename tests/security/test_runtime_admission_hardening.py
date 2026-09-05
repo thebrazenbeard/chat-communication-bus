@@ -141,12 +141,12 @@ def test_unrecognized_domain_or_intent_goes_to_dlq():
     assert "intent" in bad_intent.errors
 
 
-def test_caller_selected_idempotency_key_cannot_bypass_content_hash_dedupe():
+def test_caller_selected_idempotency_key_cannot_bypass_deterministic_dedupe():
     first = envelope(idempotency_key="attacker-key-a")
     second = envelope(idempotency_key="attacker-key-b")
     assert first.content_hash == second.content_hash
-    assert first.idempotency_key == first.content_hash
-    assert second.idempotency_key == second.content_hash
+    assert first.idempotency_key == second.idempotency_key
+    assert first.idempotency_key != first.content_hash
 
     window = DedupeWindow(window_ms=500)
     assert window.accept(first.idempotency_key, 1_000) is True
