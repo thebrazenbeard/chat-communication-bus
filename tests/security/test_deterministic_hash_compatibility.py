@@ -1,7 +1,7 @@
 import hashlib
 import json
 
-from radar.envelope import RadarEnvelope
+from radar.envelope import EnvelopeClassification, RadarEnvelope
 
 
 def _build(*, sender: str, audience: list[str], domain: str, intent: str):
@@ -43,3 +43,19 @@ def test_dedupe_key_matches_existing_middleware_payload_hash_contract():
     assert first.idempotency_key == expected
     assert second.idempotency_key == expected
     assert first.content_hash != second.content_hash
+
+
+def test_non_json_payload_fails_closed_before_deterministic_hashing():
+    result = RadarEnvelope.from_mapping(
+        {
+            "schema_version": 1,
+            "sender": "radar",
+            "domain": "system",
+            "intent": "event",
+            "payload": {"bad": object()},
+        }
+    )
+
+    assert result.classification is EnvelopeClassification.REJECTED
+    assert result.envelope is None
+    assert result.errors == ("payload",)
