@@ -273,9 +273,7 @@ def _message_ids_at_commit(repo_dir: Path, commit: str) -> set[str]:
             raise WriterLaneError(f"WRITER_LANE_MESSAGE_ID_REQUIRED:{path}")
         folded = message_id.casefold()
         if folded in ids:
-            raise WriterLaneError(
-                f"WRITER_LANE_MESSAGE_ID_DUPLICATE:{path}:{message_id}"
-            )
+            raise WriterLaneError(f"DUPLICATE_NEW_MESSAGE_ID:{message_id}:{path}")
         ids.add(folded)
     return ids
 
@@ -327,9 +325,7 @@ def _validate_commit_paths(repo_dir: Path, commit: str, lane: WriterLane) -> Non
             )
         folded_message_id = message_id.casefold()
         if folded_message_id in seen_message_ids:
-            raise WriterLaneError(
-                f"WRITER_LANE_MESSAGE_ID_DUPLICATE:{path}:{message_id}"
-            )
+            raise WriterLaneError(f"DUPLICATE_NEW_MESSAGE_ID:{message_id}:{path}")
         seen_message_ids.add(folded_message_id)
 
 
