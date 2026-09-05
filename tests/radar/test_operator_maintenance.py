@@ -23,6 +23,24 @@ def test_operator_status_does_not_claim_chat_session_is_identity_liveness():
     assert "identity_alive" not in status
 
 
+def test_operator_rejects_bool_numeric_coercion_and_truthy_string_session_state():
+    op, _ = _mods()
+    with pytest.raises(op.OperatorError, match="INVALID_IDENTITY_COUNT"):
+        op.RadarOperator.status(identity_count=True, online_node_count=1, chat_session_active=True)
+    with pytest.raises(op.OperatorError, match="INVALID_CHAT_SESSION_ACTIVE"):
+        op.RadarOperator.status(identity_count=1, online_node_count=1, chat_session_active="false")
+    with pytest.raises(op.OperatorError, match="INVALID_DLQ_PENDING"):
+        op.RadarOperator.dlq(pending=False)
+
+
+def test_operator_rejects_strings_as_finding_or_dependency_sequences():
+    op, _ = _mods()
+    with pytest.raises(op.OperatorError, match="INVALID_FINDINGS"):
+        op.RadarOperator.health(findings="oops")
+    with pytest.raises(op.OperatorError, match="INVALID_DEPENDENCIES"):
+        op.RadarOperator.dependencies(ready="one", waiting=())
+
+
 def test_maintenance_is_exception_oriented():
     _, m = _mods()
     findings = m.audit({"required_lanes": {"yin", "seven"}, "observed_lanes": {"yin"}, "dlq_pending": 2, "stale_endpoints": 0})
