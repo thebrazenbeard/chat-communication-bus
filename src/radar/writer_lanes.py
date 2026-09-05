@@ -9,7 +9,7 @@ import re
 import subprocess
 
 
-_WRITER_RE = re.compile(r"(?mi)^writer\s*:\s*(?P<value>.+?)\s*$")
+_HEADER_RE = re.compile(r"^([A-Za-z0-9_-]+)\s*:\s*(.*?)\s*$")
 _ZERO_SHA = "0" * 40
 
 
@@ -137,7 +137,11 @@ def _git_bytes(repo_dir: Path, *args: str) -> bytes:
             stderr=subprocess.PIPE,
         )
     except subprocess.CalledProcessError as exc:
-        detail = exc.stderr.decode("utf-8", errors="replace").strip() if exc.stderr else str(exc)
+        detail = (
+            exc.stderr.decode("utf-8", errors="replace").strip()
+            if exc.stderr
+            else str(exc)
+        )
         raise WriterLaneError(f"GIT_COMMAND_FAILED:{detail}") from exc
 
 
@@ -149,17 +153,73 @@ def _unwrap_scalar(value: str) -> str:
     return text
 
 
-def _declared_writer(repo_dir: Path, commit: str, path: str) -> str | None:
-    content = _git_bytes(repo_dir, "show", f"{commit}:{path}")
+def _put_header(headers: dict[str, str], raw: str, path: str) -> bool:
+    match = _HEADER_RE.match(raw)
+    if not match:
+        return False
+    key = match.group(1).casefold().replace("-", "_")
+    if key in headers:
+        raise WriterLaneError(f"WRITER_LANE_DUPLICATE_HEADER:{path}:{key}")
+    headers[key] = _unwrap_scalar(match.group(2))
+    return True
+
+
+def _message_headers(content: bytes, path: str) -> dict[str, str]:
     try:
         text = content.decode("utf-8")
     except UnicodeDecodeError as exc:
         raise WriterLaneError(f"WRITER_LANE_MESSAGE_NOT_UTF8:{path}") from exc
-    match = _WRITER_RE.search(text)
-    if not match:
-        return None
-    value = _unwrap_scalar(match.group("value"))
-    return value or None
+
+    lines = text.splitlines()
+    index = 0
+    while index < len(lines) and not lines[index].strip():
+        index += 1
+
+    # YAML-style frontmatter is supported as an alternate canonical header
+    # block. Only unindented scalar key/value rows are admitted as headers.
+    if index < len(lines) and lines[index].strip() == "---":
+        headers: dict[str, str] = {}
+        index += 1
+        while index < len(lines):
+            line = lines[index]
+            stripped = line.strip()
+            if stripped == "---":
+                if not headers:
+                    raise WriterLaneError(f"WRITER_LANE_HEADER_BLOCK_REQUIRED:{path}")
+                return headers
+            if stripped and not line.startswith((" ", "\t")):
+                if not _put_header(headers, line, path):
+                    raise WriterLaneError(f"WRITER_LANE_HEADER_INVALID:{path}")
+            index += 1
+        raise WriterLaneError(f"WRITER_LANE_FRONTMATTER_UNTERMINATED:{path}")
+
+    # Ordinary Bus Markdown may begin with one title heading, then a contiguous
+    # metadata block. Once the body begins, later `writer:`-looking text is body
+    # data and cannot satisfy admission.
+    if index < len(lines) and lines[index].lstrip().startswith("#"):
+        index += 1
+        while index < len(lines) and not lines[index].strip():
+            index += 1
+
+    headers = {}
+    started = False
+    while index < len(lines):
+        line = lines[index]
+        if not line.strip():
+            if started:
+                break
+            index += 1
+            continue
+        if not _put_header(headers, line, path):
+            if not started:
+                raise WriterLaneError(f"WRITER_LANE_HEADER_BLOCK_REQUIRED:{path}")
+            break
+        started = True
+        index += 1
+
+    if not started:
+        raise WriterLaneError(f"WRITER_LANE_HEADER_BLOCK_REQUIRED:{path}")
+    return headers
 
 
 def _assert_ancestor(repo_dir: Path, base: str, head: str) -> None:
@@ -180,13 +240,17 @@ def _commits_to_validate(repo_dir: Path, head: str, base: str | None) -> list[st
         except WriterLaneError as exc:
             raise WriterLaneError("WRITER_LANE_PARENT_REQUIRED") from exc
     _assert_ancestor(repo_dir, base, head)
-    commits = [line for line in _git(repo_dir, "rev-list", "--reverse", f"{base}..{head}").splitlines() if line]
+    commits = [
+        line
+        for line in _git(repo_dir, "rev-list", "--reverse", f"{base}..{head}").splitlines()
+        if line
+    ]
     if not commits:
         raise WriterLaneError("WRITER_LANE_NO_NEW_COMMITS")
     return commits
 
 
-def _validate_commit_paths(repo_dir: Path, commit: str, expected_writer: str) -> None:
+def _validate_commit_paths(repo_dir: Path, commit: str, lane: WriterLane) -> None:
     parent_line = _git(repo_dir, "rev-list", "--parents", "-n", "1", commit).split()
     if len(parent_line) != 2:
         raise WriterLaneError("WRITER_LANE_MERGE_COMMIT_FORBIDDEN")
@@ -212,10 +276,23 @@ def _validate_commit_paths(repo_dir: Path, commit: str, expected_writer: str) ->
             raise WriterLaneError(f"WRITER_LANE_PATH_FORBIDDEN:{path}")
         if status != "A":
             raise WriterLaneError(f"WRITER_LANE_MESSAGE_NOT_APPEND_ONLY:{path}")
-        declared = _declared_writer(repo_dir, commit, path)
-        if declared is not None and declared.casefold() != expected_writer.casefold():
+
+        content = _git_bytes(repo_dir, "show", f"{commit}:{path}")
+        headers = _message_headers(content, path)
+        declared_writer = headers.get("writer", "")
+        if not declared_writer:
+            raise WriterLaneError(f"WRITER_LANE_WRITER_REQUIRED:{path}")
+        if declared_writer.casefold() != lane.writer.casefold():
             raise WriterLaneError(
-                f"WRITER_LANE_WRITER_MISMATCH:{path}:{declared}:{expected_writer}"
+                f"WRITER_LANE_WRITER_MISMATCH:{path}:{declared_writer}:{lane.writer}"
+            )
+
+        message_id = headers.get("message_id", "")
+        if not message_id:
+            raise WriterLaneError(f"WRITER_LANE_MESSAGE_ID_REQUIRED:{path}")
+        if not message_id.casefold().startswith(f"{lane.identity.casefold()}-"):
+            raise WriterLaneError(
+                f"WRITER_LANE_MESSAGE_ID_NAMESPACE:{path}:{message_id}:{lane.identity}"
             )
 
 
@@ -248,7 +325,7 @@ def validate_writer_lane_commit(
     identity = identity_for_ref(ref, topology_path)
     lane = lanes[identity]
     for commit in _commits_to_validate(repo, head, base):
-        _validate_commit_paths(repo, commit, lane.writer)
+        _validate_commit_paths(repo, commit, lane)
 
     return identity
 
