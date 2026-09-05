@@ -42,3 +42,17 @@ def test_maintenance_surfaces_malformed_lane_separately_from_missing_lane():
     pairs = {(x.code, x.detail) for x in findings}
     assert ("MISSING_LANE", "hephaestus") in pairs
     assert ("MALFORMED_LANE", "bus/hephaestus-v1") in pairs
+
+
+def test_maintenance_rejects_boolean_or_negative_counts():
+    _, m = _mods()
+    with pytest.raises(m.MaintenanceError, match="INVALID_COUNT:dlq_pending"):
+        m.audit({"dlq_pending": True})
+    with pytest.raises(m.MaintenanceError, match="INVALID_COUNT:stale_endpoints"):
+        m.audit({"stale_endpoints": -1})
+
+
+def test_maintenance_rejects_truthy_string_flags_instead_of_reporting_false_alarm():
+    _, m = _mods()
+    with pytest.raises(m.MaintenanceError, match="INVALID_FLAG:ci_failed"):
+        m.audit({"ci_failed": "false"})
