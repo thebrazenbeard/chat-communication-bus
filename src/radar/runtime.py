@@ -103,6 +103,24 @@ class RadarRuntime:
             )
         return f"radar-dlq-{hashlib.sha256(canonical).hexdigest()[:16]}"
 
+    @classmethod
+    def _safe_dlq_value(cls, value: object) -> object:
+        """Return a deterministic JSON-safe evidence snapshot for rejected input."""
+        if value is None or isinstance(value, (str, bool, int, float)):
+            return value
+        if isinstance(value, Mapping):
+            return {
+                str(key): cls._safe_dlq_value(item)
+                for key, item in sorted(value.items(), key=lambda pair: str(pair[0]))
+            }
+        if isinstance(value, (list, tuple)):
+            return [cls._safe_dlq_value(item) for item in value]
+        return f"<{type(value).__name__}>"
+
+    @classmethod
+    def _safe_dlq_envelope(cls, raw: Mapping[str, object]) -> dict[str, object]:
+        return {str(key): cls._safe_dlq_value(value) for key, value in raw.items()}
+
     def admit(
         self,
         raw: Mapping[str, object],
@@ -124,7 +142,7 @@ class RadarRuntime:
                 message_id=message_id,
                 failure_stage="ADMISSION",
                 failure_code="UNKNOWN_TAXONOMY",
-                envelope=dict(raw),
+                envelope=self._safe_dlq_envelope(raw),
                 diagnostic=",".join(result.errors) or "unknown taxonomy",
                 reason_category="TAXONOMY",
                 source_locator=source_locator,
