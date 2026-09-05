@@ -159,6 +159,25 @@ class DedupeWindow:
                 self._seen.popitem(last=False)
             return True
 
+    def rollback_accept(self, idempotency_key: str, accepted_at_ms: int) -> bool:
+        """Undo one exact successful acceptance when downstream admission fails.
+
+        The timestamp guard prevents a stale rollback from deleting a newer
+        acceptance of the same key. The monotonic-clock watermark intentionally
+        remains advanced: a failed downstream admission is not permission for
+        callers to move the runtime clock backwards.
+        """
+        if not isinstance(idempotency_key, str) or not idempotency_key:
+            raise ValueError("INVALID_DEDUPE_KEY")
+        if type(accepted_at_ms) is not int or accepted_at_ms < 0:
+            raise ValueError("INVALID_DEDUPE_TIME")
+
+        with self._lock:
+            if self._seen.get(idempotency_key) != accepted_at_ms:
+                return False
+            del self._seen[idempotency_key]
+            return True
+
     def __len__(self) -> int:
         with self._lock:
             return len(self._seen)
