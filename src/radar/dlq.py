@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import Enum
 import json
 from pathlib import Path
 import sqlite3
@@ -10,6 +11,20 @@ import sqlite3
 
 class DeadLetterError(RuntimeError):
     pass
+
+
+class Applicability(str, Enum):
+    """Valid applicability states for dead-letter items."""
+    UNKNOWN = "UNKNOWN"
+    APPLICABLE = "APPLICABLE"
+    NOT_APPLICABLE = "NOT_APPLICABLE"
+
+
+class ReplayState(str, Enum):
+    """Valid replay states for dead-letter items."""
+    PENDING = "PENDING"
+    REPLAYED = "REPLAYED"
+    DISCARDED = "DISCARDED"
 
 
 @dataclass(frozen=True)
@@ -28,6 +43,10 @@ class DeadLetterItem:
 
 
 class DeadLetterStore:
+    """SQLite-backed dead-letter queue with replay and applicability tracking."""
+
+    MAX_RETRIES = 5
+
     def __init__(self, path: str | Path) -> None:
         self.path = str(path)
         self.connection = sqlite3.connect(self.path)
@@ -54,6 +73,13 @@ class DeadLetterStore:
         self._migrate_evidence_columns()
         self.connection.commit()
 
+    def __enter__(self) -> DeadLetterStore:
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
+        self.close()
+        return False
+
     def _migrate_evidence_columns(self) -> None:
         columns = {
             row["name"]
@@ -71,6 +97,22 @@ class DeadLetterStore:
 
     def close(self) -> None:
         self.connection.close()
+
+    def _row_to_item(self, row: sqlite3.Row) -> DeadLetterItem:
+        """Convert a database row to a DeadLetterItem."""
+        return DeadLetterItem(
+            item_id=int(row["item_id"]),
+            message_id=row["message_id"],
+            failure_stage=row["failure_stage"],
+            failure_code=row["failure_code"],
+            envelope=json.loads(row["envelope_json"]),
+            diagnostic=row["diagnostic"],
+            reason_category=row["reason_category"],
+            source_locator=row["source_locator"],
+            applicability=row["applicability"],
+            replay_state=row["replay_state"],
+            retry_count=int(row["retry_count"]),
+        )
 
     def record(
         self,
@@ -123,22 +165,10 @@ class DeadLetterStore:
         ).fetchone()
         if row is None:
             raise DeadLetterError("NOT_FOUND")
-        return DeadLetterItem(
-            item_id=int(row["item_id"]),
-            message_id=row["message_id"],
-            failure_stage=row["failure_stage"],
-            failure_code=row["failure_code"],
-            envelope=json.loads(row["envelope_json"]),
-            diagnostic=row["diagnostic"],
-            reason_category=row["reason_category"],
-            source_locator=row["source_locator"],
-            applicability=row["applicability"],
-            replay_state=row["replay_state"],
-            retry_count=int(row["retry_count"]),
-        )
+        return self._row_to_item(row)
 
     def set_applicability(self, item_id: int, applicability: str) -> None:
-        if applicability not in {"APPLICABLE", "NOT_APPLICABLE"}:
+        if applicability not in {Applicability.APPLICABLE.value, Applicability.NOT_APPLICABLE.value}:
             raise DeadLetterError("INVALID_APPLICABILITY")
         with self.connection:
             cursor = self.connection.execute(
@@ -148,21 +178,35 @@ class DeadLetterStore:
         if cursor.rowcount != 1:
             raise DeadLetterError("NOT_FOUND")
 
+    def list_pending_applicable(self, limit: int = 100) -> list[DeadLetterItem]:
+        """Retrieve items ready for replay (applicable and pending)."""
+        rows = self.connection.execute(
+            """
+            SELECT * FROM radar_dead_letters
+            WHERE applicability = ? AND replay_state = ?
+            LIMIT ?
+            """,
+            (Applicability.APPLICABLE.value, ReplayState.PENDING.value, limit),
+        ).fetchall()
+        return [self._row_to_item(row) for row in rows]
+
     def mark_replay(self, item_id: int) -> None:
         item = self.inspect(item_id)
-        if item.applicability == "UNKNOWN":
+        if item.applicability == Applicability.UNKNOWN.value:
             raise DeadLetterError("APPLICABILITY_NOT_REFRESHED")
-        if item.applicability != "APPLICABLE":
+        if item.applicability != Applicability.APPLICABLE.value:
             raise DeadLetterError("MESSAGE_NOT_APPLICABLE")
+        if item.retry_count >= self.MAX_RETRIES:
+            raise DeadLetterError("MAX_RETRIES_EXCEEDED")
         with self.connection:
             self.connection.execute(
                 """
                 UPDATE radar_dead_letters
-                SET replay_state = 'REPLAYED', retry_count = retry_count + 1
+                SET replay_state = ?, retry_count = retry_count + 1
                 WHERE item_id = ?
                 """,
-                (item_id,),
+                (ReplayState.REPLAYED.value, item_id),
             )
 
 
-__all__ = ["DeadLetterError", "DeadLetterItem", "DeadLetterStore"]
+__all__ = ["DeadLetterError", "DeadLetterItem", "DeadLetterStore", "Applicability", "ReplayState"]
