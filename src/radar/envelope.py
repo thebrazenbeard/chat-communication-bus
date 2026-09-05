@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 import uuid
-from typing import Mapping
+from typing import Any, Mapping, Optional, Sequence, Tuple, List
 
 from .model import EnvelopeClassification
 
@@ -37,6 +37,10 @@ ALLOWED_INTENTS = frozenset(
     }
 )
 
+DEFAULT_PRIORITY = 3
+MIN_PRIORITY = 0
+MAX_PRIORITY = 4
+
 
 @dataclass(frozen=True)
 class RadarEnvelope:
@@ -44,24 +48,51 @@ class RadarEnvelope:
     message_id: str
     created_at: str
     sender: str
-    audience: tuple[str, ...]
+    audience: Tuple[str, ...]
     domain: str
     intent: str
     priority: int
-    payload: object
+    payload: Any
     content_hash: str
     idempotency_key: str
-    correlation_id: str | None = None
-    root_task_id: str | None = None
-    causal_parent_id: str | None = None
+    correlation_id: Optional[str] = None
+    root_task_id: Optional[str] = None
+    causal_parent_id: Optional[str] = None
     requires_ack: bool = False
-    expires_at: str | None = None
-    authority_ref: str | None = None
-    source_refs: tuple[str, ...] = ()
+    expires_at: Optional[str] = None
+    authority_ref: Optional[str] = None
+    source_refs: Tuple[str, ...] = ()
+
+    def to_dict(self) -> Mapping[str, Any]:
+        """Return a JSON-serializable mapping of this envelope."""
+        return {
+            "schema_version": self.schema_version,
+            "message_id": self.message_id,
+            "created_at": self.created_at,
+            "sender": self.sender,
+            "audience": list(self.audience),
+            "domain": self.domain,
+            "intent": self.intent,
+            "priority": self.priority,
+            "payload": self.payload,
+            "content_hash": self.content_hash,
+            "idempotency_key": self.idempotency_key,
+            "correlation_id": self.correlation_id,
+            "root_task_id": self.root_task_id,
+            "causal_parent_id": self.causal_parent_id,
+            "requires_ack": self.requires_ack,
+            "expires_at": self.expires_at,
+            "authority_ref": self.authority_ref,
+            "source_refs": list(self.source_refs),
+        }
 
     @classmethod
     def from_mapping(cls, raw: Mapping[str, object]) -> "EnvelopeResult":
-        errors: list[str] = []
+        """
+        Validate and normalize a raw mapping into a RadarEnvelope.
+        Returns an EnvelopeResult with classification, possibly a normalized envelope, and errors.
+        """
+        errors: List[str] = []
         required = ("schema_version", "sender", "domain", "intent", "payload")
         for field in required:
             if field not in raw:
@@ -70,6 +101,7 @@ class RadarEnvelope:
         if errors:
             return EnvelopeResult(EnvelopeClassification.REJECTED, None, tuple(errors))
 
+        # Validate schema_version
         try:
             schema_version = int(raw["schema_version"])
         except (TypeError, ValueError):
@@ -77,9 +109,13 @@ class RadarEnvelope:
         if schema_version != 1:
             return EnvelopeResult(EnvelopeClassification.REJECTED, None, ("schema_version",))
 
-        sender = _required_text(raw.get("sender"), "sender", errors)
-        domain = _required_text(raw.get("domain"), "domain", errors)
-        intent = _required_text(raw.get("intent"), "intent", errors)
+        # Sender - preserve original casing but require non-empty string
+        sender = _required_text(raw.get("sender"), "sender", errors, casefold=False)
+
+        # Domain and intent - normalize for taxonomy checks (store as lowercased)
+        domain = _required_text(raw.get("domain"), "domain", errors, casefold=True)
+        intent = _required_text(raw.get("intent"), "intent", errors, casefold=True)
+
         if errors:
             return EnvelopeResult(
                 EnvelopeClassification.REJECTED,
@@ -87,19 +123,18 @@ class RadarEnvelope:
                 tuple(dict.fromkeys(errors)),
             )
 
-        taxonomy_errors: list[str] = []
+        # Taxonomy enforcement: domain and intent must be in allowed sets
+        taxonomy_errors: List[str] = []
         if domain not in ALLOWED_DOMAINS:
             taxonomy_errors.append("domain")
         if intent not in ALLOWED_INTENTS:
             taxonomy_errors.append("intent")
         if taxonomy_errors:
-            return EnvelopeResult(
-                EnvelopeClassification.DLQ,
-                None,
-                tuple(taxonomy_errors),
-            )
+            return EnvelopeResult(EnvelopeClassification.DLQ, None, tuple(taxonomy_errors))
 
         normalized = False
+
+        # message_id: allow provided string or generate one
         message_id_obj = raw.get("message_id")
         if isinstance(message_id_obj, str) and message_id_obj.strip():
             message_id = message_id_obj.strip()
@@ -107,6 +142,7 @@ class RadarEnvelope:
             message_id = f"rad_{uuid.uuid4().hex[:16]}"
             normalized = True
 
+        # created_at: accept provided string or generate an RFC3339-ish UTC string with Z
         created_at_obj = raw.get("created_at")
         if isinstance(created_at_obj, str) and created_at_obj.strip():
             created_at = created_at_obj.strip()
@@ -114,42 +150,55 @@ class RadarEnvelope:
             created_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
             normalized = True
 
+        # audience: normalize to unique, casefolded tuple; empty if missing
         audience_obj = raw.get("audience")
         if audience_obj is None:
-            audience: tuple[str, ...] = ()
+            audience: Tuple[str, ...] = ()
             normalized = True
         elif isinstance(audience_obj, (list, tuple)) and all(
             isinstance(v, str) and v.strip() for v in audience_obj
         ):
-            audience = tuple(v.strip().casefold() for v in audience_obj)
+            # Deduplicate while preserving deterministic order: casefold each and keep first occurrence
+            seen = set()
+            normalized_audience: List[str] = []
+            for v in audience_obj:
+                folded = v.strip().casefold()
+                if folded not in seen:
+                    seen.add(folded)
+                    normalized_audience.append(folded)
+            audience = tuple(normalized_audience)
         else:
             errors.append("audience")
             audience = ()
 
+        # priority: default and bounds check
         priority_obj = raw.get("priority")
         if priority_obj is None:
-            priority = 3
+            priority = DEFAULT_PRIORITY
             normalized = True
         else:
             try:
                 priority = int(priority_obj)
             except (TypeError, ValueError):
-                priority = -1
-            if not 0 <= priority <= 4:
+                priority = MIN_PRIORITY - 1
+            if not (MIN_PRIORITY <= priority <= MAX_PRIORITY):
                 errors.append("priority")
 
+        # requires_ack must be boolean
         requires_ack_obj = raw.get("requires_ack", False)
         if not isinstance(requires_ack_obj, bool):
             errors.append("requires_ack")
         requires_ack = bool(requires_ack_obj)
 
+        # source_refs: must be a list/tuple of strings
         source_refs_obj = raw.get("source_refs", ())
         if isinstance(source_refs_obj, (list, tuple)) and all(
             isinstance(v, str) for v in source_refs_obj
         ):
             source_refs = tuple(source_refs_obj)
         else:
-            errors.append("source_refs")
+            if source_refs_obj is not None:
+                errors.append("source_refs")
             source_refs = ()
 
         if errors:
@@ -159,12 +208,14 @@ class RadarEnvelope:
                 tuple(dict.fromkeys(errors)),
             )
 
+        # payload: ensure JSON-serializable for hashing/dedupe
         payload = raw["payload"]
         try:
             payload_json = json.dumps(payload, sort_keys=True)
         except (TypeError, ValueError):
             return EnvelopeResult(EnvelopeClassification.REJECTED, None, ("payload",))
 
+        # canonical for content hash: include only the parts that should affect payload equivalence
         canonical = {
             "schema_version": schema_version,
             "sender": sender,
@@ -181,10 +232,7 @@ class RadarEnvelope:
         ).encode("utf-8")
         content_hash = hashlib.sha256(canonical_bytes).hexdigest()
 
-        # Keep provenance hashing separate from the middleware's deterministic
-        # duplicate hash. The original Radar middleware hashes only the sorted
-        # payload JSON, so caller metadata or caller-selected idempotency values
-        # cannot manufacture a different dedupe key for the same payload.
+        # idempotency key is based solely on the serialized payload (legacy behavior)
         idempotency_key = hashlib.sha256(payload_json.encode("utf-8")).hexdigest()
 
         envelope = cls(
@@ -207,6 +255,7 @@ class RadarEnvelope:
             authority_ref=_optional_text(raw.get("authority_ref")),
             source_refs=source_refs,
         )
+
         classification = (
             EnvelopeClassification.NORMALIZED if normalized else EnvelopeClassification.VALID
         )
@@ -216,18 +265,24 @@ class RadarEnvelope:
 @dataclass(frozen=True)
 class EnvelopeResult:
     classification: EnvelopeClassification
-    envelope: RadarEnvelope | None
-    errors: tuple[str, ...] = ()
+    envelope: Optional[RadarEnvelope]
+    errors: Tuple[str, ...] = ()
 
 
-def _required_text(value: object, field: str, errors: list[str]) -> str:
+def _required_text(
+    value: object, field: str, errors: List[str], casefold: bool = True
+) -> str:
+    """
+    Validate a required textual field, optionally casefolding it for normalization.
+    Appends the field name to errors on failure and returns an empty string in that case.
+    """
     if not isinstance(value, str) or not value.strip():
         errors.append(field)
         return ""
-    return value.strip().casefold()
+    return value.strip().casefold() if casefold else value.strip()
 
 
-def _optional_text(value: object) -> str | None:
+def _optional_text(value: object) -> Optional[str]:
     if value is None:
         return None
     if isinstance(value, str) and value.strip():
