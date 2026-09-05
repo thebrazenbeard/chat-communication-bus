@@ -324,6 +324,25 @@ def post_projection_batch(endpoint: str, oidc_token: str, batch: dict[str, objec
     return result
 
 
+def projection_result_failed(result: dict[str, object]) -> bool:
+    if result.get("ok") is False:
+        return True
+
+    conflicts = result.get("conflicts", 0)
+    if isinstance(conflicts, int) and conflicts > 0:
+        return True
+
+    rows = result.get("results", ())
+    if isinstance(rows, list):
+        for row in rows:
+            if not isinstance(row, dict):
+                return True
+            status = row.get("result")
+            if isinstance(status, str) and status.casefold() == "conflict":
+                return True
+    return False
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-dir", required=True)
@@ -380,8 +399,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     print(json.dumps(result, sort_keys=True))
-    conflicts = result.get("conflicts", 0)
-    return 1 if isinstance(conflicts, int) and conflicts > 0 else 0
+    return 1 if projection_result_failed(result) else 0
 
 
 if __name__ == "__main__":
