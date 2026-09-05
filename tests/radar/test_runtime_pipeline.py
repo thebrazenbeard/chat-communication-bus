@@ -110,6 +110,34 @@ def test_dedupe_is_scoped_to_route_context_not_payload_globally(tmp_path):
     assert runtime.telemetry.snapshot().dropped == 1
 
 
+def test_failed_queue_admission_does_not_poison_dedupe_retry(tmp_path):
+    runtime = _runtime(tmp_path, queue_size=1)
+
+    assert runtime.admit(
+        _raw("radar-blocker-0001", payload={"blocker": True}),
+        now_ms=15_000,
+    ).state == "QUEUED"
+
+    rejected = runtime.admit(
+        _raw("radar-retry-0001", payload={"retry": True}),
+        now_ms=15_100,
+    )
+    assert rejected.state == "DROPPED_QUEUE_FULL"
+
+    assert runtime.dispatch_next().state == "DISPATCHED"
+
+    retry = runtime.admit(
+        _raw("radar-retry-0002", payload={"retry": True}),
+        now_ms=15_200,
+    )
+    assert retry.state == "QUEUED"
+    assert runtime.telemetry.snapshot().as_dict() == {
+        "routed": 1,
+        "dropped": 1,
+        "dlq": 0,
+    }
+
+
 def test_priority_zero_evicts_background_counts_drop_and_dispatches_immediately(tmp_path):
     runtime = _runtime(tmp_path, queue_size=2)
 
