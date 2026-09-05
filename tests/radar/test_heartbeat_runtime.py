@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import threading
+
 from radar.envelope import EnvelopeClassification, RadarEnvelope
 from radar.heartbeat import HeartbeatRuntime
 from radar.telemetry import HEARTBEAT_INTERVAL_MS, TelemetryStore
@@ -96,3 +98,42 @@ def test_runtime_emits_on_exact_sixty_second_cadence_and_stops_cleanly(tmp_path)
     assert sleeps == [60.0]
     assert emitted[-1]["source_ref"] == "main@abc"
     assert emitted[-1]["provider_state"] == "DEGRADED"
+
+
+def test_duplicate_emitters_share_one_durable_interval_claim(tmp_path):
+    path = tmp_path / "duplicate-emitters.sqlite"
+    first = TelemetryStore(path, check_same_thread=False)
+    second = TelemetryStore(path, check_same_thread=False)
+    start = threading.Barrier(3)
+    result_lock = threading.Lock()
+    results = []
+    errors = []
+
+    def emit(store):
+        try:
+            start.wait()
+            heartbeat = store.emit_heartbeat(10_000)
+            with result_lock:
+                results.append(heartbeat)
+        except Exception as exc:
+            with result_lock:
+                errors.append(exc)
+
+    threads = [
+        threading.Thread(target=emit, args=(first,)),
+        threading.Thread(target=emit, args=(second,)),
+    ]
+    for thread in threads:
+        thread.start()
+    start.wait()
+    for thread in threads:
+        thread.join(5)
+
+    assert all(not thread.is_alive() for thread in threads)
+    assert errors == []
+    emitted = [heartbeat for heartbeat in results if heartbeat is not None]
+    assert len(emitted) == 1
+    assert emitted[0]["message_id"] == "radar-heartbeat-10000"
+    rows = first.recent_heartbeats()
+    assert len(rows) == 1
+    assert rows[0].emitted_at_ms == 10_000
