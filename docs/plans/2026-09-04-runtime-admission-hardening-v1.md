@@ -69,7 +69,9 @@ The supplied `radar_middleware_draft.py` computes `deterministic_hash` as SHA-25
 - `content_hash`: provenance/content identity over sender + audience + domain + intent + payload;
 - `idempotency_key`: Radar-owned duplicate key using the middleware's payload-only deterministic hash.
 
-Caller-supplied `idempotency_key` is non-authoritative. This preserves the explicitly supplied middleware contract instead of conflating provenance identity with the 500 ms duplicate window.
+Caller-supplied `idempotency_key` is non-authoritative. Non-JSON payloads fail closed before hashing so the implementation cannot silently invent process-specific string representations that differ from the supplied middleware contract.
+
+This preserves the explicitly supplied middleware behavior instead of conflating provenance identity with the 500 ms duplicate window.
 
 ## Routing/liveness rule
 
@@ -106,8 +108,10 @@ The message ID must begin with the logical identity namespace `<identity>-`, cas
 1. Initial focused regression set produced the intended RED result: 10 failures with 177 existing tests passing.
 2. The first implementation pass produced 187/187 green on Python 3.11 and 3.12, including compile and source-hash checks.
 3. Live read-only taxonomy reconciliation then exposed three compatibility defects in the first allowlist (`chat_bus`, `bus_message`, `protocol`, `repository`), and a focused compatibility test reproduced them as 3 failures with 191 tests passing.
-4. A separate source check against the supplied middleware draft showed that its deterministic duplicate hash is payload-only, not the broader provenance `content_hash`; a focused test reproduced that mismatch as 1 failure with 194 tests passing.
-5. Final green verification must be taken from the exact review head after all corrections and documentation are committed.
-6. Request independent hostile review on the Bus, keeping provider projection status distinct from Git durability while issue #16 remains open.
+4. A separate source check against the supplied middleware draft showed that its deterministic duplicate hash is payload-only, not the broader provenance `content_hash`; a focused test reproduced that mismatch.
+5. A fail-closed JSON-serialization test then isolated the remaining middleware-compatibility edge: after correcting the stale hash assertion, the exact RED result was 1 failure with 195 tests passing.
+6. Implementation head `a1a59fb5e3a9e4172488d8efd32f842a564eea6f` then passed 196/196 tests on Python 3.11 and 3.12, with compile and source-hash checks green.
+7. The documentation-only evidence update that follows that implementation head still requires one final exact-head CI readback before review-ready status is claimed.
+8. Request independent hostile review on the Bus, keeping provider projection status distinct from Git durability while issue #16 remains open.
 
 Patrick remains sole merge and protected-effect authority.
