@@ -1,31 +1,94 @@
+"""Parse and project bus messages from Git repositories.
+
+Messages are stored as UTF-8 text files with optional YAML frontmatter:
+
+    ---
+    message_id: unique-message-id
+    writer: sender-name
+    created_at: 2026-09-05T10:00:00Z
+    intended_recipient: recipient1, recipient2
+    requires_ack: yes
+    subject: Optional subject
+    ---
+
+    Message body here.
+    Can contain multiple lines.
+    End with #ENDTHREAD to mark conversation as closed.
+
+Or as inline headers (no YAML frontmatter):
+
+    # Title (optional)
+    message_id: unique-message-id
+    writer: sender-name
+    created_at: 2026-09-05T10:00:00Z
+
+    Message body here.
+"""
+
 from __future__ import annotations
 
+import hashlib
+import logging
+import re
 from dataclasses import dataclass
 from datetime import datetime
-import hashlib
-import re
-from typing import Mapping
+from typing import Callable
 
 from .supabase_projection import ProjectionCommand
 
+logger = logging.getLogger(__name__)
+
 
 class BusMessageProjectionError(ValueError):
-    """Raised when a GitHub Bus document cannot be projected safely."""
+    """Raised when a bus message document cannot be projected safely."""
 
 
+# Legacy alias mappings for data consistency across system versions.
+# These identities were historically written in different forms and need
+# normalization for consistent participant tracking.
 _ALIASES = {
     "bridget": "brigit",
     "vera/sol": "vera",
     "vera / sol": "vera",
     "vera-sol": "vera",
 }
+
+# Recognized logical identity names. Used to extract the durable identity
+# from display-name expansions like "FNG / Fabulous Nitpicking Gremlin".
+_RECOGNIZED_IDENTITIES = {
+    "fng",
+    "radar",
+    "brigit",
+    "five-five",
+    "five",
+    "four",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "one",
+    "two",
+    "three",
+    "thirteen",
+    "masa",
+    "mune",
+    "yang",
+    "yin",
+    "hephaestus",
+}
+
+# Matches "key: value" header lines, allowing flexible spacing around the colon
 _HEADER_RE = re.compile(r"^(?P<key>[A-Za-z0-9_-]+)\s*:\s*(?P<value>.*)$")
+
+# Boolean values recognized during parsing (case-insensitive)
 _TRUE = {"true", "yes", "1"}
 _FALSE = {"false", "no", "0"}
 
 
 @dataclass(frozen=True)
 class BusMessageSource:
+    """Source metadata for a bus message in a Git repository."""
+
     repository: str
     ref: str
     branch_head: str
@@ -37,6 +100,8 @@ class BusMessageSource:
 
 @dataclass(frozen=True)
 class ProjectedBusMessage:
+    """Normalized representation of a bus message ready for storage."""
+
     message_id: str
     created_at: str
     sender: str
@@ -51,6 +116,14 @@ class ProjectedBusMessage:
 
 
 def _unwrap_scalar(value: str) -> str:
+    """Remove surrounding quotes or backticks from a scalar value.
+
+    Args:
+        value: The value to unwrap (may be quoted with ', ", or `)
+
+    Returns:
+        The unwrapped and stripped value.
+    """
     text = value.strip()
     pairs = (("`", "`"), ('"', '"'), ("'", "'"))
     for left, right in pairs:
@@ -60,21 +133,45 @@ def _unwrap_scalar(value: str) -> str:
 
 
 def _normalize_identity(value: str) -> str:
+    """Normalize a participant identity to its canonical form.
+
+    Handles:
+    - Legacy aliases (e.g., "vera/sol" → "vera")
+    - Display-name expansions (e.g., "FNG / Fabulous Nitpicking Gremlin" → "fng")
+    - Case normalization (e.g., "Radar" → "radar")
+
+    Args:
+        value: The identity string to normalize
+
+    Returns:
+        The normalized canonical identity.
+    """
     key = _unwrap_scalar(value).strip().casefold()
-    mapped = _ALIASES.get(key)
-    if mapped:
+    if mapped := _ALIASES.get(key):
         return mapped
     # Some early lanes used a display-name expansion after the logical writer,
     # e.g. "FNG / Fabulous Nitpicking Gremlin". Preserve the durable logical
     # identity rather than projecting the prose expansion as a new participant.
     if " / " in key:
         prefix = key.split(" / ", 1)[0].strip()
-        if prefix in {"fng", "radar", "brigit", "five-five", "five", "four", "six", "seven", "eight", "nine", "one", "two", "three", "thirteen", "masa", "mune", "yang", "yin", "hephaestus"}:
+        if prefix in _RECOGNIZED_IDENTITIES:
             return prefix
     return key
 
 
 def _parse_bool(value: str | None, *, field: str) -> bool:
+    """Parse a boolean value from a message header.
+
+    Args:
+        value: The value to parse (None, empty string, or a boolean word)
+        field: The field name for error reporting
+
+    Returns:
+        True if value matches _TRUE, False if it matches _FALSE or is empty
+
+    Raises:
+        BusMessageProjectionError: If value is not a recognized boolean
+    """
     if value is None or value.strip() == "":
         return False
     normalized = _unwrap_scalar(value).casefold()
@@ -82,10 +179,30 @@ def _parse_bool(value: str | None, *, field: str) -> bool:
         return True
     if normalized in _FALSE:
         return False
-    raise BusMessageProjectionError(f"INVALID_{field.upper()}")
+    raise BusMessageProjectionError(
+        f"INVALID_{field.upper()}: expected 'true'/'yes'/'1' or 'false'/'no'/'0', "
+        f"got {value!r}"
+    )
 
 
 def _normalize_timestamp(value: str, *, error: str) -> str:
+    """Normalize a timestamp to ISO 8601 format with timezone.
+
+    Handles:
+    - Date-only input (YYYY-MM-DD) → expanded to full ISO format
+    - Various ISO 8601 formats
+    - Timezone conversion (Z → +00:00)
+
+    Args:
+        value: The timestamp value to normalize
+        error: Error message code if normalization fails
+
+    Returns:
+        Normalized ISO 8601 timestamp string
+
+    Raises:
+        BusMessageProjectionError: If the timestamp cannot be parsed
+    """
     text = _unwrap_scalar(value)
     if not text:
         raise BusMessageProjectionError(error)
@@ -103,6 +220,18 @@ def _normalize_timestamp(value: str, *, error: str) -> str:
 
 
 def _parse_header_line(raw: str, headers: dict[str, str]) -> bool:
+    """Parse a single header line and add it to the headers dict.
+
+    Args:
+        raw: The raw line to parse
+        headers: The headers dict to update (mutated in-place)
+
+    Returns:
+        True if the line matched the header format and was added, False otherwise
+
+    Raises:
+        BusMessageProjectionError: If a duplicate header key is found
+    """
     match = _HEADER_RE.match(raw.rstrip("\r\n"))
     if not match:
         return False
@@ -114,6 +243,22 @@ def _parse_header_line(raw: str, headers: dict[str, str]) -> bool:
 
 
 def _split_yaml_frontmatter(lines: list[str]) -> tuple[dict[str, str], int] | None:
+    """Extract YAML frontmatter from the start of a document.
+
+    YAML frontmatter is delimited by --- on the first non-empty line and
+    a closing --- on its own line. Only top-level scalar keys are extracted;
+    YAML lists and continuations are ignored to preserve provenance.
+
+    Args:
+        lines: The lines of the document (with line endings preserved)
+
+    Returns:
+        A tuple of (headers dict, body start index) if frontmatter exists,
+        or None if no frontmatter is found
+
+    Raises:
+        BusMessageProjectionError: If frontmatter is malformed
+    """
     index = 0
     while index < len(lines) and not lines[index].strip():
         index += 1
@@ -146,6 +291,21 @@ def _split_yaml_frontmatter(lines: list[str]) -> tuple[dict[str, str], int] | No
 
 
 def _split_document(text: str) -> tuple[dict[str, str], str]:
+    """Split a message document into headers and body.
+
+    Attempts to parse YAML frontmatter first, then falls back to inline headers.
+    Inline headers start after an optional single-line title (starting with #)
+    and continue until the first blank line.
+
+    Args:
+        text: The full message text
+
+    Returns:
+        A tuple of (headers dict, body string)
+
+    Raises:
+        BusMessageProjectionError: If headers cannot be parsed
+    """
     lines = text.splitlines(keepends=True)
 
     frontmatter = _split_yaml_frontmatter(lines)
@@ -186,6 +346,16 @@ def _split_document(text: str) -> tuple[dict[str, str], str]:
 
 
 def _conversation_closed_by_sender(body: str) -> bool:
+    """Check if the conversation is explicitly closed by the sender.
+
+    A conversation is closed if the last non-whitespace line is "#ENDTHREAD".
+
+    Args:
+        body: The message body text
+
+    Returns:
+        True if the body ends with #ENDTHREAD, False otherwise
+    """
     trimmed = body.rstrip()
     if not trimmed:
         return False
@@ -193,6 +363,19 @@ def _conversation_closed_by_sender(body: str) -> bool:
 
 
 def parse_bus_message(content: bytes, source: BusMessageSource) -> ProjectedBusMessage:
+    """Parse and normalize a bus message from raw bytes.
+
+    Args:
+        content: The raw message content as bytes
+        source: Metadata about the message source in Git
+
+    Returns:
+        A ProjectedBusMessage with all fields extracted and normalized
+
+    Raises:
+        BusMessageProjectionError: If the message format is invalid or required
+            fields are missing
+    """
     try:
         text = content.decode("utf-8")
     except UnicodeDecodeError as exc:
@@ -215,19 +398,21 @@ def parse_bus_message(content: bytes, source: BusMessageSource) -> ProjectedBusM
         except BusMessageProjectionError:
             if not source.source_committed_at:
                 raise
-            created_at = _normalize_timestamp(source.source_committed_at, error="INVALID_SOURCE_COMMITTED_AT")
+            created_at = _normalize_timestamp(
+                source.source_committed_at, error="INVALID_SOURCE_COMMITTED_AT"
+            )
             created_at_basis = "source_commit_invalid_header"
     elif source.source_committed_at:
-        created_at = _normalize_timestamp(source.source_committed_at, error="INVALID_SOURCE_COMMITTED_AT")
+        created_at = _normalize_timestamp(
+            source.source_committed_at, error="INVALID_SOURCE_COMMITTED_AT"
+        )
         created_at_basis = "source_commit"
     else:
         raise BusMessageProjectionError("CREATED_AT_REQUIRED")
 
     intended = _unwrap_scalar(headers.get("intended_recipient", ""))
     audience = tuple(
-        _normalize_identity(piece)
-        for piece in intended.split(",")
-        if _unwrap_scalar(piece)
+        _normalize_identity(piece) for piece in intended.split(",") if _unwrap_scalar(piece)
     )
 
     requires_reply = _parse_bool(headers.get("requires_reply"), field="requires_reply")
@@ -259,6 +444,10 @@ def parse_bus_message(content: bytes, source: BusMessageSource) -> ProjectedBusM
     subject_raw = headers.get("subject")
     subject = _unwrap_scalar(subject_raw) if subject_raw else None
 
+    logger.debug(
+        "Parsed message %s from %s:%s", message_id, source.repository, source.path
+    )
+
     return ProjectedBusMessage(
         message_id=message_id,
         created_at=created_at,
@@ -275,6 +464,14 @@ def parse_bus_message(content: bytes, source: BusMessageSource) -> ProjectedBusM
 
 
 def build_bus_projection_command(projected: ProjectedBusMessage) -> ProjectionCommand:
+    """Build a SQL projection command for storing the message.
+
+    Args:
+        projected: The normalized ProjectedBusMessage
+
+    Returns:
+        A ProjectionCommand ready to execute against the database
+    """
     source_refs = (
         f"github://{projected.source.repository}@{projected.source.source_commit}/{projected.source.path}",
         f"github-ref://{projected.source.repository}/{projected.source.ref}@{projected.source.branch_head}",
