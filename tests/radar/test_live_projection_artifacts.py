@@ -46,6 +46,32 @@ def test_edge_function_uses_custom_github_oidc_before_service_role_effects():
     assert "content_base64" in source
 
 
+def test_edge_oidc_jti_replay_guard_is_durable_atomic_and_precedes_projection():
+    migration = ROOT / "supabase" / "migrations" / "20260905_radar_oidc_replay_guard_v1.sql"
+    assert migration.exists()
+    sql = migration.read_text().lower()
+    assert "create table if not exists radar.github_oidc_replay_guard" in sql
+    assert "jti text primary key" in sql
+    assert "on conflict (jti) do nothing" in sql
+    assert "create or replace function radar.consume_github_oidc_jti_v1" in sql
+    assert "revoke all on function radar.consume_github_oidc_jti_v1" in sql
+    assert "grant execute on function radar.consume_github_oidc_jti_v1" in sql
+
+    sql_test = ROOT / "supabase" / "tests" / "radar_oidc_replay_guard_v1.sql"
+    assert sql_test.exists()
+    lowered_test = sql_test.read_text().lower()
+    assert "expected_consumed" in lowered_test
+    assert "expected_replay" in lowered_test
+
+    source = (ROOT / "supabase" / "functions" / "github-bus-ingest" / "handler.ts").read_text()
+    assert "radar_consume_github_oidc_jti_v1" in source
+    assert "OIDC_JTI_REPLAYED" in source
+    assert "await consumeGithubOidcJti(supabase, claims);" in source
+    assert source.index("await consumeGithubOidcJti(supabase, claims);") < source.index(
+        "const results = await mapWithConcurrency"
+    )
+
+
 def test_edge_function_accepts_legacy_frontmatter_and_wrapped_scalars_with_evidence_time_fallback():
     source = (ROOT / "supabase" / "functions" / "github-bus-ingest" / "handler.ts").read_text()
     lowered = source.lower()
