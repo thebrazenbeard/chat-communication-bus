@@ -1,19 +1,10 @@
 #!/usr/bin/env python3
-"""Emit a Git-evidenced Bus mailbox batch to Radar's Supabase projection.
+"""Emit Git-evidenced Bus message deltas to Radar's provider projection.
 
-The emitter transports tracked Git objects plus provenance to the trusted Edge
-Function. Before transport it enforces local append-only invariants:
-
-* the source ref must be the topology-registered current lane for exactly one
-  logical identity and every commit in the observed push range may only add
-  message files;
-* a newly added message file may not reuse a message_id that already existed in
-  its parent mailbox (or another newly added file in the same commit);
-* recovery checkpoints are continuity artifacts, not Bus messages, and may not
-  consume the ordinary message_id namespace.
-
-Historical collisions remain readable/projectable and are not retroactively
-rejected.
+The emitter transports immutable Git objects plus provenance. It validates the
+observed writer-lane push before transport, projects exact added-message deltas
+when a push base is available, and splits oversized deltas into deterministic
+provider-safe chunks instead of truncating or replaying an entire mailbox.
 """
 
 from __future__ import annotations
@@ -30,9 +21,6 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
 
-# Existing v1 writer-lane workflows execute this script directly from a separate
-# `control/` checkout without installing the package. Prefer the sibling source
-# tree so post-merge control code remains executable during the zero-gap cutover.
 _CONTROL_ROOT = Path(__file__).resolve().parents[1]
 _SRC_ROOT = _CONTROL_ROOT / "src"
 if str(_SRC_ROOT) not in sys.path:
@@ -47,6 +35,7 @@ from radar.writer_lanes import (
 
 DEFAULT_AUDIENCE = "chat-communication-bus-supabase"
 DEFAULT_ENDPOINT = "https://klmbpaigzeguvnpccqzz.supabase.co/functions/v1/github-bus-ingest"
+DEFAULT_MAX_FILES = 500
 DEFAULT_MAX_FILE_BYTES = 512 * 1024
 DEFAULT_MAX_TOTAL_BYTES = 5 * 1024 * 1024
 DEFAULT_TOPOLOGY = _CONTROL_ROOT / "architecture" / "contracts" / "RADAR_TOPOLOGY_V1.json"
@@ -95,12 +84,7 @@ def resolve_base_commit(
     explicit_base: str | None,
     event_path: str | Path | None = None,
 ) -> str | None:
-    """Resolve the pushed range base, preferring explicit successor-workflow input.
-
-    Historical v1 workflows do not pass ``--base``. On GitHub Actions, recover
-    the same authoritative push ``before`` SHA from ``GITHUB_EVENT_PATH`` so
-    those lanes receive full-range validation during the staged migration.
-    """
+    """Resolve the observed push base, preferring explicit workflow input."""
     if explicit_base:
         return explicit_base
 
@@ -119,14 +103,6 @@ def resolve_base_commit(
     if not isinstance(before, str) or not _SHA_RE.fullmatch(before):
         raise EmitterError("GITHUB_EVENT_BEFORE_INVALID")
     return before
-
-
-def _tracked_message_paths(repo_dir: Path) -> list[str]:
-    raw = subprocess.check_output(
-        ["git", "-C", str(repo_dir), "ls-files", "-z", "--", "messages/*.md"],
-        stderr=subprocess.PIPE,
-    )
-    return sorted(path.decode("utf-8") for path in raw.split(b"\0") if path)
 
 
 def _unwrap_scalar(value: str) -> str:
@@ -180,7 +156,6 @@ def _added_message_paths(repo_dir: Path, parent: str, head: str) -> list[str]:
 
 
 def _added_message_paths_for_commits(repo_dir: Path, commits: list[str]) -> list[str]:
-    """Return the exact message-file delta for one observed push range."""
     paths: set[str] = set()
     for commit in commits:
         try:
@@ -215,7 +190,6 @@ def _validate_new_message_ids(repo_dir: Path, head: str) -> None:
 
         if status == "recovery-checkpoint" and message_id:
             raise EmitterError(f"RECOVERY_CHECKPOINT_MESSAGE_NAMESPACE:{path}")
-
         if not message_id:
             continue
         if message_id in prior_ids or message_id in added_ids:
@@ -226,20 +200,32 @@ def _validate_new_message_ids(repo_dir: Path, head: str) -> None:
 def _push_commits(repo_dir: Path, head: str, base: str | None) -> list[str]:
     if not base or base == _ZERO_SHA:
         return [head]
-    return [line for line in _git(repo_dir, "rev-list", "--reverse", f"{base}..{head}").splitlines() if line]
+    return [
+        line
+        for line in _git(repo_dir, "rev-list", "--reverse", f"{base}..{head}").splitlines()
+        if line
+    ]
 
 
-def collect_projection_batch(
+def _validate_limits(max_files: int, max_file_bytes: int, max_total_bytes: int) -> None:
+    if type(max_files) is not int or max_files <= 0:
+        raise EmitterError("INVALID_MAX_FILES")
+    if type(max_file_bytes) is not int or max_file_bytes <= 0:
+        raise EmitterError("INVALID_MAX_FILE_BYTES")
+    if type(max_total_bytes) is not int or max_total_bytes <= 0:
+        raise EmitterError("INVALID_MAX_TOTAL_BYTES")
+
+
+def _collect_projection_source(
     repo_dir: str | Path,
     *,
     repository: str,
     ref: str,
     branch_head: str,
-    base_commit: str | None = None,
-    topology_path: str | Path = DEFAULT_TOPOLOGY,
-    max_file_bytes: int = DEFAULT_MAX_FILE_BYTES,
-    max_total_bytes: int = DEFAULT_MAX_TOTAL_BYTES,
-) -> dict[str, object]:
+    base_commit: str | None,
+    topology_path: str | Path,
+    max_file_bytes: int,
+) -> tuple[dict[str, object], list[tuple[dict[str, object], int]]]:
     repo = Path(repo_dir)
     if not repo.is_dir():
         raise EmitterError("REPO_DIR_MISSING")
@@ -259,52 +245,159 @@ def collect_projection_batch(
     for commit in push_commits:
         _validate_new_message_ids(repo, commit)
 
-    # A real push supplies its before-SHA; project only the exact added-message
-    # delta so mailbox size cannot turn every append into a 500-file request.
-    # Callers without a base retain the historical full-mailbox behavior.
     if base_commit and base_commit != _ZERO_SHA:
         projection_paths = _added_message_paths_for_commits(repo, push_commits)
         projection_mode = "DELTA"
     else:
-        projection_paths = _tracked_message_paths(repo)
+        projection_paths = _paths_at_ref(repo, branch_head)
         projection_mode = "FULL_COMPAT"
 
-    files: list[dict[str, object]] = []
-    total = 0
+    files: list[tuple[dict[str, object], int]] = []
     for path in projection_paths:
-        file_path = repo / path
-        content = file_path.read_bytes()
+        # Read the exact Git object, not a mutable working-tree copy.
+        content = _git_bytes(repo, "show", f"{branch_head}:{path}")
         if len(content) > max_file_bytes:
             raise EmitterError(f"MESSAGE_FILE_TOO_LARGE:{path}")
-        total += len(content)
-        if total > max_total_bytes:
-            raise EmitterError("BATCH_TOO_LARGE")
 
-        source_commit = _git(repo, "log", "-1", "--format=%H", "--", path)
-        source_committed_at = _git(repo, "log", "-1", "--format=%cI", "--", path)
+        source_commit = _git(repo, "log", "-1", "--format=%H", branch_head, "--", path)
+        source_committed_at = _git(repo, "log", "-1", "--format=%cI", branch_head, "--", path)
         if not source_commit or not source_committed_at:
             raise EmitterError(f"MESSAGE_SOURCE_COMMIT_MISSING:{path}")
         blob_sha = _git(repo, "rev-parse", f"{branch_head}:{path}")
 
         files.append(
-            {
-                "path": path,
-                "source_commit": source_commit,
-                "source_committed_at": source_committed_at,
-                "blob_sha": blob_sha,
-                "content_base64": base64.b64encode(content).decode("ascii"),
-            }
+            (
+                {
+                    "path": path,
+                    "source_commit": source_commit,
+                    "source_committed_at": source_committed_at,
+                    "blob_sha": blob_sha,
+                    "content_base64": base64.b64encode(content).decode("ascii"),
+                },
+                len(content),
+            )
         )
 
-    return {
+    common = {
         "projection_version": 1,
         "repository": repository,
         "ref": ref,
         "branch_head": branch_head,
         "lane_identity": lane_identity,
         "projection_mode": projection_mode,
-        "files": files,
     }
+    return common, files
+
+
+def collect_projection_batch(
+    repo_dir: str | Path,
+    *,
+    repository: str,
+    ref: str,
+    branch_head: str,
+    base_commit: str | None = None,
+    topology_path: str | Path = DEFAULT_TOPOLOGY,
+    max_files: int = DEFAULT_MAX_FILES,
+    max_file_bytes: int = DEFAULT_MAX_FILE_BYTES,
+    max_total_bytes: int = DEFAULT_MAX_TOTAL_BYTES,
+) -> dict[str, object]:
+    """Collect one provider-safe batch, failing rather than dropping overflow."""
+    _validate_limits(max_files, max_file_bytes, max_total_bytes)
+    common, files_with_sizes = _collect_projection_source(
+        repo_dir,
+        repository=repository,
+        ref=ref,
+        branch_head=branch_head,
+        base_commit=base_commit,
+        topology_path=topology_path,
+        max_file_bytes=max_file_bytes,
+    )
+    if len(files_with_sizes) > max_files:
+        raise EmitterError("BATCH_TOO_MANY_FILES")
+    if sum(size for _, size in files_with_sizes) > max_total_bytes:
+        raise EmitterError("BATCH_TOO_LARGE")
+    return {**common, "files": [item for item, _ in files_with_sizes]}
+
+
+def collect_projection_batches(
+    repo_dir: str | Path,
+    *,
+    repository: str,
+    ref: str,
+    branch_head: str,
+    base_commit: str | None = None,
+    topology_path: str | Path = DEFAULT_TOPOLOGY,
+    max_files: int = DEFAULT_MAX_FILES,
+    max_file_bytes: int = DEFAULT_MAX_FILE_BYTES,
+    max_total_bytes: int = DEFAULT_MAX_TOTAL_BYTES,
+) -> tuple[dict[str, object], ...]:
+    """Collect every source file exactly once in deterministic bounded chunks."""
+    _validate_limits(max_files, max_file_bytes, max_total_bytes)
+
+    # Preserve the long-standing single-batch API path for ordinary traffic and
+    # test doubles. Only overflow pays for the second source traversal.
+    try:
+        single = collect_projection_batch(
+            repo_dir,
+            repository=repository,
+            ref=ref,
+            branch_head=branch_head,
+            base_commit=base_commit,
+            topology_path=topology_path,
+            max_files=max_files,
+            max_file_bytes=max_file_bytes,
+            max_total_bytes=max_total_bytes,
+        )
+    except EmitterError as exc:
+        if str(exc) not in {"BATCH_TOO_MANY_FILES", "BATCH_TOO_LARGE"}:
+            raise
+    else:
+        return (
+            {
+                **single,
+                "projection_chunk_index": 1,
+                "projection_chunk_count": 1,
+            },
+        )
+
+    common, files_with_sizes = _collect_projection_source(
+        repo_dir,
+        repository=repository,
+        ref=ref,
+        branch_head=branch_head,
+        base_commit=base_commit,
+        topology_path=topology_path,
+        max_file_bytes=max_file_bytes,
+    )
+
+    chunks: list[list[dict[str, object]]] = []
+    current: list[dict[str, object]] = []
+    current_bytes = 0
+    for item, size in files_with_sizes:
+        if size > max_total_bytes:
+            raise EmitterError(f"MESSAGE_FILE_EXCEEDS_BATCH_LIMIT:{item['path']}")
+        would_overflow = current and (
+            len(current) >= max_files or current_bytes + size > max_total_bytes
+        )
+        if would_overflow:
+            chunks.append(current)
+            current = []
+            current_bytes = 0
+        current.append(item)
+        current_bytes += size
+    if current or not chunks:
+        chunks.append(current)
+
+    chunk_count = len(chunks)
+    return tuple(
+        {
+            **common,
+            "projection_chunk_index": index,
+            "projection_chunk_count": chunk_count,
+            "files": chunk,
+        }
+        for index, chunk in enumerate(chunks, start=1)
+    )
 
 
 def request_oidc_token(audience: str = DEFAULT_AUDIENCE) -> str:
@@ -317,15 +410,22 @@ def request_oidc_token(audience: str = DEFAULT_AUDIENCE) -> str:
         build_oidc_url(request_url, audience),
         headers={"Authorization": f"Bearer {request_token}", "Accept": "application/json"},
     )
-    with urlopen(req, timeout=20) as response:
-        data = json.loads(response.read().decode("utf-8"))
-    token = data.get("value")
+    try:
+        with urlopen(req, timeout=20) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except Exception as exc:
+        raise EmitterError(f"GITHUB_OIDC_REQUEST_FAILED:{exc}") from exc
+    token = data.get("value") if isinstance(data, dict) else None
     if not isinstance(token, str) or not token:
         raise EmitterError("GITHUB_OIDC_TOKEN_MISSING")
     return token
 
 
-def post_projection_batch(endpoint: str, oidc_token: str, batch: dict[str, object]) -> dict[str, object]:
+def post_projection_batch(
+    endpoint: str,
+    oidc_token: str,
+    batch: dict[str, object],
+) -> dict[str, object]:
     body = json.dumps(batch, sort_keys=True, separators=(",", ":")).encode("utf-8")
     req = Request(
         endpoint,
@@ -349,21 +449,22 @@ def post_projection_batch(endpoint: str, oidc_token: str, batch: dict[str, objec
 
 
 def projection_result_failed(result: dict[str, object]) -> bool:
-    if result.get("ok") is False:
+    if result.get("ok") is not True:
         return True
 
     conflicts = result.get("conflicts", 0)
     if isinstance(conflicts, int) and conflicts > 0:
         return True
 
-    rows = result.get("results", ())
-    if isinstance(rows, list):
-        for row in rows:
-            if not isinstance(row, dict):
-                return True
-            status = row.get("result")
-            if isinstance(status, str) and status.casefold() == "conflict":
-                return True
+    rows = result.get("results")
+    if not isinstance(rows, list):
+        return True
+    for row in rows:
+        if not isinstance(row, dict):
+            return True
+        status = row.get("result")
+        if not isinstance(status, str) or status.casefold() in {"conflict", "failed", "error"}:
+            return True
     return False
 
 
@@ -408,7 +509,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 0
 
-        batch = collect_projection_batch(
+        batches = collect_projection_batches(
             args.repo_dir,
             repository=args.repository,
             ref=args.ref,
@@ -417,13 +518,45 @@ def main(argv: list[str] | None = None) -> int:
             topology_path=args.topology,
         )
         token = request_oidc_token(args.audience)
-        result = post_projection_batch(args.endpoint, token, batch)
+
+        all_results: list[dict[str, object]] = []
+        total_projected = 0
+        for batch in batches:
+            result = post_projection_batch(args.endpoint, token, batch)
+            if projection_result_failed(result):
+                print(
+                    json.dumps(
+                        {
+                            "ok": False,
+                            "failed_chunk": batch.get("projection_chunk_index"),
+                            "chunk_count": len(batches),
+                            "provider_result": result,
+                        },
+                        sort_keys=True,
+                    )
+                )
+                return 1
+            rows = result["results"]
+            assert isinstance(rows, list)  # established by projection_result_failed
+            all_results.extend(row for row in rows if isinstance(row, dict))
+            projected = result.get("projected")
+            total_projected += projected if isinstance(projected, int) else len(rows)
     except EmitterError as exc:
         print(str(exc), file=sys.stderr)
         return 1
 
-    print(json.dumps(result, sort_keys=True))
-    return 1 if projection_result_failed(result) else 0
+    print(
+        json.dumps(
+            {
+                "ok": True,
+                "chunks": len(batches),
+                "projected": total_projected,
+                "results": all_results,
+            },
+            sort_keys=True,
+        )
+    )
+    return 0
 
 
 if __name__ == "__main__":
