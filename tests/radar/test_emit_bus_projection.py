@@ -176,6 +176,29 @@ def test_collect_batch_carries_git_evidence_raw_bytes_and_lane_identity(tmp_path
     assert "body" not in item
 
 
+def test_collect_batch_projects_only_added_delta_when_base_is_supplied(tmp_path):
+    emitter = load_emitter()
+    topology = write_topology(tmp_path)
+    repo, first_head, _ = make_repo(tmp_path)
+    second = b"# One -> Six\\n\\nmessage_id: one-10000\\nwriter: One\\ncreated_at: 2026-09-02T20:01:00Z\\n\\nsecond\\n"
+    (repo / "messages" / "0002.md").write_bytes(second)
+    subprocess.check_call(["git", "-C", str(repo), "add", "messages/0002.md"])
+    subprocess.check_call(["git", "-C", str(repo), "commit", "-qm", "second message"])
+    current_head = git(repo, "rev-parse", "HEAD")
+
+    batch = emitter.collect_projection_batch(
+        repo,
+        repository="thebrazenbeard/chat-communication-bus",
+        ref=CURRENT_REF,
+        branch_head=current_head,
+        base_commit=first_head,
+        topology_path=topology,
+    )
+
+    assert batch["projection_mode"] == "DELTA"
+    assert [item["path"] for item in batch["files"]] == ["messages/0002.md"]
+
+
 def test_collect_batch_keeps_prior_message_source_commit_when_new_message_is_added(tmp_path):
     emitter = load_emitter()
     topology = write_topology(tmp_path)
