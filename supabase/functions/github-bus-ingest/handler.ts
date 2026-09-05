@@ -160,6 +160,25 @@ async function verifyGithubOidc(token: string): Promise<Claims> {
   return claims;
 }
 
+async function consumeGithubOidcJti(
+  supabase: ReturnType<typeof createClient>,
+  claims: Claims,
+): Promise<void> {
+  const jti = stringClaim(claims, "jti");
+  const exp = claims.exp;
+  if (typeof exp !== "number" || !Number.isFinite(exp)) throw new HttpError(403, "OIDC_EXP_INVALID");
+
+  const { data, error } = await supabase.rpc("radar_consume_github_oidc_jti_v1", {
+    p_jti: jti,
+    p_expires_at: new Date(exp * 1000).toISOString(),
+  });
+  if (error) throw new HttpError(502, `OIDC_JTI_GUARD_FAILED:${error.code ?? "UNKNOWN"}`);
+
+  const outcome = String(data);
+  if (outcome === "REPLAY") throw new HttpError(403, "OIDC_JTI_REPLAYED");
+  if (outcome !== "CONSUMED") throw new HttpError(502, "OIDC_JTI_GUARD_INVALID_RESPONSE");
+}
+
 function requireString(value: unknown, code: string): string {
   if (typeof value !== "string" || !value.trim()) throw new HttpError(422, code);
   return value.trim();
@@ -501,6 +520,10 @@ Deno.serve(async (req: Request) => {
     const supabase = createClient(supabaseUrl, serviceKey, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
+
+    // Consume the verified JWT id exactly once after request/batch validation
+    // and before any message projection can create provider-visible state.
+    await consumeGithubOidcJti(supabase, claims);
 
     const concurrency = parseProjectConcurrency(Deno.env.get("PROJECT_CONCURRENCY"));
     const results = await mapWithConcurrency(
