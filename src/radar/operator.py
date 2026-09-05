@@ -1,9 +1,4 @@
-"""ChatGPT-facing operator projections for Radar.
-
-This module provides small, stateless projection helpers for formatting operator
-state for human or machine consumers. Methods are declared as staticmethods so
-callers do not need to instantiate RadarOperator.
-"""
+"""ChatGPT-facing operator projections for Radar."""
 
 from __future__ import annotations
 
@@ -20,23 +15,39 @@ BOOTSTRAP_ORDER: Tuple[str, ...] = (
 )
 
 
+class OperatorError(ValueError):
+    """Malformed operator projection input."""
+
+
 class Reconciler(Protocol):
-    """Protocol describing the minimal interface required from a reconciler.
-
-    The reconciler must implement a `compare(github_state, provider_state)`
-    method that returns an iterable of findings/results.
-    """
-
-    def compare(self, github_state: Mapping[str, Any], provider_state: Mapping[str, Any]) -> Iterable[Any]:
+    def compare(
+        self,
+        github_state: Mapping[str, Any],
+        provider_state: Mapping[str, Any],
+    ) -> Iterable[Any]:
         ...
 
 
-class RadarOperator:
-    """Projection helpers for formatting Radar operator state.
+def _nonnegative_int(value: object, code: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+        raise OperatorError(code)
+    return value
 
-    These helpers are stateless and therefore defined as staticmethods so
-    consumers can call them without creating an instance.
-    """
+
+def _bool(value: object, code: str) -> bool:
+    if not isinstance(value, bool):
+        raise OperatorError(code)
+    return value
+
+
+def _sequence(value: object, code: str) -> Sequence[Any]:
+    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
+        raise OperatorError(code)
+    return value
+
+
+class RadarOperator:
+    """Stateless projections for human and machine Radar operators."""
 
     @staticmethod
     def status(
@@ -46,58 +57,51 @@ class RadarOperator:
         chat_session_active: bool,
         **extra: Any,
     ) -> Dict[str, Any]:
-        """Return a summary status dictionary.
-
-        Primary fields are coerced to primitive types for predictable JSON
-        serialization. Extra keys can be provided via ``extra`` and will be
-        merged into the resulting mapping.
-        """
         status: Dict[str, Any] = {
-            "identity_count": int(identity_count),
-            "online_node_count": int(online_node_count),
-            "chat_session_active": bool(chat_session_active),
+            "identity_count": _nonnegative_int(
+                identity_count, "INVALID_IDENTITY_COUNT"
+            ),
+            "online_node_count": _nonnegative_int(
+                online_node_count, "INVALID_ONLINE_NODE_COUNT"
+            ),
+            "chat_session_active": _bool(
+                chat_session_active, "INVALID_CHAT_SESSION_ACTIVE"
+            ),
         }
         status.update(extra)
         return status
 
     @staticmethod
     def health(*, findings: Sequence[Any] = ()) -> Dict[str, Any]:
-        """Return a health projection.
-
-        Findings are returned as a list to make JSON serialization explicit and
-        predictable.
-        """
-        findings_list: List[Any] = list(findings)
+        findings_value = _sequence(findings, "INVALID_FINDINGS")
+        findings_list: List[Any] = list(findings_value)
         return {"finding_count": len(findings_list), "findings": findings_list}
 
     @staticmethod
-    def dependencies(*, ready: Sequence[str] = (), waiting: Sequence[str] = ()) -> Dict[str, Any]:
-        """Return dependency readiness information.
-
-        Returns lists (not tuples) for clearer downstream consumption.
-        """
-        return {"ready": list(ready), "waiting": list(waiting)}
+    def dependencies(
+        *, ready: Sequence[str] = (), waiting: Sequence[str] = ()
+    ) -> Dict[str, Any]:
+        ready_value = _sequence(ready, "INVALID_DEPENDENCIES")
+        waiting_value = _sequence(waiting, "INVALID_DEPENDENCIES")
+        return {"ready": list(ready_value), "waiting": list(waiting_value)}
 
     @staticmethod
     def dlq(*, pending: int = 0) -> Dict[str, Any]:
-        """Return dead-letter queue metrics."""
-        return {"pending": int(pending)}
+        return {"pending": _nonnegative_int(pending, "INVALID_DLQ_PENDING")}
 
     @staticmethod
     def audit(*, findings: Sequence[Any] = ()) -> Dict[str, Any]:
-        """Return an audit projection similar to :meth:`health`."""
-        findings_list: List[Any] = list(findings)
+        findings_value = _sequence(findings, "INVALID_FINDINGS")
+        findings_list: List[Any] = list(findings_value)
         return {"finding_count": len(findings_list), "findings": findings_list}
 
     @staticmethod
     def reconcile(
-        reconciler: Reconciler, github_state: Mapping[str, Any], provider_state: Mapping[str, Any]
+        reconciler: Reconciler,
+        github_state: Mapping[str, Any],
+        provider_state: Mapping[str, Any],
     ) -> Tuple[Any, ...]:
-        """Run ``reconciler.compare`` and return its results as a tuple.
-
-        The reconciler must implement the :class:`Reconciler` protocol.
-        """
         return tuple(reconciler.compare(github_state, provider_state))
 
 
-__all__ = ["BOOTSTRAP_ORDER", "Reconciler", "RadarOperator"]
+__all__ = ["BOOTSTRAP_ORDER", "OperatorError", "Reconciler", "RadarOperator"]

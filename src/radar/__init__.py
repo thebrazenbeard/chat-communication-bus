@@ -15,6 +15,7 @@ from .model import NodeStatus
 from .registry import IdentityRegistry, RegistryError
 
 # Telemetry
+from .heartbeat import HeartbeatRuntime
 from .telemetry import HEARTBEAT_INTERVAL_MS, TelemetrySnapshot, TelemetryStore
 
 __all__ = [
@@ -33,6 +34,7 @@ __all__ = [
     "RegistryError",
     # Telemetry
     "HEARTBEAT_INTERVAL_MS",
+    "HeartbeatRuntime",
     "TelemetrySnapshot",
     "TelemetryStore",
 ]

@@ -13,6 +13,11 @@ def _topology():
     )
 
 
+def _sql_statements(text: str) -> tuple[str, ...]:
+    lines = [line for line in text.splitlines() if not line.lstrip().startswith("--")]
+    return tuple(part.strip().lower() for part in "\n".join(lines).split(";") if part.strip())
+
+
 def test_topology_has_unique_required_identities_and_current_radar_lane():
     data = _topology()
     lanes = data["required_writer_lanes"]
@@ -98,8 +103,20 @@ def test_hephaestus_current_lane_is_v3_and_older_lanes_are_preserved_history():
 
 def test_lane_projection_seed_remains_historical_bootstrap_not_current_topology_authority():
     seed = (ROOT / "supabase" / "seed" / "radar_bus_lanes_20260902.sql").read_text(encoding="utf-8")
+    lowered = seed.lower()
     assert "('vera', 'Vera', 'bus/vera-sol-v1')" in seed
-    assert "case when identity_id = 'vera' then array['vera-sol']::text[]" in seed
+    assert "array['vera-sol']" in lowered
+    assert "2026-09-02" in seed
+    assert "change here" not in lowered
+
+
+def test_lane_projection_seed_ctes_are_statement_local():
+    seed = (ROOT / "supabase" / "seed" / "radar_bus_lanes_20260902.sql").read_text(encoding="utf-8")
+    for statement in _sql_statements(seed):
+        if "from lane" in statement:
+            assert "with lane" in statement
+        if "cross join params" in statement:
+            assert "params as" in statement
 
 
 def test_vera_projection_repair_preserves_legacy_provenance_without_delete():

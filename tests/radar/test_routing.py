@@ -48,9 +48,32 @@ def test_priority_queue_orders_without_granting_authority():
     assert first.authority_ref is None
 
 
+def test_priority_zero_eviction_returns_dropped_envelope_for_telemetry():
+    e, _, rt = _modules()
+    q = rt.PriorityQueue(max_size=2)
+    q.push(_env(e, message_id="old-background", priority=4))
+    q.push(_env(e, message_id="new-background", priority=4))
+    evicted = q.push(_env(e, message_id="halt", priority=0))
+    assert evicted is not None
+    assert evicted.message_id == "new-background"
+    assert q.peek().message_id == "halt"
+
+
 def test_dedupe_window_rejects_same_key_inside_window_and_allows_after():
     _, _, rt = _modules()
     d = rt.DedupeWindow(window_ms=500)
     assert d.accept("abc", 1000) is True
     assert d.accept("abc", 1200) is False
     assert d.accept("abc", 1600) is True
+
+
+def test_dedupe_window_rejects_invalid_key_and_clock_regression():
+    _, _, rt = _modules()
+    d = rt.DedupeWindow(window_ms=500)
+    with pytest.raises(ValueError, match="INVALID_DEDUPE_KEY"):
+        d.accept("", 1000)
+    with pytest.raises(ValueError, match="INVALID_DEDUPE_TIME"):
+        d.accept("abc", True)
+    assert d.accept("abc", 1000) is True
+    with pytest.raises(ValueError, match="DEDUPE_CLOCK_REGRESSION"):
+        d.accept("def", 999)

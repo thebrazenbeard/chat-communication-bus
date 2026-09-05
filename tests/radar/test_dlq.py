@@ -1,5 +1,6 @@
 import importlib
 import sqlite3
+import threading
 
 import pytest
 
@@ -44,6 +45,36 @@ def test_replay_requires_applicability_refresh(tmp_path):
     store.set_applicability(item_id, "APPLICABLE")
     store.mark_replay(item_id)
     assert store.inspect(item_id).replay_state == "REPLAYED"
+
+
+def test_completed_replay_cannot_be_counted_twice(tmp_path):
+    m = _module()
+    store = m.DeadLetterStore(tmp_path / "replay-once.sqlite")
+    item_id = store.record(
+        message_id="m-replay",
+        failure_stage="delivery",
+        failure_code="OFFLINE",
+        envelope={"message_id": "m-replay"},
+        diagnostic="target offline",
+    )
+    store.set_applicability(item_id, "APPLICABLE")
+    store.mark_replay(item_id)
+
+    with pytest.raises(m.DeadLetterError, match="REPLAY_ALREADY_COMPLETED"):
+        store.mark_replay(item_id)
+
+    item = store.inspect(item_id)
+    assert item.replay_state == "REPLAYED"
+    assert item.retry_count == 1
+
+
+def test_pending_list_rejects_non_positive_limit(tmp_path):
+    m = _module()
+    store = m.DeadLetterStore(tmp_path / "limit.sqlite")
+    with pytest.raises(m.DeadLetterError, match="INVALID_LIMIT"):
+        store.list_pending_applicable(0)
+    with pytest.raises(m.DeadLetterError, match="INVALID_LIMIT"):
+        store.list_pending_applicable(-1)
 
 
 def test_dead_letter_preserves_source_locator_and_reason_category(tmp_path):
@@ -100,3 +131,47 @@ def test_existing_dlq_database_is_migrated_additively(tmp_path):
     item = store.inspect(1)
     assert item.reason_category == "UNCLASSIFIED"
     assert item.source_locator is None
+
+
+def test_dead_letter_store_supports_explicit_thread_sharing(tmp_path):
+    m = _module()
+    store = m.DeadLetterStore(
+        tmp_path / "thread-shared.sqlite",
+        check_same_thread=False,
+    )
+    start = threading.Barrier(3)
+    errors = []
+    ids = []
+    result_lock = threading.Lock()
+
+    def write(message_id):
+        try:
+            start.wait()
+            item_id = store.record(
+                message_id=message_id,
+                failure_stage="admission",
+                failure_code="UNKNOWN_TAXONOMY",
+                envelope={"message_id": message_id},
+                diagnostic="unknown taxonomy",
+                reason_category="TAXONOMY",
+            )
+            with result_lock:
+                ids.append(item_id)
+        except Exception as exc:
+            with result_lock:
+                errors.append(exc)
+
+    threads = [
+        threading.Thread(target=write, args=("thread-1",)),
+        threading.Thread(target=write, args=("thread-2",)),
+    ]
+    for thread in threads:
+        thread.start()
+    start.wait()
+    for thread in threads:
+        thread.join(5)
+
+    assert all(not thread.is_alive() for thread in threads)
+    assert errors == []
+    assert len(ids) == 2
+    assert sorted(store.inspect(item_id).message_id for item_id in ids) == ["thread-1", "thread-2"]

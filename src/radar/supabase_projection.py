@@ -11,16 +11,16 @@ from dataclasses import dataclass
 from typing import Mapping
 
 
-# Schema and priority validation constants
 _ALLOWED_SCHEMAS = {"radar"}
+_ALLOWED_ENDPOINT_STATUSES = frozenset({"ACTIVE", "DEGRADED", "OFFLINE", "ARCHIVED"})
 _MIN_PRIORITY = 0
 _MAX_PRIORITY = 4
 
 
 class ProjectionError(ValueError):
-    """Custom exception for projection validation errors."""
+    """Deterministic validation failure at the provider-projection boundary."""
 
-    def __init__(self, code: str, message: str = ""):
+    def __init__(self, code: str, message: str = "") -> None:
         self.code = code
         self.message = message
         super().__init__(f"{code}: {message}")
@@ -42,20 +42,13 @@ class ProviderSnapshot:
 
 
 def build_projection_commands(state: Mapping[str, object]) -> tuple[ProjectionCommand, ...]:
-    """Build projection commands from Radar state.
+    """Build validated, parameterized projection commands from Radar state."""
+    if not isinstance(state, Mapping):
+        raise ProjectionError("INVALID_STATE", f"state must be a Mapping, got {type(state).__name__}")
 
-    Args:
-        state: A Mapping containing optional 'identities', 'endpoints', and 'subscriptions' keys.
-
-    Returns:
-        A tuple of ProjectionCommand objects ready for execution.
-
-    Raises:
-        ProjectionError: If state is invalid or contains malformed records.
-    """
     commands: list[ProjectionCommand] = []
 
-    identities = state.get("identities", ()) or ()
+    identities = _collection(state.get("identities"), "INVALID_IDENTITIES")
     for raw in identities:
         record = _mapping(raw, "IDENTITY_PROJECTION_MUST_BE_MAPPING")
         identity_id = _required_text(record, "identity_id", "IDENTITY_ID_REQUIRED")
@@ -73,14 +66,22 @@ def build_projection_commands(state: Mapping[str, object]) -> tuple[ProjectionCo
             )
         )
 
-    endpoints = state.get("endpoints", ()) or ()
+    endpoints = _collection(state.get("endpoints"), "INVALID_ENDPOINTS")
     for raw in endpoints:
         record = _mapping(raw, "ENDPOINT_PROJECTION_MUST_BE_MAPPING")
         endpoint_id = _required_text(record, "endpoint_id", "ENDPOINT_ID_REQUIRED")
         identity_id = _required_text(record, "identity_id", "IDENTITY_ID_REQUIRED")
         transport = _required_text(record, "transport", "TRANSPORT_REQUIRED")
         address = _required_text(record, "address", "ADDRESS_REQUIRED")
-        status = str(record.get("status", "ACTIVE")).strip().upper() or "ACTIVE"
+        status_obj = record.get("status", "ACTIVE")
+        if not isinstance(status_obj, str) or not status_obj.strip():
+            raise ProjectionError("INVALID_ENDPOINT_STATUS", "status must be a non-empty string")
+        status = status_obj.strip().upper()
+        if status not in _ALLOWED_ENDPOINT_STATUSES:
+            raise ProjectionError(
+                "INVALID_ENDPOINT_STATUS",
+                f"status must be one of {sorted(_ALLOWED_ENDPOINT_STATUSES)}, got {status}",
+            )
         commands.append(
             _build_upsert_command(
                 "UPSERT_ENDPOINT",
@@ -101,7 +102,7 @@ def build_projection_commands(state: Mapping[str, object]) -> tuple[ProjectionCo
             )
         )
 
-    subscriptions = state.get("subscriptions", ()) or ()
+    subscriptions = _collection(state.get("subscriptions"), "INVALID_SUBSCRIPTIONS")
     for raw in subscriptions:
         record = _mapping(raw, "SUBSCRIPTION_PROJECTION_MUST_BE_MAPPING")
         identity_id = _required_text(record, "identity_id", "IDENTITY_ID_REQUIRED")
@@ -110,13 +111,27 @@ def build_projection_commands(state: Mapping[str, object]) -> tuple[ProjectionCo
         if intent_obj is not None and not isinstance(intent_obj, str):
             raise ProjectionError("INVALID_INTENT", f"intent must be a string, got {type(intent_obj).__name__}")
         intent = intent_obj.strip().casefold() if isinstance(intent_obj, str) and intent_obj.strip() else None
-        min_priority = int(record.get("min_priority", 3))
+
+        priority_obj = record.get("min_priority", 3)
+        if isinstance(priority_obj, bool):
+            raise ProjectionError("INVALID_PRIORITY", "min_priority must be an integer from 0 through 4")
+        try:
+            min_priority = int(priority_obj)
+        except (TypeError, ValueError) as exc:
+            raise ProjectionError(
+                "INVALID_PRIORITY",
+                f"min_priority must be an integer from {_MIN_PRIORITY} through {_MAX_PRIORITY}",
+            ) from exc
         if not _MIN_PRIORITY <= min_priority <= _MAX_PRIORITY:
             raise ProjectionError(
                 "INVALID_PRIORITY",
                 f"min_priority must be between {_MIN_PRIORITY} and {_MAX_PRIORITY}, got {min_priority}",
             )
-        active = bool(record.get("active", True))
+
+        active_obj = record.get("active", True)
+        if not isinstance(active_obj, bool):
+            raise ProjectionError("INVALID_ACTIVE", "active must be a boolean")
+
         commands.append(
             _build_upsert_command(
                 "UPSERT_SUBSCRIPTION",
@@ -132,7 +147,7 @@ def build_projection_commands(state: Mapping[str, object]) -> tuple[ProjectionCo
                     "domain": domain.casefold(),
                     "intent": intent,
                     "min_priority": min_priority,
-                    "active": active,
+                    "active": active_obj,
                 },
             )
         )
@@ -141,30 +156,26 @@ def build_projection_commands(state: Mapping[str, object]) -> tuple[ProjectionCo
 
 
 def parse_provider_snapshot(raw: Mapping[str, object]) -> ProviderSnapshot:
-    """Parse and validate a provider snapshot.
-
-    Args:
-        raw: A Mapping containing optional 'protocol_head' and 'identities' keys.
-
-    Returns:
-        A validated ProviderSnapshot object.
-
-    Raises:
-        ProjectionError: If the snapshot structure is invalid.
-    """
+    """Parse provider state without promoting it to canonical truth."""
+    if not isinstance(raw, Mapping):
+        raise ProjectionError("INVALID_PROVIDER_SNAPSHOT", "provider snapshot must be a Mapping")
     protocol = raw.get("protocol_head")
     if protocol is not None and not isinstance(protocol, str):
         raise ProjectionError("INVALID_PROTOCOL_HEAD", f"protocol_head must be a string, got {type(protocol).__name__}")
-    identities_obj = raw.get("identities", ()) or ()
-    if not isinstance(identities_obj, (list, tuple)):
-        raise ProjectionError(
-            "INVALID_IDENTITIES", f"identities must be a list or tuple, got {type(identities_obj).__name__}"
-        )
-    identities: list[dict[str, object]] = []
-    for item in identities_obj:
-        identities.append(dict(_mapping(item, "INVALID_IDENTITY_SNAPSHOT")))
-    # Provider projection is never promoted to canonical merely by being read.
-    return ProviderSnapshot(protocol_head=protocol, identities=tuple(identities), canonical=False)
+    identities_obj = _collection(raw.get("identities"), "INVALID_IDENTITIES")
+    identities = tuple(
+        dict(_mapping(item, "INVALID_IDENTITY_SNAPSHOT"))
+        for item in identities_obj
+    )
+    return ProviderSnapshot(protocol_head=protocol, identities=identities, canonical=False)
+
+
+def _collection(value: object, error: str) -> tuple[object, ...]:
+    if value is None:
+        return ()
+    if not isinstance(value, (list, tuple)):
+        raise ProjectionError(error, f"expected list or tuple, got {type(value).__name__}")
+    return tuple(value)
 
 
 def _build_upsert_command(
@@ -173,61 +184,28 @@ def _build_upsert_command(
     sql: str,
     parameters: dict[str, object],
 ) -> ProjectionCommand:
-    """Build a ProjectionCommand for an UPSERT operation.
-
-    Args:
-        operation: The operation name (e.g., "UPSERT_IDENTITY").
-        schema: The database schema (must be in _ALLOWED_SCHEMAS).
-        sql: The parameterized SQL string.
-        parameters: The parameters dict for the SQL query.
-
-    Returns:
-        A ProjectionCommand ready for execution.
-
-    Raises:
-        ProjectionError: If the schema is not allowed.
-    """
     if schema not in _ALLOWED_SCHEMAS:
         raise ProjectionError("INVALID_SCHEMA", f"schema must be one of {_ALLOWED_SCHEMAS}, got {schema}")
     return ProjectionCommand(operation=operation, schema=schema, sql=sql, parameters=parameters)
 
 
 def _mapping(value: object, error: str) -> Mapping[str, object]:
-    """Validate that a value is a Mapping.
-
-    Args:
-        value: The value to validate.
-        error: The error code to raise if validation fails.
-
-    Returns:
-        The value cast as a Mapping.
-
-    Raises:
-        ProjectionError: If the value is not a Mapping.
-    """
     if not isinstance(value, Mapping):
         raise ProjectionError(error, f"expected Mapping, got {type(value).__name__}")
     return value
 
 
 def _required_text(record: Mapping[str, object], key: str, error: str) -> str:
-    """Extract and validate a required text field from a record.
-
-    Args:
-        record: The record Mapping.
-        key: The field name to extract.
-        error: The error code to raise if validation fails.
-
-    Returns:
-        The stripped text value.
-
-    Raises:
-        ProjectionError: If the field is missing, not a string, or empty after stripping.
-    """
     value = record.get(key)
     if not isinstance(value, str) or not value.strip():
         raise ProjectionError(error, f"field '{key}' must be a non-empty string")
     return value.strip()
 
 
-__all__ = ["ProjectionCommand", "ProviderSnapshot", "ProjectionError", "build_projection_commands", "parse_provider_snapshot"]
+__all__ = [
+    "ProjectionCommand",
+    "ProviderSnapshot",
+    "ProjectionError",
+    "build_projection_commands",
+    "parse_provider_snapshot",
+]

@@ -23,6 +23,24 @@ def test_operator_status_does_not_claim_chat_session_is_identity_liveness():
     assert "identity_alive" not in status
 
 
+def test_operator_rejects_bool_numeric_coercion_and_truthy_string_session_state():
+    op, _ = _mods()
+    with pytest.raises(op.OperatorError, match="INVALID_IDENTITY_COUNT"):
+        op.RadarOperator.status(identity_count=True, online_node_count=1, chat_session_active=True)
+    with pytest.raises(op.OperatorError, match="INVALID_CHAT_SESSION_ACTIVE"):
+        op.RadarOperator.status(identity_count=1, online_node_count=1, chat_session_active="false")
+    with pytest.raises(op.OperatorError, match="INVALID_DLQ_PENDING"):
+        op.RadarOperator.dlq(pending=False)
+
+
+def test_operator_rejects_strings_as_finding_or_dependency_sequences():
+    op, _ = _mods()
+    with pytest.raises(op.OperatorError, match="INVALID_FINDINGS"):
+        op.RadarOperator.health(findings="oops")
+    with pytest.raises(op.OperatorError, match="INVALID_DEPENDENCIES"):
+        op.RadarOperator.dependencies(ready="one", waiting=())
+
+
 def test_maintenance_is_exception_oriented():
     _, m = _mods()
     findings = m.audit({"required_lanes": {"yin", "seven"}, "observed_lanes": {"yin"}, "dlq_pending": 2, "stale_endpoints": 0})
@@ -42,3 +60,17 @@ def test_maintenance_surfaces_malformed_lane_separately_from_missing_lane():
     pairs = {(x.code, x.detail) for x in findings}
     assert ("MISSING_LANE", "hephaestus") in pairs
     assert ("MALFORMED_LANE", "bus/hephaestus-v1") in pairs
+
+
+def test_maintenance_rejects_boolean_or_negative_counts():
+    _, m = _mods()
+    with pytest.raises(m.MaintenanceError, match="INVALID_COUNT:dlq_pending"):
+        m.audit({"dlq_pending": True})
+    with pytest.raises(m.MaintenanceError, match="INVALID_COUNT:stale_endpoints"):
+        m.audit({"stale_endpoints": -1})
+
+
+def test_maintenance_rejects_truthy_string_flags_instead_of_reporting_false_alarm():
+    _, m = _mods()
+    with pytest.raises(m.MaintenanceError, match="INVALID_FLAG:ci_failed"):
+        m.audit({"ci_failed": "false"})

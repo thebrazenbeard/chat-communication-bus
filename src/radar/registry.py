@@ -1,12 +1,4 @@
-"""Radar logical identity, node, endpoint, and subscription registry.
-
-Improvements in this version:
-- Thread-safety: all access protected by an RLock.
-- Better validation/error mapping when converting NodeStatus.
-- Avoid unnecessary lookups in nodes_for_identity.
-- Added docstrings and small validation checks in lookup methods.
-- Minor clarifications for subscription priority validation.
-"""
+"""Radar logical identity, node, endpoint, and subscription registry."""
 
 from __future__ import annotations
 
@@ -32,20 +24,27 @@ class RegistryError(ValueError):
 
 
 def normalize_identifier(value: str) -> str:
-    """Normalize an identifier: non-empty string -> stripped, casefolded.
-
-    Raises RegistryError("INVALID_IDENTIFIER") for invalid values.
-    """
+    """Normalize an identifier to stripped, casefolded text."""
     if not isinstance(value, str) or not value.strip():
         raise RegistryError("INVALID_IDENTIFIER")
     return value.strip().casefold()
 
 
-class IdentityRegistry:
-    """Registry for identities, nodes, endpoints and subscriptions.
+def _priority_value(value: object) -> int:
+    """Parse priority without accepting Python booleans as integers."""
+    if isinstance(value, bool):
+        raise RegistryError("INVALID_PRIORITY")
+    try:
+        priority = int(value)
+    except (TypeError, ValueError, OverflowError) as exc:
+        raise RegistryError("INVALID_PRIORITY") from exc
+    if not 0 <= priority <= 4:
+        raise RegistryError("INVALID_PRIORITY")
+    return priority
 
-    Thread-safe for concurrent use.
-    """
+
+class IdentityRegistry:
+    """Thread-safe registry for identities, nodes, endpoints and subscriptions."""
 
     def __init__(self) -> None:
         self._identities: dict[str, Identity] = {}
@@ -62,10 +61,7 @@ class IdentityRegistry:
         display_name: str,
         aliases: tuple[str, ...] = (),
     ) -> Identity:
-        """Register a new identity with optional aliases.
-
-        Raises RegistryError on collisions or missing display name.
-        """
+        """Register an identity while making alias ownership atomic."""
         canonical = normalize_identifier(identity_id)
         if not isinstance(display_name, str) or not display_name.strip():
             raise RegistryError("DISPLAY_NAME_REQUIRED")
@@ -73,27 +69,28 @@ class IdentityRegistry:
         normalized_aliases: list[str] = []
         for alias in aliases:
             normalized = normalize_identifier(alias)
-            if (
-                normalized == canonical
-                or normalized in self._identities
-                or normalized in self._aliases
-                or normalized in normalized_aliases
-            ):
+            # Input-local collisions can be rejected before taking the lock.
+            if normalized == canonical or normalized in normalized_aliases:
                 raise RegistryError("ALIAS_COLLISION")
             normalized_aliases.append(normalized)
 
         identity = Identity(canonical, display_name.strip(), tuple(normalized_aliases))
         with self._lock:
+            # Registry-dependent checks must happen under the same lock as the
+            # writes. Otherwise two registrations can both preflight the same
+            # free alias and the later writer silently steals it.
             if canonical in self._identities or canonical in self._aliases:
-                # re-check under lock to avoid race
                 raise RegistryError("IDENTITY_COLLISION")
+            for alias in normalized_aliases:
+                if alias in self._identities or alias in self._aliases:
+                    raise RegistryError("ALIAS_COLLISION")
+
             self._identities[canonical] = identity
             for alias in normalized_aliases:
                 self._aliases[alias] = canonical
         return identity
 
     def resolve_identity_id(self, value: str) -> str:
-        """Return the canonical identity id for a value (id or alias)."""
         key = normalize_identifier(value)
         with self._lock:
             if key in self._identities:
@@ -104,13 +101,11 @@ class IdentityRegistry:
             return canonical
 
     def identity(self, identity_id: str) -> Identity:
-        """Return Identity for the given id or alias, else RegistryError."""
         canonical = self.resolve_identity_id(identity_id)
         with self._lock:
             try:
                 return self._identities[canonical]
             except KeyError as exc:
-                # defensive: should not happen because resolve_identity_id already checked
                 raise RegistryError("UNKNOWN_IDENTITY") from exc
 
     def register_node(
@@ -120,11 +115,6 @@ class IdentityRegistry:
         identity_id: str,
         status: NodeStatus = NodeStatus.ONLINE,
     ) -> Node:
-        """Register a node belonging to an identity.
-
-        status may be a NodeStatus or something convertible to it; invalid values
-        are mapped to RegistryError("INVALID_NODE_STATUS").
-        """
         canonical_node = normalize_identifier(node_id)
         canonical_identity = self.resolve_identity_id(identity_id)
         with self._lock:
@@ -133,14 +123,13 @@ class IdentityRegistry:
             try:
                 if not isinstance(status, NodeStatus):
                     status = NodeStatus(status)
-            except Exception:
-                raise RegistryError("INVALID_NODE_STATUS")
+            except Exception as exc:
+                raise RegistryError("INVALID_NODE_STATUS") from exc
             node = Node(canonical_node, canonical_identity, status)
             self._nodes[canonical_node] = node
         return node
 
     def node(self, node_id: str) -> Node:
-        """Lookup a node by id; raises RegistryError if unknown."""
         key = normalize_identifier(node_id)
         with self._lock:
             try:
@@ -149,34 +138,28 @@ class IdentityRegistry:
                 raise RegistryError("UNKNOWN_NODE") from exc
 
     def nodes_for_identity(self, identity_id: str) -> tuple[Node, ...]:
-        """Return nodes for an identity, sorted by node_id.
-
-        This avoids multiple dict lookups by iterating values directly.
-        """
         canonical = self.resolve_identity_id(identity_id)
         with self._lock:
             nodes = [n for n in self._nodes.values() if n.identity_id == canonical]
-        # Sort deterministically by node_id
         return tuple(sorted(nodes, key=lambda n: n.node_id))
 
     def identity_has_routable_node(self, identity_id: str) -> bool:
-        """Return True if identity has any node in a routable status.
-
-        Uses a generator to short-circuit as soon as a routable node is found.
-        """
         canonical = self.resolve_identity_id(identity_id)
         with self._lock:
-            return any(n.status in ROUTABLE_NODE_STATUSES for n in self._nodes.values() if n.identity_id == canonical)
+            return any(
+                n.status in ROUTABLE_NODE_STATUSES
+                for n in self._nodes.values()
+                if n.identity_id == canonical
+            )
 
     def set_node_status(self, node_id: str, status: NodeStatus) -> Node:
-        """Update a node's status and return the updated Node."""
         with self._lock:
-            current = self.node(node_id)  # node() will normalize and check existence
+            current = self.node(node_id)
             try:
                 if not isinstance(status, NodeStatus):
                     status = NodeStatus(status)
-            except Exception:
-                raise RegistryError("INVALID_NODE_STATUS")
+            except Exception as exc:
+                raise RegistryError("INVALID_NODE_STATUS") from exc
             updated = replace(current, status=status)
             self._nodes[current.node_id] = updated
         return updated
@@ -189,7 +172,6 @@ class IdentityRegistry:
         transport: str,
         address: str,
     ) -> Endpoint:
-        """Register an endpoint for an identity."""
         canonical_endpoint = normalize_identifier(endpoint_id)
         canonical_identity = self.resolve_identity_id(identity_id)
         if not isinstance(transport, str) or not transport.strip():
@@ -210,7 +192,6 @@ class IdentityRegistry:
         return endpoint
 
     def endpoint(self, endpoint_id: str) -> Endpoint:
-        """Lookup an endpoint by id; raises RegistryError if unknown."""
         key = normalize_identifier(endpoint_id)
         with self._lock:
             try:
@@ -225,25 +206,11 @@ class IdentityRegistry:
         domain: str,
         min_priority: int = 3,
     ) -> Subscription:
-        """Subscribe an identity to a domain with a min_priority (0..4).
-
-        Note: behavior of min_priority is preserved from original code (sub.min_priority)
-        is the threshold used during matching. See subscriptions_for_domain for details.
-        """
         canonical_identity = self.resolve_identity_id(identity_id)
         if not isinstance(domain, str) or not domain.strip():
             raise RegistryError("DOMAIN_REQUIRED")
-        try:
-            min_pr = int(min_priority)
-        except Exception:
-            raise RegistryError("INVALID_PRIORITY")
-        if not 0 <= min_pr <= 4:
-            raise RegistryError("INVALID_PRIORITY")
-        sub = Subscription(
-            canonical_identity,
-            domain.strip().casefold(),
-            min_pr,
-        )
+        min_pr = _priority_value(min_priority)
+        sub = Subscription(canonical_identity, domain.strip().casefold(), min_pr)
         with self._lock:
             if sub not in self._subscriptions:
                 self._subscriptions.append(sub)
@@ -254,32 +221,21 @@ class IdentityRegistry:
         domain: str,
         priority: int,
     ) -> tuple[Subscription, ...]:
-        """Return subscriptions for a domain that accept the given priority.
+        """Return subscriptions accepting the numeric priority.
 
-        The matching logic preserves the original semantics:
-          keep sub if sub.domain == domain and priority <= sub.min_priority
-
-        That means 'min_priority' represents the maximum numeric priority the
-        subscriber will accept (smaller numbers are considered higher priority).
-        Document this clearly if you change the priority semantics.
+        Lower numeric values are more urgent. A subscription with min_priority
+        3 therefore accepts priorities 0 through 3.
         """
         if not isinstance(domain, str) or not domain.strip():
             raise RegistryError("DOMAIN_REQUIRED")
-        try:
-            pr = int(priority)
-        except Exception:
-            raise RegistryError("INVALID_PRIORITY")
-        if not 0 <= pr <= 4:
-            raise RegistryError("INVALID_PRIORITY")
-
+        pr = _priority_value(priority)
         key = domain.strip().casefold()
         with self._lock:
-            results = tuple(
+            return tuple(
                 sub
                 for sub in self._subscriptions
                 if sub.domain == key and pr <= sub.min_priority
             )
-        return results
 
     def identity_is_subscribed(
         self,
@@ -288,7 +244,6 @@ class IdentityRegistry:
         domain: str,
         priority: int,
     ) -> bool:
-        """Return True if identity is subscribed to the domain at the priority."""
         canonical = self.resolve_identity_id(identity_id)
         return any(
             sub.identity_id == canonical
@@ -296,7 +251,6 @@ class IdentityRegistry:
         )
 
     def identities(self) -> tuple[Identity, ...]:
-        """Return all registered identities sorted by canonical id."""
         with self._lock:
             return tuple(self._identities[key] for key in sorted(self._identities))
 

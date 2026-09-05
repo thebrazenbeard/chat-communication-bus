@@ -75,3 +75,66 @@ def test_provider_snapshot_parser_keeps_provider_state_as_projection():
     snapshot = m.parse_provider_snapshot({"protocol_head": "abc", "identities": [{"identity_id": "radar"}]})
     assert snapshot.protocol_head == "abc"
     assert snapshot.canonical is False
+
+
+def test_invalid_subscription_priority_uses_projection_error_contract():
+    m = _module()
+    with pytest.raises(m.ProjectionError) as exc_info:
+        m.build_projection_commands(
+            {
+                "subscriptions": [
+                    {
+                        "identity_id": "radar",
+                        "domain": "system",
+                        "min_priority": "urgent",
+                        "active": True,
+                    }
+                ]
+            }
+        )
+    assert exc_info.value.code == "INVALID_PRIORITY"
+
+
+def test_subscription_active_must_be_boolean_not_truthy_string():
+    m = _module()
+    with pytest.raises(m.ProjectionError) as exc_info:
+        m.build_projection_commands(
+            {
+                "subscriptions": [
+                    {
+                        "identity_id": "radar",
+                        "domain": "system",
+                        "min_priority": 3,
+                        "active": "false",
+                    }
+                ]
+            }
+        )
+    assert exc_info.value.code == "INVALID_ACTIVE"
+
+
+def test_endpoint_status_must_match_provider_constraint():
+    m = _module()
+    with pytest.raises(m.ProjectionError) as exc_info:
+        m.build_projection_commands(
+            {
+                "endpoints": [
+                    {
+                        "endpoint_id": "e",
+                        "identity_id": "radar",
+                        "transport": "github",
+                        "address": "repo",
+                        "status": "MAYBE",
+                    }
+                ]
+            }
+        )
+    assert exc_info.value.code == "INVALID_ENDPOINT_STATUS"
+
+
+@pytest.mark.parametrize("field", ["identities", "endpoints", "subscriptions"])
+def test_projection_collections_reject_scalar_strings(field):
+    m = _module()
+    with pytest.raises(m.ProjectionError) as exc_info:
+        m.build_projection_commands({field: "radar"})
+    assert exc_info.value.code == f"INVALID_{field.upper()}"
