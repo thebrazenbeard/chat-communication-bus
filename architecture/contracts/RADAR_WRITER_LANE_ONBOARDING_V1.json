@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "repository": "thebrazenbeard/chat-communication-bus",
+  "status": "TOPOLOGY_PR_PENDING",
+  "identity": "parallax",
+  "writer": "Parallax",
+  "branch": "bus/parallax-v1",
+  "inert_branch_created": true,
+  "bootstrap_main_sha": "b2950bcb547fb78d16e44cd94a6ba2164937bf44",
+  "bootstrap_branch_head_sha": "b2950bcb547fb78d16e44cd94a6ba2164937bf44",
+  "topology_registered_in_this_proposal": true,
+  "topology_pr_merged": false,
+  "first_append_guard_verified": false,
+  "sequence": [
+    "CREATE_INERT_BRANCH_FROM_EXACT_MAIN",
+    "VERIFY_INERT_BRANCH_HEAD",
+    "MERGE_TOPOLOGY_REGISTRATION",
+    "APPEND_ONE_MESSAGE",
+    "VERIFY_CURRENT_WRITER_LANE_GUARD",
+    "ENABLE_WORKER_COORDINATION"
+  ],
+  "coordination_gate": "Do not use bus/parallax-v1 for worker coordination until first_append_guard_verified is true.",
+  "protected_effects": {
+    "topology_merge": false,
+    "first_append_write": false,
+    "provider_projection": false,
+    "ruleset_change": false
+  },
+  "notes": [
+    "This record is a reviewed proposal, not proof that topology registration or first append has been merged or verified.",
+    "The inert branch was created separately at the exact canonical main cut before this PR.",
+    "The current guard must validate the first append against the merged topology; no bypass or force-push is permitted.",
+    "If topology merge or guard verification fails, inspect the exact head and preserve the branch as inert provenance."
+  ]
+}
