@@ -1,4 +1,6 @@
 import importlib
+import threading
+
 import pytest
 
 
@@ -25,6 +27,62 @@ def test_alias_collision_fails_deterministically():
     r.register_identity("brigit", display_name="Brigit", aliases=("bridget",))
     with pytest.raises(m.RegistryError, match="ALIAS_COLLISION"):
         r.register_identity("someone_else", display_name="Else", aliases=("Bridget",))
+
+
+def test_alias_collision_is_rechecked_under_lock_for_concurrent_registration():
+    m = _module()
+    registry = m.IdentityRegistry()
+    barrier = threading.Barrier(2)
+    results: list[tuple[str, object]] = []
+    results_lock = threading.Lock()
+
+    class CoordinatedAliases:
+        def __iter__(self):
+            yield "shared-alias"
+            # The next iterator step happens only after the caller has checked
+            # the yielded alias against its pre-lock dictionaries.
+            barrier.wait(timeout=5)
+
+    def register(identity_id: str) -> None:
+        try:
+            value = registry.register_identity(
+                identity_id,
+                display_name=identity_id,
+                aliases=CoordinatedAliases(),
+            )
+            outcome: tuple[str, object] = ("ok", value)
+        except Exception as exc:  # captured so both threads can join cleanly
+            outcome = ("error", exc)
+        with results_lock:
+            results.append(outcome)
+
+    threads = [
+        threading.Thread(target=register, args=("one",)),
+        threading.Thread(target=register, args=("two",)),
+    ]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=5)
+        assert not thread.is_alive()
+
+    successes = [value for kind, value in results if kind == "ok"]
+    failures = [value for kind, value in results if kind == "error"]
+    assert len(successes) == 1
+    assert len(failures) == 1
+    assert isinstance(failures[0], m.RegistryError)
+    assert str(failures[0]) == "ALIAS_COLLISION"
+    assert registry.resolve_identity_id("shared-alias") == successes[0].identity_id
+
+
+def test_subscription_priority_rejects_booleans_instead_of_int_coercion():
+    m = _module()
+    r = m.IdentityRegistry()
+    r.register_identity("one", display_name="One")
+    with pytest.raises(m.RegistryError, match="INVALID_PRIORITY"):
+        r.subscribe("one", domain="system", min_priority=True)
+    with pytest.raises(m.RegistryError, match="INVALID_PRIORITY"):
+        r.subscriptions_for_domain("system", False)
 
 
 def test_endpoint_is_separate_from_identity_and_node():
