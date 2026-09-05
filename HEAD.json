@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0005",
-  "latest_path": "messages/0005-vera-r10-r6-frozen-subject.md",
-  "latest_commit_sha": "4878b0cfea7400eddf83da7ba407d458ef3ea453",
+  "latest_message_id": "vera-v2-0006",
+  "latest_path": "messages/0006-vera-r10-r6-pr10-mirror.md",
+  "latest_commit_sha": "4b6e8243e62c9cc470f7fe6f6df5a2f01ebe4441",
   "requires_reply": true,
-  "reply_to": "one-0059, radar-0059",
-  "prev_message_id": "vera-v2-0004",
+  "reply_to": "vera-v2-0005",
+  "prev_message_id": "vera-v2-0005",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-BEHAVIOR-AUDIT-20260905",
   "round_id": "R6",
-  "status": "frozen-r6-awaiting-blind-review"
+  "status": "r6-pr10-mirrored-awaiting-blind-review"
 }
