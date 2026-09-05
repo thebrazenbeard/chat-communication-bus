@@ -20,6 +20,7 @@ def test_heartbeat_message_is_radar_background_telemetry(tmp_path):
     assert heartbeat["domain"] == "system"
     assert heartbeat["intent"] == "telemetry"
     assert heartbeat["priority"] == 4
+    assert heartbeat["heartbeat_sequence"] == 1
     assert heartbeat["counts"] == {"routed": 2, "dropped": 1, "dlq": 3}
 
 
@@ -42,6 +43,7 @@ def test_heartbeat_is_a_canonical_radar_envelope_not_an_out_of_band_shape(tmp_pa
     assert result.envelope.audience == ()
     assert result.envelope.priority == 4
     assert result.envelope.payload == {
+        "heartbeat_sequence": 1,
         "emitted_at_ms": 1_000,
         "counts": {"routed": 4, "dropped": 0, "dlq": 0},
         "source_ref": "main@abc",
@@ -72,6 +74,7 @@ def test_runtime_resumes_from_persisted_due_time_without_sixty_second_lag(tmp_pa
     assert sleeps == [10.0]
     assert len(emitted) == 1
     assert emitted[0]["emitted_at_ms"] == 1_000 + HEARTBEAT_INTERVAL_MS
+    assert emitted[0]["heartbeat_sequence"] == 2
 
 
 def test_runtime_emits_on_exact_sixty_second_cadence_and_stops_cleanly(tmp_path):
@@ -95,9 +98,14 @@ def test_runtime_emits_on_exact_sixty_second_cadence_and_stops_cleanly(tmp_path)
     runtime.run_forever(should_stop=lambda: len(emitted) >= 2)
 
     assert [item["emitted_at_ms"] for item in emitted] == [0, HEARTBEAT_INTERVAL_MS]
+    assert [item["heartbeat_sequence"] for item in emitted] == [1, 2]
     assert sleeps == [60.0]
     assert emitted[-1]["source_ref"] == "main@abc"
     assert emitted[-1]["provider_state"] == "DEGRADED"
+    assert [record.delivery_state for record in store.recent_heartbeats()] == [
+        "DELIVERED",
+        "DELIVERED",
+    ]
 
 
 def test_duplicate_emitters_share_one_durable_interval_claim(tmp_path):
@@ -134,9 +142,11 @@ def test_duplicate_emitters_share_one_durable_interval_claim(tmp_path):
     emitted = [heartbeat for heartbeat in results if heartbeat is not None]
     assert len(emitted) == 1
     assert emitted[0]["message_id"] == "radar-heartbeat-10000"
+    assert emitted[0]["heartbeat_sequence"] == 1
     rows = first.recent_heartbeats()
     assert len(rows) == 1
     assert rows[0].emitted_at_ms == 10_000
+    assert rows[0].delivery_state == "DELIVERED"
 
 
 def test_sink_failure_is_durable_and_scheduler_recovers_next_interval(tmp_path):
@@ -169,6 +179,7 @@ def test_sink_failure_is_durable_and_scheduler_recovers_next_interval(tmp_path):
     assert sleeps == [60.0]
     records = store.recent_heartbeats()
     assert [record.delivery_state for record in records] == ["DELIVERED", "UNCONFIRMED"]
+    assert [record.heartbeat_id for record in records] == [2, 1]
 
 
 def test_tick_wraps_sink_failure_without_misclassifying_store_failure(tmp_path):
@@ -181,3 +192,5 @@ def test_tick_wraps_sink_failure_without_misclassifying_store_failure(tmp_path):
         assert isinstance(exc.__cause__, RuntimeError)
     else:
         raise AssertionError("expected HeartbeatSinkError")
+
+    assert store.recent_heartbeats()[0].delivery_state == "UNCONFIRMED"
