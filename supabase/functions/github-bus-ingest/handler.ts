@@ -3,21 +3,22 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 
 const OIDC_ISSUER = "https://token.actions.githubusercontent.com";
 const JWKS_URL = `${OIDC_ISSUER}/.well-known/jwks`;
-const EXPECTED_AUDIENCE = "chat-communication-bus-supabase";
+const AUDIENCE_PREFIX = "chat-communication-bus-supabase:";
 const EXPECTED_REPOSITORY = "thebrazenbeard/chat-communication-bus";
-const EXPECTED_WORKFLOW_PREFIX = `${EXPECTED_REPOSITORY}/.github/workflows/radar-bus-projection.yml@refs/heads/bus/`;
-const EXPECTED_JOB_WORKFLOW_SHA = "634bb8d5af3d7577ccb6092e48349d4c197e3843";
-const EXPECTED_JOB_WORKFLOW_REF = `${EXPECTED_REPOSITORY}/.github/workflows/radar-trusted-projector.yml@${EXPECTED_JOB_WORKFLOW_SHA}`;
+const EXPECTED_CALLER_WORKFLOW_REF = `${EXPECTED_REPOSITORY}/.github/workflows/radar-central-dispatcher.yml@refs/heads/main`;
+const EXPECTED_JOB_WORKFLOW_PATH = `${EXPECTED_REPOSITORY}/.github/workflows/radar-trusted-projector.yml`;
 const MAX_FILES = 500;
 const MAX_FILE_BYTES = 512 * 1024;
 const MAX_BATCH_BYTES = 5 * 1024 * 1024;
+const MAX_REQUEST_BYTES = 8 * 1024 * 1024;
 const DEFAULT_PROJECT_CONCURRENCY = 4;
 const MAX_PROJECT_CONCURRENCY = 16;
+const SHA40_RE = /^[0-9a-f]{40}$/;
+const SHA256_RE = /^[0-9a-f]{64}$/;
+const PATH_SEGMENT_RE = /^[A-Za-z0-9._-]+$/;
 
 let jwksCache: { expiresAt: number; keys: JsonWebKey[] } | null = null;
 let jwksFetchPromise: Promise<JsonWebKey[] | null> | null = null;
-
-const PATH_SEGMENT_RE = /^[A-Za-z0-9._-]+$/;
 
 type Claims = Record<string, unknown>;
 type Headers = Record<string, string>;
@@ -28,12 +29,14 @@ type SourceFile = {
   blob_sha: string;
   content_base64: string;
 };
-type Batch = {
-  projection_version: number;
+type ProjectionBatch = {
   repository: string;
+  branch: string;
   ref: string;
   branch_head: string;
   lane_identity: string;
+  batch_id: string;
+  claim_token: string;
   files: SourceFile[];
 };
 
@@ -52,6 +55,22 @@ function response(status: number, body: Record<string, unknown>): Response {
     status,
     headers: { "content-type": "application/json; charset=utf-8" },
   });
+}
+
+function requireString(value: unknown, code: string): string {
+  if (typeof value !== "string" || !value.trim()) throw new HttpError(422, code);
+  return value.trim();
+}
+
+function requireSha40(value: unknown, code: string): string {
+  const text = requireString(value, code).toLowerCase();
+  if (!SHA40_RE.test(text)) throw new HttpError(422, code);
+  return text;
+}
+
+function requireObject(value: unknown, code: string): Record<string, unknown> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new HttpError(422, code);
+  return value as Record<string, unknown>;
 }
 
 function b64urlBytes(value: string): Uint8Array {
@@ -109,7 +128,13 @@ function audienceIncludes(value: unknown, expected: string): boolean {
   return Array.isArray(value) && value.some((item) => item === expected);
 }
 
-async function verifyGithubOidc(token: string): Promise<Claims> {
+function trustedProjectorSha(): string {
+  const value = Deno.env.get("RADAR_TRUSTED_PROJECTOR_SHA") ?? "";
+  if (!SHA40_RE.test(value)) throw new HttpError(503, "TRUSTED_PROJECTOR_SHA_INVALID");
+  return value;
+}
+
+async function verifyGithubOidc(token: string, expectedAudience: string): Promise<Claims> {
   const parts = token.split(".");
   if (parts.length !== 3) throw new HttpError(401, "OIDC_TOKEN_SHAPE_INVALID");
   const header = b64urlJson(parts[0]);
@@ -136,27 +161,30 @@ async function verifyGithubOidc(token: string): Promise<Claims> {
 
   const now = Math.floor(Date.now() / 1000);
   if (claims.iss !== OIDC_ISSUER) throw new HttpError(403, "OIDC_ISSUER_INVALID");
-  if (!audienceIncludes(claims.aud, EXPECTED_AUDIENCE)) throw new HttpError(403, "OIDC_AUDIENCE_INVALID");
+  if (!audienceIncludes(claims.aud, expectedAudience)) throw new HttpError(403, "OIDC_AUDIENCE_INVALID");
   if (typeof claims.exp !== "number" || claims.exp <= now) throw new HttpError(403, "OIDC_EXPIRED");
   if (typeof claims.nbf === "number" && claims.nbf > now + 30) throw new HttpError(403, "OIDC_NOT_YET_VALID");
   if (typeof claims.iat !== "number" || claims.iat > now + 30 || claims.iat < now - 15 * 60) {
     throw new HttpError(403, "OIDC_ISSUED_AT_INVALID");
   }
+
   stringClaim(claims, "jti");
   if (stringClaim(claims, "repository") !== EXPECTED_REPOSITORY) throw new HttpError(403, "OIDC_REPOSITORY_INVALID");
-  if (stringClaim(claims, "event_name") !== "push") throw new HttpError(403, "OIDC_EVENT_INVALID");
-  const ref = stringClaim(claims, "ref");
-  if (!laneIdentityFromRef(ref)) throw new HttpError(403, "OIDC_REF_INVALID");
-  if (!stringClaim(claims, "workflow_ref").startsWith(EXPECTED_WORKFLOW_PREFIX)) {
+  const eventName = stringClaim(claims, "event_name");
+  if (eventName !== "workflow_run" && eventName !== "schedule") throw new HttpError(403, "OIDC_EVENT_INVALID");
+  if (stringClaim(claims, "workflow_ref") !== EXPECTED_CALLER_WORKFLOW_REF) {
     throw new HttpError(403, "OIDC_WORKFLOW_INVALID");
   }
-  if (stringClaim(claims, "job_workflow_ref") !== EXPECTED_JOB_WORKFLOW_REF) {
+  if (stringClaim(claims, "ref") !== "refs/heads/main") throw new HttpError(403, "OIDC_REF_INVALID");
+
+  const expectedSha = trustedProjectorSha();
+  const expectedJobRef = `${EXPECTED_JOB_WORKFLOW_PATH}@${expectedSha}`;
+  if (stringClaim(claims, "job_workflow_ref") !== expectedJobRef) {
     throw new HttpError(403, "OIDC_JOB_WORKFLOW_INVALID");
   }
-  if (stringClaim(claims, "job_workflow_sha") !== EXPECTED_JOB_WORKFLOW_SHA) {
+  if (stringClaim(claims, "job_workflow_sha") !== expectedSha) {
     throw new HttpError(403, "OIDC_JOB_WORKFLOW_SHA_INVALID");
   }
-  stringClaim(claims, "sha");
   return claims;
 }
 
@@ -167,75 +195,14 @@ async function consumeGithubOidcJti(
   const jti = stringClaim(claims, "jti");
   const exp = claims.exp;
   if (typeof exp !== "number" || !Number.isFinite(exp)) throw new HttpError(403, "OIDC_EXP_INVALID");
-
   const { data, error } = await supabase.rpc("radar_consume_github_oidc_jti_v1", {
     p_jti: jti,
     p_expires_at: new Date(exp * 1000).toISOString(),
   });
   if (error) throw new HttpError(502, `OIDC_JTI_GUARD_FAILED:${error.code ?? "UNKNOWN"}`);
-
   const outcome = String(data);
   if (outcome === "REPLAY") throw new HttpError(403, "OIDC_JTI_REPLAYED");
   if (outcome !== "CONSUMED") throw new HttpError(502, "OIDC_JTI_GUARD_INVALID_RESPONSE");
-}
-
-function requireString(value: unknown, code: string): string {
-  if (typeof value !== "string" || !value.trim()) throw new HttpError(422, code);
-  return value.trim();
-}
-
-function parseBatch(value: unknown, claims: Claims): Batch {
-  if (!value || typeof value !== "object") throw new HttpError(400, "BATCH_REQUIRED");
-  const raw = value as Record<string, unknown>;
-  if (raw.projection_version !== 1) throw new HttpError(422, "PROJECTION_VERSION_INVALID");
-  const repository = requireString(raw.repository, "BATCH_REPOSITORY_REQUIRED");
-  const ref = requireString(raw.ref, "BATCH_REF_REQUIRED");
-  const branchHead = requireString(raw.branch_head, "BATCH_HEAD_REQUIRED");
-  const laneIdentity = normalizeIdentity(requireString(raw.lane_identity, "LANE_IDENTITY_REQUIRED"));
-  if (repository !== stringClaim(claims, "repository")) throw new HttpError(403, "BATCH_REPOSITORY_MISMATCH");
-  if (ref !== stringClaim(claims, "ref")) throw new HttpError(403, "BATCH_REF_MISMATCH");
-  if (branchHead !== stringClaim(claims, "sha")) throw new HttpError(403, "BATCH_HEAD_MISMATCH");
-  const refIdentity = laneIdentityFromRef(ref);
-  if (!refIdentity || laneIdentity !== refIdentity) throw new HttpError(403, "LANE_IDENTITY_REF_MISMATCH");
-  if (!Array.isArray(raw.files) || raw.files.length > MAX_FILES) throw new HttpError(422, "BATCH_FILES_INVALID");
-
-  const files = raw.files.map((item): SourceFile => {
-    if (!item || typeof item !== "object") throw new HttpError(422, "SOURCE_FILE_INVALID");
-    const file = item as Record<string, unknown>;
-    const path = requireString(file.path, "SOURCE_PATH_REQUIRED");
-    if (!path.startsWith("messages/") || !path.endsWith(".md") || path.includes("..")) {
-      throw new HttpError(422, "SOURCE_PATH_INVALID");
-    }
-    const segments = path.split("/").slice(1);
-    if (segments.length === 0) throw new HttpError(422, "SOURCE_PATH_INVALID");
-    for (const seg of segments) {
-      if (!PATH_SEGMENT_RE.test(seg)) throw new HttpError(422, "SOURCE_PATH_INVALID");
-    }
-
-    const sourceCommit = requireString(file.source_commit, "SOURCE_COMMIT_REQUIRED");
-    const sourceCommittedAt = requireString(file.source_committed_at, "SOURCE_COMMITTED_AT_REQUIRED");
-    const blobSha = requireString(file.blob_sha, "SOURCE_BLOB_REQUIRED");
-    const contentBase64 = requireString(file.content_base64, "SOURCE_CONTENT_REQUIRED");
-    if (!/^[0-9a-f]{40}$/.test(sourceCommit) || !/^[0-9a-f]{40}$/.test(blobSha)) throw new HttpError(422, "SOURCE_GIT_SHA_INVALID");
-    return { path, source_commit: sourceCommit, source_committed_at: sourceCommittedAt, blob_sha: blobSha, content_base64: contentBase64 };
-  });
-  return { projection_version: 1, repository, ref, branch_head: branchHead, lane_identity: laneIdentity, files };
-}
-
-function base64Bytes(value: string): Uint8Array {
-  try {
-    const binary = atob(value);
-    return Uint8Array.from(binary, (char) => char.charCodeAt(0));
-  } catch {
-    throw new HttpError(422, "SOURCE_CONTENT_BASE64_INVALID");
-  }
-}
-
-function estimatedBase64Size(base64: string): number {
-  const len = base64.length;
-  if (len === 0) return 0;
-  const padding = base64.endsWith("==") ? 2 : base64.endsWith("=") ? 1 : 0;
-  return Math.floor((len * 3) / 4) - padding;
 }
 
 function hex(buffer: ArrayBuffer): string {
@@ -252,6 +219,22 @@ async function gitBlobSha1(bytes: Uint8Array): Promise<string> {
   combined.set(prefix);
   combined.set(bytes, prefix.length);
   return hex(await crypto.subtle.digest("SHA-1", combined));
+}
+
+function base64Bytes(value: string): Uint8Array {
+  try {
+    const binary = atob(value);
+    return Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  } catch {
+    throw new HttpError(422, "SOURCE_CONTENT_BASE64_INVALID");
+  }
+}
+
+function estimatedBase64Size(base64: string): number {
+  const len = base64.length;
+  if (len === 0) return 0;
+  const padding = base64.endsWith("==") ? 2 : base64.endsWith("=") ? 1 : 0;
+  return Math.floor((len * 3) / 4) - padding;
 }
 
 function unwrapScalar(value: string): string {
@@ -386,85 +369,6 @@ function conversationClosedBySender(body: string): boolean {
   return lastLine === "#ENDTHREAD";
 }
 
-async function projectFile(
-  supabase: ReturnType<typeof createClient>,
-  batch: Batch,
-  file: SourceFile,
-): Promise<{ path: string; result: string }> {
-  const bytes = base64Bytes(file.content_base64);
-  if (bytes.length > MAX_FILE_BYTES) throw new HttpError(422, "MESSAGE_FILE_TOO_LARGE");
-  if (await gitBlobSha1(bytes) !== file.blob_sha) throw new HttpError(422, "GIT_BLOB_SHA_MISMATCH");
-
-  let text: string;
-  try {
-    text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
-  } catch {
-    throw new HttpError(422, "MESSAGE_NOT_UTF8");
-  }
-
-  const { headers, body } = splitDocument(text);
-  const messageId = unwrapScalar(requireString(headers.message_id, "MESSAGE_ID_REQUIRED"));
-  const writer = normalizeIdentity(requireString(headers.writer, "WRITER_REQUIRED"));
-  const laneIdentity = batch.lane_identity;
-  if (writer !== laneIdentity) throw new HttpError(422, "WRITER_LANE_MISMATCH");
-
-  const sourceTime = normalizedTimestamp(file.source_committed_at);
-  if (!sourceTime) throw new HttpError(422, "INVALID_SOURCE_COMMITTED_AT");
-  const declaredTime = headers.created_at ? normalizedTimestamp(headers.created_at) : null;
-  const createdAt = declaredTime ?? sourceTime;
-  const createdAtBasis = declaredTime
-    ? "message_header"
-    : headers.created_at
-    ? "source_commit_invalid_header"
-    : "source_commit";
-
-  const intended = unwrapScalar(headers.intended_recipient ?? "");
-  const audience = intended
-    .split(",")
-    .map((value) => unwrapScalar(value))
-    .filter(Boolean)
-    .map(normalizeIdentity);
-  const requiresAck = parseBool(headers.requires_reply, "INVALID_REQUIRES_REPLY") ||
-    parseBool(headers.requires_ack, "INVALID_REQUIRES_ACK");
-
-  const bodyBytes = new TextEncoder().encode(body);
-  const fullHash = await sha256(bytes);
-  const bodyHash = await sha256(bodyBytes);
-  const sourceRefs = [
-    `github://${batch.repository}@${file.source_commit}/${file.path}`,
-    `github-ref://${batch.repository}/${batch.ref}@${batch.branch_head}`,
-    `git-blob:${file.blob_sha}`,
-  ];
-  const metadata: Record<string, unknown> = {
-    ...headers,
-    admitted_lane_identity: laneIdentity,
-    created_at_basis: createdAtBasis,
-    source_repository: batch.repository,
-    source_ref: batch.ref,
-    source_branch_head: batch.branch_head,
-    source_path: file.path,
-    source_commit: file.source_commit,
-    source_blob_sha: file.blob_sha,
-    body_sha256: bodyHash,
-    body_length: bodyBytes.length,
-    conversation_closed_by_sender: conversationClosedBySender(body),
-  };
-
-  const { data, error } = await supabase.rpc("radar_project_bus_message_v1", {
-    p_message_id: messageId,
-    p_created_at: createdAt,
-    p_sender: laneIdentity,
-    p_audience: audience,
-    p_requires_ack: requiresAck,
-    p_source_refs: sourceRefs,
-    p_content_hash: fullHash,
-    p_idempotency_key: `chat-bus:${messageId}:${fullHash}`,
-    p_payload: metadata,
-  });
-  if (error) throw new HttpError(502, `PROJECTION_RPC_FAILED:${error.code ?? "UNKNOWN"}`);
-  return { path: file.path, result: String(data) };
-}
-
 function parseProjectConcurrency(value: string | undefined): number {
   const raw = (value ?? String(DEFAULT_PROJECT_CONCURRENCY)).trim();
   if (!/^\d+$/.test(raw)) throw new HttpError(503, "PROJECT_CONCURRENCY_INVALID");
@@ -492,27 +396,267 @@ async function mapWithConcurrency<T, R>(items: T[], fn: (t: T, i: number) => Pro
   return results;
 }
 
+function parseSourceFiles(value: unknown): SourceFile[] {
+  if (!Array.isArray(value) || value.length > MAX_FILES) throw new HttpError(422, "BATCH_FILES_INVALID");
+  return value.map((item): SourceFile => {
+    const file = requireObject(item, "SOURCE_FILE_INVALID");
+    const path = requireString(file.path, "SOURCE_PATH_REQUIRED");
+    if (!path.startsWith("messages/") || !path.endsWith(".md") || path.includes("..")) {
+      throw new HttpError(422, "SOURCE_PATH_INVALID");
+    }
+    const segments = path.split("/").slice(1);
+    if (segments.length === 0 || segments.some((segment) => !PATH_SEGMENT_RE.test(segment))) {
+      throw new HttpError(422, "SOURCE_PATH_INVALID");
+    }
+    return {
+      path,
+      source_commit: requireSha40(file.source_commit, "SOURCE_GIT_SHA_INVALID"),
+      source_committed_at: requireString(file.source_committed_at, "SOURCE_COMMITTED_AT_REQUIRED"),
+      blob_sha: requireSha40(file.blob_sha, "SOURCE_GIT_SHA_INVALID"),
+      content_base64: requireString(file.content_base64, "SOURCE_CONTENT_REQUIRED"),
+    };
+  });
+}
+
+function parseProjectionBatch(raw: Record<string, unknown>): ProjectionBatch {
+  const repository = requireString(raw.repository, "BATCH_REPOSITORY_REQUIRED");
+  if (repository !== EXPECTED_REPOSITORY) throw new HttpError(403, "BATCH_REPOSITORY_MISMATCH");
+  const branch = requireString(raw.branch, "BATCH_BRANCH_REQUIRED");
+  const ref = requireString(raw.ref, "BATCH_REF_REQUIRED");
+  if (ref !== `refs/heads/${branch}`) throw new HttpError(403, "BATCH_REF_MISMATCH");
+  const branchHead = requireSha40(raw.branch_head, "BATCH_HEAD_REQUIRED");
+  const laneIdentity = normalizeIdentity(requireString(raw.lane_identity, "LANE_IDENTITY_REQUIRED"));
+  const identity = normalizeIdentity(requireString(raw.identity, "IDENTITY_REQUIRED"));
+  if (identity !== laneIdentity) throw new HttpError(403, "LANE_IDENTITY_MISMATCH");
+  const refIdentity = laneIdentityFromRef(ref);
+  if (!refIdentity || refIdentity !== laneIdentity) throw new HttpError(403, "LANE_IDENTITY_REF_MISMATCH");
+  const journal = requireObject(raw.journal, "JOURNAL_REQUIRED");
+  const batchId = requireString(journal.batch_id, "JOURNAL_BATCH_ID_REQUIRED");
+  const claimToken = requireString(journal.claim_token, "JOURNAL_CLAIM_TOKEN_REQUIRED");
+  const files = parseSourceFiles(raw.files);
+  return {
+    repository,
+    branch,
+    ref,
+    branch_head: branchHead,
+    lane_identity: laneIdentity,
+    batch_id: batchId,
+    claim_token: claimToken,
+    files,
+  };
+}
+
+async function recordFileResult(
+  supabase: ReturnType<typeof createClient>,
+  batch: ProjectionBatch,
+  path: string,
+  state: string,
+  resultRef: string,
+): Promise<void> {
+  const { error } = await supabase.rpc("radar_projection_record_file_result_v1", {
+    p_batch_id: batch.batch_id,
+    p_claim_token: batch.claim_token,
+    p_path: path,
+    p_state: state,
+    p_result_ref: resultRef,
+  });
+  if (error) throw new HttpError(502, `JOURNAL_FILE_RESULT_FAILED:${error.code ?? "UNKNOWN"}`);
+}
+
+async function projectFile(
+  supabase: ReturnType<typeof createClient>,
+  batch: ProjectionBatch,
+  file: SourceFile,
+): Promise<{ path: string; result: string }> {
+  const bytes = base64Bytes(file.content_base64);
+  if (bytes.length > MAX_FILE_BYTES) throw new HttpError(422, "MESSAGE_FILE_TOO_LARGE");
+  if (await gitBlobSha1(bytes) !== file.blob_sha) throw new HttpError(422, "GIT_BLOB_SHA_MISMATCH");
+
+  let text: string;
+  try {
+    text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  } catch {
+    throw new HttpError(422, "MESSAGE_NOT_UTF8");
+  }
+
+  const { headers, body } = splitDocument(text);
+  const messageId = unwrapScalar(requireString(headers.message_id, "MESSAGE_ID_REQUIRED"));
+  const writer = normalizeIdentity(requireString(headers.writer, "WRITER_REQUIRED"));
+  if (writer !== batch.lane_identity) throw new HttpError(422, "WRITER_LANE_MISMATCH");
+
+  const sourceTime = normalizedTimestamp(file.source_committed_at);
+  if (!sourceTime) throw new HttpError(422, "INVALID_SOURCE_COMMITTED_AT");
+  let createdAt = sourceTime;
+  let createdAtBasis = "source_commit";
+  if (headers.created_at !== undefined) {
+    const declaredTime = normalizedTimestamp(headers.created_at);
+    if (!declaredTime) throw new HttpError(422, "INVALID_CREATED_AT");
+    createdAt = declaredTime;
+    createdAtBasis = "message_header";
+  }
+
+  const intended = unwrapScalar(headers.intended_recipient ?? "");
+  const audience = intended
+    .split(",")
+    .map((value) => unwrapScalar(value))
+    .filter(Boolean)
+    .map(normalizeIdentity);
+  const requiresAck = parseBool(headers.requires_reply, "INVALID_REQUIRES_REPLY") ||
+    parseBool(headers.requires_ack, "INVALID_REQUIRES_ACK");
+
+  const bodyBytes = new TextEncoder().encode(body);
+  const fullHash = await sha256(bytes);
+  const bodyHash = await sha256(bodyBytes);
+  const sourceRefs = [
+    `github://${batch.repository}@${file.source_commit}/${file.path}`,
+    `github-ref://${batch.repository}/${batch.ref}@${batch.branch_head}`,
+    `git-blob:${file.blob_sha}`,
+  ];
+  const metadata: Record<string, unknown> = {
+    ...headers,
+    admitted_lane_identity: batch.lane_identity,
+    created_at_basis: createdAtBasis,
+    source_repository: batch.repository,
+    source_ref: batch.ref,
+    source_branch_head: batch.branch_head,
+    source_path: file.path,
+    source_commit: file.source_commit,
+    source_blob_sha: file.blob_sha,
+    body_sha256: bodyHash,
+    body_length: bodyBytes.length,
+    conversation_closed_by_sender: conversationClosedBySender(body),
+  };
+
+  const { data, error } = await supabase.rpc("radar_project_bus_message_v1", {
+    p_message_id: messageId,
+    p_created_at: createdAt,
+    p_sender: batch.lane_identity,
+    p_audience: audience,
+    p_requires_ack: requiresAck,
+    p_source_refs: sourceRefs,
+    p_content_hash: fullHash,
+    p_idempotency_key: `chat-bus:${messageId}:${fullHash}`,
+    p_payload: metadata,
+  });
+  if (error) throw new HttpError(502, `PROJECTION_RPC_FAILED:${error.code ?? "UNKNOWN"}`);
+
+  const result = String(data);
+  const state = result === "IDEMPOTENT" ? "IDEMPOTENT" : result === "CONFLICT" ? "CONFLICT" : "PROJECTED";
+  await recordFileResult(supabase, batch, file.path, state, result);
+  if (state === "CONFLICT") throw new HttpError(409, "MESSAGE_PROJECTION_CONFLICT");
+  return { path: file.path, result };
+}
+
+async function handleOperation(
+  supabase: ReturnType<typeof createClient>,
+  raw: Record<string, unknown>,
+): Promise<Record<string, unknown>> {
+  if (raw.protocol_version !== 2) throw new HttpError(422, "PROTOCOL_VERSION_INVALID");
+  const operation = requireString(raw.operation, "OPERATION_REQUIRED");
+
+  if (operation === "cursor") {
+    const identity = normalizeIdentity(requireString(raw.identity, "IDENTITY_REQUIRED"));
+    const branch = requireString(raw.branch, "BRANCH_REQUIRED");
+    const { data, error } = await supabase.rpc("radar_projection_get_lane_v1", {
+      p_identity_id: identity,
+      p_branch: branch,
+    });
+    if (error) throw new HttpError(502, `JOURNAL_CURSOR_FAILED:${error.code ?? "UNKNOWN"}`);
+    return { ok: true, lane: data ?? null };
+  }
+
+  if (operation === "set_control_cut") {
+    const identity = normalizeIdentity(requireString(raw.identity, "IDENTITY_REQUIRED"));
+    const branch = requireString(raw.branch, "BRANCH_REQUIRED");
+    const controlSha = requireSha40(raw.control_sha, "CONTROL_SHA_INVALID");
+    const topologySha = requireSha40(raw.topology_sha, "TOPOLOGY_SHA_INVALID");
+    const { error } = await supabase.rpc("radar_projection_set_control_cut_v1", {
+      p_identity_id: identity,
+      p_branch: branch,
+      p_control_sha: controlSha,
+      p_topology_sha: topologySha,
+    });
+    if (error) throw new HttpError(502, `JOURNAL_CONTROL_CUT_FAILED:${error.code ?? "UNKNOWN"}`);
+    return { ok: true };
+  }
+
+  if (operation === "claim_batch") {
+    const identity = normalizeIdentity(requireString(raw.identity, "IDENTITY_REQUIRED"));
+    const branch = requireString(raw.branch, "BRANCH_REQUIRED");
+    const expected = raw.expected_projected_head === null
+      ? null
+      : requireSha40(raw.expected_projected_head, "EXPECTED_HEAD_INVALID");
+    const target = requireSha40(raw.target_head, "TARGET_HEAD_INVALID");
+    const controlSha = requireSha40(raw.control_sha, "CONTROL_SHA_INVALID");
+    const topologySha = requireSha40(raw.topology_sha, "TOPOLOGY_SHA_INVALID");
+    if (!Array.isArray(raw.files) || raw.files.some((path) => typeof path !== "string" || !path)) {
+      throw new HttpError(422, "CLAIM_FILES_INVALID");
+    }
+    const owner = requireString(raw.owner, "CLAIM_OWNER_REQUIRED");
+    const leaseSeconds = raw.lease_seconds;
+    if (!Number.isInteger(leaseSeconds) || (leaseSeconds as number) <= 0 || (leaseSeconds as number) > 3600) {
+      throw new HttpError(422, "CLAIM_LEASE_INVALID");
+    }
+    const { data, error } = await supabase.rpc("radar_projection_claim_batch_v1", {
+      p_identity_id: identity,
+      p_branch: branch,
+      p_expected_projected_head_sha: expected,
+      p_target_head_sha: target,
+      p_control_sha: controlSha,
+      p_topology_sha: topologySha,
+      p_files: raw.files,
+      p_claim_owner: owner,
+      p_lease_seconds: leaseSeconds,
+    });
+    if (error) throw new HttpError(409, `JOURNAL_CLAIM_FAILED:${error.code ?? "UNKNOWN"}`);
+    return { ok: true, batch: data };
+  }
+
+  if (operation === "project_batch") {
+    const batch = parseProjectionBatch(raw);
+    let totalBytes = 0;
+    for (const file of batch.files) {
+      totalBytes += estimatedBase64Size(file.content_base64);
+      if (totalBytes > MAX_BATCH_BYTES) throw new HttpError(413, "BATCH_TOO_LARGE");
+    }
+    const concurrency = parseProjectConcurrency(Deno.env.get("PROJECT_CONCURRENCY"));
+    const results = await mapWithConcurrency(
+      batch.files,
+      async (file) => projectFile(supabase, batch, file),
+      concurrency,
+    );
+    return { ok: true, projected: results.length, results };
+  }
+
+  if (operation === "finalize_batch") {
+    const batchId = requireString(raw.batch_id, "JOURNAL_BATCH_ID_REQUIRED");
+    const claimToken = requireString(raw.claim_token, "JOURNAL_CLAIM_TOKEN_REQUIRED");
+    const { data, error } = await supabase.rpc("radar_projection_finalize_batch_v1", {
+      p_batch_id: batchId,
+      p_claim_token: claimToken,
+    });
+    if (error) throw new HttpError(409, `JOURNAL_FINALIZE_FAILED:${error.code ?? "UNKNOWN"}`);
+    return { ok: true, lane: data };
+  }
+
+  throw new HttpError(422, "OPERATION_INVALID");
+}
+
 Deno.serve(async (req: Request) => {
   try {
     if (req.method !== "POST") throw new HttpError(405, "METHOD_NOT_ALLOWED");
     const auth = req.headers.get("authorization") ?? "";
     const match = /^Bearer\s+(.+)$/i.exec(auth);
     if (!match) throw new HttpError(401, "OIDC_BEARER_REQUIRED");
-    const claims = await verifyGithubOidc(match[1]);
 
-    let raw: unknown;
-    try {
-      raw = await req.json();
-    } catch {
-      throw new HttpError(400, "JSON_BODY_INVALID");
-    }
-    const batch = parseBatch(raw, claims);
+    const digestHeader = (req.headers.get("x-radar-body-sha256") ?? "").toLowerCase();
+    if (!SHA256_RE.test(digestHeader)) throw new HttpError(401, "BODY_SHA256_HEADER_INVALID");
+    const rawBody = new Uint8Array(await req.arrayBuffer());
+    if (rawBody.length > MAX_REQUEST_BYTES) throw new HttpError(413, "REQUEST_TOO_LARGE");
+    const actualDigest = await sha256(rawBody);
+    if (actualDigest !== digestHeader) throw new HttpError(401, "BODY_SHA256_MISMATCH");
 
-    let totalBytes = 0;
-    for (const file of batch.files) {
-      totalBytes += estimatedBase64Size(file.content_base64);
-      if (totalBytes > MAX_BATCH_BYTES) throw new HttpError(413, "BATCH_TOO_LARGE");
-    }
+    const claims = await verifyGithubOidc(match[1], `${AUDIENCE_PREFIX}${actualDigest}`);
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -521,26 +665,25 @@ Deno.serve(async (req: Request) => {
       auth: { persistSession: false, autoRefreshToken: false },
     });
 
-    // Consume the verified JWT id exactly once after request/batch validation
-    // and before any message projection can create provider-visible state.
+    // A cryptographically valid, exact-body-bound token is burned before any
+    // semantic parsing. Malformed bound requests cannot be replayed indefinitely.
     await consumeGithubOidcJti(supabase, claims);
 
-    const concurrency = parseProjectConcurrency(Deno.env.get("PROJECT_CONCURRENCY"));
-    const results = await mapWithConcurrency(
-      batch.files,
-      async (file) => projectFile(supabase, batch, file),
-      concurrency,
-    );
-
-    return response(200, {
-      ok: true,
-      repository: batch.repository,
-      ref: batch.ref,
-      head: batch.branch_head,
-      lane_identity: batch.lane_identity,
-      projected: results.length,
-      results,
-    });
+    let text: string;
+    try {
+      text = new TextDecoder("utf-8", { fatal: true }).decode(rawBody);
+    } catch {
+      throw new HttpError(400, "JSON_BODY_UTF8_INVALID");
+    }
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      throw new HttpError(400, "JSON_BODY_INVALID");
+    }
+    const raw = requireObject(parsed, "REQUEST_OBJECT_REQUIRED");
+    const result = await handleOperation(supabase, raw);
+    return response(200, result);
   } catch (error) {
     if (error instanceof HttpError) return response(error.status, { ok: false, error: error.code });
     console.error(error);
