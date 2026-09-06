@@ -51,10 +51,18 @@ class CursorJournal(Protocol):
 
 
 class LocalGitRepository:
-    """Read-only Git object access against one trusted local checkout."""
+    """Read-only Git object/ref access against one trusted local checkout."""
 
-    def __init__(self, repo_dir: str | Path) -> None:
+    def __init__(
+        self,
+        repo_dir: str | Path,
+        *,
+        use_remote_tracking_refs: bool = False,
+    ) -> None:
         self.repo_dir = Path(repo_dir)
+        self._branch_ref_prefix = (
+            "refs/remotes/origin/" if use_remote_tracking_refs else "refs/heads/"
+        )
 
     def _run(self, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
@@ -66,7 +74,12 @@ class LocalGitRepository:
         )
 
     def branch_head(self, branch: str) -> str:
-        result = self._run("rev-parse", "--verify", f"refs/heads/{branch}^{{commit}}", check=False)
+        result = self._run(
+            "rev-parse",
+            "--verify",
+            f"{self._branch_ref_prefix}{branch}^{{commit}}",
+            check=False,
+        )
         if result.returncode != 0:
             raise ReconcileError("MISSING_WRITER_BRANCH")
         return result.stdout.strip()
