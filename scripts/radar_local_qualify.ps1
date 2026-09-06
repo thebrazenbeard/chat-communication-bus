@@ -142,6 +142,21 @@ finally {
     }
 }
 
+$finalSourceCommit = Get-CheckedOutput git @("rev-parse", "HEAD")
+if ($finalSourceCommit -ne $sourceCommit) {
+    throw "Source commit changed during qualification"
+}
+
+$finalSourceTree = Get-CheckedOutput git @("rev-parse", "HEAD^{tree}")
+if ($finalSourceTree -ne $sourceTree) {
+    throw "Source tree changed during qualification"
+}
+
+$finalWorkingTreeState = Get-CheckedOutput git @("status", "--porcelain")
+if ($finalWorkingTreeState) {
+    throw "Working tree changed during qualification"
+}
+
 $receipt = [ordered]@{
     schema_version = 1
     status = "PASS"
