@@ -1,0 +1,29 @@
+{
+  "contract": "RADAR_SOURCE_CUSTODY_V1",
+  "version": 1,
+  "status": "SOURCE_ONLY_VERIFICATION_CONTRACT",
+  "required_globs": [
+    "supabase/migrations/*_radar_*.sql",
+    "supabase/tests/radar_*.sql"
+  ],
+  "paths": [
+    ".github/workflows/ci.yml",
+    ".github/workflows/writer-lane-guard.yml",
+    ".github/workflows/radar-central-dispatcher.yml",
+    ".github/workflows/radar-trusted-projector.yml",
+    "architecture/contracts/RADAR_CURRENT.json",
+    "architecture/contracts/RADAR_TOPOLOGY_V1.json",
+    "architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json",
+    "architecture/contracts/RADAR_TRUST_ANCHOR_V1.json",
+    "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V1.json",
+    "docs/protocol/BUS_MESSAGE_GRAMMAR_V1.json",
+    "tests/fixtures/bus_message_grammar_v1.json",
+    "supabase/config.toml",
+    "supabase/functions/github-bus-ingest/index.ts",
+    "supabase/functions/github-bus-ingest/handler.ts",
+    "supabase/functions/github-bus-ingest/deno.json",
+    "supabase/functions/github-bus-ingest/deno.lock",
+    "pyproject.toml",
+    "scripts/radar_source_hashes.py"
+  ]
+}
