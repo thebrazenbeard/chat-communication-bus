@@ -36,7 +36,9 @@ Generated Python caches/build metadata plus Supabase CLI local state are narrowl
 
 Before starting SQL qualification, the runner checks `supabase status`. If this project's local stack is already running, qualification aborts instead of resetting or deleting that existing local database.
 
-A stopped local stack can retain database state in Docker even when `supabase status` is not running. The runner therefore also refuses qualification if either the exact database container or exact database volume `supabase_db_chat-communication-bus` already exists. This prevents a retained developer database from being started, reset, or deleted by the qualification lifecycle.
+A stopped local stack can retain database state in Docker even when `supabase status` is not running. The runner therefore also refuses qualification if either the exact database container or exact database volume `supabase_db_chat-communication-bus` already exists. Those explicit probes protect retained or legacy database resources even if they lack current Supabase CLI labels.
+
+Supabase CLI 2.116.0 labels its local Docker resources with `com.supabase.cli.project=<project_id>` and uses that project label when `supabase stop --no-backup` prunes containers, named volumes, and networks. The runner therefore also lists all containers, volumes, and networks carrying `com.supabase.cli.project=chat-communication-bus` and refuses qualification if any already exist. Cleanup can only become responsible for a project resource set that was empty at preflight.
 
 Only after all of those preflight checks pass is cleanup armed. Cleanup is armed before `supabase start`, so a partial startup failure still attempts `supabase stop --no-backup` for resources created by the qualification attempt. Cleanup failure is fatal; a PASS receipt cannot be emitted if local Supabase teardown does not complete successfully.
 
