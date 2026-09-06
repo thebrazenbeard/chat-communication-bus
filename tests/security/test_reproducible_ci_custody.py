@@ -12,6 +12,7 @@ HANDLER = ROOT / "supabase/functions/github-bus-ingest/handler.ts"
 EDGE_DENO = ROOT / "supabase/functions/github-bus-ingest/deno.json"
 EDGE_LOCK = ROOT / "supabase/functions/github-bus-ingest/deno.lock"
 CUSTODY = ROOT / "architecture/contracts/RADAR_SOURCE_CUSTODY_V1.json"
+GITIGNORE = ROOT / ".gitignore"
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 
 
@@ -71,10 +72,24 @@ def test_edge_dependency_map_is_exact_and_lock_is_frozen() -> None:
     ]
 
 
+def test_local_qualification_ignores_only_standard_generated_python_artifacts() -> None:
+    ignored = {
+        line.strip()
+        for line in GITIGNORE.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    }
+    assert ignored == {
+        "__pycache__/",
+        "*.py[cod]",
+        ".pytest_cache/",
+        "*.egg-info/",
+    }
+
+
 def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> None:
     contract = json.loads(CUSTODY.read_text(encoding="utf-8"))
     assert contract["contract"] == "RADAR_SOURCE_CUSTODY_V1"
-    assert contract["version"] == 5
+    assert contract["version"] == 6
     assert contract["status"] == "SOURCE_ONLY_VERIFICATION_CONTRACT"
     assert set(contract["required_globs"]) == {
         "supabase/migrations/*_radar_*.sql",
@@ -83,6 +98,7 @@ def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> N
 
     fixed = set(contract["paths"])
     assert {
+        ".gitignore",
         "supabase/functions/github-bus-ingest/index.ts",
         "supabase/functions/github-bus-ingest/handler.ts",
         "supabase/functions/github-bus-ingest/deno.json",
