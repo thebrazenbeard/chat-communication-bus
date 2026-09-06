@@ -1,8 +1,8 @@
 # Radar chat handoff checkpoint — 2026-09-06
 
-Status: `SOURCE IMPLEMENTED / ANCHOR D SOURCE-BOUND / EXECUTABLE QUALIFICATION BLOCKED / PROVIDER NOT APPLIED / EDGE NOT DEPLOYED / ISSUE #16 OPEN`.
+Status: `SOURCE IMPLEMENTED / ANCHOR D SOURCE-BOUND / LOCAL EXECUTABLE QUALIFICATION PENDING / PROVIDER NOT APPLIED / EDGE NOT DEPLOYED / ISSUE #16 OPEN`.
 
-This checkpoint records the post-conflict-resolution state recovered from the full Radar chat handoff. It is continuation evidence only. It does not authorize merge, rebase/history rewrite, provider migration, Edge deployment/configuration, cursor seeding, dispatcher activation on canonical `main`, billing/account changes, credential/ruleset changes, or any other protected/live effect.
+This checkpoint records the post-conflict-resolution state recovered from the full Radar chat handoff plus the no-paid qualification correction. It is continuation evidence only. It does not authorize merge, rebase/history rewrite, provider migration, Edge deployment/configuration, cursor seeding, dispatcher activation on canonical `main`, billing/account changes, credential/ruleset changes, or any other protected/live effect.
 
 ## Current Git state
 
@@ -10,15 +10,18 @@ This checkpoint records the post-conflict-resolution state recovered from the fu
 - Consolidated staging branch: `radar/reproducible-ci-source-custody-v1-20260906`.
 - Post-merge cleanup head: `29ba509700e6cccf85f6641f0227a8f103042bfb`, tree `d8451603736ed80903892a097ab3c1467cd68818`.
 - First restore-checkpoint head: `87574118c423c3aa4e3955fa586a8af418e43ae8`, tree `4e5a8955a663ed69becb1e777659c681db271b99`.
-- Commit `29ba5097...` is `fix: restore coherent Radar currentness after conflict merge`.
-- The formerly open source-hardening stack PRs #35–#41 now show closed/merged into the staging branch. PR #41 merged the Anchor-D successor into staging; `main` remains unchanged by that stack.
-- Comparing `main@87df9b13...` to staging `29ba5097...` yielded `diverged`, `ahead_by: 94`, `behind_by: 1`, merge base `b1c0ceb80c6ce895927cd715319257b28124d919`. Do not treat staging as a fast-forward candidate.
+- CI-evidence correction head: `a939fab266d01c6343e9318ae00752c27cbaa897`.
+- No-paid local runner initial commit: `8471c3314b1656c46a13abebfdbb83d7aae1884e`.
+- No-paid operator contract commit: `3262ab318132bb49757767d894862bcb5b09b05c`.
+- Clean exact-tree receipt hardening head before this checkpoint update: `9efc10da93ffc9f30ba37da6ed3bd4b8bb269c0b`, tree `a345bea261931edfcc15cdc5525ba4c308a89172`.
+- The formerly open source-hardening stack PRs #35–#41 show closed/merged into the staging branch. PR #41 merged the Anchor-D successor into staging; `main` remains unchanged by that stack.
+- Comparing `main@87df9b13...` to staging at the post-merge cleanup yielded `diverged`, `ahead_by: 94`, `behind_by: 1`, merge base `b1c0ceb80c6ce895927cd715319257b28124d919`. Do not treat staging as a fast-forward candidate.
 
-This correction commit advances the staging branch beyond `87574118...`; fresh-read the branch head before any subsequent write.
+Creating/updating this checkpoint advances staging beyond `9efc10da...`; fresh-read branch head before any subsequent write.
 
 ## Conflict-resolution verification
 
-The seven PR #41 successor paths were fresh-read after the merge conflict resolution:
+The seven PR #41 successor paths were fresh-read after merge conflict resolution:
 
 1. `.github/workflows/radar-central-dispatcher.yml`
 2. `architecture/contracts/RADAR_CURRENT.json`
@@ -28,11 +31,11 @@ The seven PR #41 successor paths were fresh-read after the merge conflict resolu
 6. `tests/security/test_projection_anchor_c_consistency.py`
 7. `tests/security/test_projection_anchor_d_consistency.py`
 
-The earlier duplicate `uses:` damage in `radar-central-dispatcher.yml` is no longer present. The dispatcher contains exactly one reusable-workflow call pinned to Anchor D:
+The duplicate `uses:` damage in `radar-central-dispatcher.yml` is gone. Dispatcher contains one reusable-workflow call pinned to Anchor D:
 
 `401733b2013802880320629a4d8ea06f8bf7b760`
 
-`RADAR_CURRENT.json` no longer contains the duplicated schema/currentness/provider-drift fields introduced during conflict resolution. Its current source model is coherent:
+`RADAR_CURRENT.json` is coherent:
 
 - Anchor B: historical.
 - Anchor C: historical.
@@ -44,33 +47,54 @@ The earlier duplicate `uses:` damage in `radar-central-dispatcher.yml` is no lon
 
 The historical-C regression requires B→C→D lineage. The D regression requires dispatcher, V3 trust receipt, `RADAR_CURRENT`, custody, and provider-drift naming to agree on D exactly.
 
-## Exact-head CI evidence and connector correction
+## Private GitHub Actions evidence
 
-The initial restore incorrectly stated that no workflow run existed for `29ba509700e6cccf85f6641f0227a8f103042bfb`. That statement came from a connector action which only exposes pull-request-triggered runs. Branch-level Actions enumeration later exposed the push-triggered runs. The corrected evidence is:
+The initial restore incorrectly stated that no workflow run existed for `29ba509700e6cccf85f6641f0227a8f103042bfb`. That came from a connector action exposing only pull-request-triggered runs. Branch-level Actions enumeration exposed push-triggered runs.
 
-### Cleanup head `29ba509700e6cccf85f6641f0227a8f103042bfb`
+Three exact staging heads reproduced the same pre-runner failure:
 
-CI run `34057664601`:
+- `29ba509700e6cccf85f6641f0227a8f103042bfb` — CI run `34057664601`;
+- `87574118c423c3aa4e3955fa586a8af418e43ae8` — CI run `34058064585`;
+- `a939fab266d01c6343e9318ae00752c27cbaa897` — CI run `34059843334`.
 
-- SQL job `101552404328` — failure before executable steps;
-- Python 3.11 job `101552404412` — failure before executable steps;
-- Edge job `101552404460` — failure before executable steps;
-- Python 3.12 job `101552404503` — failure before executable steps.
+Across those runs, SQL, Python 3.11, Edge, and Python 3.12 jobs terminated with failure before executable steps. Step sets were empty/null and at least one job-log read returned `BlobNotFound`, consistent with no hosted runner execution beginning.
 
-### Restore-checkpoint head `87574118c423c3aa4e3955fa586a8af418e43ae8`
+This is infrastructure evidence, not source/test failure evidence.
 
-CI run `34058064585`:
+## No-paid qualification correction
 
-- SQL job `101553493905` — failure before executable steps;
-- Python 3.11 job `101553494025` — failure before executable steps;
-- Edge job `101553494060` — failure before executable steps;
-- Python 3.12 job `101553494158` — failure before executable steps.
+Patrick restated the standing constraint to avoid paid services. Therefore private GitHub-hosted Actions must not be treated as a required Radar qualification dependency, and billing/payment/spending-limit changes are not a valid Radar recovery path.
 
-All eight jobs returned empty/null executable-step sets. A direct step read for `101553494025` returned `[]`. Its job-log download returned GitHub `BlobNotFound`, consistent with no runner execution beginning.
+The source-bound local replacement is:
 
-This is exact-head blocker evidence, not source/test failure evidence. The repaired staging source remains unqualified rather than GREEN.
+- `scripts/radar_local_qualify.ps1`
+- `docs/operator/RADAR_NO_PAID_QUALIFICATION.md`
 
-Issue #39 has been updated with this reproduction. The exact account/private-repository cause remains unverified. Do not change billing/account/repository settings without separate Patrick authorization after preserving decisive evidence.
+It reproduces the substantive `.github/workflows/ci.yml` recipe locally with:
+
+- Python 3.11 and 3.12;
+- pip 26.2.1;
+- Deno 2.9.6;
+- Supabase CLI 2.116.0;
+- Docker/local Supabase;
+- `psql` over every `supabase/tests/radar_*.sql` assertion.
+
+The runner fails closed if the required commands are absent, the frozen versions do not match, the working tree is dirty, or any command fails. A PASS receipt binds the exact Git commit and Git tree.
+
+This path is source-implemented but has not yet been executed on a local machine with the frozen toolchain. Therefore status is `LOCAL EXECUTABLE QUALIFICATION PENDING`, not GREEN.
+
+Issue #39 remains open as historical/infrastructure evidence for the private hosted-runner pre-run failures. Radar's resolution is replacement of the paid-capable dependency, not purchase of runner capacity. Public hosted Actions may be used only for deliberately public, non-secret verification payloads; do not publish private repository source merely to obtain free CI.
+
+## Bus coordination
+
+Radar checked sender lanes rather than only its own lane. Vera's current `bus/vera-v2` had no direct Vera→Radar message at the time of the check. One had outstanding Radar-directed material, including `one-0061`, `one-0073`, and `one-0074`.
+
+Radar replied on `bus/radar-v2` with:
+
+- `messages/0066-radar-to-one-r10a1-static-review-and-no-paid-ci.md`
+- commit `7ec22dfe842608bcff2e4fc269294fd7fdbcdd8a`
+
+The reply preserves static/runtime separation, accepts no runtime promotion, and propagates the no-paid qualification constraint.
 
 ## Provider/live boundary
 
@@ -86,16 +110,17 @@ Last source-recorded provider state remains:
 - Anchor D is source-only and provider `RADAR_TRUSTED_PROJECTOR_SHA` is not established for D by this work;
 - central dispatcher is not active on canonical `main`.
 
-No provider/live effect was performed during this restore or CI investigation.
+No provider/live effect was performed during this restore, CI investigation, no-paid-path implementation, or Bus reply.
 
 ## Exact continuation frontier
 
-1. Fresh-read the staging head created by this correction and re-confirm the seven conflict-sensitive paths if another writer has moved the branch.
-2. Treat issue #39 as actively reproduced on the consolidated staging candidate. If private runners recover, run the full exact-head Python 3.11/3.12 + SQL + Edge matrix and rerun hostile invariants on that same head.
-3. Keep issue #16/provider recovery unapplied until separate protected-effect authorization exists.
-4. Before any integration toward `main`, reconcile the staging/main divergent history deliberately; do not blindly merge conflict choices or rewrite history.
-5. Do not promote status beyond `SOURCE IMPLEMENTED / EXECUTABLE QUALIFICATION BLOCKED / PROVIDER NOT APPLIED / EDGE NOT DEPLOYED / ISSUE #16 OPEN` until evidence changes it.
+1. Fresh-read staging head after this checkpoint update.
+2. Execute `scripts/radar_local_qualify.ps1` on a local Windows machine with the exact frozen toolchain and a clean checkout of one exact staging candidate; capture the PASS/FAIL receipt tied to commit + tree.
+3. If local qualification passes, rerun hostile/source invariants against that same exact head before any status promotion.
+4. Keep issue #16/provider recovery unapplied until separate protected-effect authorization exists.
+5. Before any integration toward `main`, deliberately reconcile the staging/main divergent history; do not blindly merge conflict choices or rewrite history.
+6. Do not pursue paid GitHub Actions capacity, billing/payment changes, or public mirroring of private source as a workaround.
 
 Recommended restore command:
 
-`RADAR::RESTORE::CHAT_HANDOFF_2026-09-06 — Read docs/checkpoints/RADAR_CHAT_HANDOFF_2026-09-06.md from the current head of radar/reproducible-ci-source-custody-v1-20260906, fresh-read main, staging, branch-level push CI, issues #16/#39, and the conflict-sensitive Anchor-D files, then continue from the executable-qualification/divergent-history boundary. Do not invent GREEN evidence and do not merge/rebase/deploy/apply protected effects without Patrick's explicit authorization.`
+`RADAR::RESTORE::CHAT_HANDOFF_2026-09-06 — Read docs/checkpoints/RADAR_CHAT_HANDOFF_2026-09-06.md from the current head of radar/reproducible-ci-source-custody-v1-20260906, fresh-read main, staging, the local no-paid qualification runner/contract, issues #16/#39, sender-lane messages addressed to Radar, and the conflict-sensitive Anchor-D files. Continue from the local executable-qualification/divergent-history boundary. Do not invent GREEN evidence and do not merge/rebase/deploy/apply protected effects without Patrick's explicit authorization.`
