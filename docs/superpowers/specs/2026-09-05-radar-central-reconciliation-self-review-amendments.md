@@ -48,7 +48,7 @@ Implementation requirement:
 - Forward corrections that alter provider behavior belong in new unique migrations.
 - Clean-rebuild tests compare the reconstructed end-state/invariants against the documented provider contract; any irreconcilable historical byte uncertainty is recorded explicitly rather than guessed away.
 
-The two source-only migrations remain unapplied history and receive the unique versions specified in the primary design.
+The two source-only migrations remain unapplied history and receive the unique versions specified by the primary design as corrected by A5 below.
 
 ## A4. Consume the body-bound OIDC JTI before semantic batch parsing
 
@@ -69,3 +69,17 @@ Implementation requirement:
 A semantically invalid but cryptographically valid bound request therefore burns its one-time credential. A retry requires a newly minted OIDC token/JTI. Business-operation idempotency remains separate: a lost response after a committed projection may be retried with a fresh JTI under the Git-backed projection idempotency contract.
 
 TDD must prove that malformed bound bodies consume the JTI, replay of that same token is rejected, body/audience/header mismatches do not consume an otherwise valid token before cryptographic binding is established, and no provider projection occurs before semantic validation succeeds.
+
+## A5. OIDC replay-guard source version uses first durable introduction, not squash-merge time
+
+The primary design assigned the source-only OIDC replay-guard migration version `20260905232637` from the later squash-merge time. Independent Git history readback shows the file first entered durable Git history at commit `c0ca7cb12b3e75fa77503804d9aee00dde4a8619`, timestamp `2026-09-05T23:08:23Z`, on the audit branch. The later `main` squash merge is integration provenance, not creation provenance.
+
+Implementation requirement:
+
+- Rename `20260905_radar_oidc_replay_guard_v1.sql` to `20260905230823_radar_oidc_replay_guard_v1.sql`.
+- Do not use `20260905232637` as its migration version.
+- Preserve the existing source bytes during this provenance-only rename unless a separately reviewed forward correction is required.
+- Treat commit `c0ca7cb12b3e75fa77503804d9aee00dde4a8619` as the first durable source-introduction evidence for the version choice.
+- Keep the squash-merge commit/time only as later integration provenance.
+
+The migration remains source-only/unapplied. This correction changes no provider state and creates no claim that the source bytes were ever executed.
