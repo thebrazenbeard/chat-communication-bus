@@ -1,0 +1,161 @@
+param(
+    [string]$ReceiptPath = ""
+)
+
+$ErrorActionPreference = "Stop"
+
+function Assert-Command {
+    param([Parameter(Mandatory = $true)][string]$Name)
+    if (-not (Get-Command $Name -ErrorAction SilentlyContinue)) {
+        throw "Required command not found: $Name"
+    }
+}
+
+function Invoke-Checked {
+    param(
+        [Parameter(Mandatory = $true)][string]$FilePath,
+        [string[]]$ArgumentList = @(),
+        [string]$WorkingDirectory = ""
+    )
+
+    $oldLocation = Get-Location
+    try {
+        if ($WorkingDirectory) {
+            Set-Location $WorkingDirectory
+        }
+        & $FilePath @ArgumentList
+        if ($LASTEXITCODE -ne 0) {
+            throw "Command failed with exit code $LASTEXITCODE: $FilePath $($ArgumentList -join ' ')"
+        }
+    }
+    finally {
+        Set-Location $oldLocation
+    }
+}
+
+function Get-CheckedOutput {
+    param(
+        [Parameter(Mandatory = $true)][string]$FilePath,
+        [string[]]$ArgumentList = @()
+    )
+
+    $output = & $FilePath @ArgumentList
+    if ($LASTEXITCODE -ne 0) {
+        throw "Command failed with exit code $LASTEXITCODE: $FilePath $($ArgumentList -join ' ')"
+    }
+    return ($output | Out-String).Trim()
+}
+
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+Set-Location $repoRoot
+
+Assert-Command git
+Assert-Command py
+Assert-Command deno
+Assert-Command supabase
+Assert-Command docker
+Assert-Command psql
+
+$sourceCommit = Get-CheckedOutput git @("rev-parse", "HEAD")
+if (-not $sourceCommit -or $sourceCommit.Length -lt 40) {
+    throw "Could not determine exact source commit"
+}
+
+$pythonVersions = @("3.11", "3.12")
+foreach ($version in $pythonVersions) {
+    $observed = Get-CheckedOutput py @("-$version", "-c", "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+    if ($observed -ne $version) {
+        throw "Python $version required; observed $observed"
+    }
+}
+
+$denoFirstLine = (Get-CheckedOutput deno @("--version") -split "`r?`n")[0]
+if ($denoFirstLine -ne "deno 2.9.6") {
+    throw "Deno 2.9.6 required; observed '$denoFirstLine'"
+}
+
+$supabaseVersion = Get-CheckedOutput supabase @("--version")
+if ($supabaseVersion -ne "2.116.0") {
+    throw "Supabase CLI 2.116.0 required; observed '$supabaseVersion'"
+}
+
+Invoke-Checked docker @("info")
+
+Write-Host "==> Radar local qualification"
+Write-Host "source_commit=$sourceCommit"
+Write-Host "mode=LOCAL_NO_PAID_SERVICES"
+
+foreach ($version in $pythonVersions) {
+    Write-Host "==> Python $version"
+    $venv = Join-Path $env:TEMP "radar-qualify-$version-$($sourceCommit.Substring(0,12))"
+    if (Test-Path $venv) {
+        Remove-Item -Recurse -Force $venv
+    }
+
+    Invoke-Checked py @("-$version", "-m", "venv", $venv)
+    $venvPython = Join-Path $venv "Scripts\python.exe"
+    Invoke-Checked $venvPython @("-m", "pip", "install", "pip==26.2.1")
+    Invoke-Checked $venvPython @("-m", "pip", "install", "-e", ".[test]")
+    Invoke-Checked $venvPython @("-m", "compileall", "-q", "src")
+    Invoke-Checked $venvPython @("-m", "pytest", "-q")
+    Invoke-Checked $venvPython @("scripts/radar_source_hashes.py")
+}
+
+Write-Host "==> Edge / Deno"
+$edgeDir = Join-Path $repoRoot "supabase/functions/github-bus-ingest"
+Invoke-Checked deno @("ci") $edgeDir
+Invoke-Checked deno @("check", "index.ts") $edgeDir
+
+Write-Host "==> SQL / local Supabase"
+$sqlStarted = $false
+try {
+    Invoke-Checked supabase @("start")
+    $sqlStarted = $true
+    Invoke-Checked supabase @("db", "reset")
+
+    $pguri = "postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+    $tests = Get-ChildItem (Join-Path $repoRoot "supabase/tests") -Filter "radar_*.sql" | Sort-Object Name
+    if (-not $tests) {
+        throw "No Radar SQL assertion files found"
+    }
+
+    foreach ($test in $tests) {
+        Write-Host "==> $($test.FullName)"
+        Invoke-Checked psql @($pguri, "-v", "ON_ERROR_STOP=1", "-f", $test.FullName)
+    }
+}
+finally {
+    if ($sqlStarted) {
+        try {
+            Invoke-Checked supabase @("stop", "--no-backup")
+        }
+        catch {
+            Write-Warning "Local Supabase stop failed: $($_.Exception.Message)"
+        }
+    }
+}
+
+$receipt = [ordered]@{
+    schema_version = 1
+    status = "PASS"
+    qualification_mode = "LOCAL_NO_PAID_SERVICES"
+    source_commit = $sourceCommit
+    python = @("3.11", "3.12")
+    pip = "26.2.1"
+    deno = "2.9.6"
+    supabase_cli = "2.116.0"
+    completed_at_utc = (Get-Date).ToUniversalTime().ToString("o")
+}
+
+$json = $receipt | ConvertTo-Json -Depth 4
+if ($ReceiptPath) {
+    $receiptFullPath = [System.IO.Path]::GetFullPath((Join-Path $repoRoot $ReceiptPath))
+    $receiptDir = Split-Path -Parent $receiptFullPath
+    if ($receiptDir -and -not (Test-Path $receiptDir)) {
+        New-Item -ItemType Directory -Force -Path $receiptDir | Out-Null
+    }
+    Set-Content -Path $receiptFullPath -Value $json -Encoding UTF8
+    Write-Host "receipt=$receiptFullPath"
+}
+
+Write-Output $json
