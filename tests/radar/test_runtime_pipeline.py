@@ -101,7 +101,7 @@ def test_unknown_taxonomy_with_unserializable_payload_still_reaches_durable_dlq(
     assert runtime.telemetry.snapshot().dlq == 1
 
 
-def test_dedupe_is_scoped_to_route_context_not_payload_globally(tmp_path):
+def test_dedupe_uses_payload_hash_across_route_context(tmp_path):
     runtime = _runtime(tmp_path)
     payload = {"same": "payload"}
 
@@ -117,8 +117,8 @@ def test_dedupe_is_scoped_to_route_context_not_payload_globally(tmp_path):
 
     assert first.state == "QUEUED"
     assert duplicate.state == "DROPPED_DUPLICATE"
-    assert other_route.state == "QUEUED"
-    assert runtime.telemetry.snapshot().dropped == 1
+    assert other_route.state == "DROPPED_DUPLICATE"
+    assert runtime.telemetry.snapshot().dropped == 2
 
 
 def test_failed_queue_admission_does_not_poison_dedupe_retry(tmp_path):

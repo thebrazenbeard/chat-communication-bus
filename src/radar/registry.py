@@ -325,6 +325,66 @@ class IdentityRegistry:
             )
         )
 
+    def routable_subscriber_node_ids(
+        self,
+        *,
+        domain: str,
+        intent: str,
+        priority: int,
+        now_ms: int,
+        identity_ids: tuple[str, ...] | None = None,
+    ) -> tuple[str, ...]:
+        """Return one atomic snapshot of exact routable subscriber nodes.
+
+        When ``identity_ids`` is supplied, recipient ordering follows that
+        canonical identity order with node IDs sorted within each identity.
+        Without it, all nodes are considered in node-ID order. The registry lock
+        is held across status/lease and subscription checks so concurrent state
+        changes cannot interleave inside one route decision.
+        """
+        now = _millisecond_value(now_ms)
+        canonical_identities: tuple[str, ...] | None = None
+        if identity_ids is not None:
+            seen: set[str] = set()
+            ordered: list[str] = []
+            for identity_id in identity_ids:
+                canonical = self.resolve_identity_id(identity_id)
+                if canonical not in seen:
+                    seen.add(canonical)
+                    ordered.append(canonical)
+            canonical_identities = tuple(ordered)
+
+        with self._lock:
+            if canonical_identities is None:
+                candidates = sorted(self._nodes.values(), key=lambda item: item.node_id)
+            else:
+                candidates = []
+                for canonical_identity in canonical_identities:
+                    candidates.extend(
+                        sorted(
+                            (
+                                node
+                                for node in self._nodes.values()
+                                if node.identity_id == canonical_identity
+                            ),
+                            key=lambda item: item.node_id,
+                        )
+                    )
+
+            recipients: list[str] = []
+            for node in candidates:
+                if not self.node_is_routable(node.node_id, now_ms=now):
+                    continue
+                if not self.node_is_subscribed(
+                    node.node_id,
+                    domain=domain,
+                    intent=intent,
+                    priority=priority,
+                ):
+                    continue
+                recipients.append(node.node_id)
+            return tuple(recipients)
+
     def identity_is_subscribed(
         self,
         identity_id: str,

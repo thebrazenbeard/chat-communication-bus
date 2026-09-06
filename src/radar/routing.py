@@ -25,64 +25,32 @@ class Router:
     def __init__(self, registry: IdentityRegistry) -> None:
         self.registry = registry
 
-    def _matching_nodes_for_identity(
-        self,
-        identity_id: str,
-        envelope: RadarEnvelope,
-        *,
-        now_ms: int,
-    ) -> tuple[str, ...]:
-        recipients = []
-        for node in self.registry.nodes_for_identity(identity_id):
-            if not self.registry.node_is_routable(node.node_id, now_ms=now_ms):
-                continue
-            if not self.registry.node_is_subscribed(
-                node.node_id,
-                domain=envelope.domain,
-                intent=envelope.intent,
-                priority=envelope.priority,
-            ):
-                continue
-            recipients.append(node.node_id)
-        return tuple(sorted(recipients))
-
     def route(self, envelope: RadarEnvelope, *, now_ms: int) -> RouteDecision:
         if type(now_ms) is not int or now_ms < 0:
             raise ValueError("INVALID_ROUTE_TIME")
 
+        identity_ids: tuple[str, ...] | None = None
         if envelope.audience:
-            recipients: list[str] = []
-            seen_nodes: set[str] = set()
-            seen_identities: set[str] = set()
+            ordered: list[str] = []
+            seen: set[str] = set()
             for audience in envelope.audience:
                 try:
                     identity_id = self.registry.resolve_identity_id(audience)
                 except RegistryError:
                     continue
-                if identity_id in seen_identities:
-                    continue
-                seen_identities.add(identity_id)
-                for node_id in self._matching_nodes_for_identity(
-                    identity_id,
-                    envelope,
-                    now_ms=now_ms,
-                ):
-                    if node_id not in seen_nodes:
-                        recipients.append(node_id)
-                        seen_nodes.add(node_id)
-        else:
-            recipients = sorted(
-                {
-                    sub.node_id
-                    for sub in self.registry.subscriptions_for_domain(
-                        envelope.domain,
-                        envelope.priority,
-                        intent=envelope.intent,
-                    )
-                    if self.registry.node_is_routable(sub.node_id, now_ms=now_ms)
-                }
-            )
-        return RouteDecision(tuple(recipients), envelope.priority, envelope.authority_ref)
+                if identity_id not in seen:
+                    seen.add(identity_id)
+                    ordered.append(identity_id)
+            identity_ids = tuple(ordered)
+
+        recipients = self.registry.routable_subscriber_node_ids(
+            domain=envelope.domain,
+            intent=envelope.intent,
+            priority=envelope.priority,
+            now_ms=now_ms,
+            identity_ids=identity_ids,
+        )
+        return RouteDecision(recipients, envelope.priority, envelope.authority_ref)
 
 
 class PriorityQueue:
