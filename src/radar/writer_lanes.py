@@ -8,8 +8,9 @@ from pathlib import Path
 import re
 import subprocess
 
+from .message_grammar import MessageGrammarError, parse_bus_document
 
-_HEADER_RE = re.compile(r"^([A-Za-z0-9_-]+)\s*:\s*(.*?)\s*$")
+
 _SHA40_RE = re.compile(r"^[0-9a-fA-F]{40}$")
 _ZERO_SHA = "0" * 40
 
@@ -153,81 +154,27 @@ def _git_bytes(repo_dir: Path, *args: str) -> bytes:
         raise WriterLaneError(f"GIT_COMMAND_FAILED:{detail}") from exc
 
 
-def _unwrap_scalar(value: str) -> str:
-    text = value.strip()
-    for left, right in (("`", "`"), ('"', '"'), ("'", "'")):
-        if len(text) >= 2 and text.startswith(left) and text.endswith(right):
-            return text[1:-1].strip()
-    return text
+def _message_headers(
+    content: bytes,
+    path: str,
+    *,
+    historical: bool = False,
+) -> dict[str, str]:
+    """Return canonical message headers under the shared Bus grammar.
 
-
-def _put_header(headers: dict[str, str], raw: str, path: str) -> bool:
-    match = _HEADER_RE.match(raw)
-    if not match:
-        return False
-    key = match.group(1).casefold().replace("-", "_")
-    if key in headers:
-        raise WriterLaneError(f"WRITER_LANE_DUPLICATE_HEADER:{path}:{key}")
-    headers[key] = _unwrap_scalar(match.group(2))
-    return True
-
-
-def _message_headers(content: bytes, path: str) -> dict[str, str]:
+    New appends are strict. Immutable historical scans retain the documented
+    source-fallback timestamp policy so legacy timestamp defects do not brick
+    future append validation; all other grammar checks remain fail-closed.
+    """
     try:
-        text = content.decode("utf-8")
-    except UnicodeDecodeError as exc:
-        raise WriterLaneError(f"WRITER_LANE_MESSAGE_NOT_UTF8:{path}") from exc
-
-    lines = text.splitlines()
-    index = 0
-    while index < len(lines) and not lines[index].strip():
-        index += 1
-
-    # YAML-style frontmatter is supported as an alternate canonical header
-    # block. Only unindented scalar key/value rows are admitted as headers.
-    if index < len(lines) and lines[index].strip() == "---":
-        headers: dict[str, str] = {}
-        index += 1
-        while index < len(lines):
-            line = lines[index]
-            stripped = line.strip()
-            if stripped == "---":
-                if not headers:
-                    raise WriterLaneError(f"WRITER_LANE_HEADER_BLOCK_REQUIRED:{path}")
-                return headers
-            if stripped and not line.startswith((" ", "\t")):
-                if not _put_header(headers, line, path):
-                    raise WriterLaneError(f"WRITER_LANE_HEADER_INVALID:{path}")
-            index += 1
-        raise WriterLaneError(f"WRITER_LANE_FRONTMATTER_UNTERMINATED:{path}")
-
-    # Ordinary Bus Markdown may begin with one title heading, then a contiguous
-    # metadata block. Once the body begins, later `writer:`-looking text is body
-    # data and cannot satisfy admission.
-    if index < len(lines) and lines[index].lstrip().startswith("#"):
-        index += 1
-        while index < len(lines) and not lines[index].strip():
-            index += 1
-
-    headers = {}
-    started = False
-    while index < len(lines):
-        line = lines[index]
-        if not line.strip():
-            if started:
-                break
-            index += 1
-            continue
-        if not _put_header(headers, line, path):
-            if not started:
-                raise WriterLaneError(f"WRITER_LANE_HEADER_BLOCK_REQUIRED:{path}")
-            break
-        started = True
-        index += 1
-
-    if not started:
-        raise WriterLaneError(f"WRITER_LANE_HEADER_BLOCK_REQUIRED:{path}")
-    return headers
+        parsed = parse_bus_document(
+            content,
+            path=path,
+            timestamp_policy="source_fallback" if historical else "strict",
+        )
+    except MessageGrammarError as exc:
+        raise WriterLaneError(f"WRITER_LANE_MESSAGE_GRAMMAR:{path}:{exc}") from exc
+    return dict(parsed.headers)
 
 
 def _assert_ancestor(repo_dir: Path, base: str, head: str) -> None:
@@ -281,7 +228,7 @@ def _message_ids_at_commit(repo_dir: Path, commit: str) -> set[str]:
     ids: set[str] = set()
     for path in paths:
         content = _git_bytes(repo_dir, "show", f"{commit}:{path}")
-        message_id = _message_headers(content, path).get("message_id", "")
+        message_id = _message_headers(content, path, historical=True).get("message_id", "")
         if not message_id:
             raise WriterLaneError(f"WRITER_LANE_MESSAGE_ID_REQUIRED:{path}")
         ids.add(message_id.casefold())
@@ -299,8 +246,6 @@ def _historical_message_ids(
 
     raw = _load_cutover(cutover_path)
     historical = raw.get("historical_writer_lanes")
-    # Pre-switch/staged cutover fixtures may legitimately have no predecessor
-    # snapshot yet. Once present, malformed identity records fail closed.
     if historical is None:
         return set()
     if not isinstance(historical, dict):
