@@ -98,3 +98,10 @@ def test_local_runner_preserves_preexisting_supabase_stack_and_cleans_partial_st
     assert cleanup_guard in runner
     assert runner.index(preflight) < runner.index(cleanup_arm) < runner.index(start)
     assert runner.index(cleanup_guard) > runner.index(start)
+
+
+def test_local_runner_refuses_pass_when_supabase_cleanup_fails() -> None:
+    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
+
+    assert "Local Supabase cleanup failed" in runner
+    assert 'Write-Warning "Local Supabase stop failed' not in runner
