@@ -132,6 +132,14 @@ if ($LASTEXITCODE -eq 0) {
     throw "Local Supabase database volume already exists; refusing destructive qualification"
 }
 
+$supabaseProjectLabel = "com.supabase.cli.project=$supabaseProjectId"
+$existingProjectContainers = Get-CheckedOutput docker @("ps", "-a", "--filter", "label=$supabaseProjectLabel", "--format", "{{.ID}}")
+$existingProjectVolumes = Get-CheckedOutput docker @("volume", "ls", "--filter", "label=$supabaseProjectLabel", "--format", "{{.Name}}")
+$existingProjectNetworks = Get-CheckedOutput docker @("network", "ls", "--filter", "label=$supabaseProjectLabel", "--format", "{{.ID}}")
+if ($existingProjectContainers -or $existingProjectVolumes -or $existingProjectNetworks) {
+    throw "Local Supabase project Docker resources already exist; refusing destructive qualification"
+}
+
 $sqlCleanupRequired = $true
 try {
     Invoke-Checked supabase @("start")
