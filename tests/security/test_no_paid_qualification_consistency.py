@@ -83,3 +83,18 @@ def test_local_runner_cannot_self_invalidate_receipt_inside_source_checkout() ->
     assert "OrdinalIgnoreCase" in runner
     assert '$env:TEMP\\radar-local-qualification.json' in operator
     assert "artifacts/radar-local-qualification.json" not in operator
+
+
+def test_local_runner_preserves_preexisting_supabase_stack_and_cleans_partial_start() -> None:
+    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
+
+    preflight = 'throw "Local Supabase stack is already running; refusing destructive qualification"'
+    cleanup_arm = "$sqlCleanupRequired = $true"
+    start = 'Invoke-Checked supabase @("start")'
+    cleanup_guard = "if ($sqlCleanupRequired)"
+
+    assert preflight in runner
+    assert cleanup_arm in runner
+    assert cleanup_guard in runner
+    assert runner.index(preflight) < runner.index(cleanup_arm) < runner.index(start)
+    assert runner.index(cleanup_guard) > runner.index(start)
