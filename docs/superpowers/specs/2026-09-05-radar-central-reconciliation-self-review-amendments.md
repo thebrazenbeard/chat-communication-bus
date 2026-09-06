@@ -49,3 +49,23 @@ Implementation requirement:
 - Clean-rebuild tests compare the reconstructed end-state/invariants against the documented provider contract; any irreconcilable historical byte uncertainty is recorded explicitly rather than guessed away.
 
 The two source-only migrations remain unapplied history and receive the unique versions specified in the primary design.
+
+## A4. Consume the body-bound OIDC JTI before semantic batch parsing
+
+The primary design correctly requires an exact raw-body SHA-256, a digest-bound OIDC audience, a matching digest header, and one fresh GitHub OIDC `jti` per HTTP request. Its original verification-order wording left semantic batch parsing before JTI consumption.
+
+That order leaves a replayable credential when a request is cryptographically valid and bound to its exact bytes but fails semantic JSON/batch validation before the JTI is consumed. The same valid token and identical malformed body could then be replayed repeatedly until token expiry.
+
+Implementation requirement:
+
+1. read and retain the exact raw request bytes;
+2. compute their SHA-256;
+3. verify the GitHub OIDC signature, temporal claims, repository, exact trusted reusable `job_workflow_ref`/`job_workflow_sha`, intended caller event class/context, and the dynamic audience `chat-communication-bus-supabase:<body_sha256>`;
+4. verify the request digest header equals the same raw-body hash;
+5. consume the OIDC `jti` durably and atomically;
+6. only then parse JSON and perform semantic batch/source validation;
+7. only after semantic validation invoke provider projection effects.
+
+A semantically invalid but cryptographically valid bound request therefore burns its one-time credential. A retry requires a newly minted OIDC token/JTI. Business-operation idempotency remains separate: a lost response after a committed projection may be retried with a fresh JTI under the Git-backed projection idempotency contract.
+
+TDD must prove that malformed bound bodies consume the JTI, replay of that same token is rejected, body/audience/header mismatches do not consume an otherwise valid token before cryptographic binding is established, and no provider projection occurs before semantic validation succeeds.
