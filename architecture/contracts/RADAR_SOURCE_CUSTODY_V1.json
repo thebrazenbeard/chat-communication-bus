@@ -1,12 +1,13 @@
 {
   "contract": "RADAR_SOURCE_CUSTODY_V1",
-  "version": 5,
+  "version": 6,
   "status": "SOURCE_ONLY_VERIFICATION_CONTRACT",
   "required_globs": [
     "supabase/migrations/*_radar_*.sql",
     "supabase/tests/radar_*.sql"
   ],
   "paths": [
+    ".gitignore",
     ".github/workflows/ci.yml",
     ".github/workflows/writer-lane-guard.yml",
     ".github/workflows/radar-central-dispatcher.yml",
