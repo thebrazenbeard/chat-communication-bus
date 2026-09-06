@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import threading
+
 import pytest
 
 from radar.envelope import RadarEnvelope
@@ -113,6 +115,54 @@ def test_identity_named_subscription_is_only_compatibly_bound_when_unambiguous()
     _register_node(registry, "yin-two")
     with pytest.raises(RegistryError, match="AMBIGUOUS_SUBSCRIPTION_TARGET"):
         registry.subscribe("yin", domain="database", intent="command", min_priority=4)
+
+
+def test_identity_named_subscription_binding_is_atomic_with_node_registration():
+    resolved = threading.Event()
+    release_resolution = threading.Event()
+    second_registered = threading.Event()
+
+    class PausingRegistry(IdentityRegistry):
+        def _resolve_subscription_node(self, target_id):
+            node = super()._resolve_subscription_node(target_id)
+            if target_id == "yin":
+                resolved.set()
+                assert release_resolution.wait(5), "timed out releasing subscription resolution"
+            return node
+
+    registry = PausingRegistry()
+    registry.register_identity("yin", display_name="Yin")
+    _register_node(registry, "yin-one")
+    outcomes = {}
+
+    def subscribe_identity():
+        outcomes["subscription"] = registry.subscribe(
+            "yin", domain="database", intent="event", min_priority=4
+        )
+
+    def register_second():
+        try:
+            _register_node(registry, "yin-two")
+        finally:
+            second_registered.set()
+
+    subscribe_thread = threading.Thread(target=subscribe_identity)
+    subscribe_thread.start()
+    assert resolved.wait(5), "subscription did not resolve target"
+
+    registration_thread = threading.Thread(target=register_second)
+    registration_thread.start()
+    registered_before_subscription_commit = second_registered.wait(0.25)
+
+    release_resolution.set()
+    subscribe_thread.join(5)
+    registration_thread.join(5)
+
+    assert not subscribe_thread.is_alive()
+    assert not registration_thread.is_alive()
+    assert registered_before_subscription_commit is False
+    assert outcomes["subscription"].node_id == "yin-one"
+    assert registry.node("yin-two").identity_id == "yin"
 
 
 def test_invalid_node_lease_times_fail_closed():
