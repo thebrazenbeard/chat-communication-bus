@@ -26,14 +26,7 @@ class RuntimeReceipt:
 
 
 class RadarRuntime:
-    """Join Radar's previously separate admission helpers into one runtime seam.
-
-    This class intentionally owns no transport or protected provider effects. It
-    provides the source-local state-machine boundary that a persistent reconciler
-    can drive: classify -> DLQ/reject -> route-scoped dedupe -> priority queue ->
-    authorized routing, while updating the same durable telemetry store consumed
-    by the 60-second heartbeat runtime.
-    """
+    """Join Radar's admission, queueing, routing, and accounting seams."""
 
     def __init__(
         self,
@@ -61,19 +54,12 @@ class RadarRuntime:
                 try:
                     canonical.append(self.registry.resolve_identity_id(item))
                 except RegistryError:
-                    # Preserve an explicit, deterministic unresolved address in
-                    # the context. Routing will still refuse it later.
                     canonical.append(f"?{item.casefold()}")
             audience = tuple(canonical)
         return (envelope.sender.casefold(), envelope.domain, envelope.intent, *audience)
 
     def _dedupe_key(self, envelope: RadarEnvelope) -> str:
-        """Scope the required payload hash to explicit route context.
-
-        ``RadarEnvelope.idempotency_key`` remains the middleware-compatible
-        payload-only SHA-256. The runtime uses it as an input, not a global key,
-        so equal payloads on distinct routes do not suppress each other.
-        """
+        """Scope the required payload hash to explicit route context."""
         material = {
             "route_context": self._route_context(envelope),
             "payload_hash": envelope.idempotency_key,
@@ -107,7 +93,6 @@ class RadarRuntime:
 
     @classmethod
     def _safe_dlq_value(cls, value: object) -> object:
-        """Return a deterministic JSON-safe evidence snapshot for rejected input."""
         if value is None or isinstance(value, (str, bool, int, float)):
             return value
         if isinstance(value, Mapping):
@@ -130,12 +115,7 @@ class RadarRuntime:
         now_ms: int,
         source_locator: str | None = None,
     ) -> RuntimeReceipt:
-        """Classify and admit one raw message into the runtime.
-
-        Priority zero is dispatched in the same call after queue admission. Other
-        priorities remain queued for ``dispatch_next``. All terminal drops and
-        DLQ transitions update the durable heartbeat counters exactly once.
-        """
+        """Classify and admit one raw message into the runtime."""
         result = RadarEnvelope.from_mapping(raw)
         message_id = self._raw_message_id(raw)
 
@@ -186,7 +166,7 @@ class RadarRuntime:
                 self.telemetry.increment("dropped")
 
             if envelope.priority == 0:
-                dispatched = self.dispatch_next()
+                dispatched = self.dispatch_next(now_ms=now_ms)
                 return replace(dispatched, evicted_message_id=evicted_message_id)
 
             return RuntimeReceipt(
@@ -195,11 +175,13 @@ class RadarRuntime:
                 evicted_message_id=evicted_message_id,
             )
 
-    def dispatch_next(self) -> RuntimeReceipt:
-        """Route the highest-priority queued message and account its disposition."""
+    def dispatch_next(self, *, now_ms: int) -> RuntimeReceipt:
+        """Route the highest-priority queued message at an explicit lease time."""
+        if type(now_ms) is not int or now_ms < 0:
+            raise ValueError("INVALID_ROUTE_TIME")
         with self._admission_lock:
             envelope = self.queue.pop()
-            decision = self.router.route(envelope)
+            decision = self.router.route(envelope, now_ms=now_ms)
             if not decision.recipients:
                 self.telemetry.increment("dropped")
                 return RuntimeReceipt(
@@ -207,8 +189,6 @@ class RadarRuntime:
                     message_id=envelope.message_id,
                 )
 
-            # Heartbeat semantics count messages, not recipient fanout. Delivery/ACK
-            # accounting is a separate state surface in the target architecture.
             self.telemetry.increment("routed")
             return RuntimeReceipt(
                 state="DISPATCHED",
