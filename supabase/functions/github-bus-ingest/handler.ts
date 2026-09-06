@@ -446,6 +446,12 @@ function parseProjectionBatch(raw: Record<string, unknown>): ProjectionBatch {
   };
 }
 
+function projectionResultState(result: string): "PROJECTED" | "IDEMPOTENT" {
+  if (result === "INSERTED" || result.startsWith("CONFLICT_INSERTED:")) return "PROJECTED";
+  if (result === "IDEMPOTENT" || result.startsWith("CONFLICT_IDEMPOTENT:")) return "IDEMPOTENT";
+  throw new HttpError(502, "PROJECTION_RPC_RESULT_INVALID");
+}
+
 async function recordFileResult(
   supabase: ReturnType<typeof createClient>,
   batch: ProjectionBatch,
@@ -541,9 +547,8 @@ async function projectFile(
   if (error) throw new HttpError(502, `PROJECTION_RPC_FAILED:${error.code ?? "UNKNOWN"}`);
 
   const result = String(data);
-  const state = result === "IDEMPOTENT" ? "IDEMPOTENT" : result === "CONFLICT" ? "CONFLICT" : "PROJECTED";
+  const state = projectionResultState(result);
   await recordFileResult(supabase, batch, file.path, state, result);
-  if (state === "CONFLICT") throw new HttpError(409, "MESSAGE_PROJECTION_CONFLICT");
   return { path: file.path, result };
 }
 
