@@ -62,6 +62,12 @@ def test_provider_client_uses_explicit_journal_operations() -> None:
     ]
     assert all(provider is token_provider for _, _, provider in calls)
 
+    project_payload = calls[3][1]
+    assert project_payload["identity"] == "yin"
+    assert project_payload["lane_identity"] == "yin"
+    assert project_payload["branch"] == "bus/yin-v2"
+    assert project_payload["ref"] == "refs/heads/bus/yin-v2"
+
 
 def test_projection_chunking_is_deterministic_and_never_drops_files() -> None:
     files = tuple(
