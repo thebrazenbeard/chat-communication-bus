@@ -14,6 +14,7 @@ EXPECTED_RADAR_MIGRATIONS = [
     "20260905230823_radar_oidc_replay_guard_v1.sql",
     "20260906133630_radar_node_routing_hardening_v1.sql",
     "20260906154101_radar_projection_journal_v1.sql",
+    "20260906165117_radar_projection_journal_api_v1.sql",
 ]
 
 
