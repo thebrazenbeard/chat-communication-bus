@@ -1,6 +1,6 @@
 {
   "contract": "RADAR_SOURCE_CUSTODY_V1",
-  "version": 4,
+  "version": 5,
   "status": "SOURCE_ONLY_VERIFICATION_CONTRACT",
   "required_globs": [
     "supabase/migrations/*_radar_*.sql",
@@ -19,6 +19,7 @@
     "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V1.json",
     "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V2.json",
     "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V3.json",
+    "docs/checkpoints/RADAR_MAIN_DIVERGENCE_RECONCILIATION_2026-09-06.md",
     "docs/operator/RADAR_NO_PAID_QUALIFICATION.md",
     "docs/protocol/BUS_MESSAGE_GRAMMAR_V1.json",
     "tests/fixtures/bus_message_grammar_v1.json",
