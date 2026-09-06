@@ -66,7 +66,7 @@ jobs:
               output.write(f"sha={job_workflow_sha}\n")
           PY
 
-      - name: Check out immutable trusted Radar source
+      - name: Check out immutable trusted Radar code
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: thebrazenbeard/chat-communication-bus
@@ -75,10 +75,43 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Check out current canonical main as inert Git data
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: thebrazenbeard/chat-communication-bus
+          ref: main
+          path: canonical
+          fetch-depth: 0
+          persist-credentials: false
+
       - name: Set up Python
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: "3.11"
+
+      - name: Verify canonical control snapshot without executing mutable source
+        env:
+          PYTHONPATH: control/src
+        run: |
+          git -C canonical update-ref refs/remotes/origin/main "$(git -C canonical rev-parse HEAD)"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          import subprocess
+          from radar.trusted_control_snapshot import materialize_current_control_snapshot
+
+          repo = Path("canonical")
+          out = Path(os.environ["RUNNER_TEMP"]) / "radar-current-control"
+          snapshot = materialize_current_control_snapshot(repo, out)
+          head = subprocess.check_output(
+              ["git", "-C", str(repo), "rev-parse", "HEAD"], text=True
+          ).strip()
+          if snapshot.main_head_sha != head:
+              raise SystemExit("RADAR_CANONICAL_MAIN_SNAPSHOT_MISMATCH")
+          print(f"canonical_main_sha={snapshot.main_head_sha}")
+          print(f"topology_blob_sha={snapshot.topology_blob_sha}")
+          print(f"cutover_blob_sha={snapshot.cutover_blob_sha}")
+          PY
 
       - name: Project canonical reconciliation targets
         env:
@@ -86,6 +119,6 @@ jobs:
           RADAR_RECONCILE_MODE: project
         run: |
           python control/scripts/radar_trusted_project.py \
-            --repo-dir control \
-            --topology control/architecture/contracts/RADAR_TOPOLOGY_V1.json \
-            --cutover control/architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json
+            --repo-dir canonical \
+            --topology canonical/architecture/contracts/RADAR_TOPOLOGY_V1.json \
+            --cutover canonical/architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json
