@@ -1,4 +1,4 @@
-"""Topology-bound current writer-lane identity and validation primitives."""
+"""Topology-bound writer-lane identity, lifecycle, and validation primitives."""
 
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ from .message_grammar import MessageGrammarError, parse_bus_document
 
 _SHA40_RE = re.compile(r"^[0-9a-fA-F]{40}$")
 _ZERO_SHA = "0" * 40
+_ALLOWED_LIFECYCLES = frozenset({"REGISTERED_INERT", "ACTIVE", "HISTORICAL", "RETIRED"})
 
 
 class WriterLaneError(ValueError):
@@ -24,9 +25,15 @@ class WriterLane:
     identity: str
     writer: str
     branch: str
+    lifecycle: str = "ACTIVE"
 
 
-def load_writer_lanes(topology_path: str | Path) -> dict[str, WriterLane]:
+def load_registered_writer_lanes(topology_path: str | Path) -> dict[str, WriterLane]:
+    """Load every topology registration, including inert/history records.
+
+    Legacy test/snapshot fixtures that predate the lifecycle field are treated
+    as ACTIVE; the canonical current topology writes lifecycle explicitly.
+    """
     raw = json.loads(Path(topology_path).read_text(encoding="utf-8"))
     required = raw.get("required_writer_lanes")
     if not isinstance(required, dict) or not required:
@@ -39,25 +46,48 @@ def load_writer_lanes(topology_path: str | Path) -> dict[str, WriterLane]:
             raise WriterLaneError("WRITER_LANE_REGISTRY_INVALID")
         writer = record.get("writer")
         branch = record.get("branch")
+        lifecycle = record.get("lifecycle", "ACTIVE")
         if not isinstance(writer, str) or not writer or not isinstance(branch, str) or not branch:
             raise WriterLaneError("WRITER_LANE_REGISTRY_INVALID")
+        if not isinstance(lifecycle, str) or lifecycle not in _ALLOWED_LIFECYCLES:
+            raise WriterLaneError("WRITER_LANE_LIFECYCLE_INVALID")
         if branch in seen_branches:
             raise WriterLaneError("DUPLICATE_WRITER_LANE_BRANCH")
         seen_branches.add(branch)
-        lanes[identity] = WriterLane(identity=identity, writer=writer, branch=branch)
+        lanes[identity] = WriterLane(
+            identity=identity,
+            writer=writer,
+            branch=branch,
+            lifecycle=lifecycle,
+        )
     return lanes
 
 
-def identity_for_ref(ref: str, topology_path: str | Path) -> str:
+def load_writer_lanes(topology_path: str | Path) -> dict[str, WriterLane]:
+    """Load only ACTIVE current lanes for routing/reconciliation authority."""
+    return {
+        identity: lane
+        for identity, lane in load_registered_writer_lanes(topology_path).items()
+        if lane.lifecycle == "ACTIVE"
+    }
+
+
+def _identity_for_ref(ref: str, lanes: dict[str, WriterLane]) -> str:
     branch = ref.removeprefix("refs/heads/")
-    matches = [
-        lane.identity
-        for lane in load_writer_lanes(topology_path).values()
-        if lane.branch == branch
-    ]
+    matches = [lane.identity for lane in lanes.values() if lane.branch == branch]
     if len(matches) != 1:
         raise WriterLaneError("UNREGISTERED_WRITER_LANE")
     return matches[0]
+
+
+def identity_for_ref(ref: str, topology_path: str | Path) -> str:
+    """Resolve only current ACTIVE lanes."""
+    return _identity_for_ref(ref, load_writer_lanes(topology_path))
+
+
+def registered_identity_for_ref(ref: str, topology_path: str | Path) -> str:
+    """Resolve any registered lane for guard/onboarding validation."""
+    return _identity_for_ref(ref, load_registered_writer_lanes(topology_path))
 
 
 def _load_cutover(cutover_path: str | Path) -> dict[str, object]:
@@ -97,12 +127,6 @@ def planned_successor_bootstrap_identity(
     cutover_path: str | Path | None,
     bootstrap_main: str | None,
 ) -> str | None:
-    """Return a planned successor identity only for its exact creation event.
-
-    A successor is deliberately *not* active until the later topology-switch
-    stage. The sole pre-switch exception is branch creation (zero ``before``
-    SHA) from the exact canonical main commit supplied by the control checkout.
-    """
     if base != _ZERO_SHA or cutover_path is None:
         return None
 
@@ -115,7 +139,7 @@ def planned_successor_bootstrap_identity(
         raise WriterLaneError("DUPLICATE_PLANNED_WRITER_LANE_BRANCH")
 
     identity = matches[0]
-    lanes = load_writer_lanes(topology_path)
+    lanes = load_registered_writer_lanes(topology_path)
     if identity not in lanes:
         raise WriterLaneError("WRITER_LANE_CUTOVER_IDENTITY_UNKNOWN")
     if lanes[identity].branch == branch:
@@ -160,12 +184,6 @@ def _message_headers(
     *,
     historical: bool = False,
 ) -> dict[str, str]:
-    """Return canonical message headers under the shared Bus grammar.
-
-    New appends are strict. Immutable historical scans retain the documented
-    source-fallback timestamp policy so legacy timestamp defects do not brick
-    future append validation; all other grammar checks remain fail-closed.
-    """
     try:
         parsed = parse_bus_document(
             content,
@@ -211,12 +229,6 @@ def _commits_to_validate(repo_dir: Path, head: str, base: str | None) -> list[st
 
 
 def _message_ids_at_commit(repo_dir: Path, commit: str) -> set[str]:
-    """Collect message ids already present at a pinned commit.
-
-    Existing duplicate ids are tolerated as immutable/grandfathered history;
-    admission only forbids a newly-added message from consuming an id that was
-    already present in current or pinned historical state.
-    """
     paths = [
         path
         for path in _git(
@@ -245,7 +257,6 @@ def _historical_message_ids(
     cutover_path: str | Path | None,
     identity: str,
 ) -> set[str]:
-    """Return ids pinned by the identity's historical-lane cutover snapshot."""
     if cutover_path is None:
         return set()
 
@@ -343,7 +354,7 @@ def validate_writer_lane_commit(
     cutover_path: str | Path | None = None,
     bootstrap_main: str | None = None,
 ) -> str:
-    lanes = load_writer_lanes(topology_path)
+    registered_lanes = load_registered_writer_lanes(topology_path)
     repo = Path(repo_dir)
     if _git(repo, "rev-parse", "HEAD") != head:
         raise WriterLaneError("BRANCH_HEAD_MISMATCH")
@@ -359,8 +370,10 @@ def validate_writer_lane_commit(
     if bootstrap_identity is not None:
         return bootstrap_identity
 
-    identity = identity_for_ref(ref, topology_path)
-    lane = lanes[identity]
+    identity = registered_identity_for_ref(ref, topology_path)
+    lane = registered_lanes[identity]
+    if lane.lifecycle not in {"ACTIVE", "REGISTERED_INERT"}:
+        raise WriterLaneError("WRITER_LANE_NOT_WRITABLE")
     historical_ids = _historical_message_ids(repo, cutover_path, identity)
     for commit in _commits_to_validate(repo, head, base):
         _validate_commit_paths(
@@ -377,6 +390,8 @@ __all__ = [
     "WriterLane",
     "WriterLaneError",
     "identity_for_ref",
+    "registered_identity_for_ref",
+    "load_registered_writer_lanes",
     "load_writer_lanes",
     "planned_successor_bootstrap_identity",
     "validate_writer_lane_commit",
