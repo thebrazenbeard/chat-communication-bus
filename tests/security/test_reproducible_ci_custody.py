@@ -25,11 +25,11 @@ def test_python_build_and_test_tooling_is_exactly_pinned() -> None:
     assert 'test = [' in pyproject
     for dependency in (
         '"pytest==9.1.1"',
-        '"colorama==0.4.6; sys_platform == \'win32\'"',
+        '"colorama==0.4.6; sys_platform == \\"win32\\""',
         '"iniconfig==2.3.0"',
         '"packaging==26.3"',
         '"pluggy==1.6.0"',
-        '"pygments==2.21.0"',
+        '"Pygments==2.21.0"',
     ):
         assert dependency in pyproject
     assert "pip==26.2.1" in ci
