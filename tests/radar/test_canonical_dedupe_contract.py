@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from radar.dlq import DeadLetterStore
+from radar.envelope import RadarEnvelope
 from radar.registry import IdentityRegistry
 from radar.runtime import RadarRuntime
 from radar.telemetry import TelemetryStore
@@ -37,6 +38,14 @@ def _message(message_id: str, audience: str) -> dict[str, object]:
         "priority": 3,
         "payload": {"same": "canonical-payload"},
     }
+
+
+def test_runtime_uses_middleware_idempotency_key_exactly(tmp_path):
+    runtime = _runtime(tmp_path)
+    result = RadarEnvelope.from_mapping(_message("radar-dedupe-key-0001", "one"))
+    assert result.envelope is not None
+
+    assert runtime._dedupe_key(result.envelope) == result.envelope.idempotency_key
 
 
 def test_same_payload_hash_dedupes_across_route_context_inside_window(tmp_path):
