@@ -72,7 +72,7 @@ def test_edge_dependency_map_is_exact_and_lock_is_frozen() -> None:
     ]
 
 
-def test_local_qualification_ignores_only_standard_generated_python_artifacts() -> None:
+def test_local_qualification_ignores_only_standard_generated_artifacts() -> None:
     ignored = {
         line.strip()
         for line in GITIGNORE.read_text(encoding="utf-8").splitlines()
@@ -83,6 +83,9 @@ def test_local_qualification_ignores_only_standard_generated_python_artifacts() 
         "*.py[cod]",
         ".pytest_cache/",
         "*.egg-info/",
+        ".supabase/",
+        "supabase/.temp/",
+        "supabase/.branches/",
     }
 
 
