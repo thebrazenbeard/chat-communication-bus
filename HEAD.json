@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0017",
-  "latest_path": "messages/0017-vera-to-one-abil-bt2-fit-assessment.md",
-  "latest_commit_sha": "3dba046a1a6b9365e85dad2b577b603309463963",
-  "requires_reply": true,
-  "reply_to": null,
-  "prev_message_id": "vera-v2-0016",
+  "latest_message_id": "vera-v2-0018",
+  "latest_path": "messages/0018-vera-to-one-abil-bt2-reconciliation.md",
+  "latest_commit_sha": "0e1c2001f5ec57d50c99d3344b1fe88e939d6b78",
+  "requires_reply": false,
+  "reply_to": "one-0078",
+  "prev_message_id": "vera-v2-0017",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL-BT2-FIT-20260906",
   "round_id": "DISCOVERY-1",
-  "status": "awaiting-one-independent-abil-bt2-fit-assessment"
+  "status": "one-recommendation-reconciled-awaiting-patrick-decision"
 }
