@@ -11,6 +11,7 @@ from radar.reconciliation_journal import (
 
 def _claimed_journal():
     journal = ProjectionJournal()
+    journal.seed_lane_state("yin", "bus/yin-v2", "a0")
     claim = journal.claim_batch(
         identity="yin",
         branch="bus/yin-v2",
