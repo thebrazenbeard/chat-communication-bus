@@ -22,7 +22,16 @@ def test_python_build_and_test_tooling_is_exactly_pinned() -> None:
     pyproject = PYPROJECT.read_text(encoding="utf-8")
     ci = CI.read_text(encoding="utf-8")
     assert 'requires = ["setuptools==84.0.0"]' in pyproject
-    assert 'test = ["pytest==9.1.1"]' in pyproject
+    assert 'test = [' in pyproject
+    for dependency in (
+        '"pytest==9.1.1"',
+        '"colorama==0.4.6; sys_platform == \'win32\'"',
+        '"iniconfig==2.3.0"',
+        '"packaging==26.3"',
+        '"pluggy==1.6.0"',
+        '"pygments==2.21.0"',
+    ):
+        assert dependency in pyproject
     assert "pip==26.2.1" in ci
     assert "pip install --upgrade pip" not in ci
 
@@ -99,7 +108,7 @@ def test_local_qualification_ignores_only_standard_generated_artifacts() -> None
 def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> None:
     contract = json.loads(CUSTODY.read_text(encoding="utf-8"))
     assert contract["contract"] == "RADAR_SOURCE_CUSTODY_V1"
-    assert contract["version"] == 6
+    assert contract["version"] == 7
     assert contract["status"] == "SOURCE_ONLY_VERIFICATION_CONTRACT"
     assert set(contract["required_globs"]) == {
         "supabase/migrations/*_radar_*.sql",
@@ -130,7 +139,9 @@ def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> N
         "docs/operator/RADAR_NO_PAID_QUALIFICATION.md",
         "docs/protocol/BUS_MESSAGE_GRAMMAR_V1.json",
         "tests/fixtures/bus_message_grammar_v1.json",
+        "tests/radar/test_remote_ref_reconciler.py",
         "tests/security/test_no_paid_qualification_consistency.py",
+        "tests/security/test_reproducible_ci_custody.py",
         "pyproject.toml",
         "scripts/radar_local_qualify.ps1",
         "scripts/radar_source_hashes.py",
