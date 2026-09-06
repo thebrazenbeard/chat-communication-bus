@@ -1,6 +1,6 @@
 {
   "contract": "RADAR_SOURCE_CUSTODY_V1",
-  "version": 1,
+  "version": 2,
   "status": "SOURCE_ONLY_VERIFICATION_CONTRACT",
   "required_globs": [
     "supabase/migrations/*_radar_*.sql",
@@ -16,6 +16,7 @@
     "architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json",
     "architecture/contracts/RADAR_TRUST_ANCHOR_V1.json",
     "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V1.json",
+    "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V2.json",
     "docs/protocol/BUS_MESSAGE_GRAMMAR_V1.json",
     "tests/fixtures/bus_message_grammar_v1.json",
     "supabase/config.toml",
@@ -24,6 +25,18 @@
     "supabase/functions/github-bus-ingest/deno.json",
     "supabase/functions/github-bus-ingest/deno.lock",
     "pyproject.toml",
-    "scripts/radar_source_hashes.py"
+    "scripts/radar_source_hashes.py",
+    "scripts/radar_trusted_project.py",
+    "scripts/radar_trusted_reconcile.py",
+    "src/radar/body_bound_oidc.py",
+    "src/radar/central_projection.py",
+    "src/radar/github_actions_oidc.py",
+    "src/radar/message_grammar.py",
+    "src/radar/reconciliation_journal.py",
+    "src/radar/trusted_control_snapshot.py",
+    "src/radar/trusted_lane_validation.py",
+    "src/radar/trusted_reconciler.py",
+    "src/radar/trusted_wakeup.py",
+    "src/radar/writer_lanes.py"
   ]
 }
