@@ -29,6 +29,24 @@ values (
   true
 );
 
+-- Once a node acquires subscriptions, later node-identity reassignment must not
+-- silently transfer or invalidate that authority relationship.
+do $$
+begin
+  begin
+    update radar.nodes
+    set identity_id = 'radar-node-route-b'
+    where node_id = '11111111-1111-4111-8111-111111111111';
+    raise exception 'RADAR_TEST_EXPECTED_NODE_IDENTITY_IMMUTABLE';
+  exception
+    when check_violation then
+      if sqlerrm not like '%RADAR_NODE_IDENTITY_IMMUTABLE%' then
+        raise;
+      end if;
+  end;
+end
+$$;
+
 do $$
 begin
   begin
@@ -138,7 +156,8 @@ begin
     'radar.assignment_ready(text)',
     'radar.mark_stale_nodes_offline(interval)',
     'radar.touch_node(uuid,text)',
-    'radar.validate_subscription_node_identity()'
+    'radar.validate_subscription_node_identity()',
+    'radar.prevent_node_identity_reassignment()'
   ]
   loop
     if has_function_privilege('anon', sig, 'EXECUTE')
