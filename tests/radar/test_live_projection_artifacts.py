@@ -89,30 +89,42 @@ def test_edge_function_derives_exact_endthread_sender_closure_without_storing_bo
     assert "body: body" not in source
 
 
-def test_writer_lane_workflow_is_secretless_and_oidc_scoped():
+def test_writer_lane_workflow_is_secretless_and_trusted_reusable_is_self_pinned_validate_only():
     caller = (ROOT / ".github" / "workflows" / "radar-bus-projection.yml").read_text()
     trusted = (ROOT / ".github" / "workflows" / "radar-trusted-projector.yml").read_text()
     caller_lowered = caller.lower()
     trusted_lowered = trusted.lower()
 
+    # Legacy writer caller remains immutably contained until Task 9 removes the
+    # old provider path. It must not execute privileged code itself.
     assert "id-token: write" in caller_lowered
     assert "contents: read" in caller_lowered
     assert "secrets." not in caller_lowered
     assert "radar-trusted-projector.yml@" in caller
     assert "runs-on:" not in caller
 
+    # The replacement reusable workflow self-identifies the called workflow SHA,
+    # checks out only that immutable trusted source, and performs no provider I/O.
     assert "id-token: write" in trusted_lowered
     assert "contents: read" in trusted_lowered
     assert "secrets." not in trusted_lowered
-    assert "python -m pip install -e control" in trusted
-    assert "scripts/radar_emit_bus_projection.py" in trusted
-    assert "radar/live-message-projection-v1" not in trusted
-    assert "github.ref" in trusted
-    assert "github.sha" in trusted
-    assert "github.event.before" in trusted
-    assert "--base" in trusted
-    assert "--cutover" in trusted
-    assert "--bootstrap-main" in trusted
+    assert "ACTIONS_ID_TOKEN_REQUEST_URL" in trusted
+    assert "ACTIONS_ID_TOKEN_REQUEST_TOKEN" in trusted
+    assert "job_workflow_ref" in trusted
+    assert "job_workflow_sha" in trusted
+    assert "path: control" in trusted
+    assert "ref: ${{ steps.self_pin.outputs.sha }}" in trusted
+    assert "persist-credentials: false" in trusted
+    assert "fetch-depth: 0" in trusted
+    assert "scripts/radar_trusted_reconcile.py" in trusted
+    assert "RADAR_RECONCILE_MODE: validate-only" in trusted
+    assert "path: lane" not in trusted
+    assert "scripts/radar_emit_bus_projection.py" not in trusted
+    assert "python -m pip install" not in trusted
+    assert "github.ref" not in trusted
+    assert "github.sha" not in trusted
+    assert "github.event.before" not in trusted
+    assert "SUPABASE" not in trusted.upper()
 
 
 def test_projection_script_bootstraps_local_src_for_legacy_lane_workflow(tmp_path):
