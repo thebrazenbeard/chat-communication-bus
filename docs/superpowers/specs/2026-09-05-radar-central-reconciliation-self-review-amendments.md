@@ -83,3 +83,17 @@ Implementation requirement:
 - Keep the squash-merge commit/time only as later integration provenance.
 
 The migration remains source-only/unapplied. This correction changes no provider state and creates no claim that the source bytes were ever executed.
+
+## A6. The design is awaiting Patrick approval; the primary header must not self-approve
+
+The primary spec currently begins with `Status: approved design, source-only review gate`. That label is not supported by the actual review state. Patrick authorized fixing identified Bus defects, but the architectural brainstorming/review gate for this replacement activation and reconciliation design has not yet received an explicit Patrick approval.
+
+Binding status correction:
+
+- Treat the primary spec's `approved design` wording as superseded.
+- Current status is `PROPOSED DESIGN / SELF-REVIEWED / AWAITING PATRICK ARCHITECTURE APPROVAL`.
+- PR #25 remains design-review only and must stay draft until Patrick explicitly approves the written architecture or otherwise directs the gate transition.
+- No implementation plan or architectural source implementation may infer approval from prior general repair authorization, from a continuation marker, from review completeness, or from the existence/mergeability of PR #25.
+- Live/provider/protected effects remain separately gated even after architecture approval and source implementation.
+
+This is a state-truth correction only. It does not alter the technical design and does not request or imply approval.
