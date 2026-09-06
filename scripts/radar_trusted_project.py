@@ -44,6 +44,7 @@ from radar.writer_lanes import WriterLaneError, load_writer_lanes  # noqa: E402
 
 
 DEFAULT_ENDPOINT = "https://klmbpaigzeguvnpccqzz.supabase.co/functions/v1/github-bus-ingest"
+CLAIM_LEASE_SECONDS = 15 * 60
 _SHA40 = re.compile(r"^[0-9a-f]{40}$")
 
 
@@ -171,6 +172,7 @@ def project_requested_lanes(
             topology_sha=topology_sha,
             files=file_paths,
             owner=owner,
+            lease_seconds=CLAIM_LEASE_SECONDS,
         )
         batch_id = str(claim["batch_id"])
         claim_token = str(claim["claim_token"])
