@@ -1,5 +1,6 @@
--- Idempotent Radar V1 self-registration / topology seed.
--- This is provider projection, not the canonical identity contract.
+-- Idempotent CURRENT Radar self-registration / topology projection seed.
+-- Apply only after the full current Git-held Radar migration chain.
+-- GitHub remains canonical. This seed never proves liveness and never mints a lease.
 
 begin;
 
@@ -14,8 +15,8 @@ values (
     'repository', 'thebrazenbeard/chat-communication-bus',
     'patrick_override', true,
     'canonical_state', 'github',
-    'integration_branch', 'radar/control-plane-v1',
-    'mailbox_branch', 'bus/radar-v1',
+    'mailbox_branch', 'bus/radar-v2',
+    'historical_integration_branch', 'radar/control-plane-v1',
     'contract_ref', 'architecture/contracts/RADAR_SELF_REGISTRATION_V1.json'
   )
 )
@@ -26,11 +27,39 @@ set display_name = excluded.display_name,
     metadata = excluded.metadata,
     updated_at = now();
 
-insert into radar.endpoints(endpoint_id, identity_id, transport, address, status, metadata)
+-- Stable recovery node. OFFLINE + NULL heartbeat/lease is intentional: seed state
+-- is registration evidence, never runtime liveness/routing authority.
+insert into radar.nodes(
+  node_id, identity_id, runtime_kind, status, capabilities, last_heartbeat, metadata
+)
+values (
+  '72616461-722d-4000-8000-000000000001'::uuid,
+  'radar',
+  'chatgpt_operator',
+  'OFFLINE',
+  array['github','routing','registry','workflow','dependency_tracking','reconciliation','telemetry','maintenance','supabase_projection'],
+  null,
+  jsonb_build_object(
+    'role', 'recoverable_operator_node',
+    'session_is_identity', false,
+    'seeded_liveness', false
+  )
+)
+on conflict (node_id) do update
+set runtime_kind = excluded.runtime_kind,
+    status = 'OFFLINE',
+    capabilities = excluded.capabilities,
+    last_heartbeat = null,
+    lease_expires_at = null,
+    metadata = excluded.metadata,
+    updated_at = now();
+
+insert into radar.endpoints(endpoint_id, identity_id, node_id, transport, address, status, metadata)
 values
   (
     'radar-github-repository',
     'radar',
+    null,
     'github',
     'thebrazenbeard/chat-communication-bus',
     'ACTIVE',
@@ -39,14 +68,16 @@ values
   (
     'radar-github-mailbox',
     'radar',
+    '72616461-722d-4000-8000-000000000001'::uuid,
     'github_branch',
-    'bus/radar-v1',
+    'bus/radar-v2',
     'ACTIVE',
     jsonb_build_object('role', 'sole_writer_mailbox')
   ),
   (
     'radar-chatgpt-operator',
     'radar',
+    '72616461-722d-4000-8000-000000000001'::uuid,
     'chatgpt',
     'operator-interface',
     'ACTIVE',
@@ -57,21 +88,29 @@ values
   )
 on conflict (endpoint_id) do update
 set identity_id = excluded.identity_id,
+    node_id = excluded.node_id,
     transport = excluded.transport,
     address = excluded.address,
     status = excluded.status,
     metadata = excluded.metadata,
     updated_at = now();
 
-insert into radar.subscriptions(identity_id, domain, intent, min_priority, active)
+insert into radar.subscriptions(identity_id, node_id, domain, intent, min_priority, active)
 values
-  ('radar', 'coordination', null, 4, true),
-  ('radar', 'system', null, 4, true),
-  ('radar', 'security', null, 4, true),
-  ('radar', 'database', null, 4, true),
-  ('radar', 'repository', null, 4, true),
-  ('radar', 'protocol', null, 4, true)
-on conflict (identity_id, domain, coalesce(intent, ''), min_priority)
-do nothing;
+  ('radar', '72616461-722d-4000-8000-000000000001'::uuid, 'coordination', null, 4, true),
+  ('radar', '72616461-722d-4000-8000-000000000001'::uuid, 'system', null, 4, true),
+  ('radar', '72616461-722d-4000-8000-000000000001'::uuid, 'security', null, 4, true),
+  ('radar', '72616461-722d-4000-8000-000000000001'::uuid, 'database', null, 4, true),
+  ('radar', '72616461-722d-4000-8000-000000000001'::uuid, 'repository', null, 4, true),
+  ('radar', '72616461-722d-4000-8000-000000000001'::uuid, 'protocol', null, 4, true)
+on conflict do nothing;
+
+update radar.subscriptions
+set active = true
+where identity_id = 'radar'
+  and node_id = '72616461-722d-4000-8000-000000000001'::uuid
+  and domain in ('coordination','system','security','database','repository','protocol')
+  and intent is null
+  and min_priority = 4;
 
 commit;
