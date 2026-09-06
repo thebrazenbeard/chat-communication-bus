@@ -120,7 +120,7 @@ def test_registered_inert_branch_cannot_wake_reconciliation(tmp_path) -> None:
     topology, _cutover = _contracts(tmp_path)
 
     with pytest.raises(ReconcileError, match="WAKEUP_BRANCH_NOT_ACTIVE"):
-        module._requested_identities(
+        module.requested_identities(
             event_name="workflow_run",
             event={
                 "workflow_run": {
@@ -129,6 +129,7 @@ def test_registered_inert_branch_cannot_wake_reconciliation(tmp_path) -> None:
                 }
             },
             topology_path=topology,
+            repository="thebrazenbeard/chat-communication-bus",
         )
 
 
@@ -147,8 +148,9 @@ def test_untrusted_repository_and_non_sha_wakeup_fail_closed(tmp_path) -> None:
         )
 
     with pytest.raises(ReconcileError, match="WORKFLOW_RUN_HEAD_INVALID"):
-        module._requested_identities(
+        module.requested_identities(
             event_name="workflow_run",
             event={"workflow_run": {"head_branch": "bus/yin-v2", "head_sha": "main"}},
             topology_path=topology,
+            repository="thebrazenbeard/chat-communication-bus",
         )
