@@ -165,6 +165,52 @@ def test_identity_named_subscription_binding_is_atomic_with_node_registration():
     assert registry.node("yin-two").identity_id == "yin"
 
 
+def test_route_eligibility_snapshot_serializes_against_status_change():
+    subscription_checked = threading.Event()
+    release_route = threading.Event()
+    status_done = threading.Event()
+
+    class PausingRegistry(IdentityRegistry):
+        def node_is_subscribed(self, *args, **kwargs):
+            result = super().node_is_subscribed(*args, **kwargs)
+            subscription_checked.set()
+            assert release_route.wait(5), "timed out releasing route snapshot"
+            return result
+
+    registry = PausingRegistry()
+    registry.register_identity("yin", display_name="Yin")
+    _register_node(registry, "yin-event")
+    registry.subscribe("yin-event", domain="database", intent="event", min_priority=4)
+    outcomes = {}
+
+    def route_message():
+        outcomes["decision"] = Router(registry).route(_env(), now_ms=1_500)
+
+    def mark_offline():
+        try:
+            registry.set_node_status("yin-event", NodeStatus.OFFLINE)
+        finally:
+            status_done.set()
+
+    route_thread = threading.Thread(target=route_message)
+    route_thread.start()
+    assert subscription_checked.wait(5), "route did not reach subscription check"
+
+    status_thread = threading.Thread(target=mark_offline)
+    status_thread.start()
+    status_finished_inside_route_snapshot = status_done.wait(0.25)
+
+    release_route.set()
+    route_thread.join(5)
+    status_thread.join(5)
+
+    assert not route_thread.is_alive()
+    assert not status_thread.is_alive()
+    assert status_finished_inside_route_snapshot is False
+    assert outcomes["decision"].recipients == ("yin-event",)
+    assert registry.node("yin-event").status is NodeStatus.OFFLINE
+
+
 def test_invalid_node_lease_times_fail_closed():
     registry = IdentityRegistry()
     registry.register_identity("yin", display_name="Yin")
