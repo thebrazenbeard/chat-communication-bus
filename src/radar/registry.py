@@ -325,6 +325,44 @@ class IdentityRegistry:
             )
         )
 
+    def routable_subscriber_node_ids(
+        self,
+        *,
+        domain: str,
+        intent: str,
+        priority: int,
+        now_ms: int,
+        identity_id: str | None = None,
+    ) -> tuple[str, ...]:
+        """Return one atomic snapshot of exact routable subscriber nodes.
+
+        The registry lock is held across status/lease and subscription checks so
+        a concurrent status or subscription mutation cannot interleave inside a
+        route decision. The RLock is intentionally re-entrant because the
+        existing predicate helpers also acquire it.
+        """
+        now = _millisecond_value(now_ms)
+        canonical_identity = None
+        if identity_id is not None:
+            canonical_identity = self.resolve_identity_id(identity_id)
+
+        with self._lock:
+            recipients: list[str] = []
+            for node in sorted(self._nodes.values(), key=lambda item: item.node_id):
+                if canonical_identity is not None and node.identity_id != canonical_identity:
+                    continue
+                if not self.node_is_routable(node.node_id, now_ms=now):
+                    continue
+                if not self.node_is_subscribed(
+                    node.node_id,
+                    domain=domain,
+                    intent=intent,
+                    priority=priority,
+                ):
+                    continue
+                recipients.append(node.node_id)
+            return tuple(recipients)
+
     def identity_is_subscribed(
         self,
         identity_id: str,
