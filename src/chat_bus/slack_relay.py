@@ -12,6 +12,7 @@ import hashlib
 import json
 import re
 import sqlite3
+import threading
 from pathlib import Path
 
 from .identity import EndpointRegistry, IdentityError
@@ -193,104 +194,118 @@ class RelayClaim:
 class RelayStore:
     """SQLite-backed idempotency and exact-delivery receipt store."""
 
-    def __init__(self, path: str | Path = ":memory:") -> None:
-        self.connection = sqlite3.connect(path)
-        self.connection.row_factory = sqlite3.Row
-        self.connection.executescript(
-            """
-            PRAGMA foreign_keys = ON;
-            CREATE TABLE IF NOT EXISTS relay_operations (
-                operation_id TEXT PRIMARY KEY,
-                message_id TEXT NOT NULL UNIQUE,
-                envelope_sha256 TEXT NOT NULL CHECK (
-                    length(envelope_sha256) = 64
-                    AND envelope_sha256 NOT GLOB '*[^0-9a-f]*'
-                ),
-                channel_id TEXT NOT NULL,
-                slack_message_ts TEXT,
-                created_at_ms INTEGER NOT NULL
-            );
-            """
+    def __init__(self, path: str | Path = ":memory:", *, timeout: float = 5.0) -> None:
+        self._lock = threading.RLock()
+        self.connection = sqlite3.connect(
+            path,
+            timeout=timeout,
+            check_same_thread=False,
         )
+        self.connection.row_factory = sqlite3.Row
+        with self._lock:
+            self.connection.executescript(
+                """
+                PRAGMA foreign_keys = ON;
+                CREATE TABLE IF NOT EXISTS relay_operations (
+                    operation_id TEXT PRIMARY KEY,
+                    message_id TEXT NOT NULL UNIQUE,
+                    envelope_sha256 TEXT NOT NULL CHECK (
+                        length(envelope_sha256) = 64
+                        AND envelope_sha256 NOT GLOB '*[^0-9a-f]*'
+                    ),
+                    channel_id TEXT NOT NULL,
+                    slack_message_ts TEXT,
+                    created_at_ms INTEGER NOT NULL
+                );
+                """
+            )
 
     def close(self) -> None:
-        self.connection.close()
+        with self._lock:
+            self.connection.close()
 
-    def claim(self, envelope: RelayEnvelope) -> RelayClaim:
-        digest = envelope.sha256
-        existing = self.connection.execute(
-            "SELECT * FROM relay_operations WHERE operation_id = ?",
-            (envelope.operation_id,),
-        ).fetchone()
-        if existing is not None:
-            if existing["envelope_sha256"] != digest or existing["message_id"] != envelope.message_id:
-                raise RelayError("OPERATION_ID_CONFLICT")
-            return RelayClaim(
-                operation_id=existing["operation_id"],
-                message_id=existing["message_id"],
-                envelope_sha256=existing["envelope_sha256"],
-                slack_message_ts=existing["slack_message_ts"],
-                created=False,
-            )
-
-        try:
-            with self.connection:
-                self.connection.execute(
-                    """
-                    INSERT INTO relay_operations (
-                        operation_id, message_id, envelope_sha256, channel_id, created_at_ms
-                    ) VALUES (?, ?, ?, ?, ?)
-                    """,
-                    (
-                        envelope.operation_id,
-                        envelope.message_id,
-                        digest,
-                        envelope.channel_id,
-                        envelope.created_at_ms,
-                    ),
-                )
-        except sqlite3.IntegrityError as exc:
-            raise RelayError("MESSAGE_ID_CONFLICT") from exc
-
-        return RelayClaim(
-            operation_id=envelope.operation_id,
-            message_id=envelope.message_id,
-            envelope_sha256=digest,
-            slack_message_ts=None,
-            created=True,
-        )
-
-    def mark_delivered(self, operation_id: str, envelope_sha256: str, slack_message_ts: str) -> RelayClaim:
-        if _TS_RE.fullmatch(slack_message_ts) is None:
-            raise RelayError("INVALID_SLACK_MESSAGE_TS")
-        row = self.connection.execute(
-            "SELECT * FROM relay_operations WHERE operation_id = ?",
-            (operation_id,),
-        ).fetchone()
-        if row is None:
-            raise RelayError("UNKNOWN_RELAY_OPERATION")
-        if row["envelope_sha256"] != envelope_sha256:
-            raise RelayError("ENVELOPE_DIGEST_MISMATCH")
-        if row["slack_message_ts"] is not None:
-            if row["slack_message_ts"] != slack_message_ts:
-                raise RelayError("DELIVERY_RECEIPT_CONFLICT")
-            return RelayClaim(
-                operation_id=row["operation_id"],
-                message_id=row["message_id"],
-                envelope_sha256=row["envelope_sha256"],
-                slack_message_ts=row["slack_message_ts"],
-                created=False,
-            )
-
-        with self.connection:
-            self.connection.execute(
-                "UPDATE relay_operations SET slack_message_ts = ? WHERE operation_id = ? AND slack_message_ts IS NULL",
-                (slack_message_ts, operation_id),
-            )
+    @staticmethod
+    def _claim_from_row(row: sqlite3.Row, *, created: bool) -> RelayClaim:
         return RelayClaim(
             operation_id=row["operation_id"],
             message_id=row["message_id"],
             envelope_sha256=row["envelope_sha256"],
-            slack_message_ts=slack_message_ts,
-            created=False,
+            slack_message_ts=row["slack_message_ts"],
+            created=created,
         )
+
+    def claim(self, envelope: RelayEnvelope) -> RelayClaim:
+        digest = envelope.sha256
+        with self._lock:
+            try:
+                with self.connection:
+                    cursor = self.connection.execute(
+                        """
+                        INSERT INTO relay_operations (
+                            operation_id, message_id, envelope_sha256, channel_id, created_at_ms
+                        ) VALUES (?, ?, ?, ?, ?)
+                        ON CONFLICT(operation_id) DO NOTHING
+                        """,
+                        (
+                            envelope.operation_id,
+                            envelope.message_id,
+                            digest,
+                            envelope.channel_id,
+                            envelope.created_at_ms,
+                        ),
+                    )
+                    created = cursor.rowcount == 1
+                    row = self.connection.execute(
+                        "SELECT * FROM relay_operations WHERE operation_id = ?",
+                        (envelope.operation_id,),
+                    ).fetchone()
+            except sqlite3.IntegrityError as exc:
+                row = self.connection.execute(
+                    "SELECT * FROM relay_operations WHERE operation_id = ?",
+                    (envelope.operation_id,),
+                ).fetchone()
+                if row is not None and (
+                    row["envelope_sha256"] != digest or row["message_id"] != envelope.message_id
+                ):
+                    raise RelayError("OPERATION_ID_CONFLICT") from exc
+                raise RelayError("MESSAGE_ID_CONFLICT") from exc
+
+            if row is None:
+                raise RelayError("RELAY_CLAIM_STATE_MISSING")
+            if row["envelope_sha256"] != digest or row["message_id"] != envelope.message_id:
+                raise RelayError("OPERATION_ID_CONFLICT")
+            return self._claim_from_row(row, created=created)
+
+    def mark_delivered(self, operation_id: str, envelope_sha256: str, slack_message_ts: str) -> RelayClaim:
+        if _TS_RE.fullmatch(slack_message_ts) is None:
+            raise RelayError("INVALID_SLACK_MESSAGE_TS")
+
+        with self._lock:
+            with self.connection:
+                self.connection.execute(
+                    """
+                    UPDATE relay_operations
+                    SET slack_message_ts = ?
+                    WHERE operation_id = ?
+                      AND envelope_sha256 = ?
+                      AND (slack_message_ts IS NULL OR slack_message_ts = ?)
+                    """,
+                    (
+                        slack_message_ts,
+                        operation_id,
+                        envelope_sha256,
+                        slack_message_ts,
+                    ),
+                )
+                row = self.connection.execute(
+                    "SELECT * FROM relay_operations WHERE operation_id = ?",
+                    (operation_id,),
+                ).fetchone()
+
+            if row is None:
+                raise RelayError("UNKNOWN_RELAY_OPERATION")
+            if row["envelope_sha256"] != envelope_sha256:
+                raise RelayError("ENVELOPE_DIGEST_MISMATCH")
+            if row["slack_message_ts"] != slack_message_ts:
+                raise RelayError("DELIVERY_RECEIPT_CONFLICT")
+            return self._claim_from_row(row, created=False)
