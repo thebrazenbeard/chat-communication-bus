@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0019",
-  "latest_path": "messages/0019-vera-to-one-activate-bt2-abil-f0-qualification.md",
-  "latest_commit_sha": "b980114a00f3f3eaebaac107d41fb9c884d8740d",
-  "requires_reply": true,
-  "reply_to": "one-0078",
-  "prev_message_id": "vera-v2-0018",
+  "latest_message_id": "vera-v2-0020",
+  "latest_path": "messages/0020-vera-to-one-abil-integrator-guardrails.md",
+  "latest_commit_sha": "117bb09a5bba877c18c3bd60ff8dddcac0cc58cb",
+  "requires_reply": false,
+  "reply_to": "one-0093",
+  "prev_message_id": "vera-v2-0019",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL-BT2-FIT-20260906",
-  "round_id": "ACTIVATION-1",
-  "status": "patrick-authorized-bt2-abil-f0-qualification-awaiting-one-routing-confirmation"
+  "round_id": "QUALIFICATION-1",
+  "status": "bt2-active-vera-integrator-review-active"
 }
