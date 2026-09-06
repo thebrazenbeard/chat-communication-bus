@@ -173,7 +173,12 @@ def _message_headers(
             timestamp_policy="source_fallback" if historical else "strict",
         )
     except MessageGrammarError as exc:
-        raise WriterLaneError(f"WRITER_LANE_MESSAGE_GRAMMAR:{path}:{exc}") from exc
+        code = str(exc)
+        if code == "WRITER_REQUIRED":
+            raise WriterLaneError(f"WRITER_LANE_WRITER_REQUIRED:{path}") from exc
+        if code == "MESSAGE_ID_REQUIRED":
+            raise WriterLaneError(f"WRITER_LANE_MESSAGE_ID_REQUIRED:{path}") from exc
+        raise WriterLaneError(f"WRITER_LANE_MESSAGE_GRAMMAR:{path}:{code}") from exc
     return dict(parsed.headers)
 
 
