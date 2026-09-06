@@ -1,6 +1,6 @@
 # Radar local qualification and trusted-ref hardening checkpoint — 2026-09-06
 
-Status: `SOURCE IMPLEMENTED / ANCHOR D SOURCE-BOUND / NO-PAID LOCAL QUALIFICATION SAFETY-HARDENED / TRUSTED WRITER OBSERVATION REF-READ-ONLY / MAIN DELTA CONTENT-RECONCILED / LOCAL EXECUTABLE QUALIFICATION PENDING / PROVIDER NOT APPLIED / EDGE NOT DEPLOYED / ISSUE #16 OPEN`.
+Status: `SOURCE IMPLEMENTED / ANCHOR D FROZEN NON-DEPLOYABLE / SUCCESSOR ANCHOR PENDING LOCAL QUALIFICATION / NO-PAID LOCAL QUALIFICATION SAFETY-HARDENED / TRUSTED WRITER OBSERVATION REF-READ-ONLY / PROJECT-BATCH PROTOCOL REPAIRED ON STAGING / MAIN DELTA CONTENT-RECONCILED / LOCAL EXECUTABLE QUALIFICATION PENDING / PROVIDER NOT APPLIED / EDGE NOT DEPLOYED / ISSUE #16 OPEN`.
 
 This is continuation/source evidence only. It does not authorize merge, rebase/history rewrite, provider migration, Edge deployment/configuration, cursor seeding, dispatcher activation on canonical `main`, billing/account changes, credential/ruleset changes, or any other protected/live effect.
 
@@ -9,8 +9,8 @@ This is continuation/source evidence only. It does not authorize merge, rebase/h
 Immediately before this checkpoint update, consolidated staging was:
 
 - branch: `radar/reproducible-ci-source-custody-v1-20260906`
-- commit: `11f6590f083863f181bb64bb3c72b2283416f1c3`
-- tree: `5f1d4af16f0cb886e374b4c80d2906209dd95278`
+- commit: `0463ae34af1f27db138e4777bf1d0b2e86e9621f`
+- tree: `166d454cd1b9b8edcee0033fd77f44d938541ec3`
 
 Fresh-read the branch before any successor write.
 
@@ -73,13 +73,55 @@ The regression `tests/radar/test_remote_ref_reconciler.py` is source-custodied a
 
 The exact pinned `actions/checkout` source was inspected. At this SHA, `fetch-depth <= 0` uses its all-history refspec `+refs/heads/*:refs/remotes/origin/*`, so the canonical checkout supplies the `origin/bus/*` remote-tracking refs that the read-only adapter consumes.
 
-`RADAR_SOURCE_CUSTODY_V1` is now version 7. It includes the remote-ref regression and its own custody-consistency verifier.
+`RADAR_SOURCE_CUSTODY_V1` is version 7. It includes the remote-ref regression and its own custody-consistency verifier.
+
+## Project-batch protocol repair
+
+A source audit found a concrete Python-to-Edge protocol mismatch in `ProviderProjectionClient.project_batch()`.
+
+The Edge `project_batch` parser requires both `identity` and `branch`, in addition to `repository`, `ref`, `branch_head`, `lane_identity`, journal claim data, and files. The frozen Anchor D Python client omitted `identity` and `branch`, so an otherwise valid trusted projection request from Anchor D would fail before file projection with the Edge branch/identity admission checks.
+
+The staging repair is source commit `46435c9e672ad3d50c5ea93b603f738b6e67f6ef`:
+
+- `src/radar/central_projection.py` now includes `identity=identity` and `branch=branch` in the body-bound `project_batch` request while retaining `lane_identity`, `ref`, `branch_head`, journal claim, and exact file payloads;
+- `tests/radar/test_central_projection_protocol.py` now asserts both Edge-required fields as well as the existing lane identity/ref relationship.
+
+Targeted protocol verification used exact reconstructed committed bytes for `body_bound_oidc.py`, repaired `central_projection.py`, and the protocol test. Their reconstructed Git blob SHAs matched GitHub exactly, and pytest returned `2 passed` with exit code 0. This proves the repaired Python protocol slice only; it is not full Radar qualification.
+
+The journal path remains fail-closed independently: claimed paths begin `PENDING`, file-result RPCs require a known claimed path and active claim, and finalize refuses cursor advancement while any claimed file is outside terminal `PROJECTED`/`IDEMPOTENT` state.
+
+## Anchor D deployment block
+
+Anchor D remains the latest frozen immutable projection reference:
+
+- commit `401733b2013802880320629a4d8ea06f8bf7b760`
+- tree `d3a9c44f0378409a626e29334b4d057ef20c7e8e`
+- trust contract `RADAR_PROJECTION_TRUST_ANCHOR_V3.json`
+- dispatcher source still references D.
+
+However, D predates the project-batch protocol repair and the later ref-read-only trust-boundary hardening. It is therefore not deployment-eligible.
+
+`RADAR_CURRENT.json` now states:
+
+- `current_projection_anchor_d_deployment_eligible: false`;
+- `post_anchor_d_source_repairs_pending_successor_anchor: true`;
+- `successor_anchor_status: PENDING_LOCAL_QUALIFICATION`;
+- projection-source status `ANCHOR_D_FROZEN_REFERENCE_NOT_DEPLOYMENT_ELIGIBLE`;
+- drift `PROJECTION_ANCHOR_D_KNOWN_PROTOCOL_DEFECT` documenting the missing Edge-required `identity`/`branch` fields in frozen D.
+
+No successor anchor has been invented or frozen. A successor must be cut only from a candidate that first receives the authoritative local exact-commit/tree PASS receipt.
+
+The custody-bound `tests/security/test_projection_anchor_d_consistency.py` was updated to require this deployment block while preserving D's frozen trust/dispatcher relationships. A byte-exact reconstruction of the committed dispatcher, V3 trust contract, custody v7 contract, `RADAR_CURRENT.json`, and the full Anchor-D consistency test matched all Git blob SHAs and returned `3 passed` with exit code 0.
+
+A separate targeted currentness reconstruction verified the exact committed `RADAR_CURRENT.json` blob and returned `2 passed` for the newly affected blocked-D/current-chain assertions. These are targeted checks only.
 
 ## Evidence boundary
 
-The edited trusted Python payloads (`trusted_wakeup.py`, `radar_trusted_reconcile.py`, `radar_trusted_project.py`, and the remote-ref regression) were syntax-parsed successfully from the exact source payloads written in this session. Committed source was also re-read after mutation-helper removal and remote-ref regression hardening.
+The edited trusted Python payloads (`trusted_wakeup.py`, `radar_trusted_reconcile.py`, `radar_trusted_project.py`, and the remote-ref regression) were syntax-parsed successfully from the exact source payloads written in this session. The project-batch protocol slice and Anchor-D consistency slice have the targeted pytest evidence described above.
 
-This is not an authoritative pytest or full qualification receipt. This runtime still lacks the complete frozen local Windows qualification toolchain. Static/source-contract and syntax evidence must not be promoted to GREEN qualification.
+The Python runtime emitted an unrelated spreadsheet-runtime warmup traceback before those pytest invocations; pytest itself exited 0 in each cited targeted run.
+
+None of this is an authoritative full local qualification receipt. This runtime still lacks the complete frozen Windows qualification toolchain. Targeted/static evidence must not be promoted to overall GREEN qualification.
 
 Issue #39 remains open until a clean exact-commit/tree local PASS receipt exists and private hosted Actions remain non-authoritative/opportunistic. No paid runner/billing recovery is required or permitted by the Radar no-paid policy.
 
@@ -89,7 +131,8 @@ Issue #16 remains open and provider/live recovery remains untouched.
 
 1. Fresh-read staging and sender-lane messages addressed to Radar.
 2. Continue source-side audits only where they materially reduce qualification or trusted-projection risk.
-3. On a suitable Windows machine, check out one exact clean staging candidate and run `scripts/radar_local_qualify.ps1`, writing any receipt outside the checkout.
-4. Treat PASS only as qualifying the exact commit/tree named in that receipt.
-5. If local execution exposes a defect, preserve RED evidence and repair source before retrying.
-6. Do not merge to `main`, alter protected history, apply provider migrations, deploy Edge/config, seed cursors, activate dispatcher, or change billing/account settings without Patrick's separate explicit authorization.
+3. Do not freeze a successor projection anchor until an exact staging candidate receives the authoritative local Windows PASS receipt.
+4. On a suitable Windows machine, check out one exact clean staging candidate and run `scripts/radar_local_qualify.ps1`, writing any receipt outside the checkout.
+5. Treat PASS only as qualifying the exact commit/tree named in that receipt.
+6. If local execution exposes a defect, preserve RED evidence and repair source before retrying.
+7. Do not merge to `main`, alter protected history, apply provider migrations, deploy Edge/config, seed cursors, activate dispatcher, or change billing/account settings without Patrick's separate explicit authorization.
