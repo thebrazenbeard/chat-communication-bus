@@ -68,7 +68,6 @@ jobs:
 
       - name: Check out immutable trusted Radar code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: thebrazenbeard/chat-communication-bus
           ref: ${{ steps.self_pin.outputs.sha }}
@@ -78,7 +77,6 @@ jobs:
 
       - name: Check out current canonical main as inert Git data
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: thebrazenbeard/chat-communication-bus
           ref: main
