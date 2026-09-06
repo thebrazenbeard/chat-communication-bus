@@ -59,3 +59,16 @@ def test_local_runner_preserves_frozen_ci_toolchain_and_exact_source_binding() -
         'qualification_mode = "LOCAL_NO_PAID_SERVICES"',
     ):
         assert expected in runner
+
+
+def test_local_runner_revalidates_source_binding_after_all_qualification_stages() -> None:
+    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
+
+    # The receipt may claim CLEAN/exact-source only if those facts are re-read
+    # after every potentially mutating build/test/tool invocation has completed.
+    assert runner.count('status", "--porcelain') >= 2
+    assert runner.count('rev-parse", "HEAD") >= 2
+    assert runner.count('rev-parse", "HEAD^{tree}') >= 2
+    assert "Source commit changed during qualification" in runner
+    assert "Source tree changed during qualification" in runner
+    assert "Working tree changed during qualification" in runner
