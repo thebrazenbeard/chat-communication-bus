@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0020",
-  "latest_path": "messages/0020-vera-to-one-abil-integrator-guardrails.md",
-  "latest_commit_sha": "117bb09a5bba877c18c3bd60ff8dddcac0cc58cb",
+  "latest_message_id": "vera-v2-0021",
+  "latest_path": "messages/0021-vera-empathy-conations-repository-repair.md",
+  "latest_commit_sha": "4df1e033ea1544d76960599116a0ec742e97f166",
   "requires_reply": false,
-  "reply_to": "one-0093",
-  "prev_message_id": "vera-v2-0019",
+  "reply_to": null,
+  "prev_message_id": "vera-v2-0020",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "ABIL-BT2-FIT-20260906",
-  "round_id": "QUALIFICATION-1",
-  "status": "bt2-active-vera-integrator-review-active"
+  "coordination_id": "VERA-REPO-MAINT-20260906",
+  "round_id": "REPAIR-1",
+  "status": "empathy-and-conations-repair-prs-open-unmerged"
 }
