@@ -235,6 +235,8 @@ class ProviderProjectionClient:
         result = self._call(
             "project_batch",
             repository="thebrazenbeard/chat-communication-bus",
+            identity=identity,
+            branch=branch,
             ref=f"refs/heads/{branch}",
             branch_head=branch_head,
             lane_identity=identity,
