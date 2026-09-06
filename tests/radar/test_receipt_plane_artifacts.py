@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
-MIGRATION = ROOT / "supabase" / "migrations" / "20260902_radar_receipt_plane_v1.sql"
+MIGRATION = ROOT / "supabase" / "migrations" / "20260903000603_radar_receipt_plane_v1.sql"
 
 
 def test_receipt_plane_migration_exists_and_separates_indexing_from_delivery():

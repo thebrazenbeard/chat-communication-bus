@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_live_projection_migration_has_atomic_rpc_and_realtime_membership():
-    sql = (ROOT / "supabase" / "migrations" / "20260902_radar_live_message_projection_v1.sql").read_text()
+    sql = (ROOT / "supabase" / "migrations" / "20260902204759_radar_live_message_projection_v1.sql").read_text()
     lowered = sql.lower()
     assert "create or replace function radar.project_bus_message_v1" in lowered
     assert "message_projection_conflict" in lowered
@@ -21,7 +21,7 @@ def test_live_projection_migration_has_atomic_rpc_and_realtime_membership():
 
 
 def test_collision_followup_preserves_both_messages_without_rewriting_git_history():
-    sql = (ROOT / "supabase" / "migrations" / "20260902_radar_live_message_collision_v1.sql").read_text()
+    sql = (ROOT / "supabase" / "migrations" / "20260902231445_radar_live_message_collision_v1.sql").read_text()
     lowered = sql.lower()
     assert "declared_message_id" in lowered
     assert "projection_collision" in lowered
@@ -47,7 +47,7 @@ def test_edge_function_uses_custom_github_oidc_before_service_role_effects():
 
 
 def test_edge_oidc_jti_replay_guard_is_durable_atomic_and_precedes_projection():
-    migration = ROOT / "supabase" / "migrations" / "20260905_radar_oidc_replay_guard_v1.sql"
+    migration = ROOT / "supabase" / "migrations" / "20260905230823_radar_oidc_replay_guard_v1.sql"
     assert migration.exists()
     sql = migration.read_text().lower()
     assert "create table if not exists radar.github_oidc_replay_guard" in sql

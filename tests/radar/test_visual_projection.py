@@ -72,7 +72,7 @@ def test_projection_commands_are_stable_upserts_without_image_payloads():
 
 def test_migration_contract_has_metadata_table_rls_and_no_binary_column():
     root = Path(__file__).resolve().parents[2]
-    sql = (root / "supabase" / "migrations" / "20260902_radar_visual_identity_v1.sql").read_text()
+    sql = (root / "supabase" / "migrations" / "20260902203610_radar_visual_identity_v1.sql").read_text()
     lowered = sql.lower()
     assert "create table if not exists radar.identity_visuals" in lowered
     assert "enable row level security" in lowered
