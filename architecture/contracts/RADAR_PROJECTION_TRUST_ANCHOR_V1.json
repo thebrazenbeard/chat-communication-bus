@@ -1,0 +1,16 @@
+{
+  "contract": "RADAR_PROJECTION_TRUST_ANCHOR_V1",
+  "status": "SOURCE_ONLY_NOT_ACTIVE",
+  "projection_anchor_sha": "7076c73595d5a572e0f374c3a495b29982d92bed",
+  "projection_anchor_tree": "142a24ea52df3539c00818f30bf3d93f0c5945b0",
+  "reusable_workflow_path": ".github/workflows/radar-trusted-projector.yml",
+  "dispatcher_path": ".github/workflows/radar-central-dispatcher.yml",
+  "edge_function_path": "supabase/functions/github-bus-ingest/handler.ts",
+  "provider_expected_sha_setting": "RADAR_TRUSTED_PROJECTOR_SHA",
+  "provider_expected_sha_value_at_deploy": "7076c73595d5a572e0f374c3a495b29982d92bed",
+  "provider_trust_status": "NOT_DEPLOYED",
+  "journal_provider_status": "NOT_MIGRATED",
+  "cursor_seed_status": "NOT_SEEDED",
+  "dispatcher_status": "SOURCE_ONLY_NOT_ACTIVE",
+  "protected_effects_required": true
+}
