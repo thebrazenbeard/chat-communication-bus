@@ -42,6 +42,8 @@ Supabase CLI 2.116.0 labels its local Docker resources with `com.supabase.cli.pr
 
 Only after all of those preflight checks pass is cleanup armed. Cleanup is armed before `supabase start`, so a partial startup failure still attempts `supabase stop --no-backup` for resources created by the qualification attempt. Cleanup failure is fatal; a PASS receipt cannot be emitted if local Supabase teardown does not complete successfully.
 
+SQL/start failure and cleanup failure are captured separately. If both occur, qualification reports both causes rather than allowing teardown failure to replace the primary SQL/start failure. If only one occurs, that failure remains fatal.
+
 This guard applies only to local Docker resources. It does not link, reset, migrate, or otherwise modify the hosted Supabase project.
 
 ## Qualification equivalence
