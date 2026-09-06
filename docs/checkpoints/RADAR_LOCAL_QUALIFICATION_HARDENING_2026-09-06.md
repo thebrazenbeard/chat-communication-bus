@@ -1,6 +1,6 @@
 # Radar local qualification and trusted-ref hardening checkpoint — 2026-09-06
 
-Status: `SOURCE IMPLEMENTED / ANCHOR D FROZEN NON-DEPLOYABLE / SUCCESSOR ANCHOR PENDING LOCAL QUALIFICATION / NO-PAID LOCAL QUALIFICATION SAFETY-HARDENED / TRUSTED WRITER OBSERVATION REF-READ-ONLY / PROJECT-BATCH PROTOCOL REPAIRED ON STAGING / MAIN DELTA CONTENT-RECONCILED / LOCAL EXECUTABLE QUALIFICATION PENDING / PROVIDER NOT APPLIED / EDGE NOT DEPLOYED / ISSUE #16 OPEN`.
+Status: `SOURCE IMPLEMENTED / ANCHOR D FROZEN NON-DEPLOYABLE / SUCCESSOR ANCHOR PENDING LOCAL QUALIFICATION / NO-PAID LOCAL QUALIFICATION SAFETY-HARDENED / TRUSTED WRITER OBSERVATION REF-READ-ONLY / PROJECT-BATCH PROTOCOL REPAIRED / EDGE PROJECTION RESULT FAIL-CLOSED / CUSTODY V8 / MAIN DELTA CONTENT-RECONCILED / LOCAL EXECUTABLE QUALIFICATION PENDING / PROVIDER NOT APPLIED / EDGE NOT DEPLOYED / ISSUE #16 OPEN`.
 
 This is continuation/source evidence only. It does not authorize merge, rebase/history rewrite, provider migration, Edge deployment/configuration, cursor seeding, dispatcher activation on canonical `main`, billing/account changes, credential/ruleset changes, or any other protected/live effect.
 
@@ -9,8 +9,8 @@ This is continuation/source evidence only. It does not authorize merge, rebase/h
 Immediately before this checkpoint update, consolidated staging was:
 
 - branch: `radar/reproducible-ci-source-custody-v1-20260906`
-- commit: `0463ae34af1f27db138e4777bf1d0b2e86e9621f`
-- tree: `166d454cd1b9b8edcee0033fd77f44d938541ec3`
+- commit: `b8c3b2d30c1bc66168b5395102992a5cd15496bb`
+- tree: `bdb04463dad29a11482a40f4701ebc92405c0ddf`
 
 Fresh-read the branch before any successor write.
 
@@ -58,13 +58,13 @@ A source audit found that both trusted reconciliation entrypoints used `material
 
 That local-head mutation is no longer part of either trusted path:
 
-- `LocalGitRepository` now supports an explicit `use_remote_tracking_refs=True` read mode;
+- `LocalGitRepository` supports an explicit `use_remote_tracking_refs=True` read mode;
 - `scripts/radar_trusted_reconcile.py` reads writer heads directly from `refs/remotes/origin/<writer-branch>`;
 - `scripts/radar_trusted_project.py` does the same for the provider-capable projector;
 - neither entrypoint imports or calls a writer-ref materializer;
 - `src/radar/trusted_wakeup.py` no longer contains or exports the materialization helper, imports `subprocess`, or contains a `git update-ref`/local-writer-head mutation path.
 
-The regression `tests/radar/test_remote_ref_reconciler.py` is source-custodied and requires:
+The custody-bound regression `tests/radar/test_remote_ref_reconciler.py` requires:
 
 1. a remote-tracking writer ref can be read without creating a local writer branch;
 2. both trusted entrypoints opt into remote-tracking ref reads and contain no materialization helper reference;
@@ -73,22 +73,47 @@ The regression `tests/radar/test_remote_ref_reconciler.py` is source-custodied a
 
 The exact pinned `actions/checkout` source was inspected. At this SHA, `fetch-depth <= 0` uses its all-history refspec `+refs/heads/*:refs/remotes/origin/*`, so the canonical checkout supplies the `origin/bus/*` remote-tracking refs that the read-only adapter consumes.
 
-`RADAR_SOURCE_CUSTODY_V1` is version 7. It includes the remote-ref regression and its own custody-consistency verifier.
-
 ## Project-batch protocol repair
 
 A source audit found a concrete Python-to-Edge protocol mismatch in `ProviderProjectionClient.project_batch()`.
 
-The Edge `project_batch` parser requires both `identity` and `branch`, in addition to `repository`, `ref`, `branch_head`, `lane_identity`, journal claim data, and files. The frozen Anchor D Python client omitted `identity` and `branch`, so an otherwise valid trusted projection request from Anchor D would fail before file projection with the Edge branch/identity admission checks.
+The Edge `project_batch` parser requires both `identity` and `branch`, in addition to `repository`, `ref`, `branch_head`, `lane_identity`, journal claim data, and files. Frozen Anchor D omitted `identity` and `branch`, so an otherwise valid trusted projection request from D would fail before file projection.
 
 The staging repair is source commit `46435c9e672ad3d50c5ea93b603f738b6e67f6ef`:
 
-- `src/radar/central_projection.py` now includes `identity=identity` and `branch=branch` in the body-bound `project_batch` request while retaining `lane_identity`, `ref`, `branch_head`, journal claim, and exact file payloads;
-- `tests/radar/test_central_projection_protocol.py` now asserts both Edge-required fields as well as the existing lane identity/ref relationship.
+- `src/radar/central_projection.py` includes `identity=identity` and `branch=branch` in the body-bound `project_batch` request while retaining `lane_identity`, `ref`, `branch_head`, journal claim, and exact file payloads;
+- `tests/radar/test_central_projection_protocol.py` asserts both Edge-required fields as well as the existing lane identity/ref relationship.
 
 Targeted protocol verification used exact reconstructed committed bytes for `body_bound_oidc.py`, repaired `central_projection.py`, and the protocol test. Their reconstructed Git blob SHAs matched GitHub exactly, and pytest returned `2 passed` with exit code 0. This proves the repaired Python protocol slice only; it is not full Radar qualification.
 
 The journal path remains fail-closed independently: claimed paths begin `PENDING`, file-result RPCs require a known claimed path and active claim, and finalize refuses cursor advancement while any claimed file is outside terminal `PROJECTED`/`IDEMPOTENT` state.
+
+## Edge projection-result fail-closed repair
+
+A cross-layer source audit compared the Edge projection result handling to the actual `radar.project_bus_message_v1` SQL return contract.
+
+The collision-preserving SQL RPC has four successful terminal result forms:
+
+- `INSERTED`;
+- `IDEMPOTENT`;
+- `CONFLICT_INSERTED:<qualified_message_id>`;
+- `CONFLICT_IDEMPOTENT:<qualified_message_id>`.
+
+The prior Edge code recognized only literal `IDEMPOTENT` and a literal `CONFLICT` value the SQL function does not return; every other string, including an unexpected or malformed provider result, fell through to `PROJECTED`. This was fail-open at the file-result boundary.
+
+The staging repair at `b8c3b2d30c1bc66168b5395102992a5cd15496bb` adds explicit `projectionResultState()` classification:
+
+- `INSERTED` and `CONFLICT_INSERTED:*` -> `PROJECTED`;
+- `IDEMPOTENT` and `CONFLICT_IDEMPOTENT:*` -> `IDEMPOTENT`;
+- every other result -> `HttpError(502, "PROJECTION_RPC_RESULT_INVALID")`.
+
+This preserves the repository's deliberate collision semantics: a distinct colliding historical Bus message remains stored under its deterministic content-qualified projection id, while replay of that same qualified collision is journaled as idempotent. Unknown RPC outcomes can no longer be recorded as successful projection.
+
+RED was pinned before the handler change in `tests/radar/test_edge_projection_result_contract.py`. The test requires the four explicit SQL result forms, the fail-closed unknown-result path, use of the classifier by `projectFile`, and absence of the obsolete literal-`CONFLICT` branch. The SQL half also requires all four terminal result strings to remain present in the collision migration.
+
+`RADAR_SOURCE_CUSTODY_V1` is now version 8 and custody-binds this regression. `tests/security/test_reproducible_ci_custody.py` requires custody v8 and the regression path.
+
+Post-write committed source was re-read. The new regression assertions evaluate successfully against those committed readbacks. This environment does not have a Deno executable, so no `deno check` claim is made here; authoritative local qualification must still run the frozen Deno 2.9.6 `deno ci`/`deno check index.ts` path.
 
 ## Anchor D deployment block
 
@@ -99,9 +124,9 @@ Anchor D remains the latest frozen immutable projection reference:
 - trust contract `RADAR_PROJECTION_TRUST_ANCHOR_V3.json`
 - dispatcher source still references D.
 
-However, D predates the project-batch protocol repair and the later ref-read-only trust-boundary hardening. It is therefore not deployment-eligible.
+However, D predates the project-batch protocol repair, ref-read-only trust-boundary hardening, and Edge result-classification repair. It is therefore not deployment-eligible.
 
-`RADAR_CURRENT.json` now states:
+`RADAR_CURRENT.json` states:
 
 - `current_projection_anchor_d_deployment_eligible: false`;
 - `post_anchor_d_source_repairs_pending_successor_anchor: true`;
@@ -111,17 +136,13 @@ However, D predates the project-batch protocol repair and the later ref-read-onl
 
 No successor anchor has been invented or frozen. A successor must be cut only from a candidate that first receives the authoritative local exact-commit/tree PASS receipt.
 
-The custody-bound `tests/security/test_projection_anchor_d_consistency.py` was updated to require this deployment block while preserving D's frozen trust/dispatcher relationships. A byte-exact reconstruction of the committed dispatcher, V3 trust contract, custody v7 contract, `RADAR_CURRENT.json`, and the full Anchor-D consistency test matched all Git blob SHAs and returned `3 passed` with exit code 0.
-
-A separate targeted currentness reconstruction verified the exact committed `RADAR_CURRENT.json` blob and returned `2 passed` for the newly affected blocked-D/current-chain assertions. These are targeted checks only.
+The custody-bound `tests/security/test_projection_anchor_d_consistency.py` requires this deployment block while preserving D's frozen trust/dispatcher relationships. A byte-exact reconstruction of the committed dispatcher, V3 trust contract, then-current custody contract, `RADAR_CURRENT.json`, and full Anchor-D consistency test matched Git blob SHAs and returned `3 passed` with exit code 0. A separate targeted currentness reconstruction returned `2 passed` for the blocked-D/current-chain assertions. These are targeted checks only.
 
 ## Evidence boundary
 
-The edited trusted Python payloads (`trusted_wakeup.py`, `radar_trusted_reconcile.py`, `radar_trusted_project.py`, and the remote-ref regression) were syntax-parsed successfully from the exact source payloads written in this session. The project-batch protocol slice and Anchor-D consistency slice have the targeted pytest evidence described above.
+The edited trusted Python payloads were syntax-parsed successfully in this workstream. The project-batch protocol slice and Anchor-D consistency slice have the targeted pytest evidence described above. The Edge result regression has committed-source readback/static assertion evidence, but no local Deno type-check in this runtime because Deno is absent.
 
-The Python runtime emitted an unrelated spreadsheet-runtime warmup traceback before those pytest invocations; pytest itself exited 0 in each cited targeted run.
-
-None of this is an authoritative full local qualification receipt. This runtime still lacks the complete frozen Windows qualification toolchain. Targeted/static evidence must not be promoted to overall GREEN qualification.
+None of this is an authoritative full local qualification receipt. This runtime lacks the complete frozen Windows qualification toolchain. Targeted/static evidence must not be promoted to overall GREEN qualification.
 
 Issue #39 remains open until a clean exact-commit/tree local PASS receipt exists and private hosted Actions remain non-authoritative/opportunistic. No paid runner/billing recovery is required or permitted by the Radar no-paid policy.
 
