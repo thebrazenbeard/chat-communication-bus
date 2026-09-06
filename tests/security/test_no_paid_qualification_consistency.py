@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import tomllib
 from pathlib import Path
 
 
@@ -102,8 +103,10 @@ def test_local_runner_preserves_preexisting_supabase_stack_and_cleans_partial_st
 
 def test_local_runner_preserves_stopped_supabase_database_state() -> None:
     runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
+    config = tomllib.loads((ROOT / "supabase/config.toml").read_text(encoding="utf-8"))
 
-    project_id = '$supabaseProjectId = "chat-communication-bus"'
+    assert config["project_id"] == "chat-communication-bus"
+    project_id = f'$supabaseProjectId = "{config["project_id"]}"'
     db_resource = '$supabaseDbResource = "supabase_db_$supabaseProjectId"'
     container_probe = 'docker container inspect $supabaseDbResource'
     volume_probe = 'docker volume inspect $supabaseDbResource'
