@@ -16,7 +16,6 @@ values (
     'patrick_override', true,
     'canonical_state', 'github',
     'mailbox_branch', 'bus/radar-v2',
-    'historical_integration_branch', 'radar/control-plane-v1',
     'contract_ref', 'architecture/contracts/RADAR_SELF_REGISTRATION_V1.json'
   )
 )
