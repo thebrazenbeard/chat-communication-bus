@@ -14,4 +14,4 @@ permissions:
 
 jobs:
   reconcile:
-    uses: thebrazenbeard/chat-communication-bus/.github/workflows/radar-trusted-projector.yml@7076c73595d5a572e0f374c3a495b29982d92bed
+    uses: thebrazenbeard/chat-communication-bus/.github/workflows/radar-trusted-projector.yml@f5ab21244a111b47708fa11e99d0e8ff7d8f5a45
