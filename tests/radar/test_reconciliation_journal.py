@@ -12,6 +12,12 @@ from radar.reconciliation_journal import (
 def _claimed_journal():
     journal = ProjectionJournal()
     journal.seed_lane_state("yin", "bus/yin-v2", "a0")
+    journal.set_control_cut(
+        identity="yin",
+        branch="bus/yin-v2",
+        control_sha="control-1",
+        topology_sha="topology-1",
+    )
     claim = journal.claim_batch(
         identity="yin",
         branch="bus/yin-v2",
@@ -25,6 +31,47 @@ def _claimed_journal():
         lease_ms=500,
     )
     return journal, claim
+
+
+def test_claim_cannot_invent_lane_state():
+    journal = ProjectionJournal()
+    with pytest.raises(JournalError, match="LANE_UNSEEDED"):
+        journal.claim_batch(
+            identity="yin",
+            branch="bus/yin-v2",
+            expected_projected_head=None,
+            target_head="a0",
+            control_sha="control-1",
+            topology_sha="topology-1",
+            files=(),
+            owner="worker-a",
+            now_ms=1_000,
+            lease_ms=500,
+        )
+
+
+def test_zero_file_bootstrap_can_initialize_cursor_after_explicit_seed():
+    journal = ProjectionJournal()
+    journal.seed_lane_state("yin", "bus/yin-v2", None)
+    journal.set_control_cut(
+        identity="yin",
+        branch="bus/yin-v2",
+        control_sha="control-1",
+        topology_sha="topology-1",
+    )
+    claim = journal.claim_batch(
+        identity="yin",
+        branch="bus/yin-v2",
+        expected_projected_head=None,
+        target_head="a0",
+        control_sha="control-1",
+        topology_sha="topology-1",
+        files=(),
+        owner="worker-a",
+        now_ms=1_000,
+        lease_ms=500,
+    )
+    assert journal.finalize_batch(claim, now_ms=1_100).projected_head_sha == "a0"
 
 
 def test_finalize_advances_cursor_only_when_every_file_is_terminal():
@@ -84,7 +131,12 @@ def test_control_or_topology_cut_change_blocks_finalization():
     journal.record_file_result(claim, "messages/yin-0001.md", BatchFileState.PROJECTED)
     journal.record_file_result(claim, "messages/yin-0002.md", BatchFileState.PROJECTED)
 
-    journal.set_control_cut(control_sha="control-2", topology_sha="topology-1")
+    journal.set_control_cut(
+        identity="yin",
+        branch="bus/yin-v2",
+        control_sha="control-2",
+        topology_sha="topology-1",
+    )
     with pytest.raises(JournalError, match="CONTROL_CUT_CHANGED"):
         journal.finalize_batch(claim, now_ms=1_200)
 
@@ -93,6 +145,13 @@ def test_control_or_topology_cut_change_blocks_finalization():
 
 def test_cursor_advance_by_other_batch_blocks_stale_finalization():
     journal = ProjectionJournal()
+    journal.seed_lane_state("yin", "bus/yin-v2", None)
+    journal.set_control_cut(
+        identity="yin",
+        branch="bus/yin-v2",
+        control_sha="control-1",
+        topology_sha="topology-1",
+    )
     first = journal.claim_batch(
         identity="yin",
         branch="bus/yin-v2",
