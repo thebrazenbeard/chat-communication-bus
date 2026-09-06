@@ -7,6 +7,9 @@ from radar.runtime import RadarRuntime
 from radar.telemetry import TelemetryStore
 
 
+MIDDLEWARE_VECTOR_HASH = "78b837d32f7965dc946e9c196293310b7f0b50be07fc67b7e6407a7a53b81ba3"
+
+
 def _runtime(tmp_path) -> RadarRuntime:
     registry = IdentityRegistry()
     for identity in ("one", "two"):
@@ -38,6 +41,15 @@ def _message(message_id: str, audience: str) -> dict[str, object]:
         "priority": 3,
         "payload": {"same": "canonical-payload"},
     }
+
+
+def test_envelope_idempotency_key_matches_original_middleware_hash_bytes():
+    raw = _message("radar-dedupe-vector-0001", "one")
+    raw["payload"] = {"user_id": "u_9918", "token_status": "expired"}
+    result = RadarEnvelope.from_mapping(raw)
+    assert result.envelope is not None
+
+    assert result.envelope.idempotency_key == MIDDLEWARE_VECTOR_HASH
 
 
 def test_runtime_uses_middleware_idempotency_key_exactly(tmp_path):
