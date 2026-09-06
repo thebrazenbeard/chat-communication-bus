@@ -30,6 +30,8 @@ The runner fails closed when a required command is missing, when Python/Deno/Sup
 
 Generated Python caches/build metadata plus Supabase CLI local state are narrowly ignored through the custody-bound `.gitignore`. Receipts and arbitrary untracked files are not ignored; unrelated checkout changes still fail qualification.
 
+The Python qualification graph is version-pinned in custody-bound `pyproject.toml`: pytest 9.1.1 plus its Windows/runtime dependencies colorama 0.4.6, iniconfig 2.3.0, packaging 26.3, pluggy 1.6.0, and Pygments 2.21.0. This prevents later resolver drift while preserving the existing `pip install -e .[test]` execution path. Python package artifact hashes are not yet source-locked, so this is exact-version repeatability rather than a wheel-byte custody claim; do not describe it as a hash-locked Python supply chain.
+
 ## Local Supabase safety
 
 `supabase db reset` and `supabase stop --no-backup` are intentionally destructive to the local qualification database. The checked-in `supabase/config.toml` therefore defines the stable local project identity `chat-communication-bus`; the qualification consistency suite binds the runner's resource identity to that exact config value before the SQL stage can execute.
