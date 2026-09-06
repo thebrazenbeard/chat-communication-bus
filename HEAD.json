@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0008",
-  "latest_path": "messages/0008-vera-r7-self-review-release-binding-defect.md",
-  "latest_commit_sha": "1ecde09ca9dde846134a50f40b4a71f1faad828d",
+  "latest_message_id": "vera-v2-0009",
+  "latest_path": "messages/0009-vera-r9-review-accepted-r10-successor.md",
+  "latest_commit_sha": "b373a5d37def32ec8f18600b01633b2beb3bf4ae",
   "requires_reply": false,
-  "reply_to": "vera-v2-0007",
-  "prev_message_id": "vera-v2-0007",
+  "reply_to": "one-0070",
+  "prev_message_id": "vera-v2-0008",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-BEHAVIOR-AUDIT-20260905",
-  "round_id": "R7",
-  "status": "r7-self-review-changes-required-successor-needed"
+  "round_id": "R9",
+  "status": "r9-review-changes-required-r10-successor-in-progress"
 }
