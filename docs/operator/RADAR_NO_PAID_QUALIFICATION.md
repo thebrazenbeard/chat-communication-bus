@@ -32,9 +32,13 @@ Generated Python caches/build metadata plus Supabase CLI local state are narrowl
 
 ## Local Supabase safety
 
-`supabase db reset` and `supabase stop --no-backup` are intentionally destructive to the local qualification database. The checked-in `supabase/config.toml` therefore defines the stable local project identity `chat-communication-bus`.
+`supabase db reset` and `supabase stop --no-backup` are intentionally destructive to the local qualification database. The checked-in `supabase/config.toml` therefore defines the stable local project identity `chat-communication-bus`; the qualification consistency suite binds the runner's resource identity to that exact config value before the SQL stage can execute.
 
-Before starting SQL qualification, the runner checks `supabase status`. If this project's local stack is already running, qualification aborts instead of resetting or deleting that existing local database. After that preflight passes, cleanup is armed before `supabase start`, so a partial startup failure still attempts `supabase stop --no-backup` for the qualification project.
+Before starting SQL qualification, the runner checks `supabase status`. If this project's local stack is already running, qualification aborts instead of resetting or deleting that existing local database.
+
+A stopped local stack can retain database state in Docker even when `supabase status` is not running. The runner therefore also refuses qualification if either the exact database container or exact database volume `supabase_db_chat-communication-bus` already exists. This prevents a retained developer database from being started, reset, or deleted by the qualification lifecycle.
+
+Only after all of those preflight checks pass is cleanup armed. Cleanup is armed before `supabase start`, so a partial startup failure still attempts `supabase stop --no-backup` for resources created by the qualification attempt. Cleanup failure is fatal; a PASS receipt cannot be emitted if local Supabase teardown does not complete successfully.
 
 This guard applies only to local Docker resources. It does not link, reset, migrate, or otherwise modify the hosted Supabase project.
 
@@ -46,7 +50,7 @@ The local runner reproduces the substantive commands in `.github/workflows/ci.ym
 2. Each installs `pip==26.2.1` and `.[test]`, runs `compileall`, the complete pytest suite, and `scripts/radar_source_hashes.py`.
 3. Deno runs `deno ci` and `deno check index.ts` from `supabase/functions/github-bus-ingest` using the frozen dependency graph.
 4. Local Supabase starts through Docker, rebuilds from the migration chain with `supabase db reset`, then every `supabase/tests/radar_*.sql` assertion runs with `ON_ERROR_STOP=1`.
-5. Local Supabase is stopped with `--no-backup` even when SQL qualification fails after startup or startup only partially succeeds.
+5. Local Supabase is stopped with `--no-backup` even when SQL qualification fails after startup or startup only partially succeeds; cleanup failure fails qualification.
 6. Before emitting PASS, the runner re-reads the Git commit, Git tree, and working-tree state and fails closed on drift.
 
 A PASS receipt is valid only for the exact Git commit reported by the runner as `source_commit` and exact tree reported as `source_tree`. A receipt from another commit or tree does not qualify a successor head.
