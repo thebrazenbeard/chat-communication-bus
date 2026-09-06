@@ -37,11 +37,11 @@ def test_reusable_projector_checks_out_only_verified_trusted_control_source() ->
     assert "python -m pip install" not in source
 
 
-def test_reusable_projector_runs_only_trusted_validate_only_reconciler() -> None:
+def test_reusable_projector_runs_only_trusted_central_projection_entrypoint() -> None:
     source = TRUSTED.read_text(encoding="utf-8")
-    assert "scripts/radar_trusted_reconcile.py" in source
-    assert "RADAR_RECONCILE_MODE: validate-only" in source
-    assert "SUPABASE" not in source.upper()
+    assert "scripts/radar_trusted_project.py" in source
+    assert "RADAR_RECONCILE_MODE: project" in source
+    assert "scripts/radar_trusted_reconcile.py" not in source
     assert "curl" not in source.lower()
 
 
