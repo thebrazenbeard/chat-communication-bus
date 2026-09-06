@@ -1,6 +1,6 @@
 {
   "contract": "RADAR_SOURCE_CUSTODY_V1",
-  "version": 3,
+  "version": 4,
   "status": "SOURCE_ONLY_VERIFICATION_CONTRACT",
   "required_globs": [
     "supabase/migrations/*_radar_*.sql",
@@ -22,6 +22,7 @@
     "docs/operator/RADAR_NO_PAID_QUALIFICATION.md",
     "docs/protocol/BUS_MESSAGE_GRAMMAR_V1.json",
     "tests/fixtures/bus_message_grammar_v1.json",
+    "tests/security/test_no_paid_qualification_consistency.py",
     "supabase/config.toml",
     "supabase/functions/github-bus-ingest/index.ts",
     "supabase/functions/github-bus-ingest/handler.ts",
