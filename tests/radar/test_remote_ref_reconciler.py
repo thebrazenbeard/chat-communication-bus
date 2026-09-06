@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+from pathlib import Path
 import subprocess
 
 from radar.trusted_reconciler import LocalGitRepository
+
+
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def _git(repo, *args: str) -> str:
@@ -32,3 +36,10 @@ def test_remote_tracking_writer_ref_is_read_without_local_branch_materialization
         ["git", "-C", str(repo), "show-ref", "--verify", "--quiet", "refs/heads/bus/yin-v2"],
         check=False,
     ).returncode != 0
+
+
+def test_validate_only_cli_reads_remote_refs_without_materializing_local_writer_branches() -> None:
+    script = (ROOT / "scripts/radar_trusted_reconcile.py").read_text(encoding="utf-8")
+
+    assert "materialize_inert_remote_bus_refs" not in script
+    assert "use_remote_tracking_refs=True" in script
