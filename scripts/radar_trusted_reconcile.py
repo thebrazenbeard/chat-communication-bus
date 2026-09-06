@@ -13,8 +13,6 @@ from dataclasses import asdict
 import json
 import os
 from pathlib import Path
-import re
-import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,98 +21,18 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from radar.trusted_reconciler import LocalGitRepository, ReconcileError, TrustedReconciler  # noqa: E402
-from radar.writer_lanes import load_writer_lanes  # noqa: E402
-
-
-EXPECTED_REPOSITORY = "thebrazenbeard/chat-communication-bus"
-_ALLOWED_EVENT_NAMES = frozenset({"workflow_run", "schedule"})
-_REMOTE_BUS_REF = re.compile(r"^refs/remotes/origin/(bus/[a-z0-9._/-]+)$")
-_SHA40 = re.compile(r"^[0-9a-f]{40}$")
+from radar.trusted_wakeup import (  # noqa: E402
+    load_caller_event,
+    materialize_inert_remote_bus_refs,
+    requested_identities,
+)
 
 
 class UninitializedCursorJournal:
-    """Task-8 validate-only cursor view; Task 9 wires durable provider state."""
+    """Validate-only cursor view; provider-capable projection uses durable state."""
 
     def projected_head(self, identity: str, branch: str) -> None:
         return None
-
-
-def _load_event(path: Path) -> dict[str, object]:
-    try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise ReconcileError("CALLER_EVENT_INVALID") from exc
-    if not isinstance(raw, dict):
-        raise ReconcileError("CALLER_EVENT_INVALID")
-    return raw
-
-
-def _materialize_inert_remote_bus_refs(repo_dir: Path) -> None:
-    """Create local ref names for fetched remote bus refs without checking out trees."""
-    result = subprocess.run(
-        [
-            "git",
-            "-C",
-            str(repo_dir),
-            "for-each-ref",
-            "--format=%(refname) %(objectname)",
-            "refs/remotes/origin/bus/",
-        ],
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=False,
-    )
-    if result.returncode != 0:
-        raise ReconcileError("GIT_REMOTE_REF_SCAN_FAILED")
-
-    rows = [line for line in result.stdout.splitlines() if line]
-    if not rows:
-        raise ReconcileError("GIT_REMOTE_BUS_REFS_MISSING")
-
-    for row in rows:
-        try:
-            ref, sha = row.split(" ", 1)
-        except ValueError as exc:
-            raise ReconcileError("GIT_REMOTE_REF_INVALID") from exc
-        match = _REMOTE_BUS_REF.fullmatch(ref)
-        if match is None or _SHA40.fullmatch(sha) is None:
-            raise ReconcileError("GIT_REMOTE_REF_INVALID")
-        subprocess.run(
-            ["git", "-C", str(repo_dir), "update-ref", f"refs/heads/{match.group(1)}", sha],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            check=True,
-        )
-
-
-def _active_identity_for_branch(topology_path: Path, branch: str) -> str:
-    lanes = load_writer_lanes(topology_path)
-    matches = [identity for identity, lane in lanes.items() if lane.branch == branch]
-    if len(matches) != 1:
-        raise ReconcileError("WAKEUP_BRANCH_NOT_ACTIVE")
-    return matches[0]
-
-
-def _requested_identities(
-    *,
-    event_name: str,
-    event: dict[str, object],
-    topology_path: Path,
-) -> tuple[tuple[str, ...], str | None]:
-    if event_name == "schedule":
-        return tuple(sorted(load_writer_lanes(topology_path))), None
-
-    workflow_run = event.get("workflow_run")
-    if not isinstance(workflow_run, dict):
-        raise ReconcileError("WORKFLOW_RUN_EVENT_INVALID")
-    head_branch = workflow_run.get("head_branch")
-    head_sha = workflow_run.get("head_sha")
-    if not isinstance(head_branch, str) or not head_branch:
-        raise ReconcileError("WORKFLOW_RUN_BRANCH_INVALID")
-    if not isinstance(head_sha, str) or not _SHA40.fullmatch(head_sha):
-        raise ReconcileError("WORKFLOW_RUN_HEAD_INVALID")
-    return (_active_identity_for_branch(topology_path, head_branch),), head_sha
 
 
 def build_validation_report(
@@ -126,15 +44,11 @@ def build_validation_report(
     event: dict[str, object],
     repository: str,
 ) -> dict[str, object]:
-    if repository != EXPECTED_REPOSITORY:
-        raise ReconcileError("UNTRUSTED_CALLER_REPOSITORY")
-    if event_name not in _ALLOWED_EVENT_NAMES:
-        raise ReconcileError("UNSUPPORTED_CALLER_EVENT")
-
-    identities, observed_hint = _requested_identities(
+    identities, observed_hint = requested_identities(
         event_name=event_name,
         event=event,
         topology_path=topology_path,
+        repository=repository,
     )
     reconciler = TrustedReconciler(
         topology_path=topology_path,
@@ -183,13 +97,13 @@ def main() -> int:
         raise ReconcileError("CALLER_CONTEXT_REQUIRED")
 
     repo_dir = Path(args.repo_dir)
-    _materialize_inert_remote_bus_refs(repo_dir)
+    materialize_inert_remote_bus_refs(repo_dir)
     report = build_validation_report(
         repo_dir=repo_dir,
         topology_path=Path(args.topology),
         cutover_path=Path(args.cutover),
         event_name=args.event_name,
-        event=_load_event(Path(args.event_path)),
+        event=load_caller_event(args.event_path),
         repository=args.repository,
     )
     print(json.dumps(report, sort_keys=True, separators=(",", ":")))
