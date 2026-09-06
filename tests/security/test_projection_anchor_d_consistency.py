@@ -47,3 +47,22 @@ def test_anchor_c_is_historical_only_after_anchor_d_supersession() -> None:
     assert "PROJECTION_ANCHOR_C_NOT_DEPLOYED" not in drift_codes
     assert "PROJECTION_ANCHOR_D_NOT_DEPLOYED" in drift_codes
     assert current["provider"]["projection_anchor_d_deployed"] is False
+
+
+def test_anchor_d_is_frozen_reference_but_not_deployment_eligible_after_post_d_repairs() -> None:
+    current = json.loads((ROOT / "architecture/contracts/RADAR_CURRENT.json").read_text(encoding="utf-8"))
+    source = current["projection_source"]
+
+    assert source["current_projection_anchor_d"] == ANCHOR_D
+    assert source["current_projection_anchor_d_deployment_eligible"] is False
+    assert source["post_anchor_d_source_repairs_pending_successor_anchor"] is True
+    assert source["successor_anchor_status"] == "PENDING_LOCAL_QUALIFICATION"
+
+    drift = {item["code"]: item for item in current["known_provider_drift"]}
+    defect = drift["PROJECTION_ANCHOR_D_KNOWN_PROTOCOL_DEFECT"]
+    assert defect["severity"] == "HIGH"
+    detail = defect["detail"]
+    assert "project_batch" in detail
+    assert "identity" in detail
+    assert "branch" in detail
+    assert "qualified successor" in detail.lower()
