@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import re
-import subprocess
 
 from .trusted_reconciler import ReconcileError
 from .writer_lanes import load_writer_lanes
@@ -13,7 +12,6 @@ from .writer_lanes import load_writer_lanes
 
 EXPECTED_REPOSITORY = "thebrazenbeard/chat-communication-bus"
 _ALLOWED_EVENT_NAMES = frozenset({"workflow_run", "schedule"})
-_REMOTE_BUS_REF = re.compile(r"^refs/remotes/origin/(bus/[a-z0-9._/-]+)$")
 _SHA40 = re.compile(r"^[0-9a-f]{40}$")
 
 
@@ -25,48 +23,6 @@ def load_caller_event(path: str | Path) -> dict[str, object]:
     if not isinstance(raw, dict):
         raise ReconcileError("CALLER_EVENT_INVALID")
     return raw
-
-
-def materialize_inert_remote_bus_refs(repo_dir: str | Path) -> None:
-    """Materialize fetched remote bus refs as local refs without checking out trees."""
-    repo = Path(repo_dir)
-    result = subprocess.run(
-        [
-            "git",
-            "-C",
-            str(repo),
-            "for-each-ref",
-            "--format=%(refname) %(objectname)",
-            "refs/remotes/origin/bus/",
-        ],
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=False,
-    )
-    if result.returncode != 0:
-        raise ReconcileError("GIT_REMOTE_REF_SCAN_FAILED")
-
-    rows = [line for line in result.stdout.splitlines() if line]
-    if not rows:
-        raise ReconcileError("GIT_REMOTE_BUS_REFS_MISSING")
-
-    for row in rows:
-        try:
-            ref, sha = row.split(" ", 1)
-        except ValueError as exc:
-            raise ReconcileError("GIT_REMOTE_REF_INVALID") from exc
-        match = _REMOTE_BUS_REF.fullmatch(ref)
-        if match is None or _SHA40.fullmatch(sha) is None:
-            raise ReconcileError("GIT_REMOTE_REF_INVALID")
-        completed = subprocess.run(
-            ["git", "-C", str(repo), "update-ref", f"refs/heads/{match.group(1)}", sha],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            check=False,
-        )
-        if completed.returncode != 0:
-            raise ReconcileError("GIT_REMOTE_REF_MATERIALIZE_FAILED")
 
 
 def _active_identity_for_branch(topology_path: str | Path, branch: str) -> str:
@@ -107,6 +63,5 @@ def requested_identities(
 __all__ = [
     "EXPECTED_REPOSITORY",
     "load_caller_event",
-    "materialize_inert_remote_bus_refs",
     "requested_identities",
 ]
