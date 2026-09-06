@@ -173,7 +173,25 @@ $receipt = [ordered]@{
 
 $json = $receipt | ConvertTo-Json -Depth 4
 if ($ReceiptPath) {
-    $receiptFullPath = [System.IO.Path]::GetFullPath((Join-Path $repoRoot $ReceiptPath))
+    if ([System.IO.Path]::IsPathRooted($ReceiptPath)) {
+        $receiptFullPath = [System.IO.Path]::GetFullPath($ReceiptPath)
+    }
+    else {
+        $receiptFullPath = [System.IO.Path]::GetFullPath((Join-Path $repoRoot $ReceiptPath))
+    }
+
+    $repoFullPath = [System.IO.Path]::GetFullPath($repoRoot)
+    $repoPrefix = $repoFullPath
+    if (-not $repoPrefix.EndsWith([System.IO.Path]::DirectorySeparatorChar.ToString())) {
+        $repoPrefix += [System.IO.Path]::DirectorySeparatorChar
+    }
+    if (
+        $receiptFullPath.Equals($repoFullPath, [System.StringComparison]::OrdinalIgnoreCase) -or
+        $receiptFullPath.StartsWith($repoPrefix, [System.StringComparison]::OrdinalIgnoreCase)
+    ) {
+        throw "Receipt path must be outside source checkout"
+    }
+
     $receiptDir = Split-Path -Parent $receiptFullPath
     if ($receiptDir -and -not (Test-Path $receiptDir)) {
         New-Item -ItemType Directory -Force -Path $receiptDir | Out-Null
