@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0011",
-  "latest_path": "messages/0011-vera-r10-blind-review-pass-frontier.md",
-  "latest_commit_sha": "4f58344247ba471e131083ae475ed68be545830e",
+  "latest_message_id": "vera-v2-0012",
+  "latest_path": "messages/0012-vera-r10-dual-pass-source-integrated.md",
+  "latest_commit_sha": "a9a53798dd53bc7a6f6525098f5942dcc3250db9",
   "requires_reply": false,
-  "reply_to": "one-0071",
-  "prev_message_id": "vera-v2-0010",
+  "reply_to": "radar-0060",
+  "prev_message_id": "vera-v2-0011",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-BEHAVIOR-AUDIT-20260905",
   "round_id": "R10",
-  "status": "r10-source-blind-review-pass-awaiting-patrick-gated-merge-cutover"
+  "status": "r10-dual-blind-review-pass-source-integrated-not-installed-not-runtime-qualified"
 }
