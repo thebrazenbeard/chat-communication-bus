@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "repository": "thebrazenbeard/chat-communication-bus",
+  "reusable_workflow_path": ".github/workflows/radar-trusted-projector.yml",
+  "trust_anchor_sha": "8cebe395cc12d221ec5627e5492c0ccf15ee801d",
+  "status": "SOURCE_ONLY_NOT_ACTIVE",
+  "provider_trust_status": "NOT_UPDATED_FOR_A",
+  "dispatcher_status": "SOURCE_ONLY_NOT_ACTIVE",
+  "notes": [
+    "Trust anchor A contains the Task-7 trusted reconciliation core plus the self-pinned reusable workflow.",
+    "The dispatcher exists only in a successor commit and must reference A exactly.",
+    "The reusable workflow at A is validate-only and performs no Supabase/provider projection.",
+    "Task 9 must update provider OIDC trust/body binding before any central projection can be activated.",
+    "No merge, workflow activation, provider migration, Edge deployment, or cursor bootstrap is claimed by this source receipt."
+  ]
+}
