@@ -102,6 +102,8 @@ def test_central_workflow_is_secretless_self_pinned_and_provider_capable():
     assert "radar-trusted-projector.yml@" in dispatcher
     assert "runs-on:" not in dispatcher
 
+    # The replacement reusable workflow self-identifies the called workflow SHA,
+    # checks out only that immutable trusted source, and performs no provider I/O.
     assert "id-token: write" in trusted_lowered
     assert "contents: read" in trusted_lowered
     assert "secrets." not in trusted_lowered

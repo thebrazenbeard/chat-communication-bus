@@ -26,6 +26,7 @@ def test_central_dispatcher_delegates_to_immutable_reusable_workflow() -> None:
         source,
     )
     assert match
+    assert match, "legacy writer-lane caller must remain immutably contained until Task 9"
     assert "runs-on:" not in source
     assert "id-token: write" in source
 
@@ -48,6 +49,7 @@ def test_trusted_reusable_workflow_is_workflow_call_only_and_pins_external_actio
 
 
 def test_trusted_projector_self_pins_and_runs_only_trusted_central_projector() -> None:
+def test_trusted_projector_self_pins_called_workflow_and_never_checks_out_writer_lane():
     source = _source(TRUSTED)
     assert "ACTIONS_ID_TOKEN_REQUEST_URL" in source
     assert "ACTIONS_ID_TOKEN_REQUEST_TOKEN" in source

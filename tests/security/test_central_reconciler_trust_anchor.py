@@ -42,6 +42,11 @@ def test_reusable_projector_runs_only_trusted_central_projection_entrypoint() ->
     assert "scripts/radar_trusted_project.py" in source
     assert "RADAR_RECONCILE_MODE: project" in source
     assert "scripts/radar_trusted_reconcile.py" not in source
+def test_reusable_projector_runs_only_trusted_validate_only_reconciler() -> None:
+    source = TRUSTED.read_text(encoding="utf-8")
+    assert "scripts/radar_trusted_reconcile.py" in source
+    assert "RADAR_RECONCILE_MODE: validate-only" in source
+    assert "SUPABASE" not in source.upper()
     assert "curl" not in source.lower()
 
 
