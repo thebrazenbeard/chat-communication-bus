@@ -114,10 +114,14 @@ Invoke-Checked deno @("ci") $edgeDir
 Invoke-Checked deno @("check", "index.ts") $edgeDir
 
 Write-Host "==> SQL / local Supabase"
-$sqlStarted = $false
+$null = & supabase status 2>$null
+if ($LASTEXITCODE -eq 0) {
+    throw "Local Supabase stack is already running; refusing destructive qualification"
+}
+
+$sqlCleanupRequired = $true
 try {
     Invoke-Checked supabase @("start")
-    $sqlStarted = $true
     Invoke-Checked supabase @("db", "reset")
 
     $pguri = "postgresql://postgres:postgres@127.0.0.1:54322/postgres"
@@ -132,7 +136,7 @@ try {
     }
 }
 finally {
-    if ($sqlStarted) {
+    if ($sqlCleanupRequired) {
         try {
             Invoke-Checked supabase @("stop", "--no-backup")
         }
