@@ -33,9 +33,13 @@ def test_current_contract_names_present_mailbox_and_full_source_chain() -> None:
     assert current["current_mailbox_branch"] == "bus/radar-v2"
     assert current["source_migration_chain"] == EXPECTED_MIGRATIONS
     assert current["provider"]["applied_source_state"] == "PARTIAL_NOT_CURRENT"
-    assert current["provider"]["projection_anchor_b_deployed"] is False
+    assert current["provider"]["projection_anchor_c_deployed"] is False
+    assert current["provider"]["projection_anchor_d_deployed"] is False
     assert current["provider"]["projection_journal_seeded"] is False
     assert current["provider"]["edge_body_bound_oidc_deployed"] is False
+    assert current["projection_source"]["current_projection_anchor_d_deployment_eligible"] is False
+    assert current["projection_source"]["post_anchor_d_source_repairs_pending_successor_anchor"] is True
+    assert current["projection_source"]["successor_anchor_status"] == "PENDING_LOCAL_QUALIFICATION"
     assert current["known_provider_drift"]
 
 
