@@ -17,6 +17,7 @@ from radar.writer_lanes import WriterLaneError, validate_writer_lane_commit
 ROOT = Path(__file__).resolve().parents[2]
 EMITTER_SCRIPT = ROOT / "scripts" / "radar_emit_bus_projection.py"
 CURRENT_REF = "refs/heads/bus/one-v2"
+ROUTE_NOW_MS = 1_500
 
 
 def git(repo: Path, *args: str) -> str:
@@ -111,8 +112,15 @@ def routed_envelope(*, audience: list[str], domain: str = "database", priority: 
 
 def register_routable(registry: IdentityRegistry, identity: str, *, domain: str = "database") -> None:
     registry.register_identity(identity, display_name=identity.title())
-    registry.register_node(f"{identity}-node", identity_id=identity, status=NodeStatus.ONLINE)
-    registry.subscribe(identity, domain=domain, min_priority=4)
+    node_id = f"{identity}-node"
+    registry.register_node(
+        node_id,
+        identity_id=identity,
+        status=NodeStatus.ONLINE,
+        last_heartbeat_ms=1_000,
+        lease_expires_ms=2_000,
+    )
+    registry.subscribe(node_id, domain=domain, min_priority=4)
 
 
 def test_unrecognized_domain_or_intent_goes_to_dlq():
@@ -175,9 +183,17 @@ def test_explicit_audience_requires_matching_subscription_and_routable_node():
     registry = IdentityRegistry()
     register_routable(registry, "one")
     registry.register_identity("two", display_name="Two")
-    registry.register_node("two-node", identity_id="two", status=NodeStatus.ONLINE)
+    registry.register_node(
+        "two-node",
+        identity_id="two",
+        status=NodeStatus.ONLINE,
+        last_heartbeat_ms=1_000,
+        lease_expires_ms=2_000,
+    )
 
-    decision = Router(registry).route(routed_envelope(audience=["two"]))
+    decision = Router(registry).route(
+        routed_envelope(audience=["two"]), now_ms=ROUTE_NOW_MS
+    )
 
     assert decision.recipients == ()
 
@@ -186,19 +202,31 @@ def test_explicit_audience_routes_when_subscription_and_node_are_valid():
     registry = IdentityRegistry()
     register_routable(registry, "one")
 
-    decision = Router(registry).route(routed_envelope(audience=["one"]))
+    decision = Router(registry).route(
+        routed_envelope(audience=["one"]), now_ms=ROUTE_NOW_MS
+    )
 
-    assert decision.recipients == ("one",)
+    assert decision.recipients == ("one-node",)
 
 
 def test_offline_identity_is_not_routed_subscription_or_direct_traffic():
     registry = IdentityRegistry()
     registry.register_identity("one", display_name="One")
-    registry.register_node("one-node", identity_id="one", status=NodeStatus.OFFLINE)
-    registry.subscribe("one", domain="database", min_priority=4)
+    registry.register_node(
+        "one-node",
+        identity_id="one",
+        status=NodeStatus.OFFLINE,
+        last_heartbeat_ms=1_000,
+        lease_expires_ms=2_000,
+    )
+    registry.subscribe("one-node", domain="database", min_priority=4)
 
-    assert Router(registry).route(routed_envelope(audience=[])).recipients == ()
-    assert Router(registry).route(routed_envelope(audience=["one"])).recipients == ()
+    assert Router(registry).route(
+        routed_envelope(audience=[]), now_ms=ROUTE_NOW_MS
+    ).recipients == ()
+    assert Router(registry).route(
+        routed_envelope(audience=["one"]), now_ms=ROUTE_NOW_MS
+    ).recipients == ()
 
 
 def test_writer_lane_requires_top_level_writer_header(tmp_path):
