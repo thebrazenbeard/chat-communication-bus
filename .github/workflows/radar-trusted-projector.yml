@@ -8,9 +8,9 @@ permissions:
   id-token: write
 
 jobs:
-  validate-reconciliation:
+  project-reconciliation:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Resolve immutable called workflow source
         id: self_pin
@@ -80,12 +80,12 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Validate canonical reconciliation targets
+      - name: Project canonical reconciliation targets
         env:
           PYTHONPATH: control/src
-          RADAR_RECONCILE_MODE: validate-only
+          RADAR_RECONCILE_MODE: project
         run: |
-          python control/scripts/radar_trusted_reconcile.py \
+          python control/scripts/radar_trusted_project.py \
             --repo-dir control \
             --topology control/architecture/contracts/RADAR_TOPOLOGY_V1.json \
             --cutover control/architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json
