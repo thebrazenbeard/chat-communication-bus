@@ -1,15 +1,20 @@
 {
   "schema_version": 1,
   "repository": "thebrazenbeard/chat-communication-bus",
-  "status": "TOPOLOGY_PR_PENDING",
+  "status": "FIRST_APPEND_PENDING",
   "identity": "parallax",
   "writer": "Parallax",
   "branch": "bus/parallax-v1",
+  "lifecycle": "REGISTERED_INERT",
   "inert_branch_created": true,
   "bootstrap_main_sha": "b2950bcb547fb78d16e44cd94a6ba2164937bf44",
   "bootstrap_branch_head_sha": "b2950bcb547fb78d16e44cd94a6ba2164937bf44",
-  "topology_registered_in_this_proposal": true,
-  "topology_pr_merged": false,
+  "topology_registered_in_proposal": true,
+  "topology_pr_number": 20,
+  "topology_pr_head_sha": "917de4a3b579afef54cf75c61e707f704cec8e85",
+  "topology_merge_commit_sha": "b22876d984f5d1c236c8016daf0a505d718faae0",
+  "topology_merged_at": "2026-09-05T17:58:21Z",
+  "topology_pr_merged": true,
   "first_append_guard_verified": false,
   "sequence": [
     "CREATE_INERT_BRANCH_FROM_EXACT_MAIN",
@@ -19,17 +24,17 @@
     "VERIFY_CURRENT_WRITER_LANE_GUARD",
     "ENABLE_WORKER_COORDINATION"
   ],
-  "coordination_gate": "Do not use bus/parallax-v1 for worker coordination until first_append_guard_verified is true.",
+  "coordination_gate": "Do not use bus/parallax-v1 for worker coordination until first_append_guard_verified is true and lifecycle is ACTIVE.",
   "protected_effects": {
-    "topology_merge": false,
+    "topology_merge": true,
     "first_append_write": false,
     "provider_projection": false,
     "ruleset_change": false
   },
   "notes": [
-    "This record is a reviewed proposal, not proof that topology registration or first append has been merged or verified.",
-    "The inert branch was created separately at the exact canonical main cut before this PR.",
-    "The current guard must validate the first append against the merged topology; no bypass or force-push is permitted.",
-    "If topology merge or guard verification fails, inspect the exact head and preserve the branch as inert provenance."
+    "PR #20 merged the topology registration on 2026-09-05; this is durable registration evidence, not activation evidence.",
+    "The inert branch was created separately at the exact canonical main cut before PR #20.",
+    "The current guard must validate the first append while the lane is REGISTERED_INERT; only after that verified append may a separate currentness change mark the lane ACTIVE.",
+    "No provider projection, ruleset change, or coordination authority is inferred from topology registration alone."
   ]
 }
