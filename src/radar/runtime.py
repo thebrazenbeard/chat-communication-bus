@@ -10,7 +10,7 @@ from typing import Mapping
 
 from .dlq import DeadLetterStore
 from .envelope import EnvelopeClassification, RadarEnvelope
-from .registry import IdentityRegistry, RegistryError
+from .registry import IdentityRegistry
 from .routing import DedupeWindow, PriorityQueue, Router
 from .telemetry import TelemetryStore
 
@@ -45,32 +45,10 @@ class RadarRuntime:
         self.dedupe = DedupeWindow(window_ms=dedupe_window_ms)
         self._admission_lock = threading.RLock()
 
-    def _route_context(self, envelope: RadarEnvelope) -> tuple[str, ...]:
-        if not envelope.audience:
-            audience = ("*",)
-        else:
-            canonical: list[str] = []
-            for item in envelope.audience:
-                try:
-                    canonical.append(self.registry.resolve_identity_id(item))
-                except RegistryError:
-                    canonical.append(f"?{item.casefold()}")
-            audience = tuple(canonical)
-        return (envelope.sender.casefold(), envelope.domain, envelope.intent, *audience)
-
-    def _dedupe_key(self, envelope: RadarEnvelope) -> str:
-        """Scope the required payload hash to explicit route context."""
-        material = {
-            "route_context": self._route_context(envelope),
-            "payload_hash": envelope.idempotency_key,
-        }
-        encoded = json.dumps(
-            material,
-            sort_keys=True,
-            separators=(",", ":"),
-            ensure_ascii=False,
-        ).encode("utf-8")
-        return hashlib.sha256(encoded).hexdigest()
+    @staticmethod
+    def _dedupe_key(envelope: RadarEnvelope) -> str:
+        """Return the V1 middleware payload hash exactly as the dedupe key."""
+        return envelope.idempotency_key
 
     @staticmethod
     def _raw_message_id(raw: Mapping[str, object]) -> str:
