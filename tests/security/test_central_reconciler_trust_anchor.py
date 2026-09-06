@@ -25,7 +25,7 @@ def test_reusable_projector_checks_out_only_verified_trusted_control_source() ->
     source = TRUSTED.read_text(encoding="utf-8")
 
     assert "path: control" in source
-    assert "ref: ${{ steps.self-pin.outputs.sha }}" in source
+    assert "ref: ${{ steps.self_pin.outputs.sha }}" in source
     assert "persist-credentials: false" in source
     assert "fetch-depth: 0" in source
 
