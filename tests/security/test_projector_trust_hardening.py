@@ -24,7 +24,7 @@ def test_projection_caller_delegates_privileged_work_to_immutable_reusable_workf
         r"radar-trusted-projector\.yml@([0-9a-f]{40})",
         source,
     )
-    assert match, "writer-lane caller must delegate to an immutable trusted reusable workflow"
+    assert match, "legacy writer-lane caller must remain immutably contained until Task 9"
     assert "runs-on:" not in source
     assert "id-token: write" in source
 
@@ -42,24 +42,27 @@ def test_trusted_reusable_workflow_is_workflow_call_only_and_pins_external_actio
         assert FULL_SHA.fullmatch(ref), f"external action is not pinned immutably: {ref}"
 
 
-def test_trusted_projector_uses_caller_event_context_but_trusted_control_source():
+def test_trusted_projector_self_pins_called_workflow_and_never_checks_out_writer_lane():
     source = _source(TRUSTED)
-    assert "github.event.before" in source
-    assert "github.sha" in source
-    assert "github.ref" in source
-    assert "path: lane" in source
+    assert "ACTIONS_ID_TOKEN_REQUEST_URL" in source
+    assert "ACTIONS_ID_TOKEN_REQUEST_TOKEN" in source
+    assert "job_workflow_ref" in source
+    assert "job_workflow_sha" in source
     assert "path: control" in source
+    assert "ref: ${{ steps.self_pin.outputs.sha }}" in source
+    assert "persist-credentials: false" in source
+    assert "fetch-depth: 0" in source
 
-    control_block = re.search(
-        r"- name: Check out trusted Radar control source\n(?P<body>(?:\s+.*\n)+?)\n\s+- name:",
-        source,
-    )
-    assert control_block, "trusted control checkout step must exist"
-    control_ref = re.search(r"(?m)^\s*ref:\s*([0-9a-f]{40})\s*$", control_block.group("body"))
-    assert control_ref, "trusted control checkout must be pinned to an immutable source cut"
+    assert "path: lane" not in source
+    assert "github.event.before" not in source
+    assert "github.sha" not in source
+    assert "github.ref" not in source
+    assert "scripts/radar_emit_bus_projection.py" not in source
+    assert "scripts/radar_trusted_reconcile.py" in source
+    assert "RADAR_RECONCILE_MODE: validate-only" in source
 
 
-def test_caller_pin_and_edge_expected_reusable_workflow_sha_match():
+def test_legacy_caller_pin_and_edge_expected_reusable_workflow_sha_match_until_task9():
     caller = _source(CALLER)
     handler = _source(HANDLER)
     caller_match = re.search(r"radar-trusted-projector\.yml@([0-9a-f]{40})", caller)
