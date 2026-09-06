@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 EMITTER_SCRIPT = ROOT / "scripts" / "radar_emit_bus_projection.py"
 EDGE_HANDLER = ROOT / "supabase" / "functions" / "github-bus-ingest" / "handler.ts"
 CURRENT_REF = "refs/heads/bus/one-v2"
+ROUTE_NOW_MS = 1_500
 
 
 def git(repo: Path, *args: str) -> str:
@@ -150,9 +151,18 @@ def test_explicit_audience_cannot_bypass_domain_subscription_authorization():
     registry = IdentityRegistry()
     registry.register_identity("one", display_name="One")
     registry.register_identity("two", display_name="Two")
-    registry.subscribe("one", domain="database", min_priority=4)
+    registry.register_node(
+        "one-node",
+        identity_id="one",
+        status=NodeStatus.ONLINE,
+        last_heartbeat_ms=1_000,
+        lease_expires_ms=2_000,
+    )
+    registry.subscribe("one-node", domain="database", min_priority=4)
 
-    decision = Router(registry).route(routed_envelope(audience=["two"]))
+    decision = Router(registry).route(
+        routed_envelope(audience=["two"]), now_ms=ROUTE_NOW_MS
+    )
 
     assert decision.recipients == ()
 
@@ -160,10 +170,18 @@ def test_explicit_audience_cannot_bypass_domain_subscription_authorization():
 def test_offline_identity_is_not_routed_subscription_traffic():
     registry = IdentityRegistry()
     registry.register_identity("one", display_name="One")
-    registry.register_node("one-node", identity_id="one", status=NodeStatus.OFFLINE)
-    registry.subscribe("one", domain="database", min_priority=4)
+    registry.register_node(
+        "one-node",
+        identity_id="one",
+        status=NodeStatus.OFFLINE,
+        last_heartbeat_ms=1_000,
+        lease_expires_ms=2_000,
+    )
+    registry.subscribe("one-node", domain="database", min_priority=4)
 
-    decision = Router(registry).route(routed_envelope(audience=[]))
+    decision = Router(registry).route(
+        routed_envelope(audience=[]), now_ms=ROUTE_NOW_MS
+    )
 
     assert decision.recipients == ()
 
