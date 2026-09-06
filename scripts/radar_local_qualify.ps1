@@ -141,6 +141,8 @@ if ($existingProjectContainers -or $existingProjectVolumes -or $existingProjectN
 }
 
 $sqlCleanupRequired = $true
+$sqlFailure = $null
+$cleanupFailure = $null
 try {
     Invoke-Checked supabase @("start")
     Invoke-Checked supabase @("db", "reset")
@@ -156,15 +158,28 @@ try {
         Invoke-Checked psql @($pguri, "-v", "ON_ERROR_STOP=1", "-f", $test.FullName)
     }
 }
+catch {
+    $sqlFailure = $_
+}
 finally {
     if ($sqlCleanupRequired) {
         try {
             Invoke-Checked supabase @("stop", "--no-backup")
         }
         catch {
-            throw "Local Supabase cleanup failed: $($_.Exception.Message)"
+            $cleanupFailure = $_
         }
     }
+}
+
+if ($sqlFailure -and $cleanupFailure) {
+    throw "SQL qualification failed: $($sqlFailure.Exception.Message); Local Supabase cleanup failed: $($cleanupFailure.Exception.Message)"
+}
+if ($cleanupFailure) {
+    throw "Local Supabase cleanup failed: $($cleanupFailure.Exception.Message)"
+}
+if ($sqlFailure) {
+    throw $sqlFailure
 }
 
 $finalSourceCommit = Get-CheckedOutput git @("rev-parse", "HEAD")
