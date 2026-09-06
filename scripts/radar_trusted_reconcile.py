@@ -3,7 +3,9 @@
 
 This script performs no provider write. Caller event fields are wake-up hints only;
 canonical lane identity, observed head, activation anchor, and ancestry are derived
-from the trusted source checkout and Git object database.
+from the trusted source checkout and Git object database. Writer branches are read
+directly from fetched origin remote-tracking refs; validate-only reconciliation does
+not create or move local branch refs.
 """
 
 from __future__ import annotations
@@ -21,11 +23,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from radar.trusted_reconciler import LocalGitRepository, ReconcileError, TrustedReconciler  # noqa: E402
-from radar.trusted_wakeup import (  # noqa: E402
-    load_caller_event,
-    materialize_inert_remote_bus_refs,
-    requested_identities,
-)
+from radar.trusted_wakeup import load_caller_event, requested_identities  # noqa: E402
 
 
 class UninitializedCursorJournal:
@@ -53,7 +51,7 @@ def build_validation_report(
     reconciler = TrustedReconciler(
         topology_path=topology_path,
         cutover_path=cutover_path,
-        git_repository=LocalGitRepository(repo_dir),
+        git_repository=LocalGitRepository(repo_dir, use_remote_tracking_refs=True),
         journal=UninitializedCursorJournal(),
     )
 
@@ -97,7 +95,6 @@ def main() -> int:
         raise ReconcileError("CALLER_CONTEXT_REQUIRED")
 
     repo_dir = Path(args.repo_dir)
-    materialize_inert_remote_bus_refs(repo_dir)
     report = build_validation_report(
         repo_dir=repo_dir,
         topology_path=Path(args.topology),
