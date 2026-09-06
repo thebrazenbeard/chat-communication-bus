@@ -7,6 +7,7 @@ from radar.trusted_reconciler import LocalGitRepository
 
 
 ROOT = Path(__file__).resolve().parents[2]
+CHECKOUT_SHA = "3d3c42e5aac5ba805825da76410c181273ba90b1"
 
 
 def _git(repo, *args: str) -> str:
@@ -57,3 +58,16 @@ def test_trusted_wakeup_exposes_no_local_writer_ref_materialization_primitive() 
     assert "materialize_inert_remote_bus_refs" not in source
     assert '"update-ref"' not in source
     assert "refs/heads/" not in source
+
+
+def test_trusted_projector_fetches_all_canonical_remote_branch_refs_for_read_only_observation() -> None:
+    workflow = (ROOT / ".github/workflows/radar-trusted-projector.yml").read_text(encoding="utf-8")
+    start = workflow.index("- name: Check out current canonical main as inert Git data")
+    end = workflow.index("- name: Set up Python", start)
+    canonical_checkout = workflow[start:end]
+
+    assert f"uses: actions/checkout@{CHECKOUT_SHA}" in canonical_checkout
+    assert "ref: main" in canonical_checkout
+    assert "path: canonical" in canonical_checkout
+    assert "fetch-depth: 0" in canonical_checkout
+    assert "persist-credentials: false" in canonical_checkout
