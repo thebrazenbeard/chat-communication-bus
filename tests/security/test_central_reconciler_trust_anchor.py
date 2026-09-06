@@ -21,15 +21,26 @@ def test_reusable_projector_self_resolves_called_workflow_sha_from_oidc() -> Non
     assert "GITHUB_OUTPUT" in source
 
 
-def test_reusable_projector_checks_out_only_verified_trusted_control_source() -> None:
+def test_reusable_projector_separates_immutable_code_from_current_canonical_data() -> None:
     source = TRUSTED.read_text(encoding="utf-8")
 
     assert "path: control" in source
     assert "ref: ${{ steps.self_pin.outputs.sha }}" in source
-    assert "persist-credentials: false" in source
-    assert "fetch-depth: 0" in source
+    assert "path: canonical" in source
+    assert "ref: main" in source
+    assert source.count("persist-credentials: false") >= 2
+    assert source.count("fetch-depth: 0") >= 2
+
+    assert "radar.trusted_control_snapshot" in source
+    assert "--repo-dir canonical" in source
+    assert "--topology canonical/architecture/contracts/RADAR_TOPOLOGY_V1.json" in source
+    assert "--cutover canonical/architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json" in source
+    assert "PYTHONPATH: control/src" in source
+    assert "python control/scripts/radar_trusted_project.py" in source
 
     assert "path: lane" not in source
+    assert "PYTHONPATH: canonical" not in source
+    assert "python canonical/" not in source
     assert "github.sha" not in source
     assert "github.ref" not in source
     assert "github.event.before" not in source
