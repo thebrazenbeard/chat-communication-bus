@@ -5,7 +5,8 @@ import re
 
 ROOT = Path(__file__).resolve().parents[2]
 DISPATCHER = ROOT / ".github" / "workflows" / "radar-central-dispatcher.yml"
-ANCHOR = ROOT / "architecture" / "contracts" / "RADAR_TRUST_ANCHOR_V1.json"
+VALIDATE_ANCHOR = ROOT / "architecture" / "contracts" / "RADAR_TRUST_ANCHOR_V1.json"
+PROJECTION_ANCHOR = ROOT / "architecture" / "contracts" / "RADAR_PROJECTION_TRUST_ANCHOR_V1.json"
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 
 
@@ -18,10 +19,10 @@ def test_dispatcher_has_workflow_run_wakeup_and_five_minute_backstop() -> None:
     assert "workflow_dispatch:" not in source
 
 
-def test_dispatcher_pins_exact_trust_anchor_and_passes_no_authority_inputs() -> None:
+def test_dispatcher_pins_exact_projection_anchor_and_passes_no_authority_inputs() -> None:
     source = DISPATCHER.read_text(encoding="utf-8")
-    contract = json.loads(ANCHOR.read_text(encoding="utf-8"))
-    anchor = contract["trust_anchor_sha"]
+    contract = json.loads(PROJECTION_ANCHOR.read_text(encoding="utf-8"))
+    anchor = contract["projection_anchor_sha"]
     assert FULL_SHA.fullmatch(anchor)
 
     expected = (
@@ -37,9 +38,19 @@ def test_dispatcher_pins_exact_trust_anchor_and_passes_no_authority_inputs() -> 
     assert "if:" not in source
 
 
-def test_trust_anchor_receipt_preserves_source_only_ceiling() -> None:
-    contract = json.loads(ANCHOR.read_text(encoding="utf-8"))
+def test_projection_anchor_receipt_preserves_source_only_provider_ceiling() -> None:
+    contract = json.loads(PROJECTION_ANCHOR.read_text(encoding="utf-8"))
     assert contract["status"] == "SOURCE_ONLY_NOT_ACTIVE"
-    assert contract["provider_trust_status"] == "NOT_UPDATED_FOR_A"
+    assert contract["provider_trust_status"] == "NOT_DEPLOYED"
+    assert contract["journal_provider_status"] == "NOT_MIGRATED"
+    assert contract["cursor_seed_status"] == "NOT_SEEDED"
     assert contract["dispatcher_status"] == "SOURCE_ONLY_NOT_ACTIVE"
+    assert contract["provider_expected_sha_value_at_deploy"] == contract["projection_anchor_sha"]
     assert contract["reusable_workflow_path"] == ".github/workflows/radar-trusted-projector.yml"
+
+
+def test_validate_only_anchor_a_remains_historical_and_distinct_from_projection_anchor_b() -> None:
+    a = json.loads(VALIDATE_ANCHOR.read_text(encoding="utf-8"))
+    b = json.loads(PROJECTION_ANCHOR.read_text(encoding="utf-8"))
+    assert a["trust_anchor_sha"] != b["projection_anchor_sha"]
+    assert a["provider_trust_status"] == "NOT_UPDATED_FOR_A"
