@@ -72,3 +72,14 @@ def test_local_runner_revalidates_source_binding_after_all_qualification_stages(
     assert "Source commit changed during qualification" in runner
     assert "Source tree changed during qualification" in runner
     assert "Working tree changed during qualification" in runner
+
+
+def test_local_runner_cannot_self_invalidate_receipt_inside_source_checkout() -> None:
+    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
+    operator = (ROOT / "docs/operator/RADAR_NO_PAID_QUALIFICATION.md").read_text(encoding="utf-8")
+
+    assert "Receipt path must be outside source checkout" in runner
+    assert "IsPathRooted" in runner
+    assert "OrdinalIgnoreCase" in runner
+    assert '$env:TEMP\\radar-local-qualification.json' in operator
+    assert "artifacts/radar-local-qualification.json" not in operator
