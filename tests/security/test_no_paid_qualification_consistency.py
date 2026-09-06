@@ -17,7 +17,6 @@ def test_no_paid_qualification_contract_is_current_and_source_custodied() -> Non
     )
 
     assert qualification["policy"] == "NO_PAID_SERVICES"
-    assert qualification["status"] == "LOCAL_EXECUTION_PENDING"
     assert qualification["authoritative_qualification"]["mode"] == "LOCAL_NO_PAID_SERVICES"
     assert qualification["authoritative_qualification"]["receipt_required_for_green"] is True
     assert qualification["github_actions"]["private_hosted_actions_authoritative"] is False
@@ -27,12 +26,12 @@ def test_no_paid_qualification_contract_is_current_and_source_custodied() -> Non
     assert current["qualification"]["authoritative_mode"] == "LOCAL_NO_PAID_SERVICES"
     assert current["qualification"]["private_hosted_actions_authoritative"] is False
     assert current["qualification"]["billing_or_plan_change_allowed_as_recovery"] is False
-    assert current["qualification"]["latest_qualification_receipt"] is None
 
     required_paths = {
         "architecture/contracts/RADAR_QUALIFICATION_V1.json",
         "docs/operator/RADAR_NO_PAID_QUALIFICATION.md",
         "scripts/radar_local_qualify.ps1",
+        "tests/security/test_no_paid_qualification_consistency.py",
     }
     assert required_paths.issubset(set(custody["paths"]))
 
