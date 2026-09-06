@@ -1,0 +1,50 @@
+{
+  "contract": "RADAR_QUALIFICATION_V1",
+  "schema_version": 1,
+  "status": "LOCAL_EXECUTION_PENDING",
+  "policy": "NO_PAID_SERVICES",
+  "authoritative_qualification": {
+    "mode": "LOCAL_NO_PAID_SERVICES",
+    "platform": "windows_powershell",
+    "runner": "scripts/radar_local_qualify.ps1",
+    "operator_contract": "docs/operator/RADAR_NO_PAID_QUALIFICATION.md",
+    "receipt_required_for_green": true,
+    "receipt_binding": [
+      "source_commit",
+      "source_tree",
+      "working_tree"
+    ],
+    "required_working_tree": "CLEAN",
+    "required_toolchain": {
+      "python": [
+        "3.11",
+        "3.12"
+      ],
+      "pip": "26.2.1",
+      "deno": "2.9.6",
+      "supabase_cli": "2.116.0",
+      "docker": "required",
+      "psql": "required"
+    },
+    "required_stages": [
+      "python_compileall",
+      "python_pytest",
+      "radar_source_hashes",
+      "deno_ci",
+      "deno_check",
+      "supabase_local_start",
+      "supabase_db_reset",
+      "all_radar_sql_assertions",
+      "supabase_local_stop"
+    ]
+  },
+  "github_actions": {
+    "private_hosted_actions_authoritative": false,
+    "private_hosted_actions_role": "OPPORTUNISTIC_NON_GATING_SIGNAL_ONLY",
+    "billing_or_plan_change_allowed_as_recovery": false,
+    "public_hosted_actions_allowed": true,
+    "public_hosted_actions_constraint": "Only deliberately public, non-secret, non-sensitive verification payloads may use public hosted Actions. Private source must not be mirrored public merely to obtain free CI."
+  },
+  "latest_qualification_receipt": null,
+  "promotion_rule": "Do not classify Radar source GREEN until an authoritative local PASS receipt binds the exact candidate commit and tree."
+}
