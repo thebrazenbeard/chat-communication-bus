@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
-MIGRATION = ROOT / "supabase" / "migrations" / "20260903_radar_assignment_plane_v1.sql"
+MIGRATION = ROOT / "supabase" / "migrations" / "20260903001906_radar_assignment_plane_v1.sql"
 CONTRACT = ROOT / "docs" / "protocol" / "ASSIGNMENT_ENVELOPE_V1.md"
 
 

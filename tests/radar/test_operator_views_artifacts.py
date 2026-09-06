@@ -2,8 +2,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
-MIGRATION = ROOT / "supabase" / "migrations" / "20260903_radar_operator_views_v1.sql"
-THREAD_CLOSURE_MIGRATION = ROOT / "supabase" / "migrations" / "20260903_radar_thread_closure_v1.sql"
+MIGRATION = ROOT / "supabase" / "migrations" / "20260903113314_radar_operator_views_v1.sql"
+THREAD_CLOSURE_MIGRATION = ROOT / "supabase" / "migrations" / "20260903214334_radar_thread_closure_v1.sql"
 CONTRACT = ROOT / "docs" / "protocol" / "OPERATOR_VIEWS_V1.md"
 THREAD_CLOSURE_CONTRACT = ROOT / "docs" / "protocol" / "THREAD_CLOSURE_V1.md"
 

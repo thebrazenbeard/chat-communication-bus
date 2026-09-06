@@ -9,8 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = (
-    "supabase/migrations/20260902_radar_control_plane_v1.sql",
-    "supabase/migrations/20260902_radar_realtime_v1.sql",
+    "supabase/migrations/20260902120716_radar_control_plane_v1.sql",
+    "supabase/migrations/20260902120826_radar_realtime_v1.sql",
     "supabase/seed/radar_v1.sql",
 )
 

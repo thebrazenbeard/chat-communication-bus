@@ -20,19 +20,12 @@ def _cutover():
     )
 
 
-def _onboarding():
-    return json.loads(
-        (ROOT / "architecture" / "contracts" / "RADAR_WRITER_LANE_ONBOARDING_V1.json").read_text(encoding="utf-8")
-    )
-
-
-def _pending_topology_identities(topology):
-    onboarding = _onboarding()
-    if onboarding["status"] != "TOPOLOGY_PR_PENDING":
-        return set()
-    identity = onboarding["identity"]
-    assert identity in topology["required_writer_lanes"]
-    return {identity}
+def _non_active_topology_identities(topology):
+    return {
+        identity
+        for identity, record in topology["required_writer_lanes"].items()
+        if record.get("lifecycle", "ACTIVE") != "ACTIVE"
+    }
 
 
 def test_effective_topology_routes_verified_successors_except_brigit_legacy_exception():
@@ -53,15 +46,15 @@ def test_cutover_contract_records_effective_switch_and_historical_snapshots():
     assert cutover["topology_switch_merged_at"] == TOPOLOGY_SWITCH_MERGED_AT
     assert cutover["successor_branches_created"] is True
     assert cutover["topology_switched"] is True
-    pending = _pending_topology_identities(topology)
-    cutover_identities = set(topology["required_writer_lanes"]) - pending
+    non_active = _non_active_topology_identities(topology)
+    cutover_identities = set(topology["required_writer_lanes"]) - non_active
     assert set(cutover["historical_writer_lanes"]) == cutover_identities
     assert set(cutover["verified_successor_heads"]) == cutover_identities
     assert set(cutover["historical_writer_lanes"]) == set(cutover["planned_current_writer_lanes"])
     assert cutover["current_writer_lanes"] == {
         identity: record["branch"]
         for identity, record in topology["required_writer_lanes"].items()
-        if identity not in pending
+        if identity not in non_active
     }
     for identity, head in cutover["verified_successor_heads"].items():
         assert head == CUTOVER_MAIN_SHA, identity
