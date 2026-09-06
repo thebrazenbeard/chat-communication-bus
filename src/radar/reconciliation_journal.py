@@ -63,10 +63,9 @@ class ProjectionJournal:
     def __init__(self) -> None:
         self._lock = threading.RLock()
         self._lanes: dict[tuple[str, str], ProjectionLaneState] = {}
+        self._control_cuts: dict[tuple[str, str], tuple[str, str]] = {}
         self._batches: dict[str, _BatchRecord] = {}
         self._active_batch_by_lane: dict[tuple[str, str], str] = {}
-        self._control_sha: str | None = None
-        self._topology_sha: str | None = None
 
     @staticmethod
     def _text(value: object, code: str) -> str:
@@ -99,12 +98,23 @@ class ProjectionJournal:
             state = self._lanes.get(key)
             return None if state is None else state.projected_head_sha
 
-    def set_control_cut(self, *, control_sha: str, topology_sha: str) -> None:
+    def set_control_cut(
+        self,
+        *,
+        identity: str,
+        branch: str,
+        control_sha: str,
+        topology_sha: str,
+    ) -> None:
+        identity = self._text(identity, "INVALID_IDENTITY")
+        branch = self._text(branch, "INVALID_BRANCH")
         control = self._text(control_sha, "INVALID_CONTROL_SHA")
         topology = self._text(topology_sha, "INVALID_TOPOLOGY_SHA")
+        key = (identity, branch)
         with self._lock:
-            self._control_sha = control
-            self._topology_sha = topology
+            if key not in self._lanes:
+                raise JournalError("LANE_UNSEEDED")
+            self._control_cuts[key] = (control, topology)
 
     def claim_batch(
         self,
@@ -132,7 +142,7 @@ class ProjectionJournal:
             raise JournalError("INVALID_CLAIM_LEASE")
         if expected_projected_head is not None:
             expected_projected_head = self._text(expected_projected_head, "INVALID_PROJECTED_HEAD")
-        if not isinstance(files, tuple) or not files or any(not isinstance(p, str) or not p for p in files):
+        if not isinstance(files, tuple) or any(not isinstance(p, str) or not p for p in files):
             raise JournalError("INVALID_BATCH_FILES")
         if len(set(files)) != len(files):
             raise JournalError("DUPLICATE_BATCH_FILE")
@@ -140,14 +150,11 @@ class ProjectionJournal:
         key = (identity, branch)
         with self._lock:
             current = self._lanes.get(key)
-            actual_head = None if current is None else current.projected_head_sha
-            if actual_head != expected_projected_head:
+            if current is None:
+                raise JournalError("LANE_UNSEEDED")
+            if current.projected_head_sha != expected_projected_head:
                 raise JournalError("PROJECTED_BASE_CHANGED")
-
-            if self._control_sha is None and self._topology_sha is None:
-                self._control_sha = control
-                self._topology_sha = topology
-            elif self._control_sha != control or self._topology_sha != topology:
+            if self._control_cuts.get(key) != (control, topology):
                 raise JournalError("CONTROL_CUT_CHANGED")
 
             previous_id = self._active_batch_by_lane.get(key)
@@ -173,8 +180,6 @@ class ProjectionJournal:
                 files={path: BatchFileState.PENDING for path in files},
             )
             self._active_batch_by_lane[key] = claim.batch_id
-            if current is None:
-                self._lanes[key] = ProjectionLaneState(identity, branch, None)
             return claim
 
     def _record_for_current_claim(self, claim: BatchClaim) -> _BatchRecord:
@@ -188,12 +193,7 @@ class ProjectionJournal:
             raise JournalError("STALE_CLAIM")
         return record
 
-    def record_file_result(
-        self,
-        claim: BatchClaim,
-        path: str,
-        state: BatchFileState,
-    ) -> None:
+    def record_file_result(self, claim: BatchClaim, path: str, state: BatchFileState) -> None:
         if not isinstance(state, BatchFileState) or state is BatchFileState.PENDING:
             raise JournalError("INVALID_BATCH_FILE_STATE")
         with self._lock:
@@ -218,13 +218,14 @@ class ProjectionJournal:
             record = self._record_for_current_claim(claim)
             if now >= claim.lease_expires_ms:
                 raise JournalError("STALE_CLAIM")
-            if self._control_sha != claim.control_sha or self._topology_sha != claim.topology_sha:
+            key = (claim.identity, claim.branch)
+            if self._control_cuts.get(key) != (claim.control_sha, claim.topology_sha):
                 raise JournalError("CONTROL_CUT_CHANGED")
 
-            key = (claim.identity, claim.branch)
             lane = self._lanes.get(key)
-            actual_head = None if lane is None else lane.projected_head_sha
-            if actual_head != claim.expected_projected_head:
+            if lane is None:
+                raise JournalError("LANE_UNSEEDED")
+            if lane.projected_head_sha != claim.expected_projected_head:
                 raise JournalError("PROJECTED_BASE_CHANGED")
             if any(state not in _TERMINAL_SUCCESS for state in record.files.values()):
                 raise JournalError("UNRESOLVED_BATCH_FILES")
