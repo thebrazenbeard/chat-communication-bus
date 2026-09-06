@@ -3,6 +3,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 CUT = "b2950bcb547fb78d16e44cd94a6ba2164937bf44"
+MERGE = "b22876d984f5d1c236c8016daf0a505d718faae0"
 
 
 def _topology():
@@ -19,14 +20,22 @@ def _onboarding():
 
 def test_parallax_is_registered_to_exact_inert_lane():
     lane = _topology()["required_writer_lanes"]["parallax"]
-    assert lane == {"writer": "Parallax", "branch": "bus/parallax-v1", "legacy_spelling": False, "onboarding_status": "TOPOLOGY_PR_PENDING"}
+    assert lane == {
+        "writer": "Parallax",
+        "branch": "bus/parallax-v1",
+        "legacy_spelling": False,
+        "lifecycle": "REGISTERED_INERT",
+        "onboarding_status": "FIRST_APPEND_PENDING",
+    }
     onboarding = _onboarding()
     assert onboarding["identity"] == "parallax"
     assert onboarding["branch"] == "bus/parallax-v1"
     assert onboarding["bootstrap_main_sha"] == CUT
     assert onboarding["bootstrap_branch_head_sha"] == CUT
     assert onboarding["inert_branch_created"] is True
-    assert onboarding["topology_pr_merged"] is False
+    assert onboarding["topology_pr_merged"] is True
+    assert onboarding["topology_merge_commit_sha"] == MERGE
+    assert onboarding["lifecycle"] == "REGISTERED_INERT"
 
 
 def test_parallax_coordination_requires_first_guarded_append():
@@ -41,12 +50,13 @@ def test_parallax_coordination_requires_first_guarded_append():
     ]
     assert onboarding["first_append_guard_verified"] is False
     assert "first_append_guard_verified" in onboarding["coordination_gate"]
+    assert "ACTIVE" in onboarding["coordination_gate"]
 
 
-def test_parallax_bootstrap_does_not_authorize_provider_or_protected_effects():
+def test_parallax_bootstrap_records_only_effects_that_actually_happened():
     effects = _onboarding()["protected_effects"]
     assert effects == {
-        "topology_merge": False,
+        "topology_merge": True,
         "first_append_write": False,
         "provider_projection": False,
         "ruleset_change": False,
