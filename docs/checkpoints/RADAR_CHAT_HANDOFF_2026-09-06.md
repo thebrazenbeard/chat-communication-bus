@@ -8,12 +8,13 @@ This checkpoint records the post-conflict-resolution state recovered from the fu
 
 - Canonical `main`: `87df9b1372d0f65b5c3ced0296122b2140084024`, tree `db73fcc73922447f0f19955c3a494e99030d4dca`.
 - Consolidated staging branch: `radar/reproducible-ci-source-custody-v1-20260906`.
-- Verified pre-checkpoint staging head: `29ba509700e6cccf85f6641f0227a8f103042bfb`, tree `d8451603736ed80903892a097ab3c1467cd68818`.
-- Commit `29ba5097...` is the post-merge cleanup: `fix: restore coherent Radar currentness after conflict merge`.
-- The formerly open source-hardening stack PRs #35–#41 now show closed/merged. PR #41 merged the Anchor-D successor into the staging branch; `main` remains unchanged by that stack.
-- Comparing `main@87df9b13...` to staging `29ba5097...` yields `diverged`, `ahead_by: 94`, `behind_by: 1`, merge base `b1c0ceb80c6ce895927cd715319257b28124d919`. Do not treat staging as a fast-forward candidate.
+- Post-merge cleanup head: `29ba509700e6cccf85f6641f0227a8f103042bfb`, tree `d8451603736ed80903892a097ab3c1467cd68818`.
+- First restore-checkpoint head: `87574118c423c3aa4e3955fa586a8af418e43ae8`, tree `4e5a8955a663ed69becb1e777659c681db271b99`.
+- Commit `29ba5097...` is `fix: restore coherent Radar currentness after conflict merge`.
+- The formerly open source-hardening stack PRs #35–#41 now show closed/merged into the staging branch. PR #41 merged the Anchor-D successor into staging; `main` remains unchanged by that stack.
+- Comparing `main@87df9b13...` to staging `29ba5097...` yielded `diverged`, `ahead_by: 94`, `behind_by: 1`, merge base `b1c0ceb80c6ce895927cd715319257b28124d919`. Do not treat staging as a fast-forward candidate.
 
-Creating this checkpoint advances the staging branch beyond `29ba5097...`; fresh-read the branch head before any subsequent write.
+This correction commit advances the staging branch beyond `87574118...`; fresh-read the branch head before any subsequent write.
 
 ## Conflict-resolution verification
 
@@ -43,13 +44,33 @@ The earlier duplicate `uses:` damage in `radar-central-dispatcher.yml` is no lon
 
 The historical-C regression requires B→C→D lineage. The D regression requires dispatcher, V3 trust receipt, `RADAR_CURRENT`, custody, and provider-drift naming to agree on D exactly.
 
-## Verification state
+## Exact-head CI evidence and connector correction
 
-There is no workflow run associated with exact pre-checkpoint head `29ba509700e6cccf85f6641f0227a8f103042bfb`. Therefore no exact-head executable qualification exists for the repaired consolidated staging state.
+The initial restore incorrectly stated that no workflow run existed for `29ba509700e6cccf85f6641f0227a8f103042bfb`. That statement came from a connector action which only exposes pull-request-triggered runs. Branch-level Actions enumeration later exposed the push-triggered runs. The corrected evidence is:
 
-Issue #39 remains OPEN: private-repository GitHub Actions jobs have been failing before runner assignment with `runner_id: 0`, empty `steps`, and no executable logs. Public controls under the same owner have executed normally. The exact account/private-repository cause remains unverified.
+### Cleanup head `29ba509700e6cccf85f6641f0227a8f103042bfb`
 
-Do not call the staging source GREEN/runtime-qualified until a newly triggered exact-candidate run actually receives a hosted runner and completes the Python 3.11/3.12, SQL reset/assertion, and Edge frozen-lock jobs to code-level results.
+CI run `34057664601`:
+
+- SQL job `101552404328` — failure before executable steps;
+- Python 3.11 job `101552404412` — failure before executable steps;
+- Edge job `101552404460` — failure before executable steps;
+- Python 3.12 job `101552404503` — failure before executable steps.
+
+### Restore-checkpoint head `87574118c423c3aa4e3955fa586a8af418e43ae8`
+
+CI run `34058064585`:
+
+- SQL job `101553493905` — failure before executable steps;
+- Python 3.11 job `101553494025` — failure before executable steps;
+- Edge job `101553494060` — failure before executable steps;
+- Python 3.12 job `101553494158` — failure before executable steps.
+
+All eight jobs returned empty/null executable-step sets. A direct step read for `101553494025` returned `[]`. Its job-log download returned GitHub `BlobNotFound`, consistent with no runner execution beginning.
+
+This is exact-head blocker evidence, not source/test failure evidence. The repaired staging source remains unqualified rather than GREEN.
+
+Issue #39 has been updated with this reproduction. The exact account/private-repository cause remains unverified. Do not change billing/account/repository settings without separate Patrick authorization after preserving decisive evidence.
 
 ## Provider/live boundary
 
@@ -65,16 +86,16 @@ Last source-recorded provider state remains:
 - Anchor D is source-only and provider `RADAR_TRUSTED_PROJECTOR_SHA` is not established for D by this work;
 - central dispatcher is not active on canonical `main`.
 
-No provider/live effect was performed during this restore.
+No provider/live effect was performed during this restore or CI investigation.
 
 ## Exact continuation frontier
 
-1. Fresh-read the staging head created by this checkpoint and re-confirm the seven conflict-sensitive paths if another writer has moved the branch.
-2. Establish an executable exact-head qualification path for the consolidated staging candidate without changing billing/account settings unless Patrick separately authorizes such a change after preserving the decisive GitHub UI/account evidence.
-3. If private runners recover, run the full exact-head Python 3.11/3.12 + SQL + Edge matrix and then rerun hostile invariants on that same head.
-4. Keep issue #16/provider recovery unapplied until separate protected-effect authorization exists.
-5. Before any integration toward `main`, reconcile the `94 ahead / 1 behind` divergent history deliberately; do not blindly merge conflict choices or rewrite history.
+1. Fresh-read the staging head created by this correction and re-confirm the seven conflict-sensitive paths if another writer has moved the branch.
+2. Treat issue #39 as actively reproduced on the consolidated staging candidate. If private runners recover, run the full exact-head Python 3.11/3.12 + SQL + Edge matrix and rerun hostile invariants on that same head.
+3. Keep issue #16/provider recovery unapplied until separate protected-effect authorization exists.
+4. Before any integration toward `main`, reconcile the staging/main divergent history deliberately; do not blindly merge conflict choices or rewrite history.
+5. Do not promote status beyond `SOURCE IMPLEMENTED / EXECUTABLE QUALIFICATION BLOCKED / PROVIDER NOT APPLIED / EDGE NOT DEPLOYED / ISSUE #16 OPEN` until evidence changes it.
 
 Recommended restore command:
 
-`RADAR::RESTORE::CHAT_HANDOFF_2026-09-06 — Read docs/checkpoints/RADAR_CHAT_HANDOFF_2026-09-06.md from the current head of radar/reproducible-ci-source-custody-v1-20260906, fresh-read main, the staging head, exact-head CI, issues #16/#39, and the conflict-sensitive Anchor-D files, then continue from the executable-qualification/divergent-history boundary. Do not invent GREEN evidence and do not merge/rebase/deploy/apply protected effects without Patrick's explicit authorization.`
+`RADAR::RESTORE::CHAT_HANDOFF_2026-09-06 — Read docs/checkpoints/RADAR_CHAT_HANDOFF_2026-09-06.md from the current head of radar/reproducible-ci-source-custody-v1-20260906, fresh-read main, staging, branch-level push CI, issues #16/#39, and the conflict-sensitive Anchor-D files, then continue from the executable-qualification/divergent-history boundary. Do not invent GREEN evidence and do not merge/rebase/deploy/apply protected effects without Patrick's explicit authorization.`
