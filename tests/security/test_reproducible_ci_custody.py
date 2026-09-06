@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import re
+import tomllib
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -11,6 +12,7 @@ PYPROJECT = ROOT / "pyproject.toml"
 HANDLER = ROOT / "supabase/functions/github-bus-ingest/handler.ts"
 EDGE_DENO = ROOT / "supabase/functions/github-bus-ingest/deno.json"
 EDGE_LOCK = ROOT / "supabase/functions/github-bus-ingest/deno.lock"
+SUPABASE_CONFIG = ROOT / "supabase/config.toml"
 CUSTODY = ROOT / "architecture/contracts/RADAR_SOURCE_CUSTODY_V1.json"
 GITIGNORE = ROOT / ".gitignore"
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
@@ -70,6 +72,11 @@ def test_edge_dependency_map_is_exact_and_lock_is_frozen() -> None:
         "jsr:@supabase/functions-js@2.5.0",
         "npm:@supabase/supabase-js@2.115.0",
     ]
+
+
+def test_local_supabase_config_has_stable_project_identity() -> None:
+    config = tomllib.loads(SUPABASE_CONFIG.read_text(encoding="utf-8"))
+    assert config["project_id"] == "chat-communication-bus"
 
 
 def test_local_qualification_ignores_only_standard_generated_artifacts() -> None:
