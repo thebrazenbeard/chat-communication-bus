@@ -1,0 +1,23 @@
+{
+  "contract": "RADAR_PROJECTION_TRUST_ANCHOR_V2",
+  "status": "SOURCE_ONLY_NOT_ACTIVE",
+  "projection_anchor_sha": "f5ab21244a111b47708fa11e99d0e8ff7d8f5a45",
+  "projection_anchor_tree": "a7dd785be8dfea883df052a73378d583e53058d1",
+  "supersedes_source_anchor_contract": "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V1.json",
+  "superseded_projection_anchor_sha": "7076c73595d5a572e0f374c3a495b29982d92bed",
+  "supersession_reason": "Anchor B froze canonical topology with executable source. Anchor C keeps code immutable while reading current main topology/cutover as inert Git data and journal-fencing the resulting main/topology cut.",
+  "reusable_workflow_path": ".github/workflows/radar-trusted-projector.yml",
+  "dispatcher_path": ".github/workflows/radar-central-dispatcher.yml",
+  "edge_function_path": "supabase/functions/github-bus-ingest/handler.ts",
+  "provider_expected_sha_setting": "RADAR_TRUSTED_PROJECTOR_SHA",
+  "provider_expected_sha_value_at_deploy": "f5ab21244a111b47708fa11e99d0e8ff7d8f5a45",
+  "immutable_code_checkout": true,
+  "canonical_main_data_checkout": true,
+  "canonical_main_data_executed": false,
+  "writer_lane_code_executed": false,
+  "provider_trust_status": "NOT_DEPLOYED",
+  "journal_provider_status": "NOT_MIGRATED",
+  "cursor_seed_status": "NOT_SEEDED",
+  "dispatcher_status": "SOURCE_ONLY_NOT_ACTIVE",
+  "protected_effects_required": true
+}
