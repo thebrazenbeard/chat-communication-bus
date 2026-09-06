@@ -141,7 +141,7 @@ finally {
             Invoke-Checked supabase @("stop", "--no-backup")
         }
         catch {
-            Write-Warning "Local Supabase stop failed: $($_.Exception.Message)"
+            throw "Local Supabase cleanup failed: $($_.Exception.Message)"
         }
     }
 }
