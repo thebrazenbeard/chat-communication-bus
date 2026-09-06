@@ -94,6 +94,27 @@ create trigger radar_subscriptions_node_identity_guard
 before insert or update of node_id, identity_id, active on radar.subscriptions
 for each row execute function radar.validate_subscription_node_identity();
 
+-- Node ownership is provenance and authority. Reassigning a node after
+-- subscriptions exist would silently transfer or invalidate routing authority,
+-- so identity ownership is immutable after insert.
+create or replace function radar.prevent_node_identity_reassignment()
+returns trigger
+language plpgsql
+set search_path = pg_catalog, radar
+as $$
+begin
+  if new.identity_id is distinct from old.identity_id then
+    raise exception 'RADAR_NODE_IDENTITY_IMMUTABLE' using errcode = '23514';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists radar_nodes_identity_immutable on radar.nodes;
+create trigger radar_nodes_identity_immutable
+before update of identity_id on radar.nodes
+for each row execute function radar.prevent_node_identity_reassignment();
+
 create or replace function radar.mark_stale_nodes_offline(
   p_stale_after interval default interval '5 minutes'
 )
@@ -165,6 +186,7 @@ revoke all on function radar.assignment_ready(text) from public, anon, authentic
 revoke all on function radar.mark_stale_nodes_offline(interval) from public, anon, authenticated;
 revoke all on function radar.touch_node(uuid, text) from public, anon, authenticated;
 revoke all on function radar.validate_subscription_node_identity() from public, anon, authenticated;
+revoke all on function radar.prevent_node_identity_reassignment() from public, anon, authenticated;
 
 grant execute on function radar.assignment_ready(text) to service_role;
 grant execute on function radar.mark_stale_nodes_offline(interval) to service_role;
