@@ -1,94 +1,80 @@
 # RADAR_SUPABASE_V1
 
-Provider target: existing healthy Vera Supabase project `klmbpaigzeguvnpccqzz`, isolated schema `radar`.
+Provider target: Supabase project `klmbpaigzeguvnpccqzz`, isolated schema `radar`.
 
-GitHub remains canonical source. Provider state is a rebuildable projection/runtime and does not become canonical merely because it exists.
+GitHub remains canonical source. Supabase is a rebuildable projection/runtime and never becomes canonical merely because state exists there. Provider effects require separate authorization.
 
-## Source custody
+## Current source custody
 
-Base migration: `supabase/migrations/20260902_radar_control_plane_v1.sql`
+Current source/recovery authority is `architecture/contracts/RADAR_SOURCE_CUSTODY_V1.json` plus the ordered `supabase/migrations/*_radar_*.sql` chain. Historical short migration filenames in older receipts are not current recovery paths.
 
-- Git blob SHA: `aa383ca0aa80dc10a0ef924a0e80369da4b8b623`
-- Git byte length: `13799`
-- Git SHA-256 from CI run 101: `7e644e63f6fbe6ae9747043aa502f9c9c1bda42e8ec6fd99da6bbfaf0436b607`
-- Provider migration name/version: `radar_control_plane_v1` / `20260902120716`
-- Provider ledger statement count: `1`
-- Provider ledger stored bytes: `13799`
-- Provider ledger stored-statement SHA-256: `7e644e63f6fbe6ae9747043aa502f9c9c1bda42e8ec6fd99da6bbfaf0436b607`
-- Custody result: **EXACT_SHA256_MATCH**.
+The current Radar source chain, through 2026-09-06, is:
 
-Realtime migration: `supabase/migrations/20260902_radar_realtime_v1.sql`
+1. `20260902120716_radar_control_plane_v1.sql`
+2. `20260902120826_radar_realtime_v1.sql`
+3. `20260902203610_radar_visual_identity_v1.sql`
+4. `20260902204759_radar_live_message_projection_v1.sql`
+5. `20260902231445_radar_live_message_collision_v1.sql`
+6. `20260903000603_radar_receipt_plane_v1.sql`
+7. `20260903001906_radar_assignment_plane_v1.sql`
+8. `20260903113314_radar_operator_views_v1.sql`
+9. `20260903214334_radar_thread_closure_v1.sql`
+10. `20260905230823_radar_oidc_replay_guard_v1.sql`
+11. `20260906133630_radar_node_routing_hardening_v1.sql`
+12. `20260906154101_radar_projection_journal_v1.sql`
+13. `20260906165117_radar_projection_journal_api_v1.sql`
 
-- Git blob SHA: `ee3a8a4a6d4161e348d009e27ca71d0048ac6f31`
-- Git byte length: `721`
-- Git SHA-256 from CI run 101: `0ef94f8a25ad0b68c354784ee460739a7ac4966496311d828ce9427a2c227be1`
-- Provider migration name/version: `radar_realtime_v1` / `20260902120826`
-- Provider ledger statement count: `1`
-- Provider ledger stored bytes: `721`
-- Provider ledger stored-statement SHA-256: `0ef94f8a25ad0b68c354784ee460739a7ac4966496311d828ce9427a2c227be1`
-- Custody result: **EXACT_SHA256_MATCH**.
+## Fresh provider readback — 2026-09-06
 
-Self-registration/topology seed: `supabase/seed/radar_v1.sql`
+The provider migration ledger currently contains Radar migrations only through `20260903113314_radar_operator_views_v1`. The five later source migrations above are not applied.
 
-- Current Git blob SHA: `fb7ff306f06c508e2c25379b1cac2caa4de57a8e`
-- Git byte length from CI run 101: `2728`
-- Git SHA-256 from CI run 101: `0f6b69c1bdef95dccf1eb353a98e8d80a327f7067fe94b70c85816c2dd8ea026`
-- Applied idempotently after `bus/radar-v1` existed and fresh-read from provider.
+Readback also confirms the provider does not currently have the GitHub OIDC replay-guard table, projection-journal lane/batch tables, or the projection-journal public RPC bridge. Therefore provider state is `PARTIAL_NOT_CURRENT` relative to Git source.
 
-## Provider readback
+The live Edge function `github-bus-ingest` is ACTIVE version 3 with `verify_jwt=true`. That gateway setting currently preempts the intended custom GitHub OIDC admission path. Immutable projection anchor B (`7076c73595d5a572e0f374c3a495b29982d92bed`) and its body-bound Edge source are source-only and are not deployed/configured in the provider.
 
-Fresh inspection established:
+These facts are status evidence only. They do not authorize migration application, Edge deployment, changing `verify_jwt`, setting `RADAR_TRUSTED_PROJECTOR_SHA`, or seeding projection cursors.
 
-- `radar` schema exists.
-- 14 expected control tables exist and all have RLS enabled.
-- `anon` and `authenticated` have no `radar` schema USAGE and zero Radar table grants.
-- functions `assignment_ready`, `mark_stale_nodes_offline`, `prevent_dependency_cycle`, `prevent_event_mutation`, and `touch_node` exist in the `radar` schema.
-- the provider migration ledger contains both migrations above.
+## Current self-registration model
 
-Provider verification receipts on 2026-09-02:
+Current mailbox: `bus/radar-v2`.
 
-- exact Git-held `supabase/tests/radar_realtime_v1.sql` executed as a read-only assertion block and completed without exception: **PASS**.
-- exact Git-held `supabase/tests/radar_control_plane_v1.sql` executed under Patrick's authorization. Its temporary fixtures exercised stale-node handling, identity preservation, dependency readiness, privilege assertions, and DLQ state; the transaction completed and rolled back: **PASS**.
-- post-test readback found zero `radar-test-a`/`radar-test-b` identities, zero `radar-pred`/`radar-succ` assignments, and zero `radar-test-message` dead letters, confirming fixture rollback.
+`supabase/seed/radar_v1.sql` is the current idempotent projection seed despite its historical filename. It must be run only after the full current migration chain. It creates/updates:
 
-## Realtime readback
+- Radar identity metadata pointing at `bus/radar-v2`;
+- one stable recovery/operator node in `OFFLINE` state with no heartbeat or lease;
+- repository, mailbox, and operator endpoints;
+- node-bound active subscriptions for the configured Radar domains.
 
-`supabase_realtime` currently publishes exactly these Radar low-volume control projections:
+The seed deliberately does not call `touch_node()` and therefore cannot establish runtime liveness or routing authority by itself.
 
-- `acknowledgements`
-- `assignments`
-- `dependencies`
-- `nodes`
-- `reconciliation_events`
+Historical references to `bus/radar-v1` or `radar/control-plane-v1` remain provenance only.
 
-High-volume `messages`, `delivery_events`, and `telemetry` are deliberately excluded from Postgres Changes.
+## Node-level routing security
 
-## Self-registration readback
+Once `20260906133630_radar_node_routing_hardening_v1.sql` is applied, active subscriptions must be node-bound, node ownership is immutable, routable nodes require current leases, NULL/expired leases fail closed, and successful heartbeats renew a bounded lease. The same migration closes the historical default-PUBLIC EXECUTE gap for `assignment_ready`, `mark_stale_nodes_offline`, and `touch_node`.
 
-Fresh provider inspection established:
+## Realtime currentness
 
-- identity `radar` is `ACTIVE` with repository-owner/operator metadata, Patrick override, integration branch `radar/control-plane-v1`, and mailbox `bus/radar-v1`;
-- endpoints `radar-github-repository`, `radar-github-mailbox`, and `radar-chatgpt-operator` are `ACTIVE`;
-- the ChatGPT endpoint metadata explicitly records `session_is_identity:false`;
-- active subscriptions exist for `coordination`, `database`, `protocol`, `repository`, `security`, and `system`, each at V1 minimum priority 4.
+Historical September-2 documentation that described exactly five low-volume Radar publication tables is superseded. Later source migrations add additional publication members where appropriate. Recovery verification must inspect actual publication membership after rebuilding the full current chain and run the current SQL assertions; do not use the old five-table list as a present-tense invariant.
 
-## Vera logical-identity reconciliation
+## Projection trust chain
 
-A GitHub/provider reconciliation found provider projection drift where historical route name `vera-sol` had been modeled as a separate active logical identity instead of logical `vera`.
+Current source design uses:
 
-Source correction and provider repair:
+- default-branch central dispatcher with `workflow_run` wakeup plus five-minute scheduled backstop;
+- immutable reusable trusted projector anchored by exact commit SHA;
+- writer branches as inert Git objects, never executable trusted source;
+- durable per-lane projection cursors and fenced batch/file journal state;
+- exact-body SHA-256-bound GitHub OIDC audience/header;
+- fresh JTI per request, consumed after cryptographic body binding and before semantic JSON parsing;
+- deploy-time `RADAR_TRUSTED_PROJECTOR_SHA` equal to reviewed immutable projection anchor B.
 
-- `src/radar/github_projection.py`, `architecture/contracts/RADAR_TOPOLOGY_V1.json`, and `supabase/seed/radar_bus_lanes_20260902.sql` normalize historical branch `bus/vera-sol-v1` to logical identity `vera` while preserving `vera-sol` as an alias/route name.
-- exact Git-held repair `supabase/repairs/20260902_normalize_vera_identity.sql` was applied under Patrick's authorization. It performs no DELETE.
-- fresh readback: `vera` is `ACTIVE`, aliases include `vera-sol`, and `lane-vera` is `ACTIVE` at `bus/vera-sol-v1`.
-- fresh readback: historical `vera-sol` identity is `ARCHIVED` with `superseded_by: vera`; historical `lane-vera-sol` endpoint is `ARCHIVED`, preserves its original branch address in metadata, and points to `lane-vera` as successor.
-- no nodes, subscriptions, acknowledgements, delivery-event identity references, health-event references, or delivery-event endpoint references depended on the legacy identity/endpoint at repair time.
-- reconciliation result: **RESOLVED_WITH_PROVENANCE_PRESERVED**.
+None of those source properties should be interpreted as a live-provider claim until migration/deployment/configuration/cursor readback proves the effect.
 
-## Security interpretation
+## Historical provider receipts
 
-Radar intentionally has no anon/authenticated schema/table access at V1. Do not add permissive RLS policies merely to make a generic lint quiet; evaluate actual grants, schema exposure, and intended client model first.
+September-2 receipts showing exact custody and successful tests for the base control/realtime migrations remain valid historical evidence at the scope they actually tested. The Vera logical-identity repair is likewise historical evidence. Those receipts do not establish currentness for later migrations, current writer lanes, current Realtime publication membership, or the current projection trust chain.
 
-## Recovery
+## Recovery rule
 
-If provider state is lost, apply the Git-held migrations in order, verify migration-ledger/readback, then apply the current Git-held seed idempotently and reconcile against GitHub. Never reconstruct migration or seed source from mutable provider state when Git custody is available.
+Follow `docs/operator/RECOVERY.md`: verify source custody, rebuild/test the full Git-held chain locally, compare provider ledger to source, apply only missing migrations under authorization, seed current registration only after the chain exists, then explicitly bootstrap projection cursors from reviewed activation evidence. Never recover current topology from dated cutover snapshots or mutable provider definitions when canonical Git source exists.
