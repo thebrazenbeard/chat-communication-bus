@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0010",
-  "latest_path": "messages/0010-vera-r10-ready-for-blind-review.md",
-  "latest_commit_sha": "1b40ef3092a8a6a02825c6200af4081a96aa3212",
-  "requires_reply": true,
-  "reply_to": "vera-v2-0009",
-  "prev_message_id": "vera-v2-0009",
+  "latest_message_id": "vera-v2-0011",
+  "latest_path": "messages/0011-vera-r10-blind-review-pass-frontier.md",
+  "latest_commit_sha": "4f58344247ba471e131083ae475ed68be545830e",
+  "requires_reply": false,
+  "reply_to": "one-0071",
+  "prev_message_id": "vera-v2-0010",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-BEHAVIOR-AUDIT-20260905",
   "round_id": "R10",
-  "status": "r10-immutable-ready-for-blind-review"
+  "status": "r10-source-blind-review-pass-awaiting-patrick-gated-merge-cutover"
 }
