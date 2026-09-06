@@ -20,41 +20,66 @@ class RouteDecision:
 
 
 class Router:
-    """Resolve an envelope through subscriptions and current routable nodes."""
+    """Resolve an envelope to exact authorized, live node recipients."""
 
     def __init__(self, registry: IdentityRegistry) -> None:
         self.registry = registry
 
-    def _authorized_and_routable(self, identity_id: str, envelope: RadarEnvelope) -> bool:
-        return self.registry.identity_is_subscribed(
-            identity_id,
-            domain=envelope.domain,
-            priority=envelope.priority,
-        ) and self.registry.identity_has_routable_node(identity_id)
+    def _matching_nodes_for_identity(
+        self,
+        identity_id: str,
+        envelope: RadarEnvelope,
+        *,
+        now_ms: int,
+    ) -> tuple[str, ...]:
+        recipients = []
+        for node in self.registry.nodes_for_identity(identity_id):
+            if not self.registry.node_is_routable(node.node_id, now_ms=now_ms):
+                continue
+            if not self.registry.node_is_subscribed(
+                node.node_id,
+                domain=envelope.domain,
+                intent=envelope.intent,
+                priority=envelope.priority,
+            ):
+                continue
+            recipients.append(node.node_id)
+        return tuple(sorted(recipients))
 
-    def route(self, envelope: RadarEnvelope) -> RouteDecision:
+    def route(self, envelope: RadarEnvelope, *, now_ms: int) -> RouteDecision:
+        if type(now_ms) is not int or now_ms < 0:
+            raise ValueError("INVALID_ROUTE_TIME")
+
         if envelope.audience:
             recipients: list[str] = []
-            seen: set[str] = set()
+            seen_nodes: set[str] = set()
+            seen_identities: set[str] = set()
             for audience in envelope.audience:
                 try:
                     identity_id = self.registry.resolve_identity_id(audience)
                 except RegistryError:
                     continue
-                if identity_id in seen:
+                if identity_id in seen_identities:
                     continue
-                if self._authorized_and_routable(identity_id, envelope):
-                    recipients.append(identity_id)
-                    seen.add(identity_id)
+                seen_identities.add(identity_id)
+                for node_id in self._matching_nodes_for_identity(
+                    identity_id,
+                    envelope,
+                    now_ms=now_ms,
+                ):
+                    if node_id not in seen_nodes:
+                        recipients.append(node_id)
+                        seen_nodes.add(node_id)
         else:
             recipients = sorted(
                 {
-                    sub.identity_id
+                    sub.node_id
                     for sub in self.registry.subscriptions_for_domain(
                         envelope.domain,
                         envelope.priority,
+                        intent=envelope.intent,
                     )
-                    if self.registry.identity_has_routable_node(sub.identity_id)
+                    if self.registry.node_is_routable(sub.node_id, now_ms=now_ms)
                 }
             )
         return RouteDecision(tuple(recipients), envelope.priority, envelope.authority_ref)
@@ -78,8 +103,6 @@ class PriorityQueue:
 
     def push(self, envelope: RadarEnvelope) -> RadarEnvelope | None:
         with self._lock:
-            # Admission sequence allocation belongs to the same critical section
-            # as the heap mutation; otherwise the class is not truly thread-safe.
             counter = next(self._counter)
             evicted: RadarEnvelope | None = None
             if len(self._heap) >= self.max_size:
@@ -160,13 +183,7 @@ class DedupeWindow:
             return True
 
     def rollback_accept(self, idempotency_key: str, accepted_at_ms: int) -> bool:
-        """Undo one exact successful acceptance when downstream admission fails.
-
-        The timestamp guard prevents a stale rollback from deleting a newer
-        acceptance of the same key. The monotonic-clock watermark intentionally
-        remains advanced: a failed downstream admission is not permission for
-        callers to move the runtime clock backwards.
-        """
+        """Undo one exact successful acceptance when downstream admission fails."""
         if not isinstance(idempotency_key, str) or not idempotency_key:
             raise ValueError("INVALID_DEDUPE_KEY")
         if type(accepted_at_ms) is not int or accepted_at_ms < 0:
