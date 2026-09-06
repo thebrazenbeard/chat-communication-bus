@@ -8,26 +8,71 @@ permissions:
   id-token: write
 
 jobs:
-  project-mailbox:
+  validate-reconciliation:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Check out exact writer lane
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          repository: ${{ github.repository }}
-          ref: ${{ github.sha }}
-          path: lane
-          fetch-depth: 0
-          persist-credentials: false
+      - name: Resolve immutable called workflow source
+        id: self_pin
+        shell: bash
+        run: |
+          python - <<'PY'
+          import base64
+          import json
+          import os
+          import re
+          import urllib.parse
+          import urllib.request
 
-      - name: Check out trusted Radar control source
+          repository = "thebrazenbeard/chat-communication-bus"
+          workflow_path = ".github/workflows/radar-trusted-projector.yml"
+          request_url = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_URL")
+          request_token = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_TOKEN")
+          output_path = os.environ.get("GITHUB_OUTPUT")
+          if not request_url or not request_token or not output_path:
+              raise SystemExit("RADAR_SELF_PIN_OIDC_CONTEXT_MISSING")
+
+          separator = "&" if "?" in request_url else "?"
+          url = request_url + separator + urllib.parse.urlencode(
+              {"audience": "radar-trusted-projector-self-pin-v1"}
+          )
+          request = urllib.request.Request(
+              url,
+              headers={"Authorization": f"bearer {request_token}"},
+          )
+          with urllib.request.urlopen(request, timeout=10) as response:
+              body = json.load(response)
+
+          token = body.get("value")
+          if not isinstance(token, str):
+              raise SystemExit("RADAR_SELF_PIN_TOKEN_MISSING")
+          parts = token.split(".")
+          if len(parts) != 3:
+              raise SystemExit("RADAR_SELF_PIN_TOKEN_INVALID")
+          payload_segment = parts[1] + "=" * (-len(parts[1]) % 4)
+          claims = json.loads(base64.urlsafe_b64decode(payload_segment).decode("utf-8"))
+
+          job_workflow_ref = claims.get("job_workflow_ref")
+          job_workflow_sha = claims.get("job_workflow_sha")
+          if claims.get("repository") != repository:
+              raise SystemExit("RADAR_SELF_PIN_REPOSITORY_INVALID")
+          if not isinstance(job_workflow_sha, str) or re.fullmatch(r"[0-9a-f]{40}", job_workflow_sha) is None:
+              raise SystemExit("RADAR_SELF_PIN_SHA_INVALID")
+          expected_ref = f"{repository}/{workflow_path}@{job_workflow_sha}"
+          if job_workflow_ref != expected_ref:
+              raise SystemExit("RADAR_SELF_PIN_WORKFLOW_REF_INVALID")
+
+          with open(output_path, "a", encoding="utf-8") as output:
+              output.write(f"sha={job_workflow_sha}\n")
+          PY
+
+      - name: Check out immutable trusted Radar source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: thebrazenbeard/chat-communication-bus
-          ref: 3a2bb6b857784c990e8625ea7731954754a513b5
+          ref: ${{ steps.self_pin.outputs.sha }}
           path: control
-          fetch-depth: 1
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Python
@@ -35,23 +80,12 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install trusted Radar control package
-        run: python -m pip install -e control
-
-      - name: Project exact Bus delta
+      - name: Validate canonical reconciliation targets
         env:
-          RADAR_REPOSITORY: ${{ github.repository }}
-          RADAR_REF: ${{ github.ref }}
-          RADAR_HEAD: ${{ github.sha }}
-          RADAR_BASE: ${{ github.event.before }}
+          PYTHONPATH: control/src
+          RADAR_RECONCILE_MODE: validate-only
         run: |
-          RADAR_BOOTSTRAP_MAIN="$(git -C control rev-parse HEAD)"
-          python control/scripts/radar_emit_bus_projection.py \
-            --repo-dir lane \
-            --repository "$RADAR_REPOSITORY" \
-            --ref "$RADAR_REF" \
-            --head "$RADAR_HEAD" \
-            --base "$RADAR_BASE" \
+          python control/scripts/radar_trusted_reconcile.py \
+            --repo-dir control \
             --topology control/architecture/contracts/RADAR_TOPOLOGY_V1.json \
-            --cutover control/architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json \
-            --bootstrap-main "$RADAR_BOOTSTRAP_MAIN"
+            --cutover control/architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json
