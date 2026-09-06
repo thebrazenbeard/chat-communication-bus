@@ -20,11 +20,13 @@ The canonical Windows runner is:
 
 `powershell -ExecutionPolicy Bypass -File scripts/radar_local_qualify.ps1`
 
-Optional receipt output:
+Optional receipt output must be written outside the source checkout so the receipt cannot invalidate its own `working_tree = CLEAN` claim. For example:
 
-`powershell -ExecutionPolicy Bypass -File scripts/radar_local_qualify.ps1 -ReceiptPath artifacts/radar-local-qualification.json`
+`powershell -ExecutionPolicy Bypass -File scripts/radar_local_qualify.ps1 -ReceiptPath "$env:TEMP\radar-local-qualification.json"`
 
-The runner fails closed when a required command is missing, when Python/Deno/Supabase versions do not match the frozen CI recipe, or when any test/assertion command returns non-zero.
+Relative receipt paths resolve under the repository and are therefore rejected. The JSON receipt is also emitted on stdout and may be captured externally by the caller.
+
+The runner fails closed when a required command is missing, when Python/Deno/Supabase versions do not match the frozen CI recipe, when any test/assertion command returns non-zero, when the source commit or tree changes during qualification, or when the working tree is dirty before or after execution.
 
 ## Qualification equivalence
 
@@ -35,8 +37,9 @@ The local runner reproduces the substantive commands in `.github/workflows/ci.ym
 3. Deno runs `deno ci` and `deno check index.ts` from `supabase/functions/github-bus-ingest` using the frozen dependency graph.
 4. Local Supabase starts through Docker, rebuilds from the migration chain with `supabase db reset`, then every `supabase/tests/radar_*.sql` assertion runs with `ON_ERROR_STOP=1`.
 5. Local Supabase is stopped with `--no-backup` even when SQL qualification fails after startup.
+6. Before emitting PASS, the runner re-reads the Git commit, Git tree, and working-tree state and fails closed on drift.
 
-A PASS receipt is valid only for the exact Git commit reported by the runner as `source_commit`. A receipt from another commit does not qualify a successor head.
+A PASS receipt is valid only for the exact Git commit reported by the runner as `source_commit` and exact tree reported as `source_tree`. A receipt from another commit or tree does not qualify a successor head.
 
 ## GitHub Actions status
 
