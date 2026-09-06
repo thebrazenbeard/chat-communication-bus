@@ -12,7 +12,7 @@
   "topology_contract": "architecture/contracts/RADAR_TOPOLOGY_V1.json",
   "provider_contract": "architecture/contracts/RADAR_SUPABASE_V1.md",
   "source_custody_contract": "architecture/contracts/RADAR_SOURCE_CUSTODY_V1.json",
-  "projection_trust_contract": "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V2.json",
+  "projection_trust_contract": "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V3.json",
   "historical_integration": {
     "branch": "radar/control-plane-v1",
     "integration_pull_request": 2,
@@ -65,6 +65,7 @@
       "body_bound_central_oidc_source_deployed": false
     },
     "projection_anchor_c_deployed": false,
+    "projection_anchor_d_deployed": false,
     "projection_journal_seeded": false,
     "edge_body_bound_oidc_deployed": false
   },
@@ -72,8 +73,10 @@
     "validate_only_anchor_a": "8cebe395cc12d221ec5627e5492c0ccf15ee801d",
     "historical_projection_anchor_b": "7076c73595d5a572e0f374c3a495b29982d92bed",
     "historical_projection_anchor_b_tree": "142a24ea52df3539c00818f30bf3d93f0c5945b0",
-    "current_projection_anchor_c": "f5ab21244a111b47708fa11e99d0e8ff7d8f5a45",
-    "current_projection_anchor_c_tree": "a7dd785be8dfea883df052a73378d583e53058d1",
+    "historical_projection_anchor_c": "f5ab21244a111b47708fa11e99d0e8ff7d8f5a45",
+    "historical_projection_anchor_c_tree": "a7dd785be8dfea883df052a73378d583e53058d1",
+    "current_projection_anchor_d": "401733b2013802880320629a4d8ea06f8bf7b760",
+    "current_projection_anchor_d_tree": "d3a9c44f0378409a626e29334b4d057ef20c7e8e",
     "immutable_code_reads_current_main_as_inert_data": true,
     "status": "SOURCE_ONLY_NOT_ACTIVE"
   },
@@ -101,9 +104,9 @@
       "detail": "Durable central reconciliation journal source exists but provider tables/RPCs and lane cursors are absent."
     },
     {
-      "code": "PROJECTION_ANCHOR_C_NOT_DEPLOYED",
+      "code": "PROJECTION_ANCHOR_D_NOT_DEPLOYED",
       "severity": "HIGH",
-      "detail": "Immutable projection anchor C is source-only; dispatcher/provider trust configuration and body-bound Edge source are not active on main/provider."
+      "detail": "Immutable projection anchor D is source-only; dispatcher/provider trust configuration and body-bound Edge source are not active on main/provider."
     }
   ],
   "historical_cutover": {
@@ -116,5 +119,5 @@
     "currentness_role": "HISTORICAL_EVIDENCE_ONLY"
   },
   "self_registration_contract": "architecture/contracts/RADAR_SELF_REGISTRATION_V1.json",
-  "currentness_note": "GitHub is canonical. Provider facts above are readback status, not authorization to apply migrations, deploy Edge source, change verify_jwt, configure RADAR_TRUSTED_PROJECTOR_SHA, seed projection cursors, or activate the dispatcher."
+  "currentness_note": "GitHub is canonical. Provider facts above are readback status, not authorization to apply migrations, deploy Edge source, change verify_jwt, configure RADAR_TRUSTED_PROJECTOR_SHA for anchor D, seed projection cursors, or activate the dispatcher."
 }
