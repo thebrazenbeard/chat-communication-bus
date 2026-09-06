@@ -29,38 +29,28 @@ class Router:
         if type(now_ms) is not int or now_ms < 0:
             raise ValueError("INVALID_ROUTE_TIME")
 
+        identity_ids: tuple[str, ...] | None = None
         if envelope.audience:
-            recipients: list[str] = []
-            seen_nodes: set[str] = set()
-            seen_identities: set[str] = set()
+            ordered: list[str] = []
+            seen: set[str] = set()
             for audience in envelope.audience:
                 try:
                     identity_id = self.registry.resolve_identity_id(audience)
                 except RegistryError:
                     continue
-                if identity_id in seen_identities:
-                    continue
-                seen_identities.add(identity_id)
-                for node_id in self.registry.routable_subscriber_node_ids(
-                    domain=envelope.domain,
-                    intent=envelope.intent,
-                    priority=envelope.priority,
-                    now_ms=now_ms,
-                    identity_id=identity_id,
-                ):
-                    if node_id not in seen_nodes:
-                        recipients.append(node_id)
-                        seen_nodes.add(node_id)
-        else:
-            recipients = list(
-                self.registry.routable_subscriber_node_ids(
-                    domain=envelope.domain,
-                    intent=envelope.intent,
-                    priority=envelope.priority,
-                    now_ms=now_ms,
-                )
-            )
-        return RouteDecision(tuple(recipients), envelope.priority, envelope.authority_ref)
+                if identity_id not in seen:
+                    seen.add(identity_id)
+                    ordered.append(identity_id)
+            identity_ids = tuple(ordered)
+
+        recipients = self.registry.routable_subscriber_node_ids(
+            domain=envelope.domain,
+            intent=envelope.intent,
+            priority=envelope.priority,
+            now_ms=now_ms,
+            identity_ids=identity_ids,
+        )
+        return RouteDecision(recipients, envelope.priority, envelope.authority_ref)
 
 
 class PriorityQueue:
