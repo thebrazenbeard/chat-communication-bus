@@ -97,3 +97,33 @@ Binding status correction:
 - Live/provider/protected effects remain separately gated even after architecture approval and source implementation.
 
 This is a state-truth correction only. It does not alter the technical design and does not request or imply approval.
+
+## A7. Projection cursor advancement is one atomic fenced finalization
+
+The primary design requires provider-side lane claims, durable per-file status, and cursor advancement only after every file is established. To prevent an expired/stale worker from falsely advancing a lane after its claim has been replaced, finalization must itself be a fenced provider transaction rather than an ordinary update following local checks.
+
+Implementation requirement:
+
+- Final lane advancement occurs through one provider-side atomic RPC/transaction that verifies all of the following in the same transaction: current lane identity/branch, current claim token/owner and unexpired-or-explicitly-owned finalization right, expected projected base cursor, batch id and target head, exact topology/control-source cut, batch state, and every batch-file terminal state.
+- The transaction may mark the batch `COMPLETE` and move `projected_head_sha` to the exact target head only when every required file is `PROJECTED` or verified `IDEMPOTENT`, with no `PENDING`, `FAILED`, `CONFLICT`, or unresolved file.
+- If the claim was replaced/expired, the projected base changed, topology/control source changed, or any file is unresolved, finalization fails closed and does not move the cursor.
+- A stale worker may not reacquire authority merely because it still holds local evidence that was valid before lease loss.
+- `admitted_head_sha` or any validation cursor must not substitute for `projected_head_sha` and must not imply provider effect coverage.
+- Actions cancellation/concurrency controls are never sufficient evidence for finalization.
+
+TDD/SQL tests must cover lease expiry between last file projection and finalization, competing reconciler takeover, stale-worker finalization after another batch advances the cursor, topology/control-cut change before finalization, and lost response after a successful atomic finalization.
+
+## A8. Trusted target lane/head is derived inside immutable control; caller inputs are hints only
+
+The central design says writer `workflow_run` data is a wake-up hint and caller-supplied values are not projection authority. Make the derivation boundary explicit so a mutable dispatcher or malformed invocation cannot cause reusable trusted control to project an arbitrary branch/head.
+
+Implementation requirement:
+
+- The immutable trusted reusable reconciler never accepts a caller-supplied lane branch, base SHA, target head SHA, file list, message body, topology record, or projection delta as authoritative input.
+- On the `workflow_run` path it reads the caller event context itself, requires the triggering repository to be exactly `thebrazenbeard/chat-communication-bus`, treats `workflow_run.head_branch/head_sha` only as an observation hint, resolves the canonical lane identity/state from the pinned topology/control cut, and independently reads Git ancestry/objects before planning a batch.
+- On the scheduled path it enumerates only `ACTIVE` lanes from the pinned canonical topology/control cut and independently reads each current Git head.
+- In either path, the durable projected cursor plus independently observed Git graph determine the exact `C..H` delta; no dispatcher-provided `before`, diff, artifact, or file list can narrow or widen it.
+- Stale wake-ups whose observed head is already behind/equal to the durable cursor are no-ops under the ancestry rules; divergent history fails closed.
+- The request sent to Edge contains only values derived by the trusted reconciler and is then body-bound by A4's OIDC contract.
+
+Tests must include a dispatcher attempting to pass a different branch/head, a stale workflow-run event, a non-canonical `bus/**` branch, a removed/renamed canonical lane, and a multi-commit lane advance between wake-up and trusted Git readback.
