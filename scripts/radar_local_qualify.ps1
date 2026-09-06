@@ -57,8 +57,14 @@ Assert-Command docker
 Assert-Command psql
 
 $sourceCommit = Get-CheckedOutput git @("rev-parse", "HEAD")
-if (-not $sourceCommit -or $sourceCommit.Length -lt 40) {
-    throw "Could not determine exact source commit"
+$sourceTree = Get-CheckedOutput git @("rev-parse", "HEAD^{tree}")
+if (-not $sourceCommit -or $sourceCommit.Length -lt 40 -or -not $sourceTree -or $sourceTree.Length -lt 40) {
+    throw "Could not determine exact source commit/tree"
+}
+
+$workingTreeState = Get-CheckedOutput git @("status", "--porcelain")
+if ($workingTreeState) {
+    throw "Working tree is not clean. Qualification receipts must bind exact committed bytes only."
 }
 
 $pythonVersions = @("3.11", "3.12")
@@ -83,6 +89,7 @@ Invoke-Checked docker @("info")
 
 Write-Host "==> Radar local qualification"
 Write-Host "source_commit=$sourceCommit"
+Write-Host "source_tree=$sourceTree"
 Write-Host "mode=LOCAL_NO_PAID_SERVICES"
 
 foreach ($version in $pythonVersions) {
@@ -140,6 +147,8 @@ $receipt = [ordered]@{
     status = "PASS"
     qualification_mode = "LOCAL_NO_PAID_SERVICES"
     source_commit = $sourceCommit
+    source_tree = $sourceTree
+    working_tree = "CLEAN"
     python = @("3.11", "3.12")
     pip = "26.2.1"
     deno = "2.9.6"
