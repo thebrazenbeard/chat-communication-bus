@@ -131,6 +131,21 @@ def test_local_runner_preserves_stopped_supabase_database_state() -> None:
     assert runner.index(volume_refusal) < runner.index(start)
 
 
+def test_local_runner_preserves_all_preexisting_supabase_project_resources() -> None:
+    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
+
+    project_label = '$supabaseProjectLabel = "com.supabase.cli.project=$supabaseProjectId"'
+    container_list = '@("ps", "-a", "--filter", "label=$supabaseProjectLabel", "--format", "{{.ID}}")'
+    volume_list = '@("volume", "ls", "--filter", "label=$supabaseProjectLabel", "--format", "{{.Name}}")'
+    network_list = '@("network", "ls", "--filter", "label=$supabaseProjectLabel", "--format", "{{.ID}}")'
+    refusal = "Local Supabase project Docker resources already exist; refusing destructive qualification"
+    cleanup_arm = "$sqlCleanupRequired = $true"
+
+    for expected in (project_label, container_list, volume_list, network_list, refusal):
+        assert expected in runner
+        assert runner.index(expected) < runner.index(cleanup_arm)
+
+
 def test_local_runner_refuses_pass_when_supabase_cleanup_fails() -> None:
     runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
 
