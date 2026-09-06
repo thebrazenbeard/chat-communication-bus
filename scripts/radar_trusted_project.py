@@ -4,6 +4,8 @@
 Writer branches remain inert Git objects. Provider cursors are read before target
 derivation; an unseeded lane fails closed. Every unseen commit is validated before
 any provider mutation, and only a successful fenced finalize advances the cursor.
+Fetched writer branches are read directly from origin remote-tracking refs; this
+projector does not create or move local writer branch refs.
 """
 
 from __future__ import annotations
@@ -35,11 +37,7 @@ from radar.trusted_reconciler import (  # noqa: E402
     ReconcileError,
     TrustedReconciler,
 )
-from radar.trusted_wakeup import (  # noqa: E402
-    load_caller_event,
-    materialize_inert_remote_bus_refs,
-    requested_identities,
-)
+from radar.trusted_wakeup import load_caller_event, requested_identities  # noqa: E402
 from radar.writer_lanes import WriterLaneError, load_writer_lanes  # noqa: E402
 
 
@@ -109,7 +107,7 @@ def project_requested_lanes(
         repository=repository,
     )
     lanes = load_writer_lanes(topology_path)
-    git = LocalGitRepository(repo_dir)
+    git = LocalGitRepository(repo_dir, use_remote_tracking_refs=True)
     control_sha = _git(repo_dir, "rev-parse", "HEAD")
     topology_sha = _git(
         repo_dir,
@@ -238,7 +236,6 @@ def main() -> int:
     repo_dir = Path(args.repo_dir).resolve()
     topology_path = Path(args.topology).resolve()
     cutover_path = Path(args.cutover).resolve()
-    materialize_inert_remote_bus_refs(repo_dir)
     client = ProviderProjectionClient(
         args.endpoint,
         token_provider=request_github_actions_oidc_token,
