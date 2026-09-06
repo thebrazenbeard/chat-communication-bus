@@ -119,6 +119,19 @@ if ($LASTEXITCODE -eq 0) {
     throw "Local Supabase stack is already running; refusing destructive qualification"
 }
 
+$supabaseProjectId = "chat-communication-bus"
+$supabaseDbResource = "supabase_db_$supabaseProjectId"
+
+$null = & docker container inspect $supabaseDbResource 2>$null
+if ($LASTEXITCODE -eq 0) {
+    throw "Local Supabase database container already exists; refusing destructive qualification"
+}
+
+$null = & docker volume inspect $supabaseDbResource 2>$null
+if ($LASTEXITCODE -eq 0) {
+    throw "Local Supabase database volume already exists; refusing destructive qualification"
+}
+
 $sqlCleanupRequired = $true
 try {
     Invoke-Checked supabase @("start")
