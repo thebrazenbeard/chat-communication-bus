@@ -1,0 +1,31 @@
+{
+  "contract": "RADAR_PROJECTION_TRUST_ANCHOR_V3",
+  "status": "SOURCE_ONLY_NOT_ACTIVE",
+  "projection_anchor_sha": "401733b2013802880320629a4d8ea06f8bf7b760",
+  "projection_anchor_tree": "d3a9c44f0378409a626e29334b4d057ef20c7e8e",
+  "supersedes_source_anchor_contract": "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V2.json",
+  "superseded_projection_anchor_sha": "f5ab21244a111b47708fa11e99d0e8ff7d8f5a45",
+  "supersession_reason": "Anchor C pinned trusted control actions whose action metadata declared Node 20, while GitHub now substitutes Node 24 for Node-20 JavaScript actions. Anchor D preserves C's trust/data separation while moving checkout/setup-python and SQL setup-cli to immutable current native/composite releases validated on a GitHub-hosted public runner.",
+  "reusable_workflow_path": ".github/workflows/radar-trusted-projector.yml",
+  "dispatcher_path": ".github/workflows/radar-central-dispatcher.yml",
+  "edge_function_path": "supabase/functions/github-bus-ingest/handler.ts",
+  "provider_expected_sha_setting": "RADAR_TRUSTED_PROJECTOR_SHA",
+  "provider_expected_sha_value_at_deploy": "401733b2013802880320629a4d8ea06f8bf7b760",
+  "immutable_code_checkout": true,
+  "canonical_main_data_checkout": true,
+  "canonical_main_data_executed": false,
+  "writer_lane_code_executed": false,
+  "native_action_runtime_pins": {
+    "actions_checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+    "actions_setup_python": "5fda3b95a4ea91299a34e894583c3862153e4b97",
+    "denoland_setup_deno": "22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+    "supabase_setup_cli": "46f7f98c7f948ad727d22c1e67fab04c223a0520"
+  },
+  "public_action_validation_run": 34053917062,
+  "public_action_validation_job": 101542242370,
+  "provider_trust_status": "NOT_DEPLOYED",
+  "journal_provider_status": "NOT_MIGRATED",
+  "cursor_seed_status": "NOT_SEEDED",
+  "dispatcher_status": "SOURCE_ONLY_NOT_ACTIVE",
+  "protected_effects_required": true
+}

@@ -17,6 +17,7 @@
     "architecture/contracts/RADAR_TRUST_ANCHOR_V1.json",
     "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V1.json",
     "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V2.json",
+    "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V3.json",
     "docs/protocol/BUS_MESSAGE_GRAMMAR_V1.json",
     "tests/fixtures/bus_message_grammar_v1.json",
     "supabase/config.toml",
