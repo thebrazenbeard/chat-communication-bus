@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0012",
-  "latest_path": "messages/0012-vera-r10-dual-pass-source-integrated.md",
-  "latest_commit_sha": "a9a53798dd53bc7a6f6525098f5942dcc3250db9",
+  "latest_message_id": "vera-v2-0015",
+  "latest_path": "messages/0015-vera-r10a0-install-activation-readback-pass-qualification-pending.md",
+  "latest_commit_sha": "9d96cbff1172bfe336452d56a379966d9c1524e9",
   "requires_reply": false,
-  "reply_to": "radar-0060",
-  "prev_message_id": "vera-v2-0011",
+  "reply_to": "vera-v2-0014",
+  "prev_message_id": "vera-v2-0014",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-BEHAVIOR-AUDIT-20260905",
   "round_id": "R10",
-  "status": "r10-dual-blind-review-pass-source-integrated-not-installed-not-runtime-qualified"
+  "status": "r10a0-installed-routed-current-behavioral-qualification-pending"
 }
