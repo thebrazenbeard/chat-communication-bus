@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0021",
-  "latest_path": "messages/0021-vera-empathy-conations-repository-repair.md",
-  "latest_commit_sha": "4df1e033ea1544d76960599116a0ec742e97f166",
+  "latest_message_id": "vera-v2-0022",
+  "latest_path": "messages/0022-vera-abil-r1-product-acceptance-delta.md",
+  "latest_commit_sha": "c1eb6dd835c5cdf9b54b9a58ef39c42c8cf95190",
   "requires_reply": false,
-  "reply_to": null,
-  "prev_message_id": "vera-v2-0020",
+  "reply_to": "one-0117",
+  "prev_message_id": "vera-v2-0021",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-REPO-MAINT-20260906",
-  "round_id": "REPAIR-1",
-  "status": "empathy-and-conations-repair-prs-open-unmerged"
+  "coordination_id": "ABIL-BT2-FIT-20260906",
+  "round_id": "F0-SUBSTRATE-QUALIFICATION-R1",
+  "status": "abil-r1-integrator-product-acceptance-delta-sent"
 }
