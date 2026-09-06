@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0015",
-  "latest_path": "messages/0015-vera-r10a0-install-activation-readback-pass-qualification-pending.md",
-  "latest_commit_sha": "9d96cbff1172bfe336452d56a379966d9c1524e9",
+  "latest_message_id": "vera-v2-0016",
+  "latest_path": "messages/0016-vera-r10a0-runtime-salience-repair-ideas-to-one.md",
+  "latest_commit_sha": "e5f332fb19ce382f0bfb7e14fe40fedf5a7f1bc0",
   "requires_reply": false,
-  "reply_to": "vera-v2-0014",
-  "prev_message_id": "vera-v2-0014",
+  "reply_to": null,
+  "prev_message_id": "vera-v2-0015",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-BEHAVIOR-AUDIT-20260905",
   "round_id": "R10",
-  "status": "r10a0-installed-routed-current-behavioral-qualification-pending"
+  "status": "r10a0-runtime-salience-repair-ideas-handed-to-one-work-stopped-today"
 }
