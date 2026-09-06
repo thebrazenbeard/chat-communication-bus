@@ -28,6 +28,16 @@ Relative receipt paths resolve under the repository and are therefore rejected. 
 
 The runner fails closed when a required command is missing, when Python/Deno/Supabase versions do not match the frozen CI recipe, when any test/assertion command returns non-zero, when the source commit or tree changes during qualification, or when the working tree is dirty before or after execution.
 
+Generated Python caches/build metadata plus Supabase CLI local state are narrowly ignored through the custody-bound `.gitignore`. Receipts and arbitrary untracked files are not ignored; unrelated checkout changes still fail qualification.
+
+## Local Supabase safety
+
+`supabase db reset` and `supabase stop --no-backup` are intentionally destructive to the local qualification database. The checked-in `supabase/config.toml` therefore defines the stable local project identity `chat-communication-bus`.
+
+Before starting SQL qualification, the runner checks `supabase status`. If this project's local stack is already running, qualification aborts instead of resetting or deleting that existing local database. After that preflight passes, cleanup is armed before `supabase start`, so a partial startup failure still attempts `supabase stop --no-backup` for the qualification project.
+
+This guard applies only to local Docker resources. It does not link, reset, migrate, or otherwise modify the hosted Supabase project.
+
 ## Qualification equivalence
 
 The local runner reproduces the substantive commands in `.github/workflows/ci.yml` without requiring a GitHub-hosted runner:
@@ -36,7 +46,7 @@ The local runner reproduces the substantive commands in `.github/workflows/ci.ym
 2. Each installs `pip==26.2.1` and `.[test]`, runs `compileall`, the complete pytest suite, and `scripts/radar_source_hashes.py`.
 3. Deno runs `deno ci` and `deno check index.ts` from `supabase/functions/github-bus-ingest` using the frozen dependency graph.
 4. Local Supabase starts through Docker, rebuilds from the migration chain with `supabase db reset`, then every `supabase/tests/radar_*.sql` assertion runs with `ON_ERROR_STOP=1`.
-5. Local Supabase is stopped with `--no-backup` even when SQL qualification fails after startup.
+5. Local Supabase is stopped with `--no-backup` even when SQL qualification fails after startup or startup only partially succeeds.
 6. Before emitting PASS, the runner re-reads the Git commit, Git tree, and working-tree state and fails closed on drift.
 
 A PASS receipt is valid only for the exact Git commit reported by the runner as `source_commit` and exact tree reported as `source_tree`. A receipt from another commit or tree does not qualify a successor head.
