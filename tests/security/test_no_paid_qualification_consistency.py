@@ -37,6 +37,21 @@ def test_no_paid_qualification_contract_is_current_and_source_custodied() -> Non
     assert required_paths.issubset(set(custody["paths"]))
 
 
+def test_python_qualification_dependency_graph_is_exactly_pinned() -> None:
+    config = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    test_dependencies = set(config["project"]["optional-dependencies"]["test"])
+
+    expected = {
+        "pytest==9.1.1",
+        'colorama==0.4.6; sys_platform == "win32"',
+        "iniconfig==2.3.0",
+        "packaging==26.3",
+        "pluggy==1.6.0",
+        "Pygments==2.21.0",
+    }
+    assert test_dependencies == expected
+
+
 def test_local_runner_preserves_frozen_ci_toolchain_and_exact_source_binding() -> None:
     qualification = json.loads(
         (ROOT / "architecture/contracts/RADAR_QUALIFICATION_V1.json").read_text(encoding="utf-8")
