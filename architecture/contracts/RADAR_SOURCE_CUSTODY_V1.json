@@ -26,6 +26,7 @@
     "tests/fixtures/bus_message_grammar_v1.json",
     "tests/radar/test_remote_ref_reconciler.py",
     "tests/security/test_no_paid_qualification_consistency.py",
+    "tests/security/test_reproducible_ci_custody.py",
     "supabase/config.toml",
     "supabase/functions/github-bus-ingest/index.ts",
     "supabase/functions/github-bus-ingest/handler.ts",
