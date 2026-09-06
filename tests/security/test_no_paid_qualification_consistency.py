@@ -151,3 +151,19 @@ def test_local_runner_refuses_pass_when_supabase_cleanup_fails() -> None:
 
     assert "Local Supabase cleanup failed" in runner
     assert 'Write-Warning "Local Supabase stop failed' not in runner
+
+
+def test_local_runner_preserves_primary_sql_failure_when_cleanup_also_fails() -> None:
+    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
+
+    for expected in (
+        "$sqlFailure = $null",
+        "$cleanupFailure = $null",
+        "$sqlFailure = $_",
+        "$cleanupFailure = $_",
+        "if ($sqlFailure -and $cleanupFailure)",
+        "SQL qualification failed:",
+        "Local Supabase cleanup failed:",
+        "throw $sqlFailure",
+    ):
+        assert expected in runner
