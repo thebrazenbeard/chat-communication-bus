@@ -36,6 +36,8 @@ class Node:
     node_id: str
     identity_id: str
     status: NodeStatus
+    last_heartbeat_ms: int | None = None
+    lease_expires_ms: int | None = None
 
 
 @dataclass(frozen=True)
@@ -48,6 +50,9 @@ class Endpoint:
 
 @dataclass(frozen=True)
 class Subscription:
+    node_id: str
     identity_id: str
     domain: str
+    intent: str | None = None
     min_priority: int = 3
+    enabled: bool = True

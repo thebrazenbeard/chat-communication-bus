@@ -8,13 +8,22 @@ from radar.runtime import RadarRuntime
 from radar.telemetry import TelemetryStore
 
 
+LEASE_END_MS = 1_000_000
+
+
 def _registry() -> IdentityRegistry:
     registry = IdentityRegistry()
     for identity in ("one", "two"):
         registry.register_identity(identity, display_name=identity.title())
-        registry.register_node(f"{identity}-node", identity_id=identity)
-        registry.subscribe(identity, domain="database", min_priority=4)
-        registry.subscribe(identity, domain="system", min_priority=4)
+        node_id = f"{identity}-node"
+        registry.register_node(
+            node_id,
+            identity_id=identity,
+            last_heartbeat_ms=0,
+            lease_expires_ms=LEASE_END_MS,
+        )
+        registry.subscribe(node_id, domain="database", min_priority=4)
+        registry.subscribe(node_id, domain="system", min_priority=4)
     return registry
 
 
@@ -126,7 +135,7 @@ def test_failed_queue_admission_does_not_poison_dedupe_retry(tmp_path):
     )
     assert rejected.state == "DROPPED_QUEUE_FULL"
 
-    assert runtime.dispatch_next().state == "DISPATCHED"
+    assert runtime.dispatch_next(now_ms=15_150).state == "DISPATCHED"
 
     retry = runtime.admit(
         _raw("radar-retry-0002", payload={"retry": True}),
@@ -267,7 +276,7 @@ def test_priority_zero_dispatch_is_atomic_against_external_dispatch(tmp_path):
 
     def dispatch_external():
         try:
-            receipts["external"] = runtime.dispatch_next()
+            receipts["external"] = runtime.dispatch_next(now_ms=17_650)
         finally:
             external_done.set()
 
@@ -314,7 +323,7 @@ def test_priority_zero_evicts_background_counts_drop_and_dispatches_immediately(
     )
 
     assert urgent.state == "DISPATCHED"
-    assert urgent.recipients == ("one",)
+    assert urgent.recipients == ("one-node",)
     assert urgent.evicted_message_id == "radar-bg-0002"
     assert runtime.telemetry.snapshot().as_dict() == {
         "routed": 1,
@@ -331,8 +340,8 @@ def test_normal_dispatch_accounts_one_routed_message_not_recipient_fanout(tmp_pa
     )
     assert queued.state == "QUEUED"
 
-    dispatched = runtime.dispatch_next()
+    dispatched = runtime.dispatch_next(now_ms=30_100)
 
     assert dispatched.state == "DISPATCHED"
-    assert dispatched.recipients == ("one", "two")
+    assert dispatched.recipients == ("one-node", "two-node")
     assert runtime.telemetry.snapshot().routed == 1

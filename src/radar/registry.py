@@ -43,6 +43,14 @@ def _priority_value(value: object) -> int:
     return priority
 
 
+def _millisecond_value(value: object, *, allow_none: bool = False) -> int | None:
+    if value is None and allow_none:
+        return None
+    if type(value) is not int or value < 0:
+        raise RegistryError("INVALID_NODE_LEASE_TIME")
+    return value
+
+
 class IdentityRegistry:
     """Thread-safe registry for identities, nodes, endpoints and subscriptions."""
 
@@ -69,16 +77,12 @@ class IdentityRegistry:
         normalized_aliases: list[str] = []
         for alias in aliases:
             normalized = normalize_identifier(alias)
-            # Input-local collisions can be rejected before taking the lock.
             if normalized == canonical or normalized in normalized_aliases:
                 raise RegistryError("ALIAS_COLLISION")
             normalized_aliases.append(normalized)
 
         identity = Identity(canonical, display_name.strip(), tuple(normalized_aliases))
         with self._lock:
-            # Registry-dependent checks must happen under the same lock as the
-            # writes. Otherwise two registrations can both preflight the same
-            # free alias and the later writer silently steals it.
             if canonical in self._identities or canonical in self._aliases:
                 raise RegistryError("IDENTITY_COLLISION")
             for alias in normalized_aliases:
@@ -114,9 +118,15 @@ class IdentityRegistry:
         *,
         identity_id: str,
         status: NodeStatus = NodeStatus.ONLINE,
+        last_heartbeat_ms: int | None = None,
+        lease_expires_ms: int | None = None,
     ) -> Node:
         canonical_node = normalize_identifier(node_id)
         canonical_identity = self.resolve_identity_id(identity_id)
+        heartbeat = _millisecond_value(last_heartbeat_ms, allow_none=True)
+        lease_expires = _millisecond_value(lease_expires_ms, allow_none=True)
+        if heartbeat is not None and lease_expires is not None and lease_expires < heartbeat:
+            raise RegistryError("INVALID_NODE_LEASE_TIME")
         with self._lock:
             if canonical_node in self._nodes:
                 raise RegistryError("NODE_COLLISION")
@@ -125,7 +135,13 @@ class IdentityRegistry:
                     status = NodeStatus(status)
             except Exception as exc:
                 raise RegistryError("INVALID_NODE_STATUS") from exc
-            node = Node(canonical_node, canonical_identity, status)
+            node = Node(
+                canonical_node,
+                canonical_identity,
+                status,
+                heartbeat,
+                lease_expires,
+            )
             self._nodes[canonical_node] = node
         return node
 
@@ -143,14 +159,23 @@ class IdentityRegistry:
             nodes = [n for n in self._nodes.values() if n.identity_id == canonical]
         return tuple(sorted(nodes, key=lambda n: n.node_id))
 
-    def identity_has_routable_node(self, identity_id: str) -> bool:
+    def node_is_routable(self, node_id: str, *, now_ms: int) -> bool:
+        now = _millisecond_value(now_ms)
+        node = self.node(node_id)
+        return (
+            node.status in ROUTABLE_NODE_STATUSES
+            and node.last_heartbeat_ms is not None
+            and node.lease_expires_ms is not None
+            and node.last_heartbeat_ms <= now
+            and now < node.lease_expires_ms
+        )
+
+    def identity_has_routable_node(self, identity_id: str, *, now_ms: int) -> bool:
         canonical = self.resolve_identity_id(identity_id)
-        with self._lock:
-            return any(
-                n.status in ROUTABLE_NODE_STATUSES
-                for n in self._nodes.values()
-                if n.identity_id == canonical
-            )
+        return any(
+            self.node_is_routable(node.node_id, now_ms=now_ms)
+            for node in self.nodes_for_identity(canonical)
+        )
 
     def set_node_status(self, node_id: str, status: NodeStatus) -> Node:
         with self._lock:
@@ -199,19 +224,54 @@ class IdentityRegistry:
             except KeyError as exc:
                 raise RegistryError("UNKNOWN_ENDPOINT") from exc
 
+    def _resolve_subscription_node(self, target_id: str) -> Node:
+        key = normalize_identifier(target_id)
+        with self._lock:
+            direct = self._nodes.get(key)
+            if direct is not None:
+                return direct
+        # Compatibility for configuration callers that still name an identity:
+        # only an unambiguous single registered node may be selected. The
+        # durable subscription itself remains node-bound.
+        canonical_identity = self.resolve_identity_id(target_id)
+        nodes = self.nodes_for_identity(canonical_identity)
+        if len(nodes) != 1:
+            raise RegistryError("AMBIGUOUS_SUBSCRIPTION_TARGET")
+        return nodes[0]
+
     def subscribe(
         self,
-        identity_id: str,
+        node_id: str,
         *,
         domain: str,
+        intent: str | None = None,
         min_priority: int = 3,
+        enabled: bool = True,
     ) -> Subscription:
-        canonical_identity = self.resolve_identity_id(identity_id)
         if not isinstance(domain, str) or not domain.strip():
             raise RegistryError("DOMAIN_REQUIRED")
         min_pr = _priority_value(min_priority)
-        sub = Subscription(canonical_identity, domain.strip().casefold(), min_pr)
+        if not isinstance(enabled, bool):
+            raise RegistryError("INVALID_SUBSCRIPTION_ENABLED")
+        normalized_intent: str | None = None
+        if intent is not None:
+            if not isinstance(intent, str) or not intent.strip():
+                raise RegistryError("INTENT_REQUIRED")
+            normalized_intent = intent.strip().casefold()
+
+        # Identity-name compatibility is safe only if target resolution and the
+        # durable node-bound append observe one atomic registry state. The RLock
+        # is re-entrant because resolution helpers also take it.
         with self._lock:
+            node = self._resolve_subscription_node(node_id)
+            sub = Subscription(
+                node.node_id,
+                node.identity_id,
+                domain.strip().casefold(),
+                normalized_intent,
+                min_pr,
+                enabled,
+            )
             if sub not in self._subscriptions:
                 self._subscriptions.append(sub)
         return sub
@@ -220,22 +280,50 @@ class IdentityRegistry:
         self,
         domain: str,
         priority: int,
+        *,
+        intent: str | None = None,
     ) -> tuple[Subscription, ...]:
-        """Return subscriptions accepting the numeric priority.
-
-        Lower numeric values are more urgent. A subscription with min_priority
-        3 therefore accepts priorities 0 through 3.
-        """
+        """Return enabled node subscriptions accepting domain/intent/priority."""
         if not isinstance(domain, str) or not domain.strip():
             raise RegistryError("DOMAIN_REQUIRED")
         pr = _priority_value(priority)
         key = domain.strip().casefold()
+        normalized_intent: str | None = None
+        if intent is not None:
+            if not isinstance(intent, str) or not intent.strip():
+                raise RegistryError("INTENT_REQUIRED")
+            normalized_intent = intent.strip().casefold()
         with self._lock:
             return tuple(
                 sub
                 for sub in self._subscriptions
-                if sub.domain == key and pr <= sub.min_priority
+                if sub.enabled
+                and sub.domain == key
+                and pr <= sub.min_priority
+                and (
+                    normalized_intent is None
+                    or sub.intent is None
+                    or sub.intent == normalized_intent
+                )
             )
+
+    def node_is_subscribed(
+        self,
+        node_id: str,
+        *,
+        domain: str,
+        intent: str,
+        priority: int,
+    ) -> bool:
+        canonical_node = self.node(node_id).node_id
+        return any(
+            sub.node_id == canonical_node
+            for sub in self.subscriptions_for_domain(
+                domain,
+                priority,
+                intent=intent,
+            )
+        )
 
     def identity_is_subscribed(
         self,
@@ -243,11 +331,12 @@ class IdentityRegistry:
         *,
         domain: str,
         priority: int,
+        intent: str | None = None,
     ) -> bool:
         canonical = self.resolve_identity_id(identity_id)
         return any(
             sub.identity_id == canonical
-            for sub in self.subscriptions_for_domain(domain, priority)
+            for sub in self.subscriptions_for_domain(domain, priority, intent=intent)
         )
 
     def identities(self) -> tuple[Identity, ...]:

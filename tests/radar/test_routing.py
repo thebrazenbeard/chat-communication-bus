@@ -2,6 +2,9 @@ import importlib
 import pytest
 
 
+NOW_MS = 1_500
+
+
 def _modules():
     try:
         return importlib.import_module("radar.envelope"), importlib.import_module("radar.registry"), importlib.import_module("radar.routing")
@@ -17,25 +20,32 @@ def _env(e, **overrides):
 
 def _activate(reg, rmod, identity, *, min_priority=4):
     reg.register_identity(identity, display_name=identity.title())
-    reg.register_node(f"{identity}-node", identity_id=identity, status=rmod.NodeStatus.ONLINE)
-    reg.subscribe(identity, domain="database", min_priority=min_priority)
+    node_id = f"{identity}-node"
+    reg.register_node(
+        node_id,
+        identity_id=identity,
+        status=rmod.NodeStatus.ONLINE,
+        last_heartbeat_ms=1_000,
+        lease_expires_ms=2_000,
+    )
+    reg.subscribe(node_id, domain="database", min_priority=min_priority)
 
 
-def test_direct_audience_routes_only_to_named_authorized_live_identity():
+def test_direct_audience_routes_only_to_named_authorized_live_node():
     e, rmod, rt = _modules()
     reg = rmod.IdentityRegistry()
     _activate(reg, rmod, "yin")
     _activate(reg, rmod, "yang")
-    decision = rt.Router(reg).route(_env(e, audience=["yin"]))
-    assert decision.recipients == ("yin",)
+    decision = rt.Router(reg).route(_env(e, audience=["yin"]), now_ms=NOW_MS)
+    assert decision.recipients == ("yin-node",)
 
 
 def test_subscription_route_respects_domain_min_priority_and_live_registration():
     e, rmod, rt = _modules()
     reg = rmod.IdentityRegistry()
     _activate(reg, rmod, "mune", min_priority=2)
-    assert rt.Router(reg).route(_env(e, priority=1)).recipients == ("mune",)
-    assert rt.Router(reg).route(_env(e, priority=3)).recipients == ()
+    assert rt.Router(reg).route(_env(e, priority=1), now_ms=NOW_MS).recipients == ("mune-node",)
+    assert rt.Router(reg).route(_env(e, priority=3), now_ms=NOW_MS).recipients == ()
 
 
 def test_priority_queue_orders_without_granting_authority():
