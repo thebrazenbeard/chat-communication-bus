@@ -15,6 +15,8 @@ def test_node_routing_migration_is_forward_only_and_fail_closed():
     assert "set active = false" in source
     assert "not active or node_id is not null" in source
     assert "radar_subscription_node_identity_mismatch" in source
+    assert "radar_node_identity_immutable" in source
+    assert "before update of identity_id on radar.nodes" in source
     assert "lease_expires_at <= now()" in source
     assert "radar_invalid_stale_interval" in source
     assert "lease_expires_at = case" in source
@@ -28,6 +30,7 @@ def test_node_routing_migration_closes_client_function_execute_gap():
         "radar.mark_stale_nodes_offline(interval)",
         "radar.touch_node(uuid, text)",
         "radar.validate_subscription_node_identity()",
+        "radar.prevent_node_identity_reassignment()",
     ):
         assert f"revoke all on function {signature} from public, anon, authenticated" in source
 
@@ -36,6 +39,7 @@ def test_node_routing_sql_test_covers_lease_and_identity_invariants():
     source = SQL_TEST.read_text(encoding="utf-8").lower()
 
     assert "radar_subscription_node_identity_mismatch" in source
+    assert "radar_node_identity_immutable" in source
     assert "radar_active_subscription_node_required" in source
     assert "radar_stale_or_leaseless_node_remained_routable" in source
     assert "radar_invalid_stale_interval" in source
