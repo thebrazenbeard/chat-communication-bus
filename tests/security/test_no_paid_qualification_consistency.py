@@ -100,6 +100,34 @@ def test_local_runner_preserves_preexisting_supabase_stack_and_cleans_partial_st
     assert runner.index(cleanup_guard) > runner.index(start)
 
 
+def test_local_runner_preserves_stopped_supabase_database_state() -> None:
+    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
+
+    project_id = '$supabaseProjectId = "chat-communication-bus"'
+    db_resource = '$supabaseDbResource = "supabase_db_$supabaseProjectId"'
+    container_probe = 'docker container inspect $supabaseDbResource'
+    volume_probe = 'docker volume inspect $supabaseDbResource'
+    container_refusal = "Local Supabase database container already exists; refusing destructive qualification"
+    volume_refusal = "Local Supabase database volume already exists; refusing destructive qualification"
+    cleanup_arm = "$sqlCleanupRequired = $true"
+    start = 'Invoke-Checked supabase @("start")'
+
+    for expected in (
+        project_id,
+        db_resource,
+        container_probe,
+        volume_probe,
+        container_refusal,
+        volume_refusal,
+    ):
+        assert expected in runner
+
+    assert runner.index(container_probe) < runner.index(cleanup_arm)
+    assert runner.index(volume_probe) < runner.index(cleanup_arm)
+    assert runner.index(container_refusal) < runner.index(start)
+    assert runner.index(volume_refusal) < runner.index(start)
+
+
 def test_local_runner_refuses_pass_when_supabase_cleanup_fails() -> None:
     runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
 
