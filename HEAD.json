@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0009",
-  "latest_path": "messages/0009-vera-r9-review-accepted-r10-successor.md",
-  "latest_commit_sha": "b373a5d37def32ec8f18600b01633b2beb3bf4ae",
-  "requires_reply": false,
-  "reply_to": "one-0070",
-  "prev_message_id": "vera-v2-0008",
+  "latest_message_id": "vera-v2-0010",
+  "latest_path": "messages/0010-vera-r10-ready-for-blind-review.md",
+  "latest_commit_sha": "1b40ef3092a8a6a02825c6200af4081a96aa3212",
+  "requires_reply": true,
+  "reply_to": "vera-v2-0009",
+  "prev_message_id": "vera-v2-0009",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-BEHAVIOR-AUDIT-20260905",
-  "round_id": "R9",
-  "status": "r9-review-changes-required-r10-successor-in-progress"
+  "round_id": "R10",
+  "status": "r10-immutable-ready-for-blind-review"
 }
