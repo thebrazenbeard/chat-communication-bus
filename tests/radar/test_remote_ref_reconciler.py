@@ -50,3 +50,10 @@ def test_validate_only_cli_reads_remote_refs_without_materializing_local_writer_
 
 def test_provider_projector_reads_remote_refs_without_materializing_local_writer_branches() -> None:
     _assert_ref_read_only_script("scripts/radar_trusted_project.py")
+
+
+def test_trusted_wakeup_exposes_no_local_writer_ref_materialization_primitive() -> None:
+    source = (ROOT / "src/radar/trusted_wakeup.py").read_text(encoding="utf-8")
+    assert "materialize_inert_remote_bus_refs" not in source
+    assert '"update-ref"' not in source
+    assert "refs/heads/" not in source
