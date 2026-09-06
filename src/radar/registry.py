@@ -258,16 +258,20 @@ class IdentityRegistry:
             if not isinstance(intent, str) or not intent.strip():
                 raise RegistryError("INTENT_REQUIRED")
             normalized_intent = intent.strip().casefold()
-        node = self._resolve_subscription_node(node_id)
-        sub = Subscription(
-            node.node_id,
-            node.identity_id,
-            domain.strip().casefold(),
-            normalized_intent,
-            min_pr,
-            enabled,
-        )
+
+        # Identity-name compatibility is safe only if target resolution and the
+        # durable node-bound append observe one atomic registry state. The RLock
+        # is re-entrant because resolution helpers also take it.
         with self._lock:
+            node = self._resolve_subscription_node(node_id)
+            sub = Subscription(
+                node.node_id,
+                node.identity_id,
+                domain.strip().casefold(),
+                normalized_intent,
+                min_pr,
+                enabled,
+            )
             if sub not in self._subscriptions:
                 self._subscriptions.append(sub)
         return sub
