@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import pytest
+
 from radar.envelope import RadarEnvelope
 from radar.model import NodeStatus
-from radar.registry import IdentityRegistry
+from radar.registry import IdentityRegistry, RegistryError
 from radar.routing import Router
 
 
@@ -99,3 +101,40 @@ def test_wildcard_intent_subscription_matches_any_intent_on_that_node_only():
     decision = Router(registry).route(_env(intent="command"), now_ms=1_500)
 
     assert decision.recipients == ("yin-any",)
+
+
+def test_identity_named_subscription_is_only_compatibly_bound_when_unambiguous():
+    registry = IdentityRegistry()
+    registry.register_identity("yin", display_name="Yin")
+    _register_node(registry, "yin-one")
+    sub = registry.subscribe("yin", domain="database", intent="event", min_priority=4)
+    assert sub.node_id == "yin-one"
+
+    _register_node(registry, "yin-two")
+    with pytest.raises(RegistryError, match="AMBIGUOUS_SUBSCRIPTION_TARGET"):
+        registry.subscribe("yin", domain="database", intent="command", min_priority=4)
+
+
+def test_invalid_node_lease_times_fail_closed():
+    registry = IdentityRegistry()
+    registry.register_identity("yin", display_name="Yin")
+
+    with pytest.raises(RegistryError, match="INVALID_NODE_LEASE_TIME"):
+        _register_node(registry, "yin-bool-heartbeat", last_heartbeat_ms=True)
+    with pytest.raises(RegistryError, match="INVALID_NODE_LEASE_TIME"):
+        _register_node(
+            registry,
+            "yin-backwards-lease",
+            last_heartbeat_ms=1_000,
+            lease_expires_ms=999,
+        )
+
+
+def test_route_time_rejects_boolean_int_coercion():
+    registry = IdentityRegistry()
+    registry.register_identity("yin", display_name="Yin")
+    _register_node(registry, "yin-event")
+    registry.subscribe("yin-event", domain="database", intent="event", min_priority=4)
+
+    with pytest.raises(ValueError, match="INVALID_ROUTE_TIME"):
+        Router(registry).route(_env(), now_ms=True)
