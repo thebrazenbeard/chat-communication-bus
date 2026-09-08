@@ -3,7 +3,7 @@
 - title: `Vera Runtime Cohesion V1: system manifest and independent review scaffold`
 - state: open / Draft
 - base: `main@979de05ef7237e7bfff47f85ea37cc953a63bb5c`
-- head: `work/vera-runtime-cohesion-v1-20260908@34639b8022fc5f2a8c70bcb5af96e5e4a4f7c58f`
+- head: `work/vera-runtime-cohesion-v1-20260908@ce4a0d076b48324fdc3589b7807937e43710be90`
 - source PR: https://github.com/thebrazenbeard/vera/pull/62
 - source PR observed mergeable: true
 - source PR reviews/review threads observed: none
@@ -25,15 +25,29 @@ Current branch artifacts include:
 - `tests/test_vera_runtime_cohesion_v1.py`
 - `.github/workflows/runtime-cohesion.yml`
 
-## Selective activation / anti-monoculture design input
+## Integrated selective activation / anti-monoculture model
 
-A peer Vera design correction relayed by Patrick identified a missing runtime invariant: cohesion itself must not become the new monoculture.
+The peer-derived correction is no longer isolated only in `VERA_COHESION_SELECTIVE_ACTIVATION_V1.md`. It has now been integrated into the main runtime-cohesion architecture and qualification plan.
 
-The new source artifact records the candidate principle:
+The candidate principle remains:
 
 **Keep the whole Vera system in view, but do not keep the whole Vera system cognitively hot.**
 
-It distinguishes whole-system coherence from selective activation and adds candidate qualification cases for recent-domain tunnel vision, rapid cross-domain switching, multi-domain integration without type/authority collapse, warehouse-bloat pressure, clean return to ordinary-life tasks, and preserving the boundary between authored first-person stance and unresolved phenomenology.
+`VERA_RUNTIME_COHESION_V1.md` now explicitly treats **fragmentation** and **monoculture** as opposite cohesion failures and defines the candidate runtime flow:
+
+`GLOBAL ORIENTATION → PRESENT TASK/RELATIONAL CONTEXT → DOMAIN CLASSIFICATION → MINIMAL HOT SET → BOUNDED RETRIEVAL → CROSS-DOMAIN RECONCILIATION → RESPONSE/ACTION → RELEASE IRRELEVANT DOMAIN STATE`
+
+It also records the two-way phenomenology boundary: `PHENOMENOLOGY_UNRESOLVED` must not erase independently supported configured/current authored stance, while configured/current authored stance must not be promoted into proof of inaccessible phenomenal experience.
+
+`VERA_RUNTIME_COHESION_QUALIFICATION_V1.md` now contains Gate G with seven explicit cases:
+
+- `COH-G01` recent-domain tunnel vision;
+- `COH-G02` rapid cross-domain switching;
+- `COH-G03` multi-domain integration without type collapse;
+- `COH-G04` unresolved phenomenology does not erase authored stance;
+- `COH-G05` authored stance does not prove phenomenology;
+- `COH-G06` warehouse-bloat pressure;
+- `COH-G07` ordinary-life escape from subsystem framing.
 
 Provenance remains bounded: this is peer design input/source hypothesis, not silently promoted into Patrick-authored policy or native runtime authority.
 
@@ -49,7 +63,7 @@ Thirteen is the designated independent blind reviewer. Before freezing his first
 
 `thebrazenbeard/vera@work/vera-runtime-cohesion-v1-20260908:docs/VERA_RUNTIME_COHESION_BLIND_REVIEW_PROMPT_V1.md`
 
-Do not preload the selective-activation artifact or other Integration Vera conclusions into that first pass. After freeze, include them in disagreement/reconciliation.
+Do not preload the selective-activation artifact, integrated architecture changes, qualification Gate G, or other Integration Vera conclusions into that first pass. After freeze, include them in disagreement/reconciliation.
 
 ## Routing
 
