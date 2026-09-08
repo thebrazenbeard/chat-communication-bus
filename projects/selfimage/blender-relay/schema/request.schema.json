@@ -20,6 +20,7 @@
         "mesh_audit",
         "scene_audit_v1",
         "import_exact_cc0",
+        "render_five_view_cc0",
         "save_blend_copy",
         "export_scene_glb"
       ]
