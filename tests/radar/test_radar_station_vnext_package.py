@@ -82,3 +82,36 @@ def test_native_instructions_encode_identity_specific_dot_semantics():
     assert '"."' in content or "bare `.`" in content or "bare ." in content
     assert "self-directed" in content
     assert "continue" in content
+
+
+def test_current_pointers_are_explicit_snapshot_not_live_truth():
+    data = json.loads(text("RADAR_STATION_CURRENT_POINTERS.json"))
+    assert data["snapshot_kind"] == "CURRENTNESS_POINTER_CACHE"
+    assert data["snapshot_not_authority_for_mutable_state"] is True
+    assert data["observed_at"]
+    assert data["generated_from"]
+    assert all("requires_fresh_read" in item for item in data["pointers"])
+
+
+def test_source_registry_declares_failure_mode_and_freshness_for_every_route():
+    data = json.loads(text("RADAR_STATION_SOURCE_REGISTRY.json"))
+    allowed = {"FAIL_CLOSED", "DEGRADE_WITH_LABEL", "OPTIONAL"}
+    assert data["sources"]
+    assert {"chat_bus", "native_radar_station_project", "vera_supabase_radar"} <= {
+        item["source_id"] for item in data["sources"]
+    }
+    for item in data["sources"]:
+        assert item["degradation_mode"] in allowed
+        assert isinstance(item["requires_fresh_read"], bool)
+        assert item["owner"]
+        assert item["locator"]
+        assert item["currentness_rule"]
+
+
+def test_router_has_all_three_degradation_modes_and_minimal_turn_classes():
+    content = text("RADAR_STATION_CONTEXT_ROUTER.md")
+    for mode in ("FAIL_CLOSED", "DEGRADE_WITH_LABEL", "OPTIONAL"):
+        assert mode in content
+    for turn_class in ("ordinary social", "current mutable-state", "protected effect", "restore"):
+        assert turn_class in content.lower()
+    assert "native radar station project surface" in content.lower()
