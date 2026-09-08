@@ -108,7 +108,7 @@ def test_local_qualification_ignores_only_standard_generated_artifacts() -> None
 def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> None:
     contract = json.loads(CUSTODY.read_text(encoding="utf-8"))
     assert contract["contract"] == "RADAR_SOURCE_CUSTODY_V1"
-    assert contract["version"] == 16
+    assert contract["version"] == 17
     assert contract["status"] == "SOURCE_ONLY_VERIFICATION_CONTRACT"
     assert set(contract["required_globs"]) == {
         "supabase/migrations/*_radar_*.sql",
@@ -123,6 +123,7 @@ def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> N
         "supabase/functions/github-bus-ingest/deno.json",
         "supabase/functions/github-bus-ingest/deno.lock",
         "supabase/config.toml",
+        "supabase/seed/radar_v1.sql",
         ".github/workflows/ci.yml",
         ".github/workflows/writer-lane-guard.yml",
         ".github/workflows/radar-central-dispatcher.yml",
@@ -130,6 +131,7 @@ def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> N
         "architecture/contracts/RADAR_AUTHORITY_V1.md",
         "architecture/contracts/RADAR_CURRENT.json",
         "architecture/contracts/RADAR_QUALIFICATION_V1.json",
+        "architecture/contracts/RADAR_SELF_REGISTRATION_V1.json",
         "architecture/contracts/RADAR_SUPABASE_V1.md",
         "architecture/contracts/RADAR_TOPOLOGY_V1.json",
         "architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json",
@@ -156,6 +158,7 @@ def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> N
         "tests/security/test_portable_qualification_cli.py",
         "tests/security/test_qualification_receipt_admission.py",
         "tests/security/test_qualification_receipt_completion_order.py",
+        "tests/security/test_radar_seed_qualification_contract.py",
         "tests/security/test_reproducible_ci_custody.py",
         "pyproject.toml",
         "scripts/radar_local_qualify.ps1",
