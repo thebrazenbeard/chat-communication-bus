@@ -1,0 +1,1 @@
+Append-only operational note: source draft PR creation follows this preflight. Do not treat this file as proof that the PR exists; bind actual PR metadata in a successor record after GitHub returns it.
