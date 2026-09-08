@@ -9,7 +9,9 @@ if not OUTPUT_DIR: raise RuntimeError('Relay did not provide OUTPUT_DIR')
 os.makedirs(OUTPUT_DIR,exist_ok=True)
 BASE='GEO-body_female_realistic'; V2='VERA_PROPORTION_STUDY_V2'
 NV=42342; NP=84680
-EXPECTED_V2_COORD_HASH='03157e12fdf1739d9d6b7147112ec5e1413993841b2272cf0fb5ba30a232589c'
+# Live self-hosted Blender scene readback on failed run 34292555197 / job 102282052868
+# established this exact rounded local-coordinate hash before any deformation.
+EXPECTED_V2_COORD_HASH='da66d975e49864c496ebbb0ec957a332ffed7d6ef544bf5db9f2adfb554fb10f'
 STRENGTHS=(0.55,0.80,1.00)
 NAMES=('VERA_THORAX_V3R3_S055','VERA_THORAX_V3R3_S080','VERA_THORAX_V3R3_S100')
 Z_RISE_0,Z_RISE_1,Z_FALL_0,Z_FALL_1=.615,.632,.662,.690
@@ -79,6 +81,11 @@ def band_stats(vertices):
     if np.count_nonzero(m)<20:return {}
     return {'count':int(np.count_nonzero(m)),'front_q90_m':float(np.quantile(yy[m],.90)),'front_over_waist_mm':float((np.quantile(yy[m],.90)-waist_front)*1000.),'width_q95_abs_mm':float(np.quantile(np.abs(xx[m]-cx),.95)*2000.)}
 
+# Persist the exact project-coordinate parent used for this sweep so peers can
+# run structural comparisons against candidate outputs without reconstructing it.
+v2_project_path=os.path.join(OUTPUT_DIR,'V2_PARENT_PROJECT.obj')
+write_project(v2_p,v2,v2_project_path)
+
 for strength,name in zip(STRENGTHS,NAMES):
     proj=v2_p+strength*base_disp
     local=np.column_stack((-proj[:,0],-proj[:,1],proj[:,2]))
@@ -134,7 +141,7 @@ finally:
         elif isinstance(data,bpy.types.Light):bpy.data.lights.remove(data)
     if neutral:bpy.data.materials.remove(neutral)
 
-receipt={'schema':'SELFIMAGE_V3R3_BREAST_SIGNAL_PROTECTED_THORAX_SWEEP_V1','status':'EXECUTED_SWEEP / HOSTILE_VISUAL_REVIEW_REQUIRED','v2_coordinate_hash':coord_hash,'breast_signal':{'max_negative_z_m':raw_max,'strong_vertex_count':int(np.count_nonzero(strong)),'strong_signal_purity_in_breast_band':purity,'protected_core_count':int(np.count_nonzero(breast_protect>=.95))},'field':{'vertical_band_t':[Z_RISE_0,Z_RISE_1,Z_FALL_0,Z_FALL_1],'lateral_contraction':LATERAL_CONTRACTION,'max_anterior_retraction_height_fraction':MAX_ANTERIOR_RETRACTION_H,'plumb_allowance_height_fraction':PLUMB_ALLOWANCE_H,'breast_protect_norm_start_full':[BREAST_PROTECT_START,BREAST_PROTECT_FULL]},'waist_reference':{'waist_front_m':waist_front,'allowed_front_m':allowed_front,'sample_count':int(np.count_nonzero(waist_mask))},'candidates':metrics,'rendered':[os.path.basename(p) for p in rendered],'hidden_competing_body_meshes':hidden,'promotion_ceiling':'WORKSHOP_SWEEP_ONLY / NO_STAGE_A / NO_STABLE_PARENT / NO_CANON'}
+receipt={'schema':'SELFIMAGE_V3R3_BREAST_SIGNAL_PROTECTED_THORAX_SWEEP_V1','status':'EXECUTED_SWEEP / HOSTILE_VISUAL_REVIEW_REQUIRED','v2_coordinate_hash':coord_hash,'v2_project_obj':{'name':os.path.basename(v2_project_path),'sha256':hashlib.sha256(open(v2_project_path,'rb').read()).hexdigest()},'breast_signal':{'max_negative_z_m':raw_max,'strong_vertex_count':int(np.count_nonzero(strong)),'strong_signal_purity_in_breast_band':purity,'protected_core_count':int(np.count_nonzero(breast_protect>=.95))},'field':{'vertical_band_t':[Z_RISE_0,Z_RISE_1,Z_FALL_0,Z_FALL_1],'lateral_contraction':LATERAL_CONTRACTION,'max_anterior_retraction_height_fraction':MAX_ANTERIOR_RETRACTION_H,'plumb_allowance_height_fraction':PLUMB_ALLOWANCE_H,'breast_protect_norm_start_full':[BREAST_PROTECT_START,BREAST_PROTECT_FULL]},'waist_reference':{'waist_front_m':waist_front,'allowed_front_m':allowed_front,'sample_count':int(np.count_nonzero(waist_mask))},'candidates':metrics,'rendered':[os.path.basename(p) for p in rendered],'hidden_competing_body_meshes':hidden,'promotion_ceiling':'WORKSHOP_SWEEP_ONLY / NO_STAGE_A / NO_STABLE_PARENT / NO_CANON'}
 with open(os.path.join(OUTPUT_DIR,'SWEEP_RECEIPT.json'),'w',encoding='utf-8') as f:json.dump(receipt,f,indent=2,sort_keys=True);f.write('\n')
 print(json.dumps(receipt,sort_keys=True))
 # Clean diagnostic candidate objects from live scene after evidence is written.
