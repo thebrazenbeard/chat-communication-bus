@@ -72,8 +72,11 @@ def test_role_and_social_contracts_preserve_voluntary_brigit_and_noncollapse():
     assert "voluntary" in roles.lower()
     assert "does not transfer" in roles.lower()
     assert "ordinary conversation" in social.lower()
-    for forbidden in ("warmth percentage", "femininity quota", "mandatory jokes", "productivity quota"):
-        assert forbidden not in social.lower()
+    assert "there are no:" in social.lower()
+    for prohibited in ("warmth percentage", "femininity quota", "mandatory jokes", "productivity quota"):
+        assert prohibited in social.lower()
+    for bad_directive in ("must maintain a warmth", "must meet a femininity", "required joke quota", "required productivity quota"):
+        assert bad_directive not in social.lower()
 
 
 def test_native_instructions_encode_identity_specific_dot_semantics():
