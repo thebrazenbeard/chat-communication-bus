@@ -16,10 +16,13 @@ def test_no_paid_qualification_contract_is_current_and_source_custodied() -> Non
     custody = json.loads(
         (ROOT / "architecture/contracts/RADAR_SOURCE_CUSTODY_V1.json").read_text(encoding="utf-8")
     )
+    operator = (ROOT / "docs/operator/RADAR_NO_PAID_QUALIFICATION.md").read_text(encoding="utf-8")
 
+    authority = qualification["authoritative_qualification"]
     assert qualification["policy"] == "NO_PAID_SERVICES"
-    assert qualification["authoritative_qualification"]["mode"] == "LOCAL_NO_PAID_SERVICES"
-    assert qualification["authoritative_qualification"]["receipt_required_for_green"] is True
+    assert authority["mode"] == "LOCAL_NO_PAID_SERVICES"
+    assert authority["receipt_required_for_green"] is True
+    assert authority["receipt_validator"] == "scripts/radar_validate_qualification_receipt.py"
     assert qualification["github_actions"]["private_hosted_actions_authoritative"] is False
     assert qualification["github_actions"]["billing_or_plan_change_allowed_as_recovery"] is False
 
@@ -32,9 +35,18 @@ def test_no_paid_qualification_contract_is_current_and_source_custodied() -> Non
         "architecture/contracts/RADAR_QUALIFICATION_V1.json",
         "docs/operator/RADAR_NO_PAID_QUALIFICATION.md",
         "scripts/radar_local_qualify.ps1",
+        "scripts/radar_validate_qualification_receipt.py",
         "tests/security/test_no_paid_qualification_consistency.py",
+        "tests/security/test_qualification_receipt_admission.py",
     }
     assert required_paths.issubset(set(custody["paths"]))
+
+    validator_command = (
+        'py -3.11 scripts/radar_validate_qualification_receipt.py '
+        '"$env:TEMP\\radar-local-qualification.json"'
+    )
+    assert validator_command in operator
+    assert "not independent cryptographic attestation" in operator
 
 
 def test_python_qualification_dependency_graph_is_exactly_pinned() -> None:
