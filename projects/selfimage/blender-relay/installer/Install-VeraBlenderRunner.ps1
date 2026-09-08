@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$RegistrationToken,
+    [string]$Repo = 'thebrazenbeard/chat-communication-bus',
     [string]$RepoUrl = 'https://github.com/thebrazenbeard/chat-communication-bus',
     [string]$RunnerDir = "$env:USERPROFILE\vera-blender-runner",
     [string]$RunnerName = "$env:COMPUTERNAME-vera-blender",
@@ -10,35 +10,106 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-if ([string]::IsNullOrWhiteSpace($RegistrationToken)) {
-    $RegistrationToken = Read-Host 'Paste the short-lived GitHub self-hosted runner registration token'
-}
-if ([string]::IsNullOrWhiteSpace($RegistrationToken)) { throw 'A runner registration token is required.' }
+function Ensure-GitHubCli {
+    $gh = Get-Command gh -ErrorAction SilentlyContinue
+    if ($gh) { return $gh.Source }
 
-Write-Host 'Checking local Blender MCP socket...'
-try {
+    $winget = Get-Command winget -ErrorAction SilentlyContinue
+    if (-not $winget) {
+        throw 'GitHub CLI is not installed and winget is unavailable. Install GitHub CLI from https://cli.github.com/ and rerun this installer.'
+    }
+
+    Write-Host 'Installing GitHub CLI with winget...'
+    & winget install --id GitHub.cli --exact --accept-source-agreements --accept-package-agreements
+    if ($LASTEXITCODE -ne 0) { throw "GitHub CLI installation failed with exit code $LASTEXITCODE." }
+
+    $candidates = @(
+        "$env:ProgramFiles\GitHub CLI\gh.exe",
+        "$env:LOCALAPPDATA\Programs\GitHub CLI\gh.exe"
+    )
+    foreach ($candidate in $candidates) {
+        if (Test-Path -LiteralPath $candidate) { return $candidate }
+    }
+    $gh = Get-Command gh -ErrorAction SilentlyContinue
+    if ($gh) { return $gh.Source }
+    throw 'GitHub CLI was installed but gh.exe could not be found. Open a new PowerShell window and rerun the installer.'
+}
+
+function Ensure-GitHubAuth {
+    param([Parameter(Mandatory=$true)][string]$GhExe)
+    & $GhExe auth status --hostname github.com 2>$null
+    if ($LASTEXITCODE -eq 0) { return }
+
+    Write-Host 'GitHub authentication is required once so the installer can request a short-lived runner registration token.'
+    Write-Host 'A browser/device login will open. The relay never stores the temporary runner token itself.'
+    & $GhExe auth login --hostname github.com --git-protocol https --web
+    if ($LASTEXITCODE -ne 0) { throw "GitHub CLI authentication failed with exit code $LASTEXITCODE." }
+}
+
+function Get-RunnerRegistrationToken {
+    param([Parameter(Mandatory=$true)][string]$GhExe)
+    Write-Host 'Requesting a short-lived repository runner registration token from GitHub...'
+    $token = (& $GhExe api --method POST "repos/$Repo/actions/runners/registration-token" --jq '.token').Trim()
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($token)) {
+        throw 'Could not obtain a GitHub self-hosted runner registration token. Confirm the signed-in GitHub account has admin access to the private repository.'
+    }
+    return $token
+}
+
+function Test-BlenderSocket {
+    Write-Host 'Checking local Blender MCP socket...'
     $probe = [System.Net.Sockets.TcpClient]::new()
-    $probe.Connect('127.0.0.1', 9876)
-    $probe.Dispose()
-    Write-Host 'Blender MCP port 9876 is reachable.'
-} catch {
-    Write-Warning 'Blender MCP port 9876 is not reachable right now. Runner installation can continue; Blender jobs will fail cleanly until Blender and the addon are running.'
+    try {
+        $async = $probe.BeginConnect('127.0.0.1', 9876, $null, $null)
+        if (-not $async.AsyncWaitHandle.WaitOne(2500)) { throw 'timeout' }
+        $probe.EndConnect($async)
+        Write-Host 'Blender MCP port 9876 is reachable.'
+    }
+    catch {
+        Write-Warning 'Blender MCP port 9876 is not reachable right now. Installation can continue; Blender jobs will fail cleanly until Blender and the MCP addon are running.'
+    }
+    finally {
+        $probe.Dispose()
+    }
+}
+
+function Get-OfficialRunnerAsset {
+    Write-Host 'Resolving the latest official GitHub Actions runner release...'
+    $release = Invoke-RestMethod -Uri 'https://api.github.com/repos/actions/runner/releases/latest' -Headers @{ 'User-Agent' = 'vera-blender-relay-installer' }
+    $asset = @($release.assets | Where-Object { $_.name -match '^actions-runner-win-x64-.*\.zip$' }) | Select-Object -First 1
+    if ($null -eq $asset) { throw 'Could not locate the official Windows x64 GitHub Actions runner archive.' }
+    return $asset
 }
 
 if (Test-Path -LiteralPath (Join-Path $RunnerDir '.runner')) {
-    throw "A GitHub Actions runner is already configured at '$RunnerDir'. Uninstall/reconfigure it deliberately rather than overwriting registration state."
+    throw "A GitHub Actions runner is already configured at '$RunnerDir'. The installer will not overwrite existing runner identity state."
 }
 
+Test-BlenderSocket
+$ghExe = Ensure-GitHubCli
+Ensure-GitHubAuth -GhExe $ghExe
+
+Write-Host 'Verifying access to the private relay repository...'
+& $ghExe repo view $Repo --json nameWithOwner,visibility --jq '"\(.nameWithOwner) \(.visibility)"'
+if ($LASTEXITCODE -ne 0) { throw "Cannot access private repository '$Repo' with the current GitHub login." }
+
+$registrationToken = Get-RunnerRegistrationToken -GhExe $ghExe
+$asset = Get-OfficialRunnerAsset
+
 New-Item -ItemType Directory -Force -Path $RunnerDir | Out-Null
-
-Write-Host 'Resolving the latest official GitHub Actions runner release...'
-$release = Invoke-RestMethod -Uri 'https://api.github.com/repos/actions/runner/releases/latest' -Headers @{ 'User-Agent' = 'vera-blender-relay-installer' }
-$asset = @($release.assets | Where-Object { $_.name -match '^actions-runner-win-x64-.*\.zip$' }) | Select-Object -First 1
-if ($null -eq $asset) { throw 'Could not locate the official Windows x64 GitHub Actions runner archive.' }
-
 $zipPath = Join-Path $env:TEMP $asset.name
 Write-Host "Downloading official runner $($asset.name)..."
 Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+
+if ($asset.PSObject.Properties.Name -contains 'digest' -and -not [string]::IsNullOrWhiteSpace([string]$asset.digest)) {
+    $digest = [string]$asset.digest
+    if ($digest -match '^sha256:([0-9a-fA-F]{64})$') {
+        $expected = $Matches[1].ToLowerInvariant()
+        $actual = (Get-FileHash -LiteralPath $zipPath -Algorithm SHA256).Hash.ToLowerInvariant()
+        if ($actual -ne $expected) { throw "Official runner archive SHA-256 mismatch. Expected $expected, got $actual." }
+        Write-Host 'Verified official runner archive SHA-256.'
+    }
+}
 
 Write-Host 'Extracting runner...'
 Expand-Archive -LiteralPath $zipPath -DestinationPath $RunnerDir -Force
@@ -50,10 +121,12 @@ if (-not (Test-Path -LiteralPath $config)) { throw 'Runner archive did not conta
 Push-Location $RunnerDir
 try {
     Write-Host 'Registering repository-scoped runner with dedicated vera-blender label...'
-    & $config --unattended --url $RepoUrl --token $RegistrationToken --name $RunnerName --labels 'vera-blender' --work '_work' --replace
+    & $config --unattended --url $RepoUrl --token $registrationToken --name $RunnerName --labels 'vera-blender' --work '_work' --replace
     if ($LASTEXITCODE -ne 0) { throw "GitHub runner registration failed with exit code $LASTEXITCODE." }
-} finally {
+}
+finally {
     Pop-Location
+    $registrationToken = $null
 }
 
 $starter = Join-Path $RunnerDir 'Start-VeraBlenderRunner.ps1'
@@ -61,7 +134,6 @@ $starter = Join-Path $RunnerDir 'Start-VeraBlenderRunner.ps1'
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $runnerDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$listener = Join-Path $runnerDir 'bin\Runner.Listener.exe'
 $existing = @(Get-CimInstance Win32_Process -Filter "Name='Runner.Listener.exe'" -ErrorAction SilentlyContinue | Where-Object { $_.ExecutablePath -and $_.ExecutablePath.StartsWith($runnerDir, [System.StringComparison]::OrdinalIgnoreCase) })
 if ($existing.Count -gt 0) { exit 0 }
 Start-Process -FilePath (Join-Path $runnerDir 'run.cmd') -WorkingDirectory $runnerDir -WindowStyle Hidden
@@ -89,5 +161,5 @@ Write-Host 'Vera Blender runner installation completed.'
 Write-Host "Runner directory: $RunnerDir"
 Write-Host "Runner name: $RunnerName"
 Write-Host 'Required labels: self-hosted, Windows, X64, vera-blender'
-Write-Host 'The registration token was used only by config.cmd and is not written by this installer.'
-Write-Host 'Next gate: GitHub must show the runner Online, then a relay ping request can prove end-to-end execution.'
+Write-Host 'The short-lived runner registration token was requested automatically, used by config.cmd, and discarded.'
+Write-Host 'Leave Blender running with MCP for Blender started on 127.0.0.1:9876 when you want relay jobs to execute.'
