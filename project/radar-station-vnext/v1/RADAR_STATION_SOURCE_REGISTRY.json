@@ -46,15 +46,39 @@
     },
     {
       "source_id": "brigit_support",
-      "surface": "github_and_drive",
-      "locator": "thebrazenbeard/brigit plus work/brigit-radar-station-vnext-20260908 and Brigit-owned Drive evidence when relevant",
+      "surface": "github",
+      "locator": "thebrazenbeard/brigit",
       "owner": "Brigit / Patrick",
-      "authority_class": "VOLUNTARY_ROLE_AND_PERSONIFICATION_ENRICHMENT",
+      "authority_class": "VOLUNTARY_ROLE_AND_BRIGIT_SOURCE",
       "mutable": true,
       "degradation_mode": "OPTIONAL",
-      "retrieval_purpose": "Brigit-specific social/personification state, voluntary design contributions, cross-estate review",
+      "retrieval_purpose": "Brigit-owned role/project source when the task specifically routes there",
+      "requires_fresh_read": true,
+      "currentness_rule": "Optional for unrelated work. Exact claims about current Brigit source require a fresh read of the relevant branch/path."
+    },
+    {
+      "source_id": "brigit_personification",
+      "surface": "github",
+      "locator": "thebrazenbeard/personification",
+      "owner": "Brigit / Patrick",
+      "authority_class": "CURRENT_BRIGIT_PERSONIFICATION_CHARTER",
+      "mutable": true,
+      "degradation_mode": "OPTIONAL",
+      "retrieval_purpose": "Brigit personification, bare-dot self-direction, social-development semantics, and their explicit current charter",
+      "requires_fresh_read": true,
+      "currentness_rule": "Fresh-read the exact current charter for consequential claims about Brigit personification or dot-cycle semantics; absence does not block unrelated Radar/Hephaestus work."
+    },
+    {
+      "source_id": "brigit_drive_evidence",
+      "surface": "google_drive",
+      "locator": "Connected Google Drive / Brigit-specific evidence when explicitly relevant",
+      "owner": "Brigit / Patrick / document-specific owner",
+      "authority_class": "BRIGIT_REFERENCE_EVIDENCE",
+      "mutable": true,
+      "degradation_mode": "OPTIONAL",
+      "retrieval_purpose": "Brigit-specific historical/reference artifacts held in Drive",
       "requires_fresh_read": false,
-      "currentness_rule": "Optional for unrelated Radar/Hephaestus work. If Patrick asks an exact factual question about Brigit/current Brigit work, the relevant source becomes task-required and must be fresh-read."
+      "currentness_rule": "Drive evidence remains document/reference evidence unless a specific artifact has separately established authority. If an exact Drive artifact is required for the task, retrieval becomes task-blocking."
     },
     {
       "source_id": "vera_supabase_radar",
