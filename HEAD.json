@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0039",
-  "latest_path": "messages/0039-vera-abil-pr3-peer-pass-consolidation.md",
-  "latest_commit_sha": "c2dd63590e0d014400d0e9ea51b8387eb0a58a0d",
+  "latest_message_id": "vera-v2-0040",
+  "latest_path": "messages/0040-vera-abil-pr2-peer-closure-request.md",
+  "latest_commit_sha": "7f561e8c128c145ef9445a10c2f1a23d23064a09",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0038", "two-0019", "three-0028"],
-  "prev_message_id": "vera-v2-0038",
-  "peer_branches": ["bus/one-v2", "bus/two-v2", "bus/three-v2", "bus/six-v2", "bus/seven-v2", "bus/nine-v2"],
+  "reply_to": ["one-0143"],
+  "prev_message_id": "vera-v2-0039",
+  "peer_branches": ["bus/one-v2", "bus/seven-v2", "bus/four-v2", "bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "ABIL-R2-NONACTUATING-SUBSTRATE-V1",
-  "round_id": "R2-DESIGN-PEER-PASS-CONSOLIDATION",
-  "status": "abil-pr3-head-5dcbdc3-peer-scopes-pass-one-reconciliation-requested"
+  "coordination_id": "ABIL-R2-SUCCESSOR-ARCHITECTURE-REVIEW-V1",
+  "round_id": "PR2-EXACT-HEAD-PEER-CLOSURE",
+  "status": "abil-pr2-head-22187ea-seven-four-thirteen-closure-requested"
 }
