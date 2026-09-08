@@ -5,6 +5,8 @@ const OIDC_ISSUER = "https://token.actions.githubusercontent.com";
 const JWKS_URL = `${OIDC_ISSUER}/.well-known/jwks`;
 const AUDIENCE_PREFIX = "chat-communication-bus-supabase:";
 const EXPECTED_REPOSITORY = "thebrazenbeard/chat-communication-bus";
+const EXPECTED_REPOSITORY_ID = "1324505476";
+const EXPECTED_REPOSITORY_OWNER_ID = "234958733";
 const EXPECTED_CALLER_WORKFLOW_REF = `${EXPECTED_REPOSITORY}/.github/workflows/radar-central-dispatcher.yml@refs/heads/main`;
 const EXPECTED_JOB_WORKFLOW_PATH = `${EXPECTED_REPOSITORY}/.github/workflows/radar-trusted-projector.yml`;
 const MAX_FILES = 500;
@@ -93,13 +95,14 @@ function b64urlJson(value: string): Record<string, unknown> {
   }
 }
 
-async function getJwks(): Promise<JsonWebKey[]> {
+async function getJwks(forceRefresh = false): Promise<JsonWebKey[]> {
   const now = Date.now();
-  if (jwksCache && jwksCache.expiresAt > now) return jwksCache.keys;
+  if (!forceRefresh && jwksCache && jwksCache.expiresAt > now) return jwksCache.keys;
   if (jwksFetchPromise) {
     const keys = await jwksFetchPromise;
     if (keys) return keys;
   }
+  if (forceRefresh) jwksCache = null;
 
   jwksFetchPromise = (async () => {
     try {
@@ -141,8 +144,12 @@ async function verifyGithubOidc(token: string, expectedAudience: string): Promis
   const claims = b64urlJson(parts[1]);
   if (header.alg !== "RS256" || typeof header.kid !== "string") throw new HttpError(401, "OIDC_ALGORITHM_INVALID");
 
-  const jwks = await getJwks();
-  const jwk = jwks.find((candidate) => candidate.kid === header.kid);
+  let jwks = await getJwks();
+  let jwk = jwks.find((candidate) => candidate.kid === header.kid);
+  if (!jwk) {
+    jwks = await getJwks(true);
+    jwk = jwks.find((candidate) => candidate.kid === header.kid);
+  }
   if (!jwk) throw new HttpError(401, "OIDC_KEY_NOT_FOUND");
   const key = await crypto.subtle.importKey(
     "jwk",
@@ -170,6 +177,12 @@ async function verifyGithubOidc(token: string, expectedAudience: string): Promis
 
   stringClaim(claims, "jti");
   if (stringClaim(claims, "repository") !== EXPECTED_REPOSITORY) throw new HttpError(403, "OIDC_REPOSITORY_INVALID");
+  if (stringClaim(claims, "repository_id") !== EXPECTED_REPOSITORY_ID) {
+    throw new HttpError(403, "OIDC_REPOSITORY_ID_INVALID");
+  }
+  if (stringClaim(claims, "repository_owner_id") !== EXPECTED_REPOSITORY_OWNER_ID) {
+    throw new HttpError(403, "OIDC_REPOSITORY_OWNER_ID_INVALID");
+  }
   const eventName = stringClaim(claims, "event_name");
   if (eventName !== "workflow_run" && eventName !== "schedule") throw new HttpError(403, "OIDC_EVENT_INVALID");
   if (stringClaim(claims, "workflow_ref") !== EXPECTED_CALLER_WORKFLOW_REF) {
@@ -211,6 +224,41 @@ function hex(buffer: ArrayBuffer): string {
 
 async function sha256(bytes: Uint8Array): Promise<string> {
   return hex(await crypto.subtle.digest("SHA-256", bytes));
+}
+
+async function readRequestBodyBounded(req: Request, maxBytes: number): Promise<Uint8Array> {
+  const reader = req.body?.getReader();
+  if (!reader) return new Uint8Array();
+
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (!value) continue;
+      totalBytes += value.byteLength;
+      if (totalBytes > maxBytes) {
+        try {
+          await reader.cancel();
+        } catch {
+          // Best-effort cancellation only; the size violation remains authoritative.
+        }
+        throw new HttpError(413, "REQUEST_TOO_LARGE");
+      }
+      chunks.push(value);
+    }
+  } finally {
+    reader.releaseLock();
+  }
+
+  const bytes = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return bytes;
 }
 
 async function gitBlobSha1(bytes: Uint8Array): Promise<string> {
@@ -650,8 +698,7 @@ Deno.serve(async (req: Request) => {
 
     const digestHeader = (req.headers.get("x-radar-body-sha256") ?? "").toLowerCase();
     if (!SHA256_RE.test(digestHeader)) throw new HttpError(401, "BODY_SHA256_HEADER_INVALID");
-    const rawBody = new Uint8Array(await req.arrayBuffer());
-    if (rawBody.length > MAX_REQUEST_BYTES) throw new HttpError(413, "REQUEST_TOO_LARGE");
+    const rawBody = await readRequestBodyBounded(req, MAX_REQUEST_BYTES);
     const actualDigest = await sha256(rawBody);
     if (actualDigest !== digestHeader) throw new HttpError(401, "BODY_SHA256_MISMATCH");
 
