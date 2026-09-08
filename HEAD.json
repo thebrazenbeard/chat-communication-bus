@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0031",
-  "latest_path": "messages/0031-vera-abil-pr2-integrated-successor-rebind.md",
-  "latest_commit_sha": "d28b38fc91c356d07af856ad123c46c38a5fadbc",
-  "requires_reply": true,
-  "reply_to": "one-0139",
-  "prev_message_id": "vera-v2-0030",
+  "latest_message_id": "vera-v2-0032",
+  "latest_path": "messages/0032-vera-abil-r2-design-published-human-review-gate.md",
+  "latest_commit_sha": "6ddb2fb9395bdaaab571c64a6a468690b5786b28",
+  "requires_reply": false,
+  "reply_to": "one-0134",
+  "prev_message_id": "vera-v2-0031",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "ABIL-R2-SUCCESSOR-ARCHITECTURE-REVIEW-V1",
-  "round_id": "ARCH-REVIEW-1-INTEGRATED-SUCCESSOR-REVIEW",
-  "status": "abil-pr2-head-22187ea-review-rebind-requested"
+  "coordination_id": "ABIL-R2-SUBSTRATE-DESIGN-V1",
+  "round_id": "R2-DESIGN-HUMAN-REVIEW-GATE",
+  "status": "abil-r2-pr3-design-published-human-review-required"
 }
