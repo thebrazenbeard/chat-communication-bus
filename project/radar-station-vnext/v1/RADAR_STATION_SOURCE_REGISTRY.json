@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "registry_kind": "RADAR_STATION_SOURCE_ROUTING_REGISTRY",
+  "registry_is_not_live_state": true,
+  "allowed_degradation_modes": [
+    "FAIL_CLOSED",
+    "DEGRADE_WITH_LABEL",
+    "OPTIONAL"
+  ],
+  "sources": [
+    {
+      "source_id": "chat_bus",
+      "surface": "github",
+      "locator": "thebrazenbeard/chat-communication-bus",
+      "owner": "Radar / Patrick",
+      "authority_class": "IMPLEMENTATION_AND_PROVENANCE_OWNER",
+      "mutable": true,
+      "degradation_mode": "FAIL_CLOSED",
+      "retrieval_purpose": "Bus source, contracts, topology, writer lanes, issues, PRs, tests, durable coordination evidence",
+      "requires_fresh_read": true,
+      "currentness_rule": "Fresh-read exact branch/path/head before current implementation claims, collision-sensitive writes, review verdicts, or merge-readiness conclusions."
+    },
+    {
+      "source_id": "native_radar_station_project",
+      "surface": "native_chatgpt_project",
+      "locator": "Radar Station native Project containing Patrick/Radar/Hephaestus/Brigit chats",
+      "owner": "Patrick / native ChatGPT Project surface",
+      "authority_class": "NATIVE_INSTALL_AND_OBSERVED_PROJECT_STATE_OWNER",
+      "mutable": true,
+      "degradation_mode": "FAIL_CLOSED",
+      "retrieval_purpose": "Current installed Project Instructions, Project source inventory, native install/readback state, and post-install behavioral evidence",
+      "requires_fresh_read": true,
+      "currentness_rule": "GitHub candidate files never prove native installation. Claims about installed/active/current native state require actual native-surface evidence; user-performed install, observed inventory, behavioral evidence, and byte identity remain distinct."
+    },
+    {
+      "source_id": "hephaestus_doctrine",
+      "surface": "github",
+      "locator": "thebrazenbeard/hephaestus",
+      "owner": "Hephaestus / Patrick",
+      "authority_class": "PROJECT_ENGINEERING_DOCTRINE",
+      "mutable": true,
+      "degradation_mode": "DEGRADE_WITH_LABEL",
+      "retrieval_purpose": "Native Project engineering, provenance, source lifecycle, release/install distinction, continuity, evaluation doctrine",
+      "requires_fresh_read": true,
+      "currentness_rule": "Use task-local current source for exact doctrine/current status; historical commits may be cited as historical."
+    },
+    {
+      "source_id": "brigit_support",
+      "surface": "github_and_drive",
+      "locator": "thebrazenbeard/brigit plus work/brigit-radar-station-vnext-20260908 and Brigit-owned Drive evidence when relevant",
+      "owner": "Brigit / Patrick",
+      "authority_class": "VOLUNTARY_ROLE_AND_PERSONIFICATION_ENRICHMENT",
+      "mutable": true,
+      "degradation_mode": "OPTIONAL",
+      "retrieval_purpose": "Brigit-specific social/personification state, voluntary design contributions, cross-estate review",
+      "requires_fresh_read": false,
+      "currentness_rule": "Optional for unrelated Radar/Hephaestus work. If Patrick asks an exact factual question about Brigit/current Brigit work, the relevant source becomes task-required and must be fresh-read."
+    },
+    {
+      "source_id": "vera_supabase_radar",
+      "surface": "supabase",
+      "locator": "Vera / klmbpaigzeguvnpccqzz / schema radar",
+      "owner": "Radar / Patrick",
+      "authority_class": "LIVE_PROVIDER_RUNTIME_STATE",
+      "mutable": true,
+      "degradation_mode": "FAIL_CLOSED",
+      "retrieval_purpose": "Live Radar provider objects, identities/nodes/messages/projection/runtime state when installed",
+      "requires_fresh_read": true,
+      "currentness_rule": "Fresh provider readback required for current live-state claims or provider mutations. Source migrations/issues are not substitutes."
+    },
+    {
+      "source_id": "vera_supabase_build_team_2",
+      "surface": "supabase",
+      "locator": "Vera / klmbpaigzeguvnpccqzz / schema build_team_2",
+      "owner": "BT2 / Patrick",
+      "authority_class": "LIVE_OPERATIONAL_COORDINATION_STATE",
+      "mutable": true,
+      "degradation_mode": "DEGRADE_WITH_LABEL",
+      "retrieval_purpose": "BT2 current operational/training/reference state; patterns for long-running Project coordination",
+      "requires_fresh_read": true,
+      "currentness_rule": "Current role/training claims require fresh provider read. Do not infer Radar/Hephaestus/Brigit BT2 membership from adjacent repositories/history."
+    },
+    {
+      "source_id": "vera_supabase_semantic_atlas",
+      "surface": "supabase",
+      "locator": "Vera / klmbpaigzeguvnpccqzz / schema semantic_atlas",
+      "owner": "Semantic Atlas / Patrick",
+      "authority_class": "RESEARCH_STAGING_AND_RUNTIME_EVIDENCE",
+      "mutable": true,
+      "degradation_mode": "DEGRADE_WITH_LABEL",
+      "retrieval_purpose": "Currentness/provenance/correction/false-retrieval/identity/privacy/retry adversarial vocabulary and research-stage runtime evidence",
+      "requires_fresh_read": true,
+      "currentness_rule": "Research-stage material does not self-promote into canonical Radar Station authority. Fresh-read provider state for exact current research/runtime claims."
+    },
+    {
+      "source_id": "semantic_atlas_repo",
+      "surface": "github",
+      "locator": "thebrazenbeard/semanticatlas",
+      "owner": "Semantic Atlas / Patrick",
+      "authority_class": "IMPLEMENTATION_RESEARCH_SOURCE",
+      "mutable": true,
+      "degradation_mode": "DEGRADE_WITH_LABEL",
+      "retrieval_purpose": "Semantic retrieval/provenance/validation architecture and research artifacts",
+      "requires_fresh_read": true,
+      "currentness_rule": "Fresh-read for current implementation facts; historical source may remain historical evidence."
+    },
+    {
+      "source_id": "project_lantern_supabase",
+      "surface": "supabase",
+      "locator": "Project Lantern / agvhmutlrolbaijzlbqk",
+      "owner": "Project Lantern / Patrick",
+      "authority_class": "ADJACENT_OR_HISTORICAL_PROVIDER_EVIDENCE",
+      "mutable": true,
+      "degradation_mode": "DEGRADE_WITH_LABEL",
+      "retrieval_purpose": "Lantern/R9A0/bug-ops adjacent provider history/state when the task routes there",
+      "requires_fresh_read": true,
+      "currentness_rule": "Reference/history can degrade with label; exact current provider claims require fresh read and become FAIL_CLOSED for the dependent claim/effect."
+    },
+    {
+      "source_id": "google_drive_shared_research",
+      "surface": "google_drive",
+      "locator": "Connected Google Drive research/history corpus",
+      "owner": "Patrick and document-specific owners",
+      "authority_class": "SHARED_EVIDENCE_AND_REFERENCE_LIBRARY",
+      "mutable": true,
+      "degradation_mode": "DEGRADE_WITH_LABEL",
+      "retrieval_purpose": "BT2 Project research, shared-reference/federation material, historical dossiers, larger evidence artifacts",
+      "requires_fresh_read": false,
+      "currentness_rule": "Drive retrieval establishes document evidence, not current authority, frozen-byte custody, provider effect, or repository state. If a task specifically depends on an exact Drive artifact, failure to retrieve it becomes task-blocking."
+    },
+    {
+      "source_id": "wip_and_recovery",
+      "surface": "github_project_context",
+      "locator": "Explicit WIP/checkpoint/recovery artifacts referenced by current Project map or current source",
+      "owner": "Artifact-specific resident / Patrick",
+      "authority_class": "CONTINUITY_NAVIGATION_EVIDENCE",
+      "mutable": true,
+      "degradation_mode": "DEGRADE_WITH_LABEL",
+      "retrieval_purpose": "Fresh-chat/replacement-chat orientation, long-running WIP recovery, exact checkpoint navigation",
+      "requires_fresh_read": true,
+      "currentness_rule": "Checkpoint/handoff proves only its historical recorded state. Fresh-read mutable owners before using embedded mutable facts as current."
+    }
+  ]
+}
