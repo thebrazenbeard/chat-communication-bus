@@ -1,6 +1,6 @@
 {
   "contract": "RADAR_SOURCE_CUSTODY_V1",
-  "version": 14,
+  "version": 15,
   "status": "SOURCE_ONLY_VERIFICATION_CONTRACT",
   "required_globs": [
     "supabase/migrations/*_radar_*.sql",
@@ -33,6 +33,7 @@
     "tests/radar/test_currentness_recovery_contract.py",
     "tests/radar/test_edge_projection_result_contract.py",
     "tests/radar/test_remote_ref_reconciler.py",
+    "tests/security/test_body_bound_edge_ordering.py",
     "tests/security/test_no_paid_qualification_consistency.py",
     "tests/security/test_portable_local_qualification.py",
     "tests/security/test_portable_qualification_cli.py",
