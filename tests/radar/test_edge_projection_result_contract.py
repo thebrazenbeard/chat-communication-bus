@@ -39,6 +39,16 @@ def test_edge_uses_atomic_claim_validated_file_projection_rpc() -> None:
     assert "radar.projection_record_file_result_v1" in atomic_sql
 
 
+def test_edge_recipient_header_compatibility_matches_python_grammar() -> None:
+    source = HANDLER.read_text(encoding="utf-8")
+
+    assert "function intendedRecipient(headers: Headers): string" in source
+    assert 'headers.intended_recipient' in source
+    assert 'headers.intended_recipients' in source
+    assert '"CONFLICTING_INTENDED_RECIPIENT_HEADERS"' in source
+    assert "const intended = intendedRecipient(headers);" in source
+
+
 def test_edge_projection_result_mapping_covers_every_sql_terminal_outcome() -> None:
     sql = COLLISION_SQL.read_text(encoding="utf-8")
 
