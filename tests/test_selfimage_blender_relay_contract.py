@@ -15,6 +15,7 @@ def test_request_schema_is_strict_and_has_no_arbitrary_execution_operation():
     assert "run_command" not in ops
     assert "import_exact_cc0" in ops
     assert "viewport_capture" in ops
+    assert "scene_audit_v1" in ops
 
 
 def test_workflow_never_runs_on_pull_request_and_is_bound_to_private_relay_lane():
@@ -34,6 +35,17 @@ def test_relay_pins_exact_cc0_transport_and_rejects_unlisted_operations():
     assert "df189d7ff267ab47fd6069232395401391399868" in text
     assert "Operation '$operation' is not allowlisted." in text
     assert "import_exact_cc0 refuses a non-default/non-empty scene." in text
+
+
+def test_approved_scene_audit_is_named_and_request_cannot_supply_python_source():
+    relay = (BASE / "relay" / "Invoke-BlenderRelay.ps1").read_text(encoding="utf-8")
+    audit = BASE / "approved-scripts" / "selfimage_blender_scene_audit_v1.py"
+    assert audit.exists()
+    assert "scene_audit_v1" in relay
+    assert "selfimage_blender_scene_audit_v1.py" in relay
+    assert "No filesystem, network, subprocess" in audit.read_text(encoding="utf-8")
+    schema = json.loads((BASE / "schema" / "request.schema.json").read_text(encoding="utf-8"))
+    assert set(schema["properties"]) == {"version", "request_id", "operation", "args", "created_at"}
 
 
 def test_results_do_not_retrigger_request_path():
