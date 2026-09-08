@@ -62,5 +62,5 @@ def test_post_seed_sql_assertion_proves_reset_state_before_replay_and_idempotenc
     assert "RADAR_SEED_POST_REPLAY_MAILBOX_INVALID" in after_replay
     assert "RADAR_SEED_POST_REPLAY_SUBSCRIPTIONS_INVALID" in after_replay
     assert "RADAR_SEED_POST_REPLAY_UNEXPECTED_ACTIVE_SUBSCRIPTIONS" in after_replay
-    assert "node_id is null" in after_replay.lower()
+    assert "node_id is distinct from stable_node" in after_replay.lower()
     assert "count(*)" in source.lower()
