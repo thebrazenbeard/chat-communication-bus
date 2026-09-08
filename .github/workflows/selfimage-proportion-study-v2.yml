@@ -34,21 +34,37 @@ jobs:
 
           function Send-BlenderCommand {
             param([Parameter(Mandatory=$true)][string]$Type,[hashtable]$Params=@{},[int]$TimeoutMs=300000)
-            $client=[Net.Sockets.TcpClient]::new(); $client.ReceiveTimeout=$TimeoutMs; $client.SendTimeout=$TimeoutMs
+            $client=[Net.Sockets.TcpClient]::new()
+            $client.ReceiveTimeout=$TimeoutMs
+            $client.SendTimeout=$TimeoutMs
             try {
               $async=$client.BeginConnect('127.0.0.1',9876,$null,$null)
               if(-not $async.AsyncWaitHandle.WaitOne(5000)){throw 'Timed out connecting to Blender MCP.'}
-              $client.EndConnect($async); $stream=$client.GetStream()
+              $client.EndConnect($async)
+              $stream=$client.GetStream()
               $payload=@{type=$Type;params=$Params}|ConvertTo-Json -Compress -Depth 50
-              $bytes=[Text.Encoding]::UTF8.GetBytes($payload); $stream.Write($bytes,0,$bytes.Length); $stream.Flush()
-              $mem=[IO.MemoryStream]::new(); $buf=New-Object byte[] 8192
+              $bytes=[Text.Encoding]::UTF8.GetBytes($payload)
+              $stream.Write($bytes,0,$bytes.Length)
+              $stream.Flush()
+              $mem=[IO.MemoryStream]::new()
+              $buf=New-Object byte[] 8192
               while($true){
-                try{$count=$stream.Read($buf,0,$buf.Length)}catch[IO.IOException]{break}
-                if($count -le 0){break}; $mem.Write($buf,0,$count); $text=[Text.Encoding]::UTF8.GetString($mem.ToArray())
-                try{return ($text|ConvertFrom-Json)}catch{}
+                try {
+                  $count=$stream.Read($buf,0,$buf.Length)
+                }
+                catch [System.IO.IOException] {
+                  break
+                }
+                if($count -le 0){break}
+                $mem.Write($buf,0,$count)
+                $text=[Text.Encoding]::UTF8.GetString($mem.ToArray())
+                try { return ($text|ConvertFrom-Json) } catch { }
               }
               throw "Incomplete Blender JSON for $Type"
-            } finally {$client.Dispose()}
+            }
+            finally {
+              $client.Dispose()
+            }
           }
 
           $addon=Send-BlenderCommand -Type 'get_addon_info' -TimeoutMs 15000
@@ -64,7 +80,8 @@ jobs:
           foreach($prefix in @('BASELINE','V1','V2')){foreach($view in @('FRONT','FRONT_3Q','SIDE','REAR_3Q','REAR')){$required += "${prefix}_${view}.png"}}
           $files=@()
           foreach($name in $required){
-            $path=Join-Path $outDir $name; if(-not(Test-Path -LiteralPath $path)){throw "Expected V2 artifact missing: $name"}
+            $path=Join-Path $outDir $name
+            if(-not(Test-Path -LiteralPath $path)){throw "Expected V2 artifact missing: $name"}
             $item=Get-Item -LiteralPath $path
             $files += [ordered]@{name=$name;bytes=$item.Length;sha256=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()}
           }
