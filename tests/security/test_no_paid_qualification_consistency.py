@@ -25,6 +25,7 @@ def test_no_paid_qualification_contract_is_current_and_source_custodied() -> Non
     assert authority["platform"] == "windows"
     assert authority["launcher_identity_evidentiary"] is False
     assert authority["platform_identity_evidentiary"] is False
+    assert authority["runner_role"] == "NON_EVIDENTIARY_SUPPORTED_ENTRYPOINT"
     assert authority["receipt_required_for_green"] is True
     assert authority["receipt_validator"] == "scripts/radar_validate_qualification_receipt.py"
     assert authority["receipt_location"] == "EXTERNAL_TO_SOURCE_CHECKOUT"
@@ -36,6 +37,7 @@ def test_no_paid_qualification_contract_is_current_and_source_custodied() -> Non
     assert current["qualification"]["authorized_platform"] == "windows"
     assert current["qualification"]["launcher_identity_evidentiary"] is False
     assert current["qualification"]["platform_identity_evidentiary"] is False
+    assert current["qualification"]["runner_role"] == "NON_EVIDENTIARY_SUPPORTED_ENTRYPOINT"
     assert current["qualification"]["private_hosted_actions_authoritative"] is False
     assert current["qualification"]["billing_or_plan_change_allowed_as_recovery"] is False
     assert current["qualification"]["receipt_validator"] == "scripts/radar_validate_qualification_receipt.py"
@@ -89,8 +91,12 @@ def test_python_engine_owns_qualification_semantics_and_windows_launcher_is_thin
     authority = qualification["authoritative_qualification"]
     assert authority["engine"] == "scripts/radar_qualify.py"
     assert authority["windows_launcher"] == "scripts/radar_local_qualify.ps1"
+    assert authority["runner"] == "scripts/radar_local_qualify.ps1"
+    assert authority["runner_role"] == "NON_EVIDENTIARY_SUPPORTED_ENTRYPOINT"
     assert current["qualification"]["engine"] == "scripts/radar_qualify.py"
     assert current["qualification"]["windows_launcher"] == "scripts/radar_local_qualify.ps1"
+    assert current["qualification"]["runner"] == "scripts/radar_local_qualify.ps1"
+    assert current["qualification"]["runner_role"] == "NON_EVIDENTIARY_SUPPORTED_ENTRYPOINT"
 
     for semantic_token in (
         "read_clean_source_state",
@@ -128,6 +134,7 @@ def test_operator_docs_state_engine_launcher_platform_and_receipt_boundaries() -
     assert "PowerShell is the canonical supported Windows launcher for the currently authorized platform profile." in operator
     assert "Launcher identity is not separately attested by the receipt." in operator
     assert "Platform identity is not independently attested by the receipt." in operator
+    assert "NON_EVIDENTIARY_SUPPORTED_ENTRYPOINT" in operator
     assert "A runnable engine on another OS is not automatically an authoritative platform profile." in operator
     assert "Receipt V2 stage evidence is required before GREEN." in operator
     assert '$env:TEMP\\radar-local-qualification.json' in operator
