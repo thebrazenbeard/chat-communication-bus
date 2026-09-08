@@ -46,12 +46,32 @@ function Ensure-GitHubAuth {
     if ($LASTEXITCODE -ne 0) { throw "GitHub CLI authentication failed with exit code $LASTEXITCODE." }
 }
 
+function Invoke-GhJson {
+    param(
+        [Parameter(Mandatory=$true)][string]$GhExe,
+        [Parameter(Mandatory=$true)][string[]]$Arguments,
+        [Parameter(Mandatory=$true)][string]$FailureMessage
+    )
+    $raw = (& $GhExe @Arguments 2>&1 | Out-String).Trim()
+    $exit = $LASTEXITCODE
+    if ($exit -ne 0) {
+        throw "$FailureMessage`nGitHub CLI output: $raw"
+    }
+    try {
+        return ($raw | ConvertFrom-Json)
+    }
+    catch {
+        throw "$FailureMessage`nGitHub CLI returned non-JSON output: $raw"
+    }
+}
+
 function Get-RunnerRegistrationToken {
     param([Parameter(Mandatory=$true)][string]$GhExe)
     Write-Host 'Requesting a short-lived repository runner registration token from GitHub...'
-    $token = (& $GhExe api --method POST "repos/$Repo/actions/runners/registration-token" --jq '.token').Trim()
-    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($token)) {
-        throw 'Could not obtain a GitHub self-hosted runner registration token. Confirm the signed-in GitHub account has admin access to the private repository.'
+    $response = Invoke-GhJson -GhExe $GhExe -Arguments @('api','--method','POST',"repos/$Repo/actions/runners/registration-token") -FailureMessage 'Could not obtain a GitHub self-hosted runner registration token.'
+    $token = [string]$response.token
+    if ([string]::IsNullOrWhiteSpace($token)) {
+        throw 'GitHub returned no runner registration token. Confirm the signed-in GitHub account has admin access to the private repository.'
     }
     return $token
 }
@@ -90,8 +110,14 @@ $ghExe = Ensure-GitHubCli
 Ensure-GitHubAuth -GhExe $ghExe
 
 Write-Host 'Verifying access to the private relay repository...'
-& $ghExe repo view $Repo --json nameWithOwner,visibility --jq '"\(.nameWithOwner) \(.visibility)"'
-if ($LASTEXITCODE -ne 0) { throw "Cannot access private repository '$Repo' with the current GitHub login." }
+$repoInfo = Invoke-GhJson -GhExe $ghExe -Arguments @('repo','view',$Repo,'--json','nameWithOwner,visibility') -FailureMessage "Cannot access private repository '$Repo' with the current GitHub login."
+if ([string]$repoInfo.nameWithOwner -ne $Repo) {
+    throw "GitHub resolved an unexpected repository '$($repoInfo.nameWithOwner)' instead of '$Repo'."
+}
+if ([string]$repoInfo.visibility -ne 'PRIVATE') {
+    throw "Relay repository '$Repo' is not private. Refusing to attach a self-hosted runner."
+}
+Write-Host "Verified private repository: $($repoInfo.nameWithOwner)"
 
 $registrationToken = Get-RunnerRegistrationToken -GhExe $ghExe
 $asset = Get-OfficialRunnerAsset
