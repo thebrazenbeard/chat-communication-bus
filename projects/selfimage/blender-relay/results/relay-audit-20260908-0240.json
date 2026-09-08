@@ -1,0 +1,19 @@
+﻿{
+    "version":  1,
+    "relay_version":  "1.1.1",
+    "request_id":  "relay-audit-20260908-0240",
+    "operation":  "scene_audit_v1",
+    "status":  "success",
+    "started_at":  "2026-09-08T02:40:35.0285979+00:00",
+    "completed_at":  "2026-09-08T02:40:35.0931814+00:00",
+    "blender":  {
+                    "status":  "success",
+                    "result":  {
+                                   "executed":  true,
+                                   "result":  "SELFIMAGE_BLENDER_SCENE_AUDIT_V1::{\"active_object\": \"Cube\", \"blender_version\": [5, 2, 1], \"blender_version_string\": \"5.2.1 LTS\", \"camera\": \"Camera\", \"nonclaims\": [\"No source-file hash verified by this scene-only script\", \"No object or scene mutation performed\", \"No morphology acceptance or Stage-A promotion\"], \"object_count\": 3, \"objects\": [{\"hide_render\": false, \"hide_viewport\": false, \"mesh\": {\"boundary_edges\": 0, \"data_name\": \"Cube\", \"dimensions\": [2.0, 2.0, 2.0], \"edges\": 12, \"hide_render\": false, \"hide_viewport\": false, \"location\": [0.0, 0.0, 0.0], \"loops\": 24, \"materials\": [\"Material\"], \"modifiers\": [], \"name\": \"Cube\", \"nonmanifold_edges\": 0, \"polygons\": 6, \"rotation_euler\": [0.0, 0.0, 0.0], \"scale\": [1.0, 1.0, 1.0], \"uv_layers\": [\"UVMap\"], \"vertex_groups\": [], \"vertices\": 8, \"wire_edges\": 0}, \"name\": \"Cube\", \"selected\": false, \"type\": \"MESH\"}, {\"hide_render\": false, \"hide_viewport\": false, \"name\": \"Light\", \"selected\": false, \"type\": \"LIGHT\"}, {\"hide_render\": false, \"hide_viewport\": false, \"name\": \"Camera\", \"selected\": false, \"type\": \"CAMERA\"}], \"render_engine\": \"BLENDER_EEVEE\", \"scene\": \"Scene\", \"schema\": \"SELFIMAGE_BLENDER_SCENE_AUDIT_V1\", \"selected_cc0_body_check\": {\"expected_triangles_on_selected_mirror_transport\": 84680, \"expected_vertices_on_selected_mirror_transport\": 42342, \"object_name\": \"GEO-body_female_realistic\", \"present\": false}, \"status\": \"READ_ONLY_SCENE_AUDIT\"}\n"
+                               }
+                },
+    "artifacts":  [
+
+                  ]
+}

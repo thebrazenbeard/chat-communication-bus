@@ -1,0 +1,26 @@
+﻿{
+    "version":  1,
+    "relay_version":  "1.1.1",
+    "request_id":  "relay-viewport-20260908-0240",
+    "operation":  "viewport_capture",
+    "status":  "success",
+    "started_at":  "2026-09-08T02:40:35.1690608+00:00",
+    "completed_at":  "2026-09-08T02:40:35.3463828+00:00",
+    "blender":  {
+                    "status":  "success",
+                    "result":  {
+                                   "success":  true,
+                                   "width":  783,
+                                   "height":  880,
+                                   "filepath":  "C:\\Users\\patri\\vera-blender-runner\\_work\\_temp\\vera-blender-relay-artifacts\\relay-viewport-20260908-0240\\viewport-relay-viewport-20260908-0240.png",
+                                   "method":  "offscreen"
+                               }
+                },
+    "artifacts":  [
+                      {
+                          "name":  "viewport-relay-viewport-20260908-0240.png",
+                          "bytes":  259375,
+                          "sha256":  "c786066b635a1eb496d48bc4241bb8c688370da34f697435fe87c9c12df2ac42"
+                      }
+                  ]
+}
