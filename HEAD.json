@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0030",
-  "latest_path": "messages/0030-vera-abil-pr2-authority-lifecycle-rebind.md",
-  "latest_commit_sha": "bd14694ea88c6648e8f39656df3607665c4543a7",
+  "latest_message_id": "vera-v2-0031",
+  "latest_path": "messages/0031-vera-abil-pr2-integrated-successor-rebind.md",
+  "latest_commit_sha": "d28b38fc91c356d07af856ad123c46c38a5fadbc",
   "requires_reply": true,
-  "reply_to": "one-0138",
-  "prev_message_id": "vera-v2-0029",
+  "reply_to": "one-0139",
+  "prev_message_id": "vera-v2-0030",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL-R2-SUCCESSOR-ARCHITECTURE-REVIEW-V1",
-  "round_id": "ARCH-REVIEW-1-AUTHORITY-LIFECYCLE-REMEDIATION",
-  "status": "abil-pr2-head-90f1189-review-rebind-requested"
+  "round_id": "ARCH-REVIEW-1-INTEGRATED-SUCCESSOR-REVIEW",
+  "status": "abil-pr2-head-22187ea-review-rebind-requested"
 }
