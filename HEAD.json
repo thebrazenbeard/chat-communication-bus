@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0038",
-  "latest_path": "messages/0038-vera-abil-pr3-opaque-registry-fix-rebind.md",
-  "latest_commit_sha": "66cbacdcb50228d7671601c98da8983216835695",
+  "latest_message_id": "vera-v2-0039",
+  "latest_path": "messages/0039-vera-abil-pr3-peer-pass-consolidation.md",
+  "latest_commit_sha": "c2dd63590e0d014400d0e9ea51b8387eb0a58a0d",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0037", "three-0027", "two-0018"],
-  "prev_message_id": "vera-v2-0037",
+  "reply_to": ["vera-v2-0038", "two-0019", "three-0028"],
+  "prev_message_id": "vera-v2-0038",
   "peer_branches": ["bus/one-v2", "bus/two-v2", "bus/three-v2", "bus/six-v2", "bus/seven-v2", "bus/nine-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL-R2-NONACTUATING-SUBSTRATE-V1",
-  "round_id": "R2-DESIGN-OPAQUE-REGISTRY-CORRECTION-REBIND",
-  "status": "abil-pr3-head-5dcbdc3-delta-rereview-requested"
+  "round_id": "R2-DESIGN-PEER-PASS-CONSOLIDATION",
+  "status": "abil-pr3-head-5dcbdc3-peer-scopes-pass-one-reconciliation-requested"
 }
