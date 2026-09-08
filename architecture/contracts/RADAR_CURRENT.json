@@ -26,7 +26,8 @@
     "receipt_location": "EXTERNAL_TO_SOURCE_CHECKOUT",
     "latest_qualification_receipt": null,
     "authorized_platform": "windows",
-    "launcher_identity_evidentiary": false
+    "launcher_identity_evidentiary": false,
+    "platform_identity_evidentiary": false
   },
   "historical_integration": {
     "branch": "radar/control-plane-v1",
@@ -149,5 +150,5 @@
     "currentness_role": "HISTORICAL_EVIDENCE_ONLY"
   },
   "self_registration_contract": "architecture/contracts/RADAR_SELF_REGISTRATION_V1.json",
-  "currentness_note": "GitHub is canonical. scripts/radar_qualify.py defines qualification semantics; scripts/radar_local_qualify.ps1 is the canonical supported Windows launcher for the currently authorized LOCAL_NO_PAID_SERVICES platform profile; launcher identity is not separately attested by the receipt. Receipt V2 stage evidence remains required and local execution is pending. Private hosted Actions are non-authoritative. Any local PASS receipt must be stored outside the source checkout and pass scripts/radar_validate_qualification_receipt.py against the same clean exact checkout before GREEN classification or successor-anchor freeze. Anchor D remains the latest frozen projection reference but is not deployment-eligible because post-D source repairs exist, including project_batch identity/branch protocol repair and atomic claim-bound file projection/journaling; freeze any successor only after authoritative local qualification and receipt admission. Provider facts above are readback status, not authorization to apply migrations, deploy Edge source, change verify_jwt, configure RADAR_TRUSTED_PROJECTOR_SHA, seed projection cursors, or activate the dispatcher."
+  "currentness_note": "GitHub is canonical. scripts/radar_qualify.py defines qualification semantics; scripts/radar_local_qualify.ps1 is the canonical supported Windows launcher for the currently authorized LOCAL_NO_PAID_SERVICES platform profile; neither launcher identity nor platform identity is independently attested by the receipt. Receipt V2 stage evidence remains required and local execution is pending. Private hosted Actions are non-authoritative. Any local PASS receipt must be stored outside the source checkout and pass scripts/radar_validate_qualification_receipt.py against the same clean exact checkout before GREEN classification or successor-anchor freeze. Anchor D remains the latest frozen projection reference but is not deployment-eligible because post-D source repairs exist, including project_batch identity/branch protocol repair and atomic claim-bound file projection/journaling; freeze any successor only after authoritative local qualification and receipt admission. Provider facts above are readback status, not authorization to apply migrations, deploy Edge source, change verify_jwt, configure RADAR_TRUSTED_PROJECTOR_SHA, seed projection cursors, or activate the dispatcher."
 }
