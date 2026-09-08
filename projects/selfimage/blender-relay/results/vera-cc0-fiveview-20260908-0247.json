@@ -1,0 +1,43 @@
+﻿{
+    "version":  1,
+    "relay_version":  "1.1.2",
+    "request_id":  "vera-cc0-fiveview-20260908-0247",
+    "operation":  "render_five_view_cc0",
+    "status":  "success",
+    "started_at":  "2026-09-08T02:47:51.6594052+00:00",
+    "completed_at":  "2026-09-08T02:48:12.5118857+00:00",
+    "blender":  {
+                    "status":  "success",
+                    "result":  {
+                                   "executed":  true,
+                                   "result":  "{\"body_center\": [-4.728138446807861e-05, -0.025452304631471634, 0.8216582536697388], \"body_height\": 1.639373826328665, \"camera_ortho_scale\": 1.8033112287521362, \"rendered\": [\"C:\\\\Users\\\\patri\\\\vera-blender-runner\\\\_work\\\\_temp\\\\vera-blender-relay-artifacts\\\\vera-cc0-fiveview-20260908-0247\\\\cc0_FRONT.png\", \"C:\\\\Users\\\\patri\\\\vera-blender-runner\\\\_work\\\\_temp\\\\vera-blender-relay-artifacts\\\\vera-cc0-fiveview-20260908-0247\\\\cc0_FRONT_3Q.png\", \"C:\\\\Users\\\\patri\\\\vera-blender-runner\\\\_work\\\\_temp\\\\vera-blender-relay-artifacts\\\\vera-cc0-fiveview-20260908-0247\\\\cc0_SIDE.png\", \"C:\\\\Users\\\\patri\\\\vera-blender-runner\\\\_work\\\\_temp\\\\vera-blender-relay-artifacts\\\\vera-cc0-fiveview-20260908-0247\\\\cc0_REAR_3Q.png\", \"C:\\\\Users\\\\patri\\\\vera-blender-runner\\\\_work\\\\_temp\\\\vera-blender-relay-artifacts\\\\vera-cc0-fiveview-20260908-0247\\\\cc0_REAR.png\"]}\n"
+                               }
+                },
+    "artifacts":  [
+                      {
+                          "name":  "cc0_FRONT.png",
+                          "bytes":  340996,
+                          "sha256":  "5838fc9140ad6ce0992af9a39567839efa544280124ddf7f0ce490df767c19c3"
+                      },
+                      {
+                          "name":  "cc0_FRONT_3Q.png",
+                          "bytes":  341010,
+                          "sha256":  "04fd3a3f3ab42dae4fd48cf1c15f4105225ae8996c8774cc100ff663d4702da1"
+                      },
+                      {
+                          "name":  "cc0_SIDE.png",
+                          "bytes":  325926,
+                          "sha256":  "21cd7833966fe221ececc851473eec46caa377126ead6c3dc2f90a88317185f6"
+                      },
+                      {
+                          "name":  "cc0_REAR_3Q.png",
+                          "bytes":  340846,
+                          "sha256":  "a3f32d66193ec9c91bacfe4c9e668fd80a0c2d4bddfe8d847b293bbc53f3bedd"
+                      },
+                      {
+                          "name":  "cc0_REAR.png",
+                          "bytes":  338056,
+                          "sha256":  "19a805f6730d3c7165e4ac00eac819876cd08e8a6c5139e49f4dccb682e25e9d"
+                      }
+                  ]
+}
