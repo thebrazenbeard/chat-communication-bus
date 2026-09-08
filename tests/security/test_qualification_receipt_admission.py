@@ -135,3 +135,26 @@ def test_rejects_receipt_with_toolchain_drift(tmp_path: Path) -> None:
         assert "deno" in str(exc).lower()
     else:
         raise AssertionError("toolchain drift unexpectedly accepted")
+
+
+def test_rejects_receipt_inside_source_checkout_even_when_git_ignored(tmp_path: Path) -> None:
+    validator = _load_validator()
+    repo, _commit, _tree = _init_repo(tmp_path)
+    (repo / ".gitignore").write_text("ignored-receipts/\n", encoding="utf-8")
+    _git(repo, "add", ".gitignore")
+    _git(repo, "commit", "-m", "ignore receipt directory")
+    commit = _git(repo, "rev-parse", "HEAD")
+    tree = _git(repo, "rev-parse", "HEAD^{tree}")
+
+    receipt_dir = repo / "ignored-receipts"
+    receipt_dir.mkdir()
+    receipt_path = receipt_dir / "receipt.json"
+    receipt_path.write_text(json.dumps(_receipt(commit, tree)), encoding="utf-8")
+    assert _git(repo, "status", "--porcelain", "--untracked-files=all") == ""
+
+    try:
+        validator.validate_receipt(receipt_path=receipt_path, repo_root=repo)
+    except validator.ReceiptValidationError as exc:
+        assert "outside source checkout" in str(exc).lower()
+    else:
+        raise AssertionError("in-checkout ignored receipt unexpectedly accepted")
