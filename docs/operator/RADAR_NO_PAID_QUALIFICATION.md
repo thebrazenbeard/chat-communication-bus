@@ -2,88 +2,121 @@
 
 Status: `SOURCE-BOUND / LOCAL EXECUTION REQUIRED / PRIVATE HOSTED ACTIONS NON-AUTHORITATIVE`.
 
-Patrick's standing constraint is to avoid paid services. Private GitHub-hosted Actions therefore must not be treated as a required Radar qualification dependency, and billing/payment/spending-limit changes are not a valid recovery path for Radar.
+Patrick's standing constraint is to avoid paid services. Private GitHub-hosted Actions are therefore not a required Radar qualification dependency, and billing/payment/spending-limit changes are not a valid recovery path.
+
+## Authority split
+
+Python engine defines qualification semantics.
+
+`scripts/radar_qualify.py` is the canonical qualification engine and evidence producer. It owns source binding, toolchain probes, stage ordering, destructive-local-resource guards, cleanup behavior, schema-V2 receipt construction, and external receipt writing.
+
+PowerShell is the authoritative Windows launcher for the currently authorized platform profile.
+
+`scripts/radar_local_qualify.ps1` is only a convenience/entry launcher. It checks for the Windows `py` launcher, invokes Python 3.11 on `scripts/radar_qualify.py`, forwards the receipt path, and propagates the engine exit code. It does not duplicate qualification semantics.
+
+A runnable engine on another OS is not automatically an authoritative platform profile.
+
+Receipt V2 stage evidence is required before GREEN.
 
 ## Authoritative no-paid path
 
-For the current Radar source candidate, executable qualification is performed on a local machine using:
+The current authorized profile is Windows using:
 
-- Python 3.11;
-- Python 3.12;
+- Python 3.11 and 3.12;
 - pip 26.2.1;
 - Deno 2.9.6;
 - Supabase CLI 2.116.0;
 - Docker/local Supabase;
 - `psql` against the local Supabase PostgreSQL instance.
 
-The canonical Windows runner is:
+The normal launcher command is:
 
 `powershell -ExecutionPolicy Bypass -File scripts/radar_local_qualify.ps1`
 
-Optional receipt output must be written outside the source checkout so the receipt cannot invalidate its own `working_tree = CLEAN` claim. For example:
+By default the launcher sends the receipt to `$env:TEMP\radar-local-qualification.json`, which is outside the source checkout. An explicit external path may be supplied:
 
 `powershell -ExecutionPolicy Bypass -File scripts/radar_local_qualify.ps1 -ReceiptPath "$env:TEMP\radar-local-qualification.json"`
 
-Relative receipt paths resolve under the repository and are therefore rejected. The JSON receipt is also emitted on stdout and may be captured externally by the caller.
+The Python engine may also be called directly on the authorized Windows profile:
 
-The runner fails closed when a required command is missing, when Python/Deno/Supabase versions do not match the frozen CI recipe, when any test/assertion command returns non-zero, when the source commit or tree changes during qualification, or when the working tree is dirty before or after execution.
+`py -3.11 scripts/radar_qualify.py --receipt-path "$env:TEMP\radar-local-qualification.json"`
 
-Generated Python caches/build metadata plus Supabase CLI local state are narrowly ignored through the custody-bound `.gitignore`. Receipts and arbitrary untracked files are not ignored; unrelated checkout changes still fail qualification.
+An in-checkout receipt path is rejected. Generated Python caches/build metadata and narrowly scoped local Supabase CLI state may be ignored by source custody, but arbitrary receipts/untracked source changes are not a substitute for the external-receipt rule.
 
-The Python qualification graph is version-pinned in custody-bound `pyproject.toml`: pytest 9.1.1 plus its Windows/runtime dependencies colorama 0.4.6, iniconfig 2.3.0, packaging 26.3, pluggy 1.6.0, and Pygments 2.21.0. This prevents later resolver drift while preserving the existing `pip install -e .[test]` execution path. Python package artifact hashes are not yet source-locked, so this is exact-version repeatability rather than a wheel-byte custody claim; do not describe it as a hash-locked Python supply chain.
+## Exact execution contract
 
-## Receipt admission
+The engine starts by binding the exact clean Git commit/tree. It then verifies the required toolchain and executes exactly these stage instances in order:
 
-A generated receipt is not admitted merely because it says `PASS`. Before any Radar GREEN classification or successor-anchor freeze, validate the external receipt from the same clean checkout:
+1. `python_compileall:3.11`
+2. `python_pytest:3.11`
+3. `radar_source_hashes:3.11`
+4. `python_compileall:3.12`
+5. `python_pytest:3.12`
+6. `radar_source_hashes:3.12`
+7. `deno_ci`
+8. `deno_check`
+9. `supabase_local_start`
+10. `supabase_db_reset`
+11. `all_radar_sql_assertions`
+12. `supabase_local_stop`
 
-`py -3.11 scripts/radar_validate_qualification_receipt.py "$env:TEMP\radar-local-qualification.json"`
+Each required Python version receives its own temporary virtual environment. pip is upgraded to exactly 26.2.1 before `.[test]` is installed. The pinned Python test graph remains pytest 9.1.1 plus its pinned runtime dependencies in `pyproject.toml`.
 
-The validator fails closed unless the receipt resolves outside the Git source checkout, even if an in-checkout receipt would be hidden by `.gitignore`. Git cleanliness is necessary but is not a substitute for the external-receipt boundary.
+Deno executes `deno ci` and `deno check index.ts` from `supabase/functions/github-bus-ingest`.
 
-The validator also fails closed unless the machine-readable qualification contract still requires the no-paid local path and the receipt has the expected schema, `PASS` status, qualification mode, frozen Python/pip/Deno/Supabase toolchain, `working_tree = CLEAN`, and UTC completion timestamp. It then re-reads the checkout's current Git top-level, HEAD commit, HEAD tree, and full working-tree state and rejects any receipt that does not bind that exact clean checkout.
-
-This validator is an admission-consistency control, not independent cryptographic attestation. It prevents stale, mismatched, malformed, toolchain-drifted, or source-checkout-local receipts from being used accidentally; it does not independently prove that an externally supplied receipt was generated by an untampered execution of the runner. The authoritative evidence remains the actual local runner execution plus the receipt it produced.
-
-A validator success does not itself change `RADAR_CURRENT.json`, freeze a projection anchor, merge source, or authorize any provider/live effect.
+SQL assertions are every sorted `supabase/tests/radar_*.sql` file, executed through `psql` with `ON_ERROR_STOP=1`. Their exact outputs are aggregated into the single `all_radar_sql_assertions` stage evidence record.
 
 ## Local Supabase safety
 
-`supabase db reset` and `supabase stop --no-backup` are intentionally destructive to the local qualification database. The checked-in `supabase/config.toml` therefore defines the stable local project identity `chat-communication-bus`; the qualification consistency suite binds the runner's resource identity to that exact config value before the SQL stage can execute.
+`supabase db reset` and `supabase stop --no-backup` are destructive only to the local qualification database. The engine refuses to start qualification when the `chat-communication-bus` local Supabase stack is already running or when existing project Docker state could be destroyed.
 
-Before starting SQL qualification, the runner checks `supabase status`. If this project's local stack is already running, qualification aborts instead of resetting or deleting that existing local database.
+Before `supabase start`, it checks:
 
-A stopped local stack can retain database state in Docker even when `supabase status` is not running. The runner therefore also refuses qualification if either the exact database container or exact database volume `supabase_db_chat-communication-bus` already exists. Those explicit probes protect retained or legacy database resources even if they lack current Supabase CLI labels.
+- `supabase status` is not already healthy/running;
+- exact database container `supabase_db_chat-communication-bus` does not exist;
+- exact database volume `supabase_db_chat-communication-bus` does not exist;
+- no container, volume, or network exists with `com.supabase.cli.project=chat-communication-bus`.
 
-Supabase CLI 2.116.0 labels its local Docker resources with `com.supabase.cli.project=<project_id>` and uses that project label when `supabase stop --no-backup` prunes containers, named volumes, and networks. The runner therefore also lists all containers, volumes, and networks carrying `com.supabase.cli.project=chat-communication-bus` and refuses qualification if any already exist. Cleanup can only become responsible for a project resource set that was empty at preflight.
+Once an owned start is attempted, `supabase stop --no-backup` is attempted in `finally`. Cleanup failure is fatal. If the primary qualification stage and cleanup both fail, both causes are preserved. No PASS receipt is emitted unless cleanup succeeds.
 
-Only after all of those preflight checks pass is cleanup armed. Cleanup is armed before `supabase start`, so a partial startup failure still attempts `supabase stop --no-backup` for resources created by the qualification attempt. Cleanup failure is fatal; a PASS receipt cannot be emitted if local Supabase teardown does not complete successfully.
+This path does not link, migrate, reset, or otherwise modify the hosted Supabase project.
 
-SQL/start failure and cleanup failure are captured separately. If both occur, qualification reports both causes rather than allowing teardown failure to replace the primary SQL/start failure. If only one occurs, that failure remains fatal.
+## Receipt evidence and admission
 
-This guard applies only to local Docker resources. It does not link, reset, migrate, or otherwise modify the hosted Supabase project.
+A schema-V2 PASS receipt binds:
 
-## Qualification equivalence
+- exact source commit;
+- exact source tree;
+- `working_tree = CLEAN`;
+- observed/frozen toolchain evidence;
+- all twelve ordered stage-evidence records;
+- canonical SHA-256 over those stage records;
+- a completion timestamp no earlier than the final required stage.
 
-The local runner reproduces the substantive commands in `.github/workflows/ci.yml` without requiring a GitHub-hosted runner:
+Before receipt emission the engine re-reads the exact commit/tree/working-tree state and fails closed on drift.
 
-1. Python 3.11 and 3.12 each create a clean temporary virtual environment.
-2. Each installs `pip==26.2.1` and `.[test]`, runs `compileall`, the complete pytest suite, and `scripts/radar_source_hashes.py`.
-3. Deno runs `deno ci` and `deno check index.ts` from `supabase/functions/github-bus-ingest` using the frozen dependency graph.
-4. Local Supabase starts through Docker, rebuilds from the migration chain with `supabase db reset`, then every `supabase/tests/radar_*.sql` assertion runs with `ON_ERROR_STOP=1`.
-5. Local Supabase is stopped with `--no-backup` even when SQL qualification fails after startup or startup only partially succeeds; cleanup failure fails qualification.
-6. Before emitting PASS, the runner re-reads the Git commit, Git tree, and working-tree state and fails closed on drift.
-7. Before admission, the receipt validator requires an external receipt, independently re-reads the current clean HEAD/tree, and rejects a stale or mismatched receipt.
+A generated receipt is not admitted merely because it says `PASS`. Validate it from the same clean checkout:
 
-A PASS receipt is valid only for the exact Git commit reported by the runner as `source_commit` and exact tree reported as `source_tree`. A receipt from another commit or tree does not qualify a successor head.
+`py -3.11 scripts/radar_validate_qualification_receipt.py "$env:TEMP\radar-local-qualification.json"`
+
+The validator rejects an in-checkout receipt even if ignored. Git cleanliness is necessary but is not a substitute for the external-receipt boundary.
+
+The validator also checks schema V2, PASS status, qualification mode, frozen/observed toolchain evidence, exact ordered successful stage evidence and digest, receipt completion ordering, and the current exact clean HEAD/tree.
+
+This validator is an admission-consistency control, not independent cryptographic attestation. It prevents stale, mismatched, malformed, toolchain-drifted, stage-incomplete, or source-checkout-local receipts from being admitted accidentally; it does not independently prove that an externally supplied receipt was generated by an untampered execution.
+
+A validator success does not itself modify `RADAR_CURRENT.json`, freeze an anchor, merge source, or authorize provider/live effects.
 
 ## GitHub Actions status
 
-Private GitHub-hosted Actions may remain present as opportunistic/free-quota signal, but they are not a gating dependency and must not trigger plan, billing, payment-method, spending-limit, or other paid-service changes.
+Private GitHub-hosted Actions may remain opportunistic/non-gating signal but are not authoritative qualification. A self-hosted or ad-hoc workflow used to exercise focused source tests is likewise only evidence for the exact tests it actually executes; it is not a substitute for the full authoritative engine run and admitted receipt.
 
-Issue #39 remains historical/infrastructure evidence for the repeated pre-runner failures. Its resolution for Radar is replacement of the paid-capable dependency with this local path, not purchase of runner capacity.
+Public hosted Actions may be used only for deliberately public, non-secret, non-sensitive verification payloads. Private source must not be mirrored public merely to obtain free CI.
 
-Public GitHub-hosted Actions may be used only for deliberately public, non-secret, non-sensitive verification payloads where public execution is appropriate. Do not mirror private repository source into a public repository merely to obtain free CI.
+Issue #39 remains infrastructure evidence for historical pre-runner private-hosted failures. Its Radar recovery path is the local no-paid qualification model, not purchase of runner capacity.
 
 ## Boundary
 
-This operator path authorizes local verification only. It does not authorize merge, deployment, provider migration, provider configuration, cursor seeding, dispatcher activation, branch-history rewrite, billing/account changes, or any other protected/live effect.
+The authoritative status remains `LOCAL_EXECUTION_PENDING` until the complete frozen Windows toolchain runs `scripts/radar_qualify.py`, produces an external schema-V2 PASS receipt, and that receipt is admitted against the same exact clean checkout.
+
+This operator path authorizes verification only. It does not authorize merge, provider migration, Edge deployment/configuration, cursor seeding, dispatcher activation, credentials/ruleset changes, branch-history rewrite, billing/account changes, native Project cutover, or any other protected/live effect.
