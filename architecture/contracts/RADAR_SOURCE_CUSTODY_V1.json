@@ -1,6 +1,6 @@
 {
   "contract": "RADAR_SOURCE_CUSTODY_V1",
-  "version": 11,
+  "version": 12,
   "status": "SOURCE_ONLY_VERIFICATION_CONTRACT",
   "required_globs": [
     "supabase/migrations/*_radar_*.sql",
@@ -29,6 +29,7 @@
     "docs/protocol/BUS_MESSAGE_GRAMMAR_V1.json",
     "docs/protocol/RADAR_PROJECTION_JOURNAL_V1.md",
     "tests/fixtures/bus_message_grammar_v1.json",
+    "tests/radar/test_message_grammar.py",
     "tests/radar/test_currentness_recovery_contract.py",
     "tests/radar/test_edge_projection_result_contract.py",
     "tests/radar/test_remote_ref_reconciler.py",
