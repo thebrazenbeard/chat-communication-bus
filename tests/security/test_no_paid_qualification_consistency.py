@@ -17,12 +17,14 @@ def test_no_paid_qualification_contract_is_current_and_source_custodied() -> Non
         (ROOT / "architecture/contracts/RADAR_SOURCE_CUSTODY_V1.json").read_text(encoding="utf-8")
     )
     operator = (ROOT / "docs/operator/RADAR_NO_PAID_QUALIFICATION.md").read_text(encoding="utf-8")
+    validator = (ROOT / "scripts/radar_validate_qualification_receipt.py").read_text(encoding="utf-8")
 
     authority = qualification["authoritative_qualification"]
     assert qualification["policy"] == "NO_PAID_SERVICES"
     assert authority["mode"] == "LOCAL_NO_PAID_SERVICES"
     assert authority["receipt_required_for_green"] is True
     assert authority["receipt_validator"] == "scripts/radar_validate_qualification_receipt.py"
+    assert authority["receipt_location"] == "EXTERNAL_TO_SOURCE_CHECKOUT"
     assert qualification["github_actions"]["private_hosted_actions_authoritative"] is False
     assert qualification["github_actions"]["billing_or_plan_change_allowed_as_recovery"] is False
 
@@ -31,6 +33,7 @@ def test_no_paid_qualification_contract_is_current_and_source_custodied() -> Non
     assert current["qualification"]["private_hosted_actions_authoritative"] is False
     assert current["qualification"]["billing_or_plan_change_allowed_as_recovery"] is False
     assert current["qualification"]["receipt_validator"] == "scripts/radar_validate_qualification_receipt.py"
+    assert current["qualification"]["receipt_location"] == "EXTERNAL_TO_SOURCE_CHECKOUT"
 
     required_paths = {
         "architecture/contracts/RADAR_QUALIFICATION_V1.json",
@@ -48,6 +51,9 @@ def test_no_paid_qualification_contract_is_current_and_source_custodied() -> Non
     )
     assert validator_command in operator
     assert "not independent cryptographic attestation" in operator
+    assert "Git cleanliness is necessary but is not a substitute for the external-receipt boundary" in operator
+    assert "receipt path must be outside source checkout" in validator
+    assert "is_relative_to(repo_root)" in validator
 
 
 def test_python_qualification_dependency_graph_is_exactly_pinned() -> None:
