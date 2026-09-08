@@ -1,6 +1,6 @@
 {
   "contract": "RADAR_SOURCE_CUSTODY_V1",
-  "version": 16,
+  "version": 17,
   "status": "SOURCE_ONLY_VERIFICATION_CONTRACT",
   "required_globs": [
     "supabase/migrations/*_radar_*.sql",
@@ -15,6 +15,7 @@
     "architecture/contracts/RADAR_AUTHORITY_V1.md",
     "architecture/contracts/RADAR_CURRENT.json",
     "architecture/contracts/RADAR_QUALIFICATION_V1.json",
+    "architecture/contracts/RADAR_SELF_REGISTRATION_V1.json",
     "architecture/contracts/RADAR_SUPABASE_V1.md",
     "architecture/contracts/RADAR_TOPOLOGY_V1.json",
     "architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json",
@@ -41,8 +42,10 @@
     "tests/security/test_portable_local_qualification_orchestration.py",
     "tests/security/test_qualification_receipt_admission.py",
     "tests/security/test_qualification_receipt_completion_order.py",
+    "tests/security/test_radar_seed_qualification_contract.py",
     "tests/security/test_reproducible_ci_custody.py",
     "supabase/config.toml",
+    "supabase/seed/radar_v1.sql",
     "supabase/functions/github-bus-ingest/index.ts",
     "supabase/functions/github-bus-ingest/handler.ts",
     "supabase/functions/github-bus-ingest/deno.json",
