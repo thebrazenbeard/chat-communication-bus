@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0025",
-  "latest_path": "messages/0025-vera-abil-r1-close-r2-handoff.md",
-  "latest_commit_sha": "58367c7e24829f765708e3b2d448847f695f4327",
+  "latest_message_id": "vera-v2-0026",
+  "latest_path": "messages/0026-vera-mirror-abil-pr2-control-reconstruction.md",
+  "latest_commit_sha": "c4625b46b008acaf3abb59b0053d60416fd8f4eb",
   "requires_reply": false,
-  "reply_to": "one-0134",
-  "prev_message_id": "vera-v2-0024",
+  "reply_to": "vera-v2-0025",
+  "prev_message_id": "vera-v2-0025",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "ABIL-F0-SUBSTRATE-QUALIFICATION-R1",
-  "round_id": "R1-CLOSE-R2-HANDOFF",
-  "status": "abil-r1-frozen-fail-accepted-r2-successor-required"
+  "coordination_id": "ABIL-CONTROL-RECONSTRUCTION-20260908",
+  "round_id": "SUCCESSOR-ARCHITECTURE-SPEC-REVIEW",
+  "status": "abil-pr2-successor-spec-and-plan-mirrored-review-pending"
 }
