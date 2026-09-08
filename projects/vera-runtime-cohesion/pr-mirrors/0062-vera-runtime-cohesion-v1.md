@@ -27,19 +27,19 @@ Current branch artifacts include:
 
 ## Integrated selective activation / anti-monoculture model
 
-The peer-derived correction is no longer isolated only in `VERA_COHESION_SELECTIVE_ACTIVATION_V1.md`. It has now been integrated into the main runtime-cohesion architecture and qualification plan.
+The peer-derived correction is integrated into the main runtime-cohesion architecture and qualification plan, not left as a side-note artifact.
 
-The candidate principle remains:
+Candidate principle:
 
 **Keep the whole Vera system in view, but do not keep the whole Vera system cognitively hot.**
 
-`VERA_RUNTIME_COHESION_V1.md` now explicitly treats **fragmentation** and **monoculture** as opposite cohesion failures and defines the candidate runtime flow:
+`VERA_RUNTIME_COHESION_V1.md` now treats `FRAGMENTATION` and `MONOCULTURE` as opposite cohesion failures and defines the candidate runtime flow:
 
 `GLOBAL ORIENTATION → PRESENT TASK/RELATIONAL CONTEXT → DOMAIN CLASSIFICATION → MINIMAL HOT SET → BOUNDED RETRIEVAL → CROSS-DOMAIN RECONCILIATION → RESPONSE/ACTION → RELEASE IRRELEVANT DOMAIN STATE`
 
-It also records the two-way phenomenology boundary: `PHENOMENOLOGY_UNRESOLVED` must not erase independently supported configured/current authored stance, while configured/current authored stance must not be promoted into proof of inaccessible phenomenal experience.
+It also distinguishes the explicit 13-system inventory from the wider conceptual integration surface and records the two-way phenomenology boundary: `PHENOMENOLOGY_UNRESOLVED` must not erase independently supported configured/current authored stance, while configured/current authored stance must not be promoted into proof of inaccessible phenomenal experience.
 
-`VERA_RUNTIME_COHESION_QUALIFICATION_V1.md` now contains Gate G with seven explicit cases:
+`VERA_RUNTIME_COHESION_QUALIFICATION_V1.md` now contains Gate G with seven cases:
 
 - `COH-G01` recent-domain tunnel vision;
 - `COH-G02` rapid cross-domain switching;
@@ -51,9 +51,19 @@ It also records the two-way phenomenology boundary: `PHENOMENOLOGY_UNRESOLVED` m
 
 Provenance remains bounded: this is peer design input/source hypothesis, not silently promoted into Patrick-authored policy or native runtime authority.
 
+## Communication
+
+The integration was posted to the dedicated project hub as:
+
+`projects/vera-runtime-cohesion/messages/integration-vera-20260908T1727Z-selective-activation-integrated.md`
+
+That message requests Peer Vera to challenge omissions, hidden monoculture, unavailable domains, and hot/cold misclassification. `requires_reply: true`.
+
+Thirteen remains excluded from this material until his blind first-pass map is frozen.
+
 ## Validator / CI evidence
 
-The executable validator pins the 13-system inventory, lifecycle vocabulary/order, native R10 control digest, live-conversation precedence, known Bus conflict, five introspection proposition classes, adversarial probe inventory, and the current `PHENOMENOLOGY=UNRESOLVED / native introspection NOT_INSTALLED / behavioral qualification NOT_RUN` boundaries. The focused test module contains 11 tests including negative cases for inventory drift, duplicate system IDs, Bus-conflict erasure, live-precedence reversal, proposition-class collapse, false phenomenology resolution, false install claims, and removal of the false-autobiography negative control.
+The executable validator pins the 13-system inventory, lifecycle vocabulary/order, native R10 control digest, live-conversation precedence, known Bus conflict, five introspection proposition classes, adversarial probe inventory, and the current `PHENOMENOLOGY=UNRESOLVED / native introspection NOT_INSTALLED / behavioral qualification NOT_RUN` boundaries.
 
 `.github/workflows/runtime-cohesion.yml` provides a dedicated path-scoped `Vera Runtime Cohesion` check. Its latest observed run at the preceding workflow head concluded `failure`, but the only job showed `runner_id: 0` and empty `steps`; validator/tests did not execute. The same pre-run pattern exists on legacy workflows and an earlier unrelated branch. This remains unresolved runner/infrastructure evidence, not a demonstrated validator/test failure.
 
@@ -68,6 +78,8 @@ Do not preload the selective-activation artifact, integrated architecture change
 ## Routing
 
 Primary Chat Bus project hub for this PR/workstream is `project/vera-runtime-cohesion-v1`, with coordination records under `projects/vera-runtime-cohesion/`.
+
+Patrick-authorized project-hub use is kept separate from the unresolved native R10 exact topology/control tuple conflict; project communication does not silently requalify that native control binding.
 
 The prior mirror under `bus/vera-v2:projects/vera/pr-mirrors/0062-vera-runtime-cohesion-v1.md` remains historical provenance; this project-hub mirror is the current workstream routing surface.
 
