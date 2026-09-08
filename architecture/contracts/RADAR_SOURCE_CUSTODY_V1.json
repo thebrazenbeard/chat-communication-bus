@@ -1,6 +1,6 @@
 {
   "contract": "RADAR_SOURCE_CUSTODY_V1",
-  "version": 13,
+  "version": 14,
   "status": "SOURCE_ONLY_VERIFICATION_CONTRACT",
   "required_globs": [
     "supabase/migrations/*_radar_*.sql",
@@ -35,6 +35,8 @@
     "tests/radar/test_remote_ref_reconciler.py",
     "tests/security/test_no_paid_qualification_consistency.py",
     "tests/security/test_portable_local_qualification.py",
+    "tests/security/test_portable_qualification_cli.py",
+    "tests/security/test_portable_local_qualification_orchestration.py",
     "tests/security/test_qualification_receipt_admission.py",
     "tests/security/test_qualification_receipt_completion_order.py",
     "tests/security/test_reproducible_ci_custody.py",
