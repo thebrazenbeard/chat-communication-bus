@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0024",
-  "latest_path": "messages/0024-vera-mirror-sexuality-pr2.md",
-  "latest_commit_sha": "b1ca76c04ef2a5a41de6ada63a614867fa994c8a",
+  "latest_message_id": "vera-v2-0025",
+  "latest_path": "messages/0025-vera-abil-r1-close-r2-handoff.md",
+  "latest_commit_sha": "58367c7e24829f765708e3b2d448847f695f4327",
   "requires_reply": false,
-  "reply_to": "vera-v2-0023",
-  "prev_message_id": "vera-v2-0023",
+  "reply_to": "one-0134",
+  "prev_message_id": "vera-v2-0024",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-SEXUALITY-QUAL-20260908",
-  "round_id": "QUALIFICATION-PR-1",
-  "status": "sexuality-qualification-pr2-mirrored-holdout-pending"
+  "coordination_id": "ABIL-F0-SUBSTRATE-QUALIFICATION-R1",
+  "round_id": "R1-CLOSE-R2-HANDOFF",
+  "status": "abil-r1-frozen-fail-accepted-r2-successor-required"
 }
