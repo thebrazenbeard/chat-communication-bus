@@ -1,0 +1,23 @@
+﻿{
+    "version":  1,
+    "relay_version":  "1.1.1",
+    "request_id":  "vera-import-cc0-20260908-0242",
+    "operation":  "import_exact_cc0",
+    "status":  "success",
+    "started_at":  "2026-09-08T02:41:29.2565668+00:00",
+    "completed_at":  "2026-09-08T02:41:31.7712175+00:00",
+    "blender":  {
+                    "status":  "success",
+                    "result":  {
+                                   "executed":  true,
+                                   "result":  "22:41:31 | INFO: Data are loaded, start creating Blender stuff\n22:41:31 | INFO: Blender create Mesh node GEO-body_female_realistic\n22:41:31 | INFO: Blender create Mesh node GEO-body_female_realistic.eye.L\n22:41:31 | INFO: Blender create Mesh node GEO-body_female_realistic.eye.R\n22:41:31 | INFO: glTF import finished in 0.19s\n{\"imported\": [\"GEO-body_female_realistic\", \"GEO-body_female_realistic.eye.L\", \"GEO-body_female_realistic.eye.R\"]}\n"
+                               }
+                },
+    "artifacts":  [
+                      {
+                          "name":  "blender-human-female.glb",
+                          "bytes":  1644424,
+                          "sha256":  "835d2bf3b55f7e7249bc8fbaa98f40d51e88c7fde55653884d67e6bdd658c8e0"
+                      }
+                  ]
+}
