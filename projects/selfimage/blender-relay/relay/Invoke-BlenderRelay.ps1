@@ -8,7 +8,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$RelayVersion = '1.1.0'
+$RelayVersion = '1.1.1'
 $HostName = '127.0.0.1'
 $Port = 9876
 $AllowedOperations = @(
@@ -91,7 +91,8 @@ function Send-BlenderCommand {
             $memory.Write($buffer, 0, $count)
             $text = [System.Text.Encoding]::UTF8.GetString($memory.ToArray())
             try {
-                return ($text | ConvertFrom-Json -Depth 50)
+                # Windows PowerShell 5.1 has no ConvertFrom-Json -Depth parameter.
+                return ($text | ConvertFrom-Json)
             } catch {
                 # Keep reading until a complete JSON response is available.
             }
@@ -123,7 +124,8 @@ function Get-ArgValue {
 }
 
 New-Item -ItemType Directory -Force -Path $ArtifactDir | Out-Null
-$request = Get-Content -LiteralPath $RequestFile -Raw | ConvertFrom-Json -Depth 50
+# Windows PowerShell 5.1 has no ConvertFrom-Json -Depth parameter.
+$request = Get-Content -LiteralPath $RequestFile -Raw | ConvertFrom-Json
 
 if ($request.version -ne 1) { throw 'Unsupported request version.' }
 if (-not $request.request_id) { throw 'request_id is required.' }
