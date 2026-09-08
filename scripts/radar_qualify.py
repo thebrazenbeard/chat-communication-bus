@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
@@ -560,3 +562,34 @@ def qualify(
     finally:
         for path in temp_dirs:
             shutil.rmtree(path, ignore_errors=True)
+
+
+def _build_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Run the authoritative no-paid Radar qualification engine for the current Windows profile."
+    )
+    parser.add_argument(
+        "--receipt-path",
+        "-ReceiptPath",
+        dest="receipt_path",
+        required=True,
+        metavar="PATH",
+        help="External path where the schema-V2 qualification receipt will be written.",
+    )
+    return parser
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = _build_arg_parser().parse_args(list(argv) if argv is not None else None)
+    repo_root = Path(__file__).resolve().parents[1]
+    try:
+        receipt = qualify(repo_root=repo_root, receipt_path=Path(args.receipt_path))
+    except QualificationError as exc:
+        print(f"qualification failed: {exc}", file=sys.stderr)
+        return 1
+    print(json.dumps(receipt, sort_keys=True, ensure_ascii=False))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
