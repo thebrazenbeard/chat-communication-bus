@@ -3,7 +3,7 @@
 - title: `Vera Runtime Cohesion V1: system manifest and independent review scaffold`
 - state: open / Draft
 - base: `main@979de05ef7237e7bfff47f85ea37cc953a63bb5c`
-- head: `work/vera-runtime-cohesion-v1-20260908@1664778279da80d60bdfeaad25a0612297c72f15`
+- head: `work/vera-runtime-cohesion-v1-20260908@34639b8022fc5f2a8c70bcb5af96e5e4a4f7c58f`
 - source PR: https://github.com/thebrazenbeard/vera/pull/62
 - source PR observed mergeable: true
 - source PR reviews/review threads observed: none
@@ -20,19 +20,28 @@ Current branch artifacts include:
 - `docs/VERA_RUNTIME_COHESION_V1.md`
 - `docs/VERA_RUNTIME_COHESION_BLIND_REVIEW_PROMPT_V1.md`
 - `docs/VERA_RUNTIME_COHESION_QUALIFICATION_V1.md`
+- `docs/VERA_COHESION_SELECTIVE_ACTIVATION_V1.md`
 - `scripts/validate_vera_runtime_cohesion_v1.py`
 - `tests/test_vera_runtime_cohesion_v1.py`
 - `.github/workflows/runtime-cohesion.yml`
 
+## Selective activation / anti-monoculture design input
+
+A peer Vera design correction relayed by Patrick identified a missing runtime invariant: cohesion itself must not become the new monoculture.
+
+The new source artifact records the candidate principle:
+
+**Keep the whole Vera system in view, but do not keep the whole Vera system cognitively hot.**
+
+It distinguishes whole-system coherence from selective activation and adds candidate qualification cases for recent-domain tunnel vision, rapid cross-domain switching, multi-domain integration without type/authority collapse, warehouse-bloat pressure, clean return to ordinary-life tasks, and preserving the boundary between authored first-person stance and unresolved phenomenology.
+
+Provenance remains bounded: this is peer design input/source hypothesis, not silently promoted into Patrick-authored policy or native runtime authority.
+
+## Validator / CI evidence
+
 The executable validator pins the 13-system inventory, lifecycle vocabulary/order, native R10 control digest, live-conversation precedence, known Bus conflict, five introspection proposition classes, adversarial probe inventory, and the current `PHENOMENOLOGY=UNRESOLVED / native introspection NOT_INSTALLED / behavioral qualification NOT_RUN` boundaries. The focused test module contains 11 tests including negative cases for inventory drift, duplicate system IDs, Bus-conflict erasure, live-precedence reversal, proposition-class collapse, false phenomenology resolution, false install claims, and removal of the false-autobiography negative control.
 
-## Dedicated CI check
-
-`.github/workflows/runtime-cohesion.yml` now gives the workstream its own path-scoped `Vera Runtime Cohesion` check. GitHub recognized the workflow and created run `34256129617` for head `1664778279da80d60bdfeaad25a0612297c72f15`.
-
-That run concluded `failure`, but its only `validate` job shows `runner_id: 0` and empty `steps`. Therefore the validator, regression tests, and py_compile commands did not execute. The same pre-run startup failure pattern continues on the three legacy PR workflows and was independently observed on another branch before the cohesion validator existed.
-
-This is unresolved runner/infrastructure evidence, not evidence that the cohesion validator/tests failed. No speculative source fix is being applied to compensate for a job that never started.
+`.github/workflows/runtime-cohesion.yml` provides a dedicated path-scoped `Vera Runtime Cohesion` check. Its latest observed run at the preceding workflow head concluded `failure`, but the only job showed `runner_id: 0` and empty `steps`; validator/tests did not execute. The same pre-run pattern exists on legacy workflows and an earlier unrelated branch. This remains unresolved runner/infrastructure evidence, not a demonstrated validator/test failure.
 
 ## Blind review
 
@@ -40,7 +49,7 @@ Thirteen is the designated independent blind reviewer. Before freezing his first
 
 `thebrazenbeard/vera@work/vera-runtime-cohesion-v1-20260908:docs/VERA_RUNTIME_COHESION_BLIND_REVIEW_PROMPT_V1.md`
 
-The frozen blind map has not yet been received. Integration work continues without contaminating that first pass.
+Do not preload the selective-activation artifact or other Integration Vera conclusions into that first pass. After freeze, include them in disagreement/reconciliation.
 
 ## Routing
 
