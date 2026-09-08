@@ -99,8 +99,6 @@ def test_local_runner_preserves_frozen_ci_toolchain_and_exact_source_binding() -
 def test_local_runner_revalidates_source_binding_after_all_qualification_stages() -> None:
     runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
 
-    # The receipt may claim CLEAN/exact-source only if those facts are re-read
-    # after every potentially mutating build/test/tool invocation has completed.
     assert runner.count('status", "--porcelain') >= 2
     assert runner.count('rev-parse", "HEAD") >= 2
     assert runner.count('rev-parse", "HEAD^{tree}') >= 2
@@ -201,3 +199,35 @@ def test_local_runner_preserves_primary_sql_failure_when_cleanup_also_fails() ->
         "throw $sqlFailure",
     ):
         assert expected in runner
+
+
+def test_windows_launcher_is_thin_and_python_engine_owns_semantics() -> None:
+    qualification = json.loads(
+        (ROOT / "architecture/contracts/RADAR_QUALIFICATION_V1.json").read_text(encoding="utf-8")
+    )
+    current = json.loads((ROOT / "architecture/contracts/RADAR_CURRENT.json").read_text(encoding="utf-8"))
+    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
+    operator = (ROOT / "docs/operator/RADAR_NO_PAID_QUALIFICATION.md").read_text(encoding="utf-8")
+
+    authority = qualification["authoritative_qualification"]
+    assert authority["engine"] == "scripts/radar_qualify.py"
+    assert authority["windows_launcher"] == "scripts/radar_local_qualify.ps1"
+    assert current["qualification"]["engine"] == "scripts/radar_qualify.py"
+    assert current["qualification"]["windows_launcher"] == "scripts/radar_local_qualify.ps1"
+
+    assert "radar_qualify.py" in runner
+    assert "-3.11" in runner
+    assert "--receipt-path" in runner
+    for forbidden in (
+        "supabase db reset",
+        "deno check",
+        "pytest",
+        "radar_source_hashes.py",
+        "RADAR_TRUSTED_PROJECTOR_SHA",
+    ):
+        assert forbidden.lower() not in runner.lower()
+
+    assert "Python engine defines qualification semantics." in operator
+    assert "PowerShell is the authoritative Windows launcher for the currently authorized platform profile." in operator
+    assert "A runnable engine on another OS is not automatically an authoritative platform profile." in operator
+    assert "Receipt V2 stage evidence is required before GREEN." in operator
