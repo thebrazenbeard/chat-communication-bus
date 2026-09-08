@@ -1,6 +1,6 @@
 {
   "contract": "RADAR_SOURCE_CUSTODY_V1",
-  "version": 10,
+  "version": 11,
   "status": "SOURCE_ONLY_VERIFICATION_CONTRACT",
   "required_globs": [
     "supabase/migrations/*_radar_*.sql",
@@ -33,6 +33,7 @@
     "tests/radar/test_edge_projection_result_contract.py",
     "tests/radar/test_remote_ref_reconciler.py",
     "tests/security/test_no_paid_qualification_consistency.py",
+    "tests/security/test_qualification_receipt_admission.py",
     "tests/security/test_reproducible_ci_custody.py",
     "supabase/config.toml",
     "supabase/functions/github-bus-ingest/index.ts",
@@ -41,6 +42,7 @@
     "supabase/functions/github-bus-ingest/deno.lock",
     "pyproject.toml",
     "scripts/radar_local_qualify.ps1",
+    "scripts/radar_validate_qualification_receipt.py",
     "scripts/radar_source_hashes.py",
     "scripts/radar_trusted_project.py",
     "scripts/radar_trusted_reconcile.py",
