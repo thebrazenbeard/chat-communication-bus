@@ -62,6 +62,7 @@
       "ordinal_base": 1,
       "digest": "SHA-256_CANONICAL_JSON",
       "canonical_json": "UTF-8 JSON array, sort_keys=true, separators=[comma,colon], no surrounding whitespace",
+      "receipt_completion_order": "receipt.completed_at_utc >= final required stage completed_at_utc",
       "required_fields": [
         "ordinal",
         "stage_id",
@@ -82,5 +83,5 @@
     "public_hosted_actions_constraint": "Only deliberately public, non-secret, non-sensitive verification payloads may use public hosted Actions. Private source must not be mirrored public merely to obtain free CI."
   },
   "latest_qualification_receipt": null,
-  "promotion_rule": "Do not classify Radar source GREEN until an authoritative local PASS receipt schema V2 stored outside the source checkout proves the exact required stage sequence and toolchain, binds the exact candidate commit/tree, and passes scripts/radar_validate_qualification_receipt.py against that same clean checkout."
+  "promotion_rule": "Do not classify Radar source GREEN until an authoritative local PASS receipt schema V2 stored outside the source checkout proves the exact required stage sequence and toolchain, orders receipt completion after the final required stage, binds the exact candidate commit/tree, and passes scripts/radar_validate_qualification_receipt.py against that same clean checkout."
 }
