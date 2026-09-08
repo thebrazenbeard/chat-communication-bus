@@ -160,6 +160,14 @@ def _closed_by_sender(body: str) -> bool:
     return bool(trimmed) and trimmed.splitlines()[-1] == "#ENDTHREAD"
 
 
+def _intended_recipient(headers: dict[str, str]) -> str:
+    singular = headers.get("intended_recipient")
+    plural = headers.get("intended_recipients")
+    if singular is not None and plural is not None:
+        raise MessageGrammarError("CONFLICTING_INTENDED_RECIPIENT_HEADERS")
+    return singular if singular is not None else plural or ""
+
+
 def parse_bus_document(
     content: bytes,
     *,
@@ -204,7 +212,7 @@ def parse_bus_document(
         created_at_invalid=created_at_invalid,
         requires_reply=requires_reply,
         requires_ack=requires_ack,
-        intended_recipient=headers.get("intended_recipient", ""),
+        intended_recipient=_intended_recipient(headers),
         subject=subject,
         full_sha256=hashlib.sha256(content).hexdigest(),
         body_sha256=hashlib.sha256(body_bytes).hexdigest(),
