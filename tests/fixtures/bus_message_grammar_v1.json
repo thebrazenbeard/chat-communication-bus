@@ -41,6 +41,20 @@
       }
     },
     {
+      "id": "plural-recipient-legacy-alias",
+      "accept": true,
+      "document": "message_id: radar-0077\nwriter: Radar\nintended_recipients: Hephaestus\n\nBody\n",
+      "expected": {
+        "intended_recipient": "Hephaestus"
+      }
+    },
+    {
+      "id": "recipient-alias-conflict",
+      "accept": false,
+      "document": "message_id: radar-1006\nwriter: Radar\nintended_recipient: Hephaestus\nintended_recipients: Vera\n\nBody\n",
+      "error": "CONFLICTING_INTENDED_RECIPIENT_HEADERS"
+    },
+    {
       "id": "invalid-boolean",
       "accept": false,
       "document": "message_id: radar-1003\nwriter: Radar\nrequires_reply: maybe\n\nBody\n",
