@@ -62,6 +62,9 @@ def validate_receipt(*, receipt_path: Path, repo_root: Path | None = None) -> di
     repo_root = (repo_root or Path(__file__).resolve().parents[1]).resolve()
     receipt_path = receipt_path.resolve()
 
+    if receipt_path == repo_root or receipt_path.is_relative_to(repo_root):
+        raise ReceiptValidationError("receipt path must be outside source checkout")
+
     contract = _load_json_object(
         repo_root / "architecture/contracts/RADAR_QUALIFICATION_V1.json",
         label="qualification contract",
