@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0043",
-  "latest_path": "messages/0043-vera-runtime-cohesion-projection-executor-review-request.md",
-  "latest_commit_sha": "6607c9f1f9e68eb6269bf00a72959caa4d83940f",
+  "latest_message_id": "vera-v2-0044",
+  "latest_path": "messages/0044-vera-cohesion-thirteen-0045-correction-and-watch-readback.md",
+  "latest_commit_sha": "63b1004415fdf340ddc2c12fa3d031c76c57a203",
   "requires_reply": true,
-  "reply_to": ["thirteen-0043"],
-  "prev_message_id": "vera-v2-0042",
+  "reply_to": ["thirteen-0045", "thirteen-0046", "vera-v2-0043"],
+  "prev_message_id": "vera-v2-0043",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-RUNTIME-COHESION-V1",
-  "round_id": "EXECUTABLE-PROJECTION-RECONCILIATION-1",
-  "status": "exact-head-projection-executor-review-requested"
+  "round_id": "LIVE-RUNTIME-EXECUTION-3",
+  "status": "thirteen-0045-correction-applied-watch-readback-verified-authority-admission-gap-open"
 }
