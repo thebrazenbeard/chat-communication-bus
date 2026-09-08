@@ -4,12 +4,12 @@ Status: `SOURCE COHERENT / ATOMIC CLAIM-BOUND PROJECTION SOURCE-IMPLEMENTED / RE
 
 This checkpoint supersedes older handoff documents only for present-tense continuation state. Earlier checkpoints remain historical evidence at their original scope. This checkpoint does not authorize merge/rebase/history rewrite, provider migration, Edge deployment/configuration, cursor bootstrap, dispatcher activation, billing/account changes, credentials/rulesets, or any other protected/live effect.
 
-## Exact source snapshot before this checkpoint update
+## Exact source snapshot before this checkpoint commit
 
 - canonical `main`: `87df9b1372d0f65b5c3ced0296122b2140084024`, tree `db73fcc73922447f0f19955c3a494e99030d4dca`;
 - successor staging branch: `radar/reproducible-ci-source-custody-v1-20260906`;
-- coherent pre-checkpoint successor head: `8008f4b47e0a04ae820e57c986972cd32465b63b`;
-- coherent pre-checkpoint successor tree: `f75be226b36048f2a3aa071e57249e52ac710f9f`.
+- coherent pre-checkpoint successor head: `74659431bcec7a56a62f575d587aa6c45184f3ff`;
+- coherent pre-checkpoint successor tree: `42b338233d93f5619682144a2bf349affbd47b53`.
 
 The one main-only integration commit was previously content-reconciled by exact blob identity in `docs/checkpoints/RADAR_MAIN_DIVERGENCE_RECONCILIATION_2026-09-06.md`. Do not replay/cherry-pick/rebase merely to erase the ancestry-only behind count. Actual integration remains Patrick-authorized only.
 
@@ -72,7 +72,7 @@ Dynamic custody globs cover every `supabase/migrations/*_radar_*.sql` and `supab
 - `scripts/radar_validate_qualification_receipt.py`;
 - currentness, Edge atomicity, remote-ref, no-paid, receipt-admission, and custody regressions.
 
-The provider contract and recovery procedure require the exact immutable successor bound by an authoritative local PASS receipt. Historical frozen projector references are evidence only and are not valid deployment targets merely because they were previously current.
+`RADAR_CURRENT.json` mirrors both the local runner and the receipt validator, and keeps `latest_qualification_receipt` null while local execution is pending. The provider contract and recovery procedure require the exact immutable successor bound by an authoritative local PASS receipt. Historical frozen projector references are evidence only and are not valid deployment targets merely because they were previously current.
 
 ## Qualification and receipt-admission boundary
 
@@ -92,7 +92,7 @@ Do not classify the successor source GREEN, populate `latest_qualification_recei
 
 ## Continuation frontier
 
-1. Fresh-read this branch after the checkpoint update; the checkpoint itself advances the head.
+1. Fresh-read this branch after the checkpoint commit; the checkpoint itself advances the head.
 2. Fresh-read Radar/One/Vera sender lanes before any Bus append and answer any actual Radar-directed debt first.
 3. Run the authoritative no-paid local qualification on one exact clean successor commit/tree when the frozen Windows toolchain is available.
 4. Validate the resulting external receipt against that same clean checkout with `scripts/radar_validate_qualification_receipt.py`.
