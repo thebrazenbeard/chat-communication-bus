@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/thebrazenbeard/chat-communication-bus/projects/selfimage/blender-relay/schema/result.schema.json",
+  "title": "Vera Blender Relay Result V1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["version", "relay_version", "request_id", "operation", "status", "started_at", "completed_at", "artifacts"],
+  "properties": {
+    "version": {"const": 1},
+    "relay_version": {"type": "string"},
+    "request_id": {"type": "string"},
+    "operation": {"type": ["string", "null"]},
+    "status": {"enum": ["success", "failed"]},
+    "started_at": {"type": "string"},
+    "completed_at": {"type": "string"},
+    "error": {"type": "string"},
+    "blender": {},
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "bytes", "sha256"],
+        "properties": {
+          "name": {"type": "string"},
+          "bytes": {"type": "integer", "minimum": 0},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    }
+  }
+}
