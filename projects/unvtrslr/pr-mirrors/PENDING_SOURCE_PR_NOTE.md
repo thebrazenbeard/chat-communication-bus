@@ -1,0 +1,1 @@
+The source research branch is ready for a draft PR. This note is append-only evidence that the Chat Bus mirror path was prepared before opening the source PR; a successor record must bind the actual PR number/head after creation.
