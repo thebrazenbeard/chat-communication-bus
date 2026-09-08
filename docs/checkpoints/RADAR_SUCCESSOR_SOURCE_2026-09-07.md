@@ -1,6 +1,6 @@
 # Radar successor source checkpoint — 2026-09-07
 
-Status: `SOURCE COHERENT / ATOMIC CLAIM-BOUND PROJECTION SOURCE-IMPLEMENTED / RECEIPT ADMISSION SOURCE-IMPLEMENTED / CUSTODY V11 / ANCHOR D BLOCKED / NO-PAID LOCAL QUALIFICATION PENDING / PROVIDER NOT APPLIED / EDGE NOT DEPLOYED / ISSUE #16 OPEN`.
+Status: `SOURCE COHERENT / ATOMIC CLAIM-BOUND PROJECTION SOURCE-IMPLEMENTED / RECEIPT ADMISSION SOURCE-IMPLEMENTED / EXTERNAL RECEIPT BOUNDARY ENFORCED / CUSTODY V11 / ANCHOR D BLOCKED / NO-PAID LOCAL QUALIFICATION PENDING / PROVIDER NOT APPLIED / EDGE NOT DEPLOYED / ISSUE #16 OPEN`.
 
 This checkpoint supersedes older handoff documents only for present-tense continuation state. Earlier checkpoints remain historical evidence at their original scope. This checkpoint does not authorize merge/rebase/history rewrite, provider migration, Edge deployment/configuration, cursor bootstrap, dispatcher activation, billing/account changes, credentials/rulesets, or any other protected/live effect.
 
@@ -8,8 +8,8 @@ This checkpoint supersedes older handoff documents only for present-tense contin
 
 - canonical `main`: `87df9b1372d0f65b5c3ced0296122b2140084024`, tree `db73fcc73922447f0f19955c3a494e99030d4dca`;
 - successor staging branch: `radar/reproducible-ci-source-custody-v1-20260906`;
-- coherent pre-checkpoint successor head: `74659431bcec7a56a62f575d587aa6c45184f3ff`;
-- coherent pre-checkpoint successor tree: `42b338233d93f5619682144a2bf349affbd47b53`.
+- coherent pre-checkpoint successor head: `e9386273a11cfc7c3806d8a0ab6d9a86d69b9d76`;
+- coherent pre-checkpoint successor tree: `44691e8650f17d0a894f9be5fe7ab31f509b47cc`.
 
 The one main-only integration commit was previously content-reconciled by exact blob identity in `docs/checkpoints/RADAR_MAIN_DIVERGENCE_RECONCILIATION_2026-09-06.md`. Do not replay/cherry-pick/rebase merely to erase the ancestry-only behind count. Actual integration remains Patrick-authorized only.
 
@@ -60,7 +60,7 @@ Current staging contains both source repairs. No successor anchor may be frozen 
 
 ## Source custody and authority
 
-`RADAR_SOURCE_CUSTODY_V1` is version 11.
+`RADAR_SOURCE_CUSTODY_V1` remains version 11 because this slice changes only already-custodied paths and introduces no new custody path.
 
 Dynamic custody globs cover every `supabase/migrations/*_radar_*.sql` and `supabase/tests/radar_*.sql`. Fixed trust roots explicitly include:
 
@@ -72,7 +72,7 @@ Dynamic custody globs cover every `supabase/migrations/*_radar_*.sql` and `supab
 - `scripts/radar_validate_qualification_receipt.py`;
 - currentness, Edge atomicity, remote-ref, no-paid, receipt-admission, and custody regressions.
 
-`RADAR_CURRENT.json` mirrors both the local runner and the receipt validator, and keeps `latest_qualification_receipt` null while local execution is pending. The provider contract and recovery procedure require the exact immutable successor bound by an authoritative local PASS receipt. Historical frozen projector references are evidence only and are not valid deployment targets merely because they were previously current.
+`RADAR_QUALIFICATION_V1.json` and `RADAR_CURRENT.json` now both declare `receipt_location = EXTERNAL_TO_SOURCE_CHECKOUT`. `RADAR_CURRENT.json` keeps `latest_qualification_receipt` null while local execution is pending. The provider contract and recovery procedure require the exact immutable successor bound by an authoritative local PASS receipt. Historical frozen projector references are evidence only and are not valid deployment targets merely because they were previously current.
 
 ## Qualification and receipt-admission boundary
 
@@ -84,9 +84,22 @@ After the runner emits an external receipt, admission is checked from the same c
 
 `py -3.11 scripts/radar_validate_qualification_receipt.py "$env:TEMP\radar-local-qualification.json"`
 
-The validator fails closed on malformed/non-PASS receipts, wrong qualification mode, frozen toolchain drift, non-UTC completion time, dirty checkout, or any mismatch between receipt `source_commit` / `source_tree` and the checkout's current HEAD/tree. It is an admission-consistency control, not independent cryptographic attestation and not a substitute for actually executing the authoritative local runner.
+The validator rejects any receipt whose resolved path is inside the source checkout before considering Git cleanliness. This closes a seam where an in-checkout receipt under an ignored directory could otherwise remain invisible to `git status --porcelain --untracked-files=all` and be admitted despite the external-receipt contract.
 
-The receipt-admission regression was developed red/green: with the validator absent, its four focused tests fail on the missing surface; with the validator restored, the four focused tests pass in this runtime. That focused evidence does not constitute the full Python/Deno/PostgreSQL qualification suite.
+The validator also fails closed on malformed/non-PASS receipts, wrong qualification mode, frozen toolchain drift, non-UTC completion time, dirty checkout, or any mismatch between receipt `source_commit` / `source_tree` and the checkout's current HEAD/tree. It is an admission-consistency control, not independent cryptographic attestation and not a substitute for actually executing the authoritative local runner.
+
+The receipt-admission tests were exercised red/green in this runtime. The newly added ignored-in-checkout case failed against the pre-fix validator because the receipt was admitted while Git status remained clean. After the path-boundary fix, the complete focused receipt-admission file reports `5 passed`. This focused Python evidence does not constitute the full Python/Deno/PostgreSQL qualification suite.
+
+From the previous coherent checkpoint `cde6061e8f95b4c12be2dd2a4889d70aac8e50ff` through pre-checkpoint head `e9386273a11cfc7c3806d8a0ab6d9a86d69b9d76`, Git reports a linear six-commit advance touching only:
+
+- `architecture/contracts/RADAR_CURRENT.json`;
+- `architecture/contracts/RADAR_QUALIFICATION_V1.json`;
+- `docs/operator/RADAR_NO_PAID_QUALIFICATION.md`;
+- `scripts/radar_validate_qualification_receipt.py`;
+- `tests/security/test_no_paid_qualification_consistency.py`;
+- `tests/security/test_qualification_receipt_admission.py`.
+
+No routing, Edge, SQL, provider, workflow, or migration source changed in that slice.
 
 Do not classify the successor source GREEN, populate `latest_qualification_receipt`, or freeze a successor projector anchor until the real local runner produces a PASS receipt for the exact final candidate and that receipt passes admission against the same clean checkout.
 
