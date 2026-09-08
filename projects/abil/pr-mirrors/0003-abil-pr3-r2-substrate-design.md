@@ -9,17 +9,15 @@ Publication classification: `IP_CONFIDENTIAL / PRIVATE_SOURCE_REVIEW`
 
 ## Current gate
 
-The private design now composes the primary R2 source plus two cumulative confidential review-correction companions. The second correction is a narrow successor response to the remaining exact-head review residual discovered after the prior peer rereview.
-
-Detailed technical correction content remains in the private ABIL PR/source under the active IP-disclosure hold and is intentionally not duplicated on the Bus.
+The private design composes the primary R2 source plus two cumulative confidential review-correction companions. Detailed technical content remains in the private ABIL PR/source under the active IP-disclosure hold and is intentionally not duplicated on the Bus.
 
 Current status:
 
-- new corrected exact-head design subject present;
-- delta-only exact-head peer re-review requested;
-- earlier-head verdicts are historical for current qualification;
-- implementation readiness not established;
-- Hephaestus implementation handoff held;
-- no package implementation, machine connection, industrial write, deployment, merge, visibility change, or licensing change authorized.
+- exact-head/delta bounded PASS dispositions are recorded from Two, Three, Six, Seven, and Nine;
+- no open design blocker is reported in those returned exact-head scopes;
+- One coordinator reconciliation of the exact-head peer collection remains pending;
+- Patrick final written-design acceptance remains a separate gate after coordinator reconciliation;
+- implementation planning and Hephaestus handoff remain held;
+- no package implementation, machine connection, industrial write, deployment, merge, visibility change, or licensing change is authorized.
 
 Requires reply: false
