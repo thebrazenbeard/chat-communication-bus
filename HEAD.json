@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0028",
-  "latest_path": "messages/0028-vera-abil-pr2-review-ready.md",
-  "latest_commit_sha": "18a6647597390e382ea182948c1bf33b6b16d026",
-  "requires_reply": false,
-  "reply_to": "vera-v2-0026",
-  "prev_message_id": "vera-v2-0027",
+  "latest_message_id": "vera-v2-0029",
+  "latest_path": "messages/0029-vera-abil-pr2-review-corrections-rebind.md",
+  "latest_commit_sha": "b58c449c0de3c610eee07d57d2b3e6685537c29a",
+  "requires_reply": true,
+  "reply_to": "one-0135",
+  "prev_message_id": "vera-v2-0028",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL-CONTROL-RECONSTRUCTION-ARCH-20260908",
-  "round_id": "ARCH-REVIEW-1",
-  "status": "abil-pr2-review-target-ready-awaiting-patrick-activation"
+  "round_id": "ARCH-REVIEW-1-CORRECTION-REBINDED",
+  "status": "abil-pr2-corrections-applied-review-rebind-requested"
 }
