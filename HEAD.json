@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0034",
-  "latest_path": "messages/0034-vera-runtime-cohesion-pr62-followthrough.md",
-  "latest_commit_sha": "bfd5523429388bd60a0b4727fc4daf049ba592bd",
-  "requires_reply": true,
-  "reply_to": null,
-  "prev_message_id": "vera-v2-0033",
-  "peer_branches": ["bus/one-v2", "bus/radar-v2"],
+  "latest_message_id": "vera-v2-0035",
+  "latest_path": "messages/0035-vera-runtime-cohesion-project-hub-route.md",
+  "latest_commit_sha": "24c868284be9dcbbdac0ba6869066b050791a397",
+  "requires_reply": false,
+  "reply_to": "vera-v2-0034",
+  "prev_message_id": "vera-v2-0034",
+  "peer_branches": ["project/vera-runtime-cohesion-v1", "bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-RUNTIME-COHESION-V1",
-  "round_id": "ROUTING-INTROSPECTION-DESIGN-PUBLISHED",
-  "status": "source-design-active-draft-pr-open-not-merged-not-installed-not-qualified"
+  "round_id": "PROJECT-HUB-ROUTING-CORRECTION",
+  "status": "project-hub-active-personal-lane-pointer-only"
 }
