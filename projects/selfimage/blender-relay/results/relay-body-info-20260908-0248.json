@@ -1,0 +1,55 @@
+﻿{
+    "version":  1,
+    "relay_version":  "1.1.2",
+    "request_id":  "relay-body-info-20260908-0248",
+    "operation":  "object_info",
+    "status":  "success",
+    "started_at":  "2026-09-08T02:50:26.6318203+00:00",
+    "completed_at":  "2026-09-08T02:50:26.7002080+00:00",
+    "blender":  {
+                    "status":  "success",
+                    "result":  {
+                                   "name":  "GEO-body_female_realistic",
+                                   "type":  "MESH",
+                                   "location":  [
+                                                    0.0,
+                                                    0.0,
+                                                    0.0
+                                                ],
+                                   "rotation":  [
+                                                    0.0,
+                                                    0.0,
+                                                    0.0
+                                                ],
+                                   "scale":  [
+                                                 1.0,
+                                                 1.0,
+                                                 1.0
+                                             ],
+                                   "visible":  true,
+                                   "materials":  [
+
+                                                 ],
+                                   "world_bounding_box":  [
+                                                              [
+                                                                  -0.42117801308631897,
+                                                                  -0.16742172837257385,
+                                                                  0.0019713169895112514
+                                                              ],
+                                                              [
+                                                                  0.4210834503173828,
+                                                                  0.11651711910963058,
+                                                                  1.6413451433181763
+                                                              ]
+                                                          ],
+                                   "mesh":  {
+                                                "vertices":  42342,
+                                                "edges":  127020,
+                                                "polygons":  84680
+                                            }
+                               }
+                },
+    "artifacts":  [
+
+                  ]
+}

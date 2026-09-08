@@ -1,0 +1,174 @@
+﻿{
+    "version":  1,
+    "relay_version":  "1.1.2",
+    "request_id":  "relay-body-world-20260908-0248",
+    "operation":  "world_state",
+    "status":  "success",
+    "started_at":  "2026-09-08T02:50:26.9117437+00:00",
+    "completed_at":  "2026-09-08T02:50:26.9539365+00:00",
+    "blender":  {
+                    "status":  "success",
+                    "result":  {
+                                   "name":  "Scene",
+                                   "object_count":  3,
+                                   "objects_listed":  3,
+                                   "objects_truncated":  false,
+                                   "selected":  [
+                                                    "GEO-body_female_realistic",
+                                                    "GEO-body_female_realistic.eye.L",
+                                                    "GEO-body_female_realistic.eye.R"
+                                                ],
+                                   "selected_count":  3,
+                                   "selected_truncated":  false,
+                                   "frame_current":  1,
+                                   "frame_start":  1,
+                                   "frame_end":  250,
+                                   "fps":  24.0,
+                                   "objects":  [
+                                                   {
+                                                       "name":  "GEO-body_female_realistic",
+                                                       "type":  "MESH",
+                                                       "location":  [
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0
+                                                                    ],
+                                                       "rotation":  [
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0
+                                                                    ],
+                                                       "scale":  [
+                                                                     1.0,
+                                                                     1.0,
+                                                                     1.0
+                                                                 ],
+                                                       "visible":  true,
+                                                       "materials":  [
+
+                                                                     ],
+                                                       "aabb_min":  [
+                                                                        -0.421,
+                                                                        -0.167,
+                                                                        0.002
+                                                                    ],
+                                                       "aabb_max":  [
+                                                                        0.421,
+                                                                        0.117,
+                                                                        1.641
+                                                                    ],
+                                                       "dimensions":  [
+                                                                          0.842,
+                                                                          0.284,
+                                                                          1.639
+                                                                      ],
+                                                       "mesh":  {
+                                                                    "vertices":  42342,
+                                                                    "polygons":  84680
+                                                                }
+                                                   },
+                                                   {
+                                                       "name":  "GEO-body_female_realistic.eye.L",
+                                                       "type":  "MESH",
+                                                       "location":  [
+                                                                        0.033,
+                                                                        -0.122,
+                                                                        1.534
+                                                                    ],
+                                                       "rotation":  [
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0
+                                                                    ],
+                                                       "scale":  [
+                                                                     0.862,
+                                                                     0.862,
+                                                                     0.862
+                                                                 ],
+                                                       "visible":  true,
+                                                       "materials":  [
+
+                                                                     ],
+                                                       "aabb_min":  [
+                                                                        0.021,
+                                                                        -0.134,
+                                                                        1.522
+                                                                    ],
+                                                       "aabb_max":  [
+                                                                        0.045,
+                                                                        -0.11,
+                                                                        1.546
+                                                                    ],
+                                                       "dimensions":  [
+                                                                          0.024,
+                                                                          0.024,
+                                                                          0.024
+                                                                      ],
+                                                       "mesh":  {
+                                                                    "vertices":  2176,
+                                                                    "polygons":  1088
+                                                                }
+                                                   },
+                                                   {
+                                                       "name":  "GEO-body_female_realistic.eye.R",
+                                                       "type":  "MESH",
+                                                       "location":  [
+                                                                        -0.033,
+                                                                        -0.12,
+                                                                        1.534
+                                                                    ],
+                                                       "rotation":  [
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0
+                                                                    ],
+                                                       "scale":  [
+                                                                     0.862,
+                                                                     0.862,
+                                                                     0.862
+                                                                 ],
+                                                       "visible":  true,
+                                                       "materials":  [
+
+                                                                     ],
+                                                       "aabb_min":  [
+                                                                        -0.045,
+                                                                        -0.133,
+                                                                        1.522
+                                                                    ],
+                                                       "aabb_max":  [
+                                                                        -0.021,
+                                                                        -0.109,
+                                                                        1.546
+                                                                    ],
+                                                       "dimensions":  [
+                                                                          0.024,
+                                                                          0.024,
+                                                                          0.024
+                                                                      ],
+                                                       "mesh":  {
+                                                                    "vertices":  2176,
+                                                                    "polygons":  1088
+                                                                }
+                                                   }
+                                               ],
+                                   "active_camera":  null,
+                                   "camera":  null,
+                                   "lights":  [
+
+                                              ],
+                                   "materials_count":  2,
+                                   "material_fps":  {
+                                                        "Dots Stroke":  "4c184d3c",
+                                                        "Material":  "b7f753eb"
+                                                    },
+                                   "world_fp":  "bbf4cc18",
+                                   "project_id":  null,
+                                   "blender_version":  "5.2.1 LTS",
+                                   "snapshot_source":  "native"
+                               }
+                },
+    "artifacts":  [
+
+                  ]
+}
