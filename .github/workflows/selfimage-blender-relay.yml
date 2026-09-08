@@ -28,6 +28,13 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      - name: Refresh relay branch tip
+        shell: powershell
+        run: |
+          git fetch origin '${{ github.ref_name }}'
+          git checkout '${{ github.ref_name }}'
+          git pull --ff-only origin '${{ github.ref_name }}'
+
       - name: Process pending Blender requests
         id: process
         continue-on-error: true
