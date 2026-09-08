@@ -30,6 +30,7 @@ def test_no_paid_qualification_contract_is_current_and_source_custodied() -> Non
     assert current["qualification"]["authoritative_mode"] == "LOCAL_NO_PAID_SERVICES"
     assert current["qualification"]["private_hosted_actions_authoritative"] is False
     assert current["qualification"]["billing_or_plan_change_allowed_as_recovery"] is False
+    assert current["qualification"]["receipt_validator"] == "scripts/radar_validate_qualification_receipt.py"
 
     required_paths = {
         "architecture/contracts/RADAR_QUALIFICATION_V1.json",
