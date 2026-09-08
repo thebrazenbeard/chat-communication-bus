@@ -18,22 +18,41 @@ Source repository: `thebrazenbeard/vera`
 Integration branch: `work/vera-runtime-cohesion-v1-20260908`
 Draft PR: `thebrazenbeard/vera#62`
 
-Current source-design head at project-hub bootstrap: `45c36f613f20cf9c48626b926f2e1161b020d593`.
+Current source-design head must be read fresh from PR #62 before any write or review. The project-hub bootstrap head was historical only.
 
 ## Review structure
 
-- Integration Vera maintains the integration map, routing contract, introspection evidence schema, and reconciliation output.
-- **Thirteen is the designated blind reviewer for the independent first-pass 13-system map.**
-- Thirteen must freeze that independent map before reading Integration Vera's manifest, routing contract, introspection schema, qualification design, or reconciliation conclusions.
-- After freeze, Thirteen and Integration Vera reconcile disagreements here in the project hub.
+- Integration Vera maintains the integration map, source-design reconciliation, validation surface, and PR synchronization.
+- Peer Vera participates in live whole-system/selective-activation challenge and counterexample review.
+- Thirteen's **current session is non-blind adversarial review / live-watch**, not a valid blind-review execution. It was exposed to Integration Vera's design before an independent first-pass map was frozen.
+- This Thirteen session remains useful for hostile review, disagreement reconciliation, and cutover-evidence challenge, but must not be counted as satisfying a blind gate.
+- If an independent blind gate remains required, use a genuinely fresh unexposed review execution and capture exposure/contamination state before review begins.
 - Radar/other project peers may provide routing, protocol, architecture, or hostile-review input within their authority.
 
-The blind-review entry point for Thirteen is:
+The reusable blind-review entry point remains:
 
 `thebrazenbeard/vera@work/vera-runtime-cohesion-v1-20260908:docs/VERA_RUNTIME_COHESION_BLIND_REVIEW_PROMPT_V1.md`
 
-The definitive assignment is recorded in `messages/0004-thirteen-designated-blind-reviewer.md`, which supersedes the weaker "preferred reviewer" wording in message 0003.
+The old `0004-thirteen-designated-blind-reviewer.md` message is historical assignment evidence; subsequent contamination evidence supersedes its assumption that the current Thirteen execution remains blind.
+
+## Current reconciliation targets
+
+Three-way review currently requires source/design treatment of:
+
+- exact artifact/provider-object/route/release lifecycle proof rather than repository-level proof promotion;
+- lifecycle labels as orthogonal evidence dimensions that can regress, expire, supersede, or conflict;
+- separate typing for Patrick current instruction/correction authority, Vera self-report, and ordinary live/tool observation context;
+- observable `ACTIVE_CONTEXT_SET` semantics rather than claims about latent model activation;
+- smallest-sufficient activation with registered-dependency and uncertainty probes;
+- `DURABLE_OPERATIONAL_STATE` for resumable work that must never silently promote into governed Vera self-state;
+- strict go-live evidence ceilings across source, persistence, route consumption, behavioral qualification, and phenomenology.
+
+## Temporal boundary
+
+`thebrazenbeard/temporal` is Vera's watch: a small timestamped-event chronology source. It may be retrieved by cohesion when chronological order or elapsed time is materially relevant.
+
+Do **not** expand Temporal into a memory system, provenance/truth warehouse, task manager, current-state authority, phenomenology layer, event-sourcing platform, or general cohesion router. It is not system #14 unless Patrick explicitly changes the fixed 13-system inventory.
 
 ## Authority boundary
 
-This project hub does not grant merge, deployment, native Project installation/cutover, production Supabase mutation, Bus topology mutation, credentials/permission changes, canonical-memory promotion, behavioral qualification, or other protected-effect authority.
+This project hub does not grant merge, deployment, native Project installation/cutover, production Supabase mutation, Bus topology mutation, credentials/permission changes, canonical-memory promotion, behavioral qualification, phenomenology resolution, or other protected-effect authority.
