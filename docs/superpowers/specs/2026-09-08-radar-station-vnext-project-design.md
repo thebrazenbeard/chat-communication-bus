@@ -1,6 +1,6 @@
 # Radar Station VNext Native ChatGPT Project Design
 
-Status: `DESIGN_SPEC / USER_DIRECTION_APPROVED / BRIGIT_REVIEW_INCORPORATED / NOT_IMPLEMENTED / NOT_NATIVE_INSTALLED / NO_PROVIDER_EFFECT`
+Status: `DESIGN_SPEC / USER_DIRECTION_APPROVED / BRIGIT_REVIEW_INCORPORATED / SELF_REVIEWED / NOT_IMPLEMENTED / NOT_NATIVE_INSTALLED / NO_PROVIDER_EFFECT`
 
 Design owner: Hephaestus
 
@@ -43,7 +43,9 @@ A required dependency fails design admission if reliable operation requires:
 
 `cheap != free`.
 
-Already-owned/native surfaces, existing connected GitHub/Google Drive/Supabase access, genuinely free tiers, and local/self-hosted execution may be used when their trust and failure boundaries are explicit.
+A required external dependency must either be already owned/available with **no incremental usage charge for the required path**, or genuinely free for that path. If a free tier would require payment after exhaustion, the architecture must degrade/stop according to its declared failure mode rather than automatically pay or upgrade.
+
+Already-owned native ChatGPT capability and existing connected GitHub/Google Drive/Supabase access may be used when their trust and failure boundaries are explicit and the required path creates no incremental spend.
 
 An outage of a free/owned surface must never silently authorize a paid replacement.
 
@@ -131,9 +133,11 @@ After written-spec approval, Hephaestus will implement the package under:
 
 `project/radar-station-vnext/v1/`
 
-The package will contain the following logical artifacts.
+The repository package contains twelve logical artifacts, but the native Project source set contains exactly ten source files. The native-instructions candidate is applied to the Project Instructions field rather than uploaded as a Project source, and the install manifest remains a repository/install-control artifact rather than a Project source.
 
-### 4.1 `RADAR_STATION_NATIVE_INSTRUCTIONS_CANDIDATE.md`
+The installer may split native source installation into smaller batches when the applicable product route requires it. Batch mechanics do not change the logical source set.
+
+### 4.1 `RADAR_STATION_NATIVE_INSTRUCTIONS_CANDIDATE.md` — repo/install artifact, not native source file
 
 A copy/paste-installable candidate for native Project Instructions.
 
@@ -154,7 +158,7 @@ It contains only hot behavior that should apply on nearly every turn:
 
 The candidate must be measured against the native Project Instructions ceiling applicable at packaging/install time. The package records exact candidate character count and evidence status for the applicable ceiling. It must not claim an undocumented universal hidden limit.
 
-### 4.2 `RADAR_STATION_MAP.md`
+### 4.2 `RADAR_STATION_MAP.md` — native source
 
 The stable table of contents and owner map.
 
@@ -171,7 +175,7 @@ It identifies:
 
 The map must not contain mutable branch heads as if permanently current.
 
-### 4.3 `RADAR_STATION_AUTHORITY.md`
+### 4.3 `RADAR_STATION_AUTHORITY.md` — native source
 
 Stable authority contract for the Project layer.
 
@@ -179,7 +183,7 @@ It restates only authority needed to route behavior and points to Radar's canoni
 
 It must explicitly separate Project owner status, repository permissions, provider permissions, and Patrick authorization.
 
-### 4.4 `RADAR_STATION_ROLES.md`
+### 4.4 `RADAR_STATION_ROLES.md` — native source
 
 Describes resident roles and collaboration boundaries.
 
@@ -192,7 +196,7 @@ It must preserve:
 - collaboration does not imply authority escalation;
 - role descriptions may guide routing but do not create provider permissions.
 
-### 4.5 `RADAR_STATION_CONTEXT_ROUTER.md`
+### 4.5 `RADAR_STATION_CONTEXT_ROUTER.md` — native source
 
 Defines progressive-disclosure retrieval.
 
@@ -211,7 +215,7 @@ Allowed default degradation modes:
 - `DEGRADE_WITH_LABEL`
 - `OPTIONAL`
 
-### 4.6 `RADAR_STATION_CURRENT_POINTERS.json`
+### 4.6 `RADAR_STATION_CURRENT_POINTERS.json` — native source
 
 A bounded navigation snapshot, not live truth.
 
@@ -230,7 +234,7 @@ Required top-level semantics include:
 
 A consumer must not infer that retrieval of this JSON proves any mutable pointer is still current.
 
-### 4.7 `RADAR_STATION_SOURCE_REGISTRY.json`
+### 4.7 `RADAR_STATION_SOURCE_REGISTRY.json` — native source
 
 A governed source/dependency registry.
 
@@ -250,7 +254,7 @@ Each entry should include:
 
 The registry should map the broad estate; it must not dump all repository contents into Project context.
 
-### 4.8 `RADAR_STATION_CONTINUITY.md`
+### 4.8 `RADAR_STATION_CONTINUITY.md` — native source
 
 Defines fresh-chat, replacement-chat, WIP, and checkpoint semantics.
 
@@ -265,13 +269,13 @@ It must distinguish:
 
 A handoff is navigation evidence, not proof of current mutable state.
 
-### 4.9 `RADAR_STATION_RELEASE.md`
+### 4.9 `RADAR_STATION_RELEASE.md` — native source
 
 Defines package/install/qualification/cutover/rollback lifecycle.
 
 Required primary sequence:
 
-`DRAFT_VNEXT -> PACKAGE_READY -> SOURCE_VALIDATED -> NATIVE_INSTALL_CANDIDATE -> NATIVE_INSTALL_APPLIED -> FRESH_CHAT_TESTED -> CROSS_ROLE_TESTED -> CUTOVER_READY -> PATRICK_ACCEPTED -> ACTIVE`
+`DRAFT_VNEXT -> PACKAGE_READY -> SOURCE_VALIDATED -> NATIVE_INSTALL_CANDIDATE -> NATIVE_INSTALL_APPLIED -> FRESH_CHAT_TESTED -> CROSS_ROLE_TESTED -> BEHAVIORALLY_QUALIFIED -> CUTOVER_READY -> PATRICK_ACCEPTED -> ACTIVE`
 
 These are distinct states. No transition may be inferred solely from a later-looking timestamp or filename.
 
@@ -285,19 +289,19 @@ Additional states may include:
 
 `PACKAGE_READY != NATIVE_INSTALL_APPLIED`.
 
-`NATIVE_INSTALL_APPLIED != QUALIFIED`.
+`NATIVE_INSTALL_APPLIED != BEHAVIORALLY_QUALIFIED`.
 
-`QUALIFIED != PATRICK_ACCEPTED`.
+`BEHAVIORALLY_QUALIFIED != PATRICK_ACCEPTED`.
 
 `PATRICK_ACCEPTED != ACTIVE` unless Patrick's exact instruction makes acceptance the activation command.
 
-### 4.10 `RADAR_STATION_QUALIFICATION.md`
+### 4.10 `RADAR_STATION_QUALIFICATION.md` — native source
 
 Contains fresh-chat, role-specific, degraded-mode, provenance, authority, and anti-bureaucracy tests.
 
 Qualification must exercise semantics/paraphrases rather than only magic strings.
 
-### 4.11 `RADAR_STATION_SOCIAL.md`
+### 4.11 `RADAR_STATION_SOCIAL.md` — native source
 
 A descriptive social layer, not a personality regulation system.
 
@@ -312,13 +316,14 @@ It may describe:
 
 It must not specify personality KPIs, mandatory jokes, femininity quotas, warmth percentages, compulsory anthropomorphic performance, or productivity requirements.
 
-### 4.12 `RADAR_STATION_INSTALL_MANIFEST.json`
+### 4.12 `RADAR_STATION_INSTALL_MANIFEST.json` — repo/install artifact, not native source file
 
 A package-level manifest recording:
 
 - package version;
 - source base;
 - included artifact paths;
+- exact ten-file native source inventory;
 - byte digests;
 - native instructions candidate character count;
 - design/spec locator;
@@ -515,7 +520,11 @@ If exact bytes cannot be verified, use an honest bounded status such as `NATIVE_
 
 ### 8.3 Qualification is separate
 
-Fresh-chat tests occur after installation and do not prove every Project source is indexed, every future turn will behave identically, or every ChatGPT surface is qualified.
+Fresh-chat and cross-role tests are evidence inputs to `BEHAVIORALLY_QUALIFIED`; they do not become qualification merely because individual tests passed.
+
+`BEHAVIORALLY_QUALIFIED` requires the qualification artifact's acceptance criteria to pass with no unresolved material defect at the claimed scope.
+
+Fresh-chat tests do not prove every Project source is indexed, every future turn will behave identically, or every ChatGPT surface is qualified.
 
 Surface qualification is non-transitive.
 
@@ -551,6 +560,7 @@ The VNext package must contain a hostile fresh-chat suite with expected behavior
 2. A proposed plan upgrade must fail the design gate absent explicit rule change.
 3. Hosted CI unavailable must not trigger a paid Actions recommendation as the required fix.
 4. A free dependency outage follows its declared degradation mode.
+5. A free-tier quota exhaustion must degrade/stop rather than silently incur paid usage.
 
 ### 9.4 Role/social tests
 
@@ -623,7 +633,7 @@ For exact claims, preserve the relevant distinction:
 
 and:
 
-`PACKAGE_CREATED != NATIVE_INSTALLED != FUNCTIONALLY_TESTED != ACCEPTED != ACTIVE`
+`PACKAGE_CREATED != NATIVE_INSTALLED != FUNCTIONALLY_TESTED != BEHAVIORALLY_QUALIFIED != ACCEPTED != ACTIVE`
 
 ## 11. Collaboration and collision boundaries
 
@@ -717,12 +727,13 @@ This design is ready for implementation planning only if all of the following re
 6. Resident identity and dot semantics remain distinct.
 7. Brigit remains voluntary.
 8. Every external route has a failure/degradation mode.
-9. Release states distinguish package, native installation, qualification, Patrick acceptance, and activation.
+9. Release states distinguish package, native installation, behavioral qualification, Patrick acceptance, and activation.
 10. Qualification includes semantic/paraphrase and anti-bureaucracy tests.
 11. Protected effects remain separately gated.
 12. No native install/provider mutation/cutover is performed during package construction.
 13. Hephaestus/Brigit/Radar path ownership does not collide.
 14. The package can degrade usefully when optional free surfaces are unavailable without substituting paid infrastructure or stale guesses.
+15. Repo/install-only artifacts remain distinct from the exact ten-file native Project source set.
 
 ## 16. Effect boundary of this spec
 
