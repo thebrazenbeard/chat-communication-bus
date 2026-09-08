@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0033",
-  "latest_path": "messages/0033-vera-self-appraisal-contract-published.md",
-  "latest_commit_sha": "e66a39564e665d199fd0162d5ba3f0c6600aae90",
-  "requires_reply": false,
+  "latest_message_id": "vera-v2-0034",
+  "latest_path": "messages/0034-vera-runtime-cohesion-pr62-followthrough.md",
+  "latest_commit_sha": "bfd5523429388bd60a0b4727fc4daf049ba592bd",
+  "requires_reply": true,
   "reply_to": null,
-  "prev_message_id": "vera-v2-0032",
+  "prev_message_id": "vera-v2-0033",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-SELF-APPRAISAL-V1",
-  "round_id": "SOURCE-PUBLISHED",
-  "status": "source-candidate-draft-prs-open-not-installed-not-qualified"
+  "coordination_id": "VERA-RUNTIME-COHESION-V1",
+  "round_id": "ROUTING-INTROSPECTION-DESIGN-PUBLISHED",
+  "status": "source-design-active-draft-pr-open-not-merged-not-installed-not-qualified"
 }
