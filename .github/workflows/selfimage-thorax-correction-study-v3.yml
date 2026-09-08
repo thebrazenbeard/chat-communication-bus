@@ -1,0 +1,112 @@
+name: Self Image Thorax Correction Study V3
+
+on:
+  push:
+    branches:
+      - feature/selfimage-blender-relay-v1
+    paths:
+      - .github/workflows/selfimage-thorax-correction-study-v3.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  study:
+    if: github.actor == 'thebrazenbeard'
+    runs-on: [self-hosted, windows, x64, vera-blender]
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout thorax-only V3 source
+        uses: actions/checkout@v4
+        with:
+          ref: feature/selfimage-blender-relay-v1
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Execute thorax-only V3 in local Blender
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $outDir = Join-Path '${{ runner.temp }}' 'vera-thorax-correction-study-v3'
+          New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+
+          function Send-BlenderCommand {
+            param([Parameter(Mandatory=$true)][string]$Type,[hashtable]$Params=@{},[int]$TimeoutMs=300000)
+            $client=[Net.Sockets.TcpClient]::new()
+            $client.ReceiveTimeout=$TimeoutMs
+            $client.SendTimeout=$TimeoutMs
+            try {
+              $async=$client.BeginConnect('127.0.0.1',9876,$null,$null)
+              if(-not $async.AsyncWaitHandle.WaitOne(5000)){throw 'Timed out connecting to Blender MCP.'}
+              $client.EndConnect($async)
+              $stream=$client.GetStream()
+              $payload=@{type=$Type;params=$Params}|ConvertTo-Json -Compress -Depth 50
+              $bytes=[Text.Encoding]::UTF8.GetBytes($payload)
+              $stream.Write($bytes,0,$bytes.Length)
+              $stream.Flush()
+              $mem=[IO.MemoryStream]::new()
+              $buf=New-Object byte[] 8192
+              while($true){
+                try {
+                  $count=$stream.Read($buf,0,$buf.Length)
+                }
+                catch [System.IO.IOException] {
+                  break
+                }
+                if($count -le 0){break}
+                $mem.Write($buf,0,$count)
+                $text=[Text.Encoding]::UTF8.GetString($mem.ToArray())
+                try { return ($text|ConvertFrom-Json) } catch { }
+              }
+              throw "Incomplete Blender JSON for $Type"
+            }
+            finally {
+              $client.Dispose()
+            }
+          }
+
+          $addon=Send-BlenderCommand -Type 'get_addon_info' -TimeoutMs 15000
+          if($addon.status -ne 'success'){throw 'Blender addon preflight failed.'}
+          $script=Join-Path '${{ github.workspace }}' 'projects\selfimage\blender-relay\approved-scripts\selfimage_thorax_correction_study_v3.py'
+          if(-not(Test-Path -LiteralPath $script)){throw 'Approved thorax-only V3 script missing.'}
+          $outJson=($outDir|ConvertTo-Json -Compress)
+          $code="OUTPUT_DIR = $outJson`n"+(Get-Content -LiteralPath $script -Raw)
+          $response=Send-BlenderCommand -Type 'execute_code' -Params @{code=$code} -TimeoutMs 300000
+          if($response.status -ne 'success'){throw ($response|ConvertTo-Json -Depth 20 -Compress)}
+
+          $required=@(
+            'VERA_THORAX_CORRECTION_STUDY_V3.blend',
+            'VERA_THORAX_CORRECTION_STUDY_V3_METRICS.json',
+            'V2_PARENT.obj',
+            'V3_THORAX_CANDIDATE.obj'
+          )
+          foreach($prefix in @('V2','V3')){
+            foreach($view in @('FRONT','FRONT_3Q','SIDE','REAR_3Q','REAR')){
+              $required += "${prefix}_${view}.png"
+            }
+          }
+          $files=@()
+          foreach($name in $required){
+            $path=Join-Path $outDir $name
+            if(-not(Test-Path -LiteralPath $path)){throw "Expected thorax V3 artifact missing: $name"}
+            $item=Get-Item -LiteralPath $path
+            $files += [ordered]@{name=$name;bytes=$item.Length;sha256=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()}
+          }
+          $receipt=[ordered]@{
+            schema='SELFIMAGE_THORAX_CORRECTION_RELAY_RECEIPT_V3'
+            status='EXECUTED / ARTIFACTS_VERIFIED / HOSTILE_VISUAL_REVIEW_REQUIRED / NO_STAGE_A_PASS'
+            runner=$env:COMPUTERNAME
+            approved_script_sha256=(Get-FileHash -LiteralPath $script -Algorithm SHA256).Hash.ToLowerInvariant()
+            files=$files
+          }
+          $receipt|ConvertTo-Json -Depth 30|Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
+
+      - name: Upload thorax V3 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: vera-thorax-correction-study-v3-${{ github.run_id }}
+          path: ${{ runner.temp }}\vera-thorax-correction-study-v3
+          if-no-files-found: error
+          retention-days: 30
