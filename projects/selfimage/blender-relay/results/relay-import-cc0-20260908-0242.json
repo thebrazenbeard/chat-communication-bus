@@ -1,0 +1,13 @@
+﻿{
+    "version":  1,
+    "relay_version":  "1.0.0",
+    "request_id":  "relay-import-cc0-20260908-0242",
+    "operation":  null,
+    "status":  "failed",
+    "started_at":  "2026-09-08T02:42:22.2370056+00:00",
+    "completed_at":  "2026-09-08T02:42:22.2370056+00:00",
+    "error":  "import_exact_cc0 refuses a non-default/non-empty scene.",
+    "artifacts":  [
+
+                  ]
+}
