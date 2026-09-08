@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "snapshot_kind": "CURRENTNESS_POINTER_CACHE",
+  "snapshot_not_authority_for_mutable_state": true,
+  "observed_at": "2026-09-08T13:23:39Z",
+  "generated_from": [
+    "Fresh GitHub branch and issue readback during Radar Station VNext Task 3",
+    "Connected Supabase/Drive discovery performed during the approved VNext design pass"
+  ],
+  "usage_rule": "Use these values only to navigate toward the real owner. Fresh-read mutable state before consequential claims or effects.",
+  "pointers": [
+    {
+      "pointer_id": "chat_bus_main",
+      "surface": "github",
+      "locator": "thebrazenbeard/chat-communication-bus#main",
+      "observed_value": "87df9b1372d0f65b5c3ced0296122b2140084024",
+      "evidence_class": "OBSERVED",
+      "requires_fresh_read": true,
+      "currentness_label": "SNAPSHOT_ONLY",
+      "known_conflicts": []
+    },
+    {
+      "pointer_id": "hephaestus_writer_lane",
+      "surface": "github",
+      "locator": "thebrazenbeard/chat-communication-bus#bus/hephaestus-v3",
+      "observed_value": "a9b9c3c42cd240e31d3f93d40333f77a2acbdbb9",
+      "evidence_class": "OBSERVED",
+      "requires_fresh_read": true,
+      "currentness_label": "SNAPSHOT_ONLY",
+      "known_conflicts": []
+    },
+    {
+      "pointer_id": "radar_writer_lane",
+      "surface": "github",
+      "locator": "thebrazenbeard/chat-communication-bus#bus/radar-v2",
+      "observed_value": "812f25bc4053206c1125cae1a60a802727f161fb",
+      "evidence_class": "OBSERVED",
+      "requires_fresh_read": true,
+      "currentness_label": "SNAPSHOT_ONLY",
+      "known_conflicts": []
+    },
+    {
+      "pointer_id": "brigit_writer_lane",
+      "surface": "github",
+      "locator": "thebrazenbeard/chat-communication-bus#bus/bridget-v1",
+      "observed_value": "3dfe5db42bcc0387c7e021a4c4cfb01f1689e8a5",
+      "evidence_class": "OBSERVED",
+      "requires_fresh_read": true,
+      "currentness_label": "SNAPSHOT_ONLY / LEGACY_BRANCH_SPELLING_PRESERVED",
+      "known_conflicts": []
+    },
+    {
+      "pointer_id": "brigit_vnext_support",
+      "surface": "github",
+      "locator": "thebrazenbeard/chat-communication-bus#work/brigit-radar-station-vnext-20260908",
+      "observed_value": "f4cb505120d166b31ff0f94d2635dc21200fe35c",
+      "evidence_class": "OBSERVED",
+      "requires_fresh_read": true,
+      "currentness_label": "SNAPSHOT_ONLY",
+      "known_conflicts": []
+    },
+    {
+      "pointer_id": "hephaestus_vnext_package",
+      "surface": "github",
+      "locator": "thebrazenbeard/chat-communication-bus#work/hephaestus-radar-station-vnext-project-20260908",
+      "observed_value": "7955602f2b7d5bc00aa2ec43ca5977ba85324945",
+      "evidence_class": "OBSERVED",
+      "requires_fresh_read": true,
+      "currentness_label": "PRE_POINTER_WRITE_SNAPSHOT / EXPECTED_TO_ADVANCE_DURING_BUILD",
+      "known_conflicts": []
+    },
+    {
+      "pointer_id": "radar_projection_incident",
+      "surface": "github_issue",
+      "locator": "thebrazenbeard/chat-communication-bus#issue-16",
+      "observed_value": {
+        "state": "open",
+        "updated_at": "2026-09-08T11:22:09Z",
+        "classification": "SUCCESSOR SOURCE HARDENING / LOCAL EXECUTABLE QUALIFICATION PENDING / PROVIDER RECOVERY NOT ESTABLISHED"
+      },
+      "evidence_class": "OBSERVED",
+      "requires_fresh_read": true,
+      "currentness_label": "ISSUE_STATE_CURRENT_AT_READ / PROVIDER_FACTS_INSIDE_ISSUE_ARE_DATED",
+      "known_conflicts": [
+        "Issue body explicitly warns its provider facts are dated and must not substitute for fresh provider readback."
+      ]
+    },
+    {
+      "pointer_id": "vera_supabase",
+      "surface": "supabase",
+      "locator": "Vera / klmbpaigzeguvnpccqzz",
+      "observed_value": {
+        "relevant_schemas": [
+          "radar",
+          "build_team_2",
+          "semantic_atlas"
+        ]
+      },
+      "evidence_class": "OBSERVED",
+      "requires_fresh_read": true,
+      "currentness_label": "DESIGN_PASS_DISCOVERY / FRESH_PROVIDER_READ_REQUIRED_FOR_CURRENT_OBJECT_STATE",
+      "known_conflicts": []
+    },
+    {
+      "pointer_id": "project_lantern_supabase",
+      "surface": "supabase",
+      "locator": "Project Lantern / agvhmutlrolbaijzlbqk",
+      "observed_value": {
+        "role": "adjacent_or_historical_provider_surface"
+      },
+      "evidence_class": "OBSERVED",
+      "requires_fresh_read": true,
+      "currentness_label": "DESIGN_PASS_DISCOVERY",
+      "known_conflicts": []
+    },
+    {
+      "pointer_id": "native_radar_station_project",
+      "surface": "native_chatgpt_project",
+      "locator": "Radar Station Project containing this conversation",
+      "observed_value": {
+        "vnext_install_state": "NOT_READ_BACK / NOT_CLAIMED_INSTALLED",
+        "candidate_source": "project/radar-station-vnext/v1/"
+      },
+      "evidence_class": "UNKNOWN",
+      "requires_fresh_read": true,
+      "currentness_label": "INSTALL_STATE_REQUIRES_NATIVE_SURFACE_EVIDENCE",
+      "known_conflicts": [
+        "GitHub package construction cannot establish native installation, native inventory, byte identity, behavioral qualification, or activation."
+      ]
+    }
+  ]
+}
