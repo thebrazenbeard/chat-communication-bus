@@ -369,6 +369,15 @@ function conversationClosedBySender(body: string): boolean {
   return lastLine === "#ENDTHREAD";
 }
 
+function intendedRecipient(headers: Headers): string {
+  const singular = headers.intended_recipient;
+  const plural = headers.intended_recipients;
+  if (singular !== undefined && plural !== undefined) {
+    throw new HttpError(422, "CONFLICTING_INTENDED_RECIPIENT_HEADERS");
+  }
+  return unwrapScalar(singular ?? plural ?? "");
+}
+
 function parseProjectConcurrency(value: string | undefined): number {
   const raw = (value ?? String(DEFAULT_PROJECT_CONCURRENCY)).trim();
   if (!/^\d+$/.test(raw)) throw new HttpError(503, "PROJECT_CONCURRENCY_INVALID");
@@ -484,7 +493,7 @@ async function projectFile(
     createdAtBasis = "message_header";
   }
 
-  const intended = unwrapScalar(headers.intended_recipient ?? "");
+  const intended = intendedRecipient(headers);
   const audience = intended
     .split(",")
     .map((value) => unwrapScalar(value))
