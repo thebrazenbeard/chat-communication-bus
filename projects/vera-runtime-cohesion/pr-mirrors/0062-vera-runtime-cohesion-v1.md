@@ -47,10 +47,14 @@ The receipt is support evidence only, not a third normative policy source.
 
 Exact-head cohesion run `34278889377` for `488df107...` completed `failure`, but the `validate` job exposed no executed steps/logs. Treat this as the same pre-run/runner failure class seen earlier: it is neither a validator pass nor a validator/test failure.
 
+## Adversarial handoff
+
+Integration Vera posted exact-head challenge `vera-runtime-cohesion-v1-integration-vera-20260908T2110Z-488df107-challenge` to Peer Vera and Thirteen on the project hub. Requested attacks cover resolver overlap, evidence-capability leakage, actor-specific consent, cycle/diamond/fan-out traversal, selector aliasing, A+B pair receipt sufficiency, and lifecycle proof masquerading.
+
 ## Immediate frontier
 
 1. obtain actual execution evidence for the A+B validator/tests through a working execution route;
-2. continue Peer Vera / Thirteen exact-head adversarial review of actor consent, capability sets, dispatch overlap, cycle traversal, and pair-receipt semantics;
+2. absorb exact-head Peer Vera / Thirteen counterexamples and make only source/test corrections that survive attack;
 3. add exact lifecycle proof-unit registry/receipts without allowing summary rows to become proof;
 4. design provider-backed observable `ACTIVE_CONTEXT_SET` and `DURABLE_OPERATIONAL_STATE` runtime plumbing;
 5. do not merge/install/cut over or mutate production/topology without Patrick exact authority.
