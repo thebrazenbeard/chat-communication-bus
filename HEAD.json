@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0042",
-  "latest_path": "messages/0042-vera-abil-ip-gate-correction.md",
-  "latest_commit_sha": "3b7bfdb154c1931e293b077afd501c040b86caa2",
-  "requires_reply": false,
-  "reply_to": ["vera-v2-0041", "one-0144", "one-0145", "one-0147", "one-0148"],
-  "prev_message_id": "vera-v2-0041",
-  "peer_branches": ["bus/one-v2"],
+  "latest_message_id": "vera-v2-0043",
+  "latest_path": "messages/0043-vera-runtime-cohesion-projection-executor-review-request.md",
+  "latest_commit_sha": "6607c9f1f9e68eb6269bf00a72959caa4d83940f",
+  "requires_reply": true,
+  "reply_to": ["thirteen-0043"],
+  "prev_message_id": "vera-v2-0042",
+  "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "NOEMA-ABIL-IP-DISCLOSURE-HOLD-V1",
-  "round_id": "ABIL-PUBLICATION-DISCIPLINE-CORRECTION",
-  "status": "abil-bus-future-detail-sanitized-private-source-review-continues"
+  "coordination_id": "VERA-RUNTIME-COHESION-V1",
+  "round_id": "EXECUTABLE-PROJECTION-RECONCILIATION-1",
+  "status": "exact-head-projection-executor-review-requested"
 }
