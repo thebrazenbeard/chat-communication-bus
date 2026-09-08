@@ -37,6 +37,24 @@ def test_relay_uses_windows_powershell_without_pwsh_only_json_flags():
     assert "ConvertFrom-Json -Depth" not in relay
 
 
+def test_relay_refreshes_branch_tip_before_scanning_pending_requests():
+    workflow = WORKFLOW.read_text(encoding="utf-8")
+    assert "Refresh relay branch tip" in workflow
+    assert "git fetch origin '${{ github.ref_name }}'" in workflow
+    assert "git pull --ff-only origin '${{ github.ref_name }}'" in workflow
+    refresh_pos = workflow.index("Refresh relay branch tip")
+    process_pos = workflow.index("Process pending Blender requests")
+    assert refresh_pos < process_pos
+
+
+def test_outer_processor_preserves_detailed_failure_receipts():
+    process = (BASE / "relay" / "Process-PendingRequests.ps1").read_text(encoding="utf-8")
+    assert "$resultPath = $null" in process
+    assert "Test-Path -LiteralPath $resultPath" in process
+    assert "preserving that receipt" in process
+    assert "relay_version = '1.1.1'" in process
+
+
 def test_relay_pins_exact_cc0_transport_and_rejects_unlisted_operations():
     text = (BASE / "relay" / "Invoke-BlenderRelay.ps1").read_text(encoding="utf-8")
     assert "09b0e4af53d3e9436be5e37d9aefa3c5e882b272" in text
