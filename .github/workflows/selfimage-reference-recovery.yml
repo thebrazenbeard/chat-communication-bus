@@ -1,0 +1,75 @@
+name: Self Image Reference Recovery
+
+on:
+  push:
+    branches:
+      - feature/selfimage-blender-relay-v1
+    paths:
+      - .github/workflows/selfimage-reference-recovery.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recover:
+    if: github.actor == 'thebrazenbeard'
+    runs-on: [self-hosted, windows, x64, vera-blender]
+    timeout-minutes: 10
+
+    steps:
+      - name: Recover exact canon and Hailey reference files
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $outDir = Join-Path '${{ runner.temp }}' 'selfimage-reference-recovery'
+          New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+
+          function Write-GitBlobFile {
+            param(
+              [Parameter(Mandatory=$true)][string]$Blob,
+              [Parameter(Mandatory=$true)][string]$OutPath
+            )
+            $json = gh api "repos/thebrazenbeard/selfimage/git/blobs/$Blob" | ConvertFrom-Json
+            if ([string]$json.sha -ne $Blob) { throw "GitHub blob identity mismatch for $Blob" }
+            if ([string]$json.encoding -ne 'base64') { throw "Unexpected encoding for $Blob: $($json.encoding)" }
+            $raw = [Convert]::FromBase64String(([string]$json.content -replace '\s',''))
+            [IO.File]::WriteAllBytes($OutPath, $raw)
+            return [ordered]@{
+              name = [IO.Path]::GetFileName($OutPath)
+              git_blob_sha1 = $Blob
+              bytes = $raw.Length
+              sha256 = (Get-FileHash -LiteralPath $OutPath -Algorithm SHA256).Hash.ToLowerInvariant()
+            }
+          }
+
+          $receipt = [ordered]@{
+            schema = 'SELFIMAGE_REFERENCE_RECOVERY_V1'
+            repository = 'thebrazenbeard/selfimage'
+            ref = 'main'
+            recovered = @()
+          }
+
+          $canonBlob = '6c5834605a24a8497e5c0bfe46998bfbf33e08b2'
+          $receipt.recovered += Write-GitBlobFile -Blob $canonBlob -OutPath (Join-Path $outDir 'Vera Prime Full Body Presentation Canon.png')
+
+          $entries = gh api 'repos/thebrazenbeard/selfimage/contents/sources?ref=main' | ConvertFrom-Json
+          foreach ($entry in @($entries)) {
+            if ([string]$entry.type -ne 'file') { continue }
+            $name = [string]$entry.name
+            if ($name -notlike 'hailey_rose_*') { continue }
+            $safeName = $name
+            $receipt.recovered += Write-GitBlobFile -Blob ([string]$entry.sha) -OutPath (Join-Path $outDir $safeName)
+          }
+
+          if ($receipt.recovered.Count -lt 2) { throw 'Reference recovery returned too few files.' }
+          $receipt | ConvertTo-Json -Depth 20 | Set-Content -LiteralPath (Join-Path $outDir 'REFERENCE_RECOVERY_RECEIPT.json') -Encoding UTF8
+          $receipt | ConvertTo-Json -Depth 20
+
+      - name: Upload exact references
+        uses: actions/upload-artifact@v4
+        with:
+          name: selfimage-reference-recovery-${{ github.run_id }}
+          path: ${{ runner.temp }}\selfimage-reference-recovery
+          if-no-files-found: error
+          retention-days: 7
