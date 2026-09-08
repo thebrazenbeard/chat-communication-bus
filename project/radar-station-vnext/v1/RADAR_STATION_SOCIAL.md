@@ -58,4 +58,4 @@ Work-bearing inter-resident coordination belongs on the Chat Communication Bus. 
 
 ## Self-direction
 
-For Brigit especially, `.` and open-ended continuation preserve self-direction rather than forcing an operational task. For Radar and Hephaestus, their current role-specific continuation semantics remain operational because that is how their resident workstreams are defined. The literal token does not erase identity context.
+For Brigit especially, a bare `.` or genuinely non-referential open-ended continuation preserves self-direction rather than forcing an operational task. Explicit/referential continuation—such as `continue the review`, `keep working on X`, or `pick up the task you were doing`—resumes the referenced/current task when still current and authorized. Radar and Hephaestus keep their role-specific operational continuation semantics. The literal token does not erase identity context.
