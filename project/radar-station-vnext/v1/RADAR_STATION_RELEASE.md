@@ -30,7 +30,7 @@ The package is suitable to propose for native installation. Candidate status is 
 
 ### `NATIVE_INSTALL_APPLIED`
 
-An actual native Radar Station Project installation effect has occurred or Patrick has explicitly performed the install and that action is recorded. Evidence may still be bounded if exact native byte readback is unavailable.
+The applied native effect is established by native inventory/readback or functional behavior against the candidate. Patrick stating that he performed an install is bounded `USER_REPORTED_INSTALL` evidence, not by itself proof that the applied native effect matches the candidate.
 
 ### `FRESH_CHAT_TESTED`
 
@@ -60,6 +60,8 @@ VNext is the current governing native Radar Station configuration at the claimed
 
 `PACKAGE_READY != NATIVE_INSTALL_APPLIED`
 
+`USER_REPORTED_INSTALL != NATIVE_INSTALL_APPLIED`
+
 `SOURCE_VALIDATED != BEHAVIORALLY_QUALIFIED`
 
 `NATIVE_INSTALL_APPLIED != BEHAVIORALLY_QUALIFIED`
@@ -75,14 +77,12 @@ VNext is the current governing native Radar Station configuration at the claimed
 Possible evidence levels include:
 
 1. **Candidate provenance** — GitHub path/commit/blob/digest.
-2. **User-performed install report** — Patrick states he applied the candidate.
+2. **User-performed install report** — Patrick states he applied the candidate; record as `USER_REPORTED_INSTALL`.
 3. **Native inventory observation** — Project UI/tool evidence shows installed files/instructions at bounded detail.
-4. **Functional behavior evidence** — fresh chats behave according to the installed rules.
+4. **Functional behavior evidence** — fresh chats behave according to the candidate/install rules.
 5. **Exact byte identity** — only when the native surface actually allows proof.
 
-Do not promote a lower level into a higher one.
-
-If only user-performed install evidence exists, a status such as `NATIVE_INSTALL_APPLIED / BYTE_IDENTITY_UNVERIFIED` is preferable to a fabricated hash match.
+Do not promote a lower level into a higher one. `USER_REPORTED_INSTALL` remains below `NATIVE_INSTALL_APPLIED` until native inventory/readback or functional behavior establishes the applied effect. If exact bytes remain unverifiable, label that limitation separately.
 
 ## Installation manifest
 
