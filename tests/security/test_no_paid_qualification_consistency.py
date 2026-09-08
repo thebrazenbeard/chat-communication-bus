@@ -39,9 +39,11 @@ def test_no_paid_qualification_contract_is_current_and_source_custodied() -> Non
         "architecture/contracts/RADAR_QUALIFICATION_V1.json",
         "docs/operator/RADAR_NO_PAID_QUALIFICATION.md",
         "scripts/radar_local_qualify.ps1",
+        "scripts/radar_qualify.py",
         "scripts/radar_validate_qualification_receipt.py",
         "tests/security/test_no_paid_qualification_consistency.py",
         "tests/security/test_qualification_receipt_admission.py",
+        "tests/security/test_portable_local_qualification.py",
     }
     assert required_paths.issubset(set(custody["paths"]))
 
@@ -71,143 +73,13 @@ def test_python_qualification_dependency_graph_is_exactly_pinned() -> None:
     assert test_dependencies == expected
 
 
-def test_local_runner_preserves_frozen_ci_toolchain_and_exact_source_binding() -> None:
-    qualification = json.loads(
-        (ROOT / "architecture/contracts/RADAR_QUALIFICATION_V1.json").read_text(encoding="utf-8")
-    )
-    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
-
-    toolchain = qualification["authoritative_qualification"]["required_toolchain"]
-    assert toolchain["python"] == ["3.11", "3.12"]
-    assert toolchain["pip"] == "26.2.1"
-    assert toolchain["deno"] == "2.9.6"
-    assert toolchain["supabase_cli"] == "2.116.0"
-
-    for expected in (
-        '"3.11", "3.12"',
-        'pip==26.2.1',
-        'deno 2.9.6',
-        '2.116.0',
-        'rev-parse", "HEAD^{tree}',
-        'status", "--porcelain',
-        'working_tree = "CLEAN"',
-        'qualification_mode = "LOCAL_NO_PAID_SERVICES"',
-    ):
-        assert expected in runner
-
-
-def test_local_runner_revalidates_source_binding_after_all_qualification_stages() -> None:
-    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
-
-    assert runner.count('status", "--porcelain') >= 2
-    assert runner.count('rev-parse", "HEAD") >= 2
-    assert runner.count('rev-parse", "HEAD^{tree}') >= 2
-    assert "Source commit changed during qualification" in runner
-    assert "Source tree changed during qualification" in runner
-    assert "Working tree changed during qualification" in runner
-
-
-def test_local_runner_cannot_self_invalidate_receipt_inside_source_checkout() -> None:
-    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
-    operator = (ROOT / "docs/operator/RADAR_NO_PAID_QUALIFICATION.md").read_text(encoding="utf-8")
-
-    assert "Receipt path must be outside source checkout" in runner
-    assert "IsPathRooted" in runner
-    assert "OrdinalIgnoreCase" in runner
-    assert '$env:TEMP\\radar-local-qualification.json' in operator
-    assert "artifacts/radar-local-qualification.json" not in operator
-
-
-def test_local_runner_preserves_preexisting_supabase_stack_and_cleans_partial_start() -> None:
-    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
-
-    preflight = 'throw "Local Supabase stack is already running; refusing destructive qualification"'
-    cleanup_arm = "$sqlCleanupRequired = $true"
-    start = 'Invoke-Checked supabase @("start")'
-    cleanup_guard = "if ($sqlCleanupRequired)"
-
-    assert preflight in runner
-    assert cleanup_arm in runner
-    assert cleanup_guard in runner
-    assert runner.index(preflight) < runner.index(cleanup_arm) < runner.index(start)
-    assert runner.index(cleanup_guard) > runner.index(start)
-
-
-def test_local_runner_preserves_stopped_supabase_database_state() -> None:
-    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
-    config = tomllib.loads((ROOT / "supabase/config.toml").read_text(encoding="utf-8"))
-
-    assert config["project_id"] == "chat-communication-bus"
-    project_id = f'$supabaseProjectId = "{config["project_id"]}"'
-    db_resource = '$supabaseDbResource = "supabase_db_$supabaseProjectId"'
-    container_probe = 'docker container inspect $supabaseDbResource'
-    volume_probe = 'docker volume inspect $supabaseDbResource'
-    container_refusal = "Local Supabase database container already exists; refusing destructive qualification"
-    volume_refusal = "Local Supabase database volume already exists; refusing destructive qualification"
-    cleanup_arm = "$sqlCleanupRequired = $true"
-    start = 'Invoke-Checked supabase @("start")'
-
-    for expected in (
-        project_id,
-        db_resource,
-        container_probe,
-        volume_probe,
-        container_refusal,
-        volume_refusal,
-    ):
-        assert expected in runner
-
-    assert runner.index(container_probe) < runner.index(cleanup_arm)
-    assert runner.index(volume_probe) < runner.index(cleanup_arm)
-    assert runner.index(container_refusal) < runner.index(start)
-    assert runner.index(volume_refusal) < runner.index(start)
-
-
-def test_local_runner_preserves_all_preexisting_supabase_project_resources() -> None:
-    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
-
-    project_label = '$supabaseProjectLabel = "com.supabase.cli.project=$supabaseProjectId"'
-    container_list = '@("ps", "-a", "--filter", "label=$supabaseProjectLabel", "--format", "{{.ID}}")'
-    volume_list = '@("volume", "ls", "--filter", "label=$supabaseProjectLabel", "--format", "{{.Name}}")'
-    network_list = '@("network", "ls", "--filter", "label=$supabaseProjectLabel", "--format", "{{.ID}}")'
-    refusal = "Local Supabase project Docker resources already exist; refusing destructive qualification"
-    cleanup_arm = "$sqlCleanupRequired = $true"
-
-    for expected in (project_label, container_list, volume_list, network_list, refusal):
-        assert expected in runner
-        assert runner.index(expected) < runner.index(cleanup_arm)
-
-
-def test_local_runner_refuses_pass_when_supabase_cleanup_fails() -> None:
-    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
-
-    assert "Local Supabase cleanup failed" in runner
-    assert 'Write-Warning "Local Supabase stop failed' not in runner
-
-
-def test_local_runner_preserves_primary_sql_failure_when_cleanup_also_fails() -> None:
-    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
-
-    for expected in (
-        "$sqlFailure = $null",
-        "$cleanupFailure = $null",
-        "$sqlFailure = $_",
-        "$cleanupFailure = $_",
-        "if ($sqlFailure -and $cleanupFailure)",
-        "SQL qualification failed:",
-        "Local Supabase cleanup failed:",
-        "throw $sqlFailure",
-    ):
-        assert expected in runner
-
-
-def test_windows_launcher_is_thin_and_python_engine_owns_semantics() -> None:
+def test_python_engine_owns_qualification_semantics_and_windows_launcher_is_thin() -> None:
     qualification = json.loads(
         (ROOT / "architecture/contracts/RADAR_QUALIFICATION_V1.json").read_text(encoding="utf-8")
     )
     current = json.loads((ROOT / "architecture/contracts/RADAR_CURRENT.json").read_text(encoding="utf-8"))
-    runner = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
-    operator = (ROOT / "docs/operator/RADAR_NO_PAID_QUALIFICATION.md").read_text(encoding="utf-8")
+    engine = (ROOT / "scripts/radar_qualify.py").read_text(encoding="utf-8")
+    launcher = (ROOT / "scripts/radar_local_qualify.ps1").read_text(encoding="utf-8")
 
     authority = qualification["authoritative_qualification"]
     assert authority["engine"] == "scripts/radar_qualify.py"
@@ -215,19 +87,39 @@ def test_windows_launcher_is_thin_and_python_engine_owns_semantics() -> None:
     assert current["qualification"]["engine"] == "scripts/radar_qualify.py"
     assert current["qualification"]["windows_launcher"] == "scripts/radar_local_qualify.ps1"
 
-    assert "radar_qualify.py" in runner
-    assert "-3.11" in runner
-    assert "--receipt-path" in runner
+    for semantic_token in (
+        "read_clean_source_state",
+        "required_toolchain",
+        "required_stage_instances",
+        "supabase_local_start",
+        "supabase_db_reset",
+        "all_radar_sql_assertions",
+        "supabase_local_stop",
+        "build_pass_receipt",
+    ):
+        assert semantic_token in engine
+
+    assert "radar_qualify.py" in launcher
+    assert "-3.11" in launcher
+    assert "--receipt-path" in launcher
     for forbidden in (
         "supabase db reset",
         "deno check",
         "pytest",
         "radar_source_hashes.py",
         "RADAR_TRUSTED_PROJECTOR_SHA",
+        "rev-parse",
+        "docker container inspect",
     ):
-        assert forbidden.lower() not in runner.lower()
+        assert forbidden.lower() not in launcher.lower()
+
+
+def test_operator_docs_state_engine_launcher_platform_and_receipt_boundaries() -> None:
+    operator = (ROOT / "docs/operator/RADAR_NO_PAID_QUALIFICATION.md").read_text(encoding="utf-8")
 
     assert "Python engine defines qualification semantics." in operator
     assert "PowerShell is the authoritative Windows launcher for the currently authorized platform profile." in operator
     assert "A runnable engine on another OS is not automatically an authoritative platform profile." in operator
     assert "Receipt V2 stage evidence is required before GREEN." in operator
+    assert '$env:TEMP\\radar-local-qualification.json' in operator
+    assert "artifacts/radar-local-qualification.json" not in operator
