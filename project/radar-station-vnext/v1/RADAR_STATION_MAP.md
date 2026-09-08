@@ -18,6 +18,7 @@ Radar Station is a progressive-disclosure router. This file answers **where to l
 |---|---|---|
 | Bus implementation, protocol, topology, writer lanes, source provenance | `thebrazenbeard/chat-communication-bus` on GitHub | Fresh-read exact current source for writes, reviews, current implementation claims, or merge-readiness conclusions. |
 | Radar runtime/control-plane/provider truth | Radar-owned contracts plus live provider state where installed | Source presence is not provider installation. Fresh provider readback is required for live-state claims/effects. |
+| Native Radar Station install/readback state | The actual native ChatGPT Radar Station Project surface: installed Project Instructions, Project source inventory, and product-observable Project state | `FAIL_CLOSED` for claims that VNext is installed/active or for exact current native inventory when native readback is unavailable. User-performed installation evidence, tool-observed inventory, functional behavior, and byte identity are distinct evidence levels. GitHub remains candidate/source provenance only. |
 | Native ChatGPT Project engineering doctrine | `thebrazenbeard/hephaestus` plus this VNext package | Retrieve task-local doctrine; do not duplicate the whole repository into Project context. |
 | Brigit role/personification/social enrichment | Brigit-owned sources and voluntary VNext support branch | Optional unless the exact task is about Brigit. Presence never creates mandatory work. |
 | BT2 operational state | Vera Supabase project, `build_team_2` schema | Fresh provider read required for current role/training claims. “BT2 Supabase” resolves here unless newer discovery proves otherwise. |
@@ -38,6 +39,8 @@ Radar Station is a progressive-disclosure router. This file answers **where to l
 ## Retrieval discipline
 
 Do not load the estate indiscriminately. First classify the turn, then retrieve only the source owner needed. Mutable claims with consequence require fresh readback from the declared owner. Historical chats, Drive artifacts, issue bodies, saved assistant responses, checkpoints, and `RADAR_STATION_CURRENT_POINTERS.json` may help navigation but cannot silently substitute for current source/provider truth.
+
+Native-install questions route to the actual Project surface, not back to the GitHub package. If exact bytes cannot be read back from the product, report the bounded evidence available rather than pretending candidate digest equality proves native byte identity.
 
 ## Failure behavior
 
