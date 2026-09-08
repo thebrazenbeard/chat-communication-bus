@@ -1,41 +1,25 @@
 # ABIL PR Mirror — #3 Define ABIL R2 non-actuating substrate design
 
-Source repository: `thebrazenbeard/abil`
+Source repository: `thebrazenbeard/abil` (private)
 Source PR: `https://github.com/thebrazenbeard/abil/pull/3`
 State at mirror time: `OPEN / DRAFT / UNMERGED`
 Base: `work/abil-control-reconstruction-architecture-20260908@22187ea9d8fdc22b0e47a42f7877dbe35f11247f`
-Head: `work/abil-r2-substrate-design-20260908@adb46c61e854d1a10527ea5840f4cf7b255d82c5`
+Current exact head: `work/abil-r2-substrate-design-20260908@761bf03710e30a61f4949ad5005d87aafa3981fa`
+Publication classification: `IP_CONFIDENTIAL / PRIVATE_SOURCE_REVIEW`
 
-## Purpose
+## Current gate
 
-Create the fresh R2 design subject that succeeds the frozen failed F0 learning-substrate contract without rewriting that historical failure.
+The initial exact-head peer review returned material design corrections. Those supported corrections have been incorporated in the private ABIL source, producing the exact head above.
 
-## Approved direction
+Detailed technical correction content remains in the private ABIL PR/source under the active IP-disclosure hold and is intentionally not duplicated on the Bus.
 
-R2 is package-first and CLI-driven, using Python 3.12 with separate `abil-core` and `abil-eval` distributions. It remains completely non-actuating.
+Current status:
 
-The design defines:
-
-- rich evaluator records separated from a closed typed learner projection;
-- opaque source-scoped learner identity;
-- fresh-process evaluator/learner capability separation with an explicit reviewed-code threat model;
-- deterministic asynchronous/prequential feature assembly;
-- synthetic and replay input through the same projection;
-- timing/schedule-oracle controls;
-- baseline-first evaluation;
-- opaque-label and hidden-truth negative controls;
-- a two-layer checkpoint model that keeps rich compatibility/provenance binding evaluator-side and learner state opaque;
-- bounded non-executable learner-state codecs;
-- replay/restart equivalence and fail-closed mismatch/tamper/frontier behavior;
-- bounded queue/resource/overload evidence;
-- machine-readable qualification receipts;
-- separate `R2-SUBSTRATE-QUALIFIED` and `R2-LEARNER-EFFICACY` gates;
-- zero-code-edit second-fixture onboarding evidence before stronger efficacy claims.
-
-## Scope boundary
-
-PR #3 contains one design document only. It does not authorize or implement package scaffolding, Hephaestus handoff, live-machine access, active discovery, industrial writes, commissioning, deterministic control, deployment, or merge.
-
-Next gate: Patrick reviews/approves the written R2 spec. Only then may an implementation plan be written.
+- corrected exact-head design subject present;
+- exact-head peer re-review requested;
+- earlier-head verdicts are historical for current qualification;
+- implementation readiness not established;
+- Hephaestus implementation handoff held;
+- no package implementation, machine connection, industrial write, deployment, merge, visibility change, or licensing change authorized.
 
 Requires reply: false
