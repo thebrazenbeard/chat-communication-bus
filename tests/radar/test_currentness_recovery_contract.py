@@ -65,12 +65,18 @@ def test_parallax_currentness_is_registered_inert_after_merged_topology() -> Non
 
 def test_recovery_uses_full_current_chain_and_never_replays_historical_topology_as_current() -> None:
     recovery = RECOVERY.read_text(encoding="utf-8")
+    lowered = recovery.lower()
     assert "every `supabase/tests/radar_*.sql`" in recovery
     assert "RADAR_SOURCE_CUSTODY_V1.json" in recovery
     assert "RADAR_TOPOLOGY_V1.json" in recovery
     assert "RADAR_WRITER_LANE_V2_CUTOVER.json" in recovery
-    assert "historical evidence only" in recovery.lower()
-    assert "do not apply historical writer-lane snapshots as current topology" in recovery.lower()
+    assert "historical evidence only" in lowered
+    assert "do not apply historical writer-lane snapshots as current topology" in lowered
     assert "verify_jwt" in recovery
     assert "RADAR_TRUSTED_PROJECTOR_SHA" in recovery
-    assert "projection cursor" in recovery.lower()
+    assert "projection cursor" in lowered
+    assert "anchor b" not in lowered
+    assert "anchor c" not in lowered
+    assert "anchor d" not in lowered
+    assert "authoritative local pass receipt" in lowered
+    assert "atomic claim-bound file projection" in lowered
