@@ -108,7 +108,7 @@ def test_local_qualification_ignores_only_standard_generated_artifacts() -> None
 def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> None:
     contract = json.loads(CUSTODY.read_text(encoding="utf-8"))
     assert contract["contract"] == "RADAR_SOURCE_CUSTODY_V1"
-    assert contract["version"] == 9
+    assert contract["version"] == 10
     assert contract["status"] == "SOURCE_ONLY_VERIFICATION_CONTRACT"
     assert set(contract["required_globs"]) == {
         "supabase/migrations/*_radar_*.sql",
@@ -127,8 +127,10 @@ def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> N
         ".github/workflows/writer-lane-guard.yml",
         ".github/workflows/radar-central-dispatcher.yml",
         ".github/workflows/radar-trusted-projector.yml",
+        "architecture/contracts/RADAR_AUTHORITY_V1.md",
         "architecture/contracts/RADAR_CURRENT.json",
         "architecture/contracts/RADAR_QUALIFICATION_V1.json",
+        "architecture/contracts/RADAR_SUPABASE_V1.md",
         "architecture/contracts/RADAR_TOPOLOGY_V1.json",
         "architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json",
         "architecture/contracts/RADAR_TRUST_ANCHOR_V1.json",
@@ -136,6 +138,7 @@ def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> N
         "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V2.json",
         "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V3.json",
         "docs/checkpoints/RADAR_MAIN_DIVERGENCE_RECONCILIATION_2026-09-06.md",
+        "docs/operator/CHATGPT_OPERATOR_CONTRACT.md",
         "docs/operator/RADAR_NO_PAID_QUALIFICATION.md",
         "docs/operator/RECOVERY.md",
         "docs/protocol/BUS_MESSAGE_GRAMMAR_V1.json",
