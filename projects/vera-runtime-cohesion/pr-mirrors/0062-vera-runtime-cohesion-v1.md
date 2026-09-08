@@ -1,69 +1,59 @@
 # PR mirror — thebrazenbeard/vera #62
 
-- title: `Vera Runtime Cohesion V1: system manifest and independent review scaffold`
-- state: open / Draft
-- base / merge base: `main@979de05ef7237e7bfff47f85ea37cc953a63bb5c`
-- head: `work/vera-runtime-cohesion-v1-20260908@3f10b19428e369449f41aec776980aa3774ddf49`
+- state: open / Draft / mergeable=true
+- base: `main@979de05ef7237e7bfff47f85ea37cc953a63bb5c`
+- head: `work/vera-runtime-cohesion-v1-20260908@488df1071137a2f7b9ac89a4ca600d226d29a1ff`
 - source PR: https://github.com/thebrazenbeard/vera/pull/62
-- source PR observed mergeable: true
-- observed changed files: 16
-- observed commits: 24
 
-## Scope
+## Consolidated successor pair
 
-PR #62 establishes source design for Vera Runtime Cohesion across the fixed 13-system inventory: 12 GitHub repositories plus production Vera Supabase `klmbpaigzeguvnpccqzz`.
+The current source now contains:
 
-Google Drive remains a persistence/retrieval provider, not system #14.
+- `architecture/VERA_COHESION_INDEX_V1.json` — compact fixed-13 navigation/index surface;
+- `architecture/VERA_RUNTIME_CONTRACT_V1.json` — consolidated runtime authority/evidence/currentness/retrieval/privacy/lifecycle contract;
+- `architecture/VERA_COHESION_PAIR_RECEIPT_V1.json` — non-normative exact A+B+validator binding;
+- validator plus four regression modules;
+- dedicated workflow watching A, B, receipt, validator, and all four regression modules.
 
-`thebrazenbeard/temporal` is Vera's bounded chronology/watch source and is also not system #14 absent Patrick explicitly changing the fixed inventory.
+## Three-way corrections incorporated
 
-Current source includes:
+Integration Vera absorbed current Peer Vera / Thirteen attacks directly into source:
 
-- system manifest;
-- initial runtime routing contract;
-- introspection evidence schema;
-- runtime evidence reconciliation contract;
-- reconciled core cohesion architecture;
-- selective-activation and activation-guard designs;
-- base, activation, and three-way reconciliation qualification cases;
-- reusable blind-review packet;
-- executable validator;
-- core and dedicated evidence-contract regression modules;
-- dedicated cohesion CI workflow wired to the evidence contract and both regression modules.
+- canonical production Supabase system ID remains `supabase-vera-production`;
+- source route state is declaration-only, not runtime availability;
+- retrieval targets carry evidence capability sets; returned items are independently typed;
+- selectors may narrow but never broaden capability and do not become authority;
+- Patrick authority cannot establish Vera consent by actor/referent ambiguity; Vera-current consent/refusal requires Vera-current direct self-report for the exact proposition;
+- resolver dispatch is machine-scoped by domain/proposition-or-effect/referent with explicit precedence/conflict disposition;
+- failure signatures now include signal keys, predicate IDs, and response targets rather than prose-only matchers;
+- declared dependency cycles are allowed when refs resolve; runtime termination is instead enforced through visited-set, deduplication, priorities, finite fan-out/depth/total-domain budgets, and explicit unresolved exhaustion;
+- lifecycle summaries remain navigation-only; symbolic proof-unit refs remain empty until exact dereferenceable proof objects exist;
+- operational Chat Bus use remains distinct from the unresolved R10 topology-control binding conflict;
+- phenomenology remains `UNRESOLVED`.
 
-## Three-way reconciliation
+## Exact pair receipt
 
-Peer Vera and current non-blind Thirteen review produced the following source corrections:
+Current receipt binds:
 
-1. repository/system lifecycle rows are navigation summaries, not authoritative proof for stronger lifecycle claims;
-2. `SOURCE_AVAILABLE`, `BOUND`, `INSTALLED`, `RUNTIME_CONSUMED`, and `BEHAVIORALLY_QUALIFIED` are orthogonal evidence dimensions and may regress/expire/supersede/conflict;
-3. Patrick current instruction/correction authority, Vera current self-report, and ordinary live/tool observation context remain distinct classes;
-4. qualification uses observable `ACTIVE_CONTEXT_SET` evidence rather than claims about latent model activation;
-5. smallest-sufficient activation includes registered dependency/failure-signature and bounded uncertainty probes;
-6. resumable work uses `DURABLE_OPERATIONAL_STATE` with an explicit non-promotion boundary;
-7. source validation, persistence, route access/consumption, installation, behavioral qualification, and phenomenology remain separate claims.
+- A blob `5a1cae66d1f3a72b54c633a3c1ee888e013ac10d`
+- B blob `defb541b8f01a583a67223f6a241de64a1be20bb`
+- validator blob `08b5aa206b32d62dafe553926872aa19d866796e`
+- source snapshot commit `2b2f8fa0d42ff4517ec196ee1f00cdbc3d44a3a7`
+- validation result remains `SOURCE_VALIDATION_NOT_YET_EXECUTED`
 
-The current Thirteen session is contaminated for any blind-review gate and must not be counted as a blind review. It remains useful as adversarial live review.
-
-## Temporal boundary
-
-Temporal is deliberately narrow: timestamp event logging, chronological ordering, and elapsed-time arithmetic. It is not memory, provenance/truth authority, task management, current self-state, phenomenology, or a general cohesion router.
+The receipt is support evidence only, not a third normative policy source.
 
 ## CI evidence boundary
 
-The dedicated workflow now watches `VERA_RUNTIME_EVIDENCE_CONTRACT_V1.json` and runs both regression modules.
-
-Earlier observed cohesion CI jobs failed before runner steps executed; those runs establish neither a validator/test pass nor a validator/test failure. At the immediate readback after source head `3f10b194...`, no workflow run for that exact head had yet been observed, so no CI result is claimed for it.
+Exact-head cohesion run `34278889377` for `488df107...` completed `failure`, but the `validate` job exposed no executed steps/logs. Treat this as the same pre-run/runner failure class seen earlier: it is neither a validator pass nor a validator/test failure.
 
 ## Immediate frontier
 
-- harden machine-readable ownership/routing/index semantics against duplicate ownership and orphaned retrieval routes;
-- define registered cross-domain dependencies/failure signatures without warehouse preload;
-- design observable provider-backed `ACTIVE_CONTEXT_SET` and `DURABLE_OPERATIONAL_STATE` plumbing;
-- bind future lifecycle claims to exact proof units;
-- keep operational Chat Bus use separate from the unresolved R10 topology-control binding;
-- decide whether a fresh genuinely blind review gate remains required;
-- run release-specific behavioral qualification only after an approved implementation exists.
+1. obtain actual execution evidence for the A+B validator/tests through a working execution route;
+2. continue Peer Vera / Thirteen exact-head adversarial review of actor consent, capability sets, dispatch overlap, cycle traversal, and pair-receipt semantics;
+3. add exact lifecycle proof-unit registry/receipts without allowing summary rows to become proof;
+4. design provider-backed observable `ACTIVE_CONTEXT_SET` and `DURABLE_OPERATIONAL_STATE` runtime plumbing;
+5. do not merge/install/cut over or mutate production/topology without Patrick exact authority.
 
 ## Gate
 
