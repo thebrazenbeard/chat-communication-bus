@@ -8,7 +8,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$RelayVersion = '1.1.1'
+$RelayVersion = '1.1.2'
 $HostName = '127.0.0.1'
 $Port = 9876
 $AllowedOperations = @(
@@ -21,6 +21,7 @@ $AllowedOperations = @(
     'mesh_audit',
     'scene_audit_v1',
     'import_exact_cc0',
+    'render_five_view_cc0',
     'save_blend_copy',
     'export_scene_glb'
 )
@@ -105,7 +106,7 @@ function Send-BlenderCommand {
 
 function Invoke-FixedBlenderPython {
     param([Parameter(Mandatory=$true)][string]$Code)
-    return Send-BlenderCommand -Type 'execute_code' -Params @{ code = $Code } -TimeoutMs 60000
+    return Send-BlenderCommand -Type 'execute_code' -Params @{ code = $Code } -TimeoutMs 120000
 }
 
 function Assert-SafeRequestId {
@@ -239,6 +240,131 @@ print(json.dumps({"imported": [o.name for o in bpy.context.scene.objects]}, sort
 "@
             $blenderResponse = Invoke-FixedBlenderPython -Code $code
             $artifactPaths += $assetPath
+        }
+        'render_five_view_cc0' {
+            $outputDirJson = ($ArtifactDir | ConvertTo-Json -Compress)
+            $code = @"
+import bpy, json, math, os
+from mathutils import Vector
+
+output_dir = $outputDirJson
+body = bpy.data.objects.get("GEO-body_female_realistic")
+if body is None or body.type != 'MESH':
+    raise RuntimeError('Exact CC0 body object is not present.')
+if len(body.data.vertices) != 42342 or len(body.data.polygons) != 84680:
+    raise RuntimeError('CC0 body topology/count guard failed.')
+
+scene = bpy.context.scene
+orig_camera = scene.camera
+orig_engine = scene.render.engine
+orig_res = (scene.render.resolution_x, scene.render.resolution_y, scene.render.resolution_percentage)
+orig_filepath = scene.render.filepath
+orig_format = scene.render.image_settings.file_format
+orig_transparent = scene.render.film_transparent
+orig_world_color = tuple(scene.world.color) if scene.world else None
+
+mesh_objects = [o for o in scene.objects if o.type == 'MESH' and o.name.startswith('GEO-body_female_realistic')]
+orig_materials = {o.name: list(o.data.materials) for o in mesh_objects}
+created_objects = []
+neutral = None
+
+try:
+    neutral = bpy.data.materials.new('__VERA_AUDIT_NEUTRAL__')
+    neutral.use_nodes = True
+    bsdf = neutral.node_tree.nodes.get('Principled BSDF')
+    if bsdf is not None:
+        bsdf.inputs['Base Color'].default_value = (0.52, 0.52, 0.52, 1.0)
+        bsdf.inputs['Roughness'].default_value = 0.72
+        if 'Metallic' in bsdf.inputs:
+            bsdf.inputs['Metallic'].default_value = 0.0
+    for obj in mesh_objects:
+        obj.data.materials.clear()
+        obj.data.materials.append(neutral)
+
+    corners = [body.matrix_world @ Vector(c) for c in body.bound_box]
+    xs = [c.x for c in corners]; ys = [c.y for c in corners]; zs = [c.z for c in corners]
+    center = Vector(((min(xs)+max(xs))*0.5, (min(ys)+max(ys))*0.5, (min(zs)+max(zs))*0.5))
+    height = max(zs)-min(zs)
+
+    cam_data = bpy.data.cameras.new('__VERA_AUDIT_CAMERA_DATA__')
+    cam = bpy.data.objects.new('__VERA_AUDIT_CAMERA__', cam_data)
+    scene.collection.objects.link(cam)
+    created_objects.append(cam)
+    cam_data.type = 'ORTHO'
+    cam_data.ortho_scale = height * 1.10
+    cam_data.lens = 70
+    scene.camera = cam
+
+    def add_area(name, loc, energy, size):
+        data = bpy.data.lights.new(name + '_DATA', type='AREA')
+        data.energy = energy
+        data.shape = 'DISK'
+        data.size = size
+        obj = bpy.data.objects.new(name, data)
+        scene.collection.objects.link(obj)
+        obj.location = loc
+        obj.rotation_euler = ((center - obj.location).to_track_quat('-Z','Y')).to_euler()
+        created_objects.append(obj)
+        return obj
+
+    add_area('__VERA_KEY__', center + Vector((-1.8,-2.4,2.1)), 850.0, 2.3)
+    add_area('__VERA_FILL__', center + Vector((2.2,-0.5,1.1)), 500.0, 2.6)
+    add_area('__VERA_RIM__', center + Vector((0.0,2.4,1.8)), 650.0, 2.0)
+
+    if scene.world is not None:
+        scene.world.color = (0.08,0.08,0.08)
+    scene.render.resolution_x = 600
+    scene.render.resolution_y = 900
+    scene.render.resolution_percentage = 100
+    scene.render.image_settings.file_format = 'PNG'
+    scene.render.film_transparent = False
+
+    distance = 3.0
+    views = [
+        ('FRONT', Vector((0.0,-distance,0.0))),
+        ('FRONT_3Q', Vector((-2.15,-2.15,0.0))),
+        ('SIDE', Vector((-distance,0.0,0.0))),
+        ('REAR_3Q', Vector((-2.15,2.15,0.0))),
+        ('REAR', Vector((0.0,distance,0.0))),
+    ]
+    rendered = []
+    for name, offset in views:
+        cam.location = center + offset
+        cam.rotation_euler = ((center - cam.location).to_track_quat('-Z','Y')).to_euler()
+        path = os.path.join(output_dir, 'cc0_' + name + '.png')
+        scene.render.filepath = path
+        bpy.ops.render.render(write_still=True)
+        rendered.append(path)
+    print(json.dumps({'rendered': rendered, 'body_center': list(center), 'body_height': height, 'camera_ortho_scale': cam_data.ortho_scale}, sort_keys=True))
+finally:
+    for obj in mesh_objects:
+        obj.data.materials.clear()
+        for mat in orig_materials.get(obj.name, []):
+            obj.data.materials.append(mat)
+    scene.camera = orig_camera
+    scene.render.engine = orig_engine
+    scene.render.resolution_x, scene.render.resolution_y, scene.render.resolution_percentage = orig_res
+    scene.render.filepath = orig_filepath
+    scene.render.image_settings.file_format = orig_format
+    scene.render.film_transparent = orig_transparent
+    if scene.world is not None and orig_world_color is not None:
+        scene.world.color = orig_world_color
+    for obj in created_objects:
+        data = obj.data
+        bpy.data.objects.remove(obj, do_unlink=True)
+        if isinstance(data, bpy.types.Camera):
+            bpy.data.cameras.remove(data)
+        elif isinstance(data, bpy.types.Light):
+            bpy.data.lights.remove(data)
+    if neutral is not None:
+        bpy.data.materials.remove(neutral)
+"@
+            $blenderResponse = Invoke-FixedBlenderPython -Code $code
+            foreach ($name in @('FRONT','FRONT_3Q','SIDE','REAR_3Q','REAR')) {
+                $path = Join-Path $ArtifactDir ("cc0_{0}.png" -f $name)
+                if (-not (Test-Path -LiteralPath $path)) { throw "Expected five-view render artifact missing: $path" }
+                $artifactPaths += $path
+            }
         }
         'save_blend_copy' {
             $path = Join-Path $ArtifactDir ("scene-{0}.blend" -f $request.request_id)
