@@ -11,9 +11,14 @@ HANDLER = ROOT / "supabase/functions/github-bus-ingest/handler.ts"
 
 def _jwks_harness_source() -> str:
     source = HANDLER.read_text(encoding="utf-8")
-    start = source.index("let jwksCache:")
-    end = source.index("\n\nfunction stringClaim", start)
-    implementation = source[start:end]
+
+    timing_start = source.index("const JWKS_CACHE_TTL_MS")
+    timing_end = source.index("\nconst SHA40_RE", timing_start)
+    timing_constants = source[timing_start:timing_end]
+
+    implementation_start = source.index("let jwksCache:")
+    implementation_end = source.index("\n\nfunction stringClaim", implementation_start)
+    implementation = source[implementation_start:implementation_end]
 
     return f'''const JWKS_URL = "https://example.invalid/jwks";
 class HttpError extends Error {{
@@ -25,6 +30,8 @@ class HttpError extends Error {{
     this.code = code;
   }}
 }}
+
+{timing_constants}
 
 {implementation}
 
