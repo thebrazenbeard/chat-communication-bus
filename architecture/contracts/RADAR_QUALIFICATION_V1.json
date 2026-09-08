@@ -6,6 +6,8 @@
   "authoritative_qualification": {
     "mode": "LOCAL_NO_PAID_SERVICES",
     "platform": "windows_powershell",
+    "engine": "scripts/radar_qualify.py",
+    "windows_launcher": "scripts/radar_local_qualify.ps1",
     "runner": "scripts/radar_local_qualify.ps1",
     "receipt_validator": "scripts/radar_validate_qualification_receipt.py",
     "operator_contract": "docs/operator/RADAR_NO_PAID_QUALIFICATION.md",
