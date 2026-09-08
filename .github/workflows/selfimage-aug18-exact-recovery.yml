@@ -1,0 +1,74 @@
+name: Self Image Exact Aug18 Recovery
+
+on:
+  push:
+    branches:
+      - feature/selfimage-blender-relay-v1
+    paths:
+      - .github/workflows/selfimage-aug18-exact-recovery.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recover:
+    if: github.actor == 'thebrazenbeard'
+    runs-on: [self-hosted, windows, x64, vera-blender]
+    timeout-minutes: 10
+
+    steps:
+      - name: Recover exact private Self Image blob with existing local gh auth
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $blob = 'cc338ed713135d482d764879328af7709a3f7c16'
+          $outDir = Join-Path '${{ runner.temp }}' 'vera-aug18-exact-recovery'
+          New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+          $png = Join-Path $outDir 'ChatGPT Image Aug 18, 2026, 07_05_06 AM.png'
+
+          # The runner was installed for Patrick's Windows user after `gh auth status`
+          # verified thebrazenbeard. Do not print or export the credential.
+          $json = gh api "repos/thebrazenbeard/selfimage/git/blobs/$blob" | ConvertFrom-Json
+          if ([string]$json.sha -ne $blob) { throw "GitHub blob identity mismatch: $($json.sha)" }
+          if ([string]$json.encoding -ne 'base64') { throw "Unexpected GitHub blob encoding: $($json.encoding)" }
+          $raw = [Convert]::FromBase64String(([string]$json.content -replace '\s',''))
+          [IO.File]::WriteAllBytes($png, $raw)
+
+          $bytes = (Get-Item -LiteralPath $png).Length
+          $sha256 = (Get-FileHash -LiteralPath $png -Algorithm SHA256).Hash.ToLowerInvariant()
+
+          Add-Type -AssemblyName System.Drawing
+          $image = [System.Drawing.Image]::FromFile($png)
+          try {
+            $width = $image.Width
+            $height = $image.Height
+          } finally {
+            $image.Dispose()
+          }
+          if ($width -ne 1024 -or $height -ne 1536) {
+            throw "Exact blob has unexpected dimensions ${width}x${height}; expected 1024x1536."
+          }
+
+          $receipt = [ordered]@{
+            schema = 'VERA_AUG18_EXACT_SOURCE_RECOVERY_V1'
+            status = 'EXACT_PRIVATE_GIT_BLOB_RECOVERED / DIMENSIONS_VERIFIED / POSTERIOR_MASK_NOT_YET_AUTHORED'
+            repository = 'thebrazenbeard/selfimage'
+            ref = 'main'
+            path = 'ChatGPT Image Aug 18, 2026, 07_05_06 AM.png'
+            git_blob_sha1 = $blob
+            bytes = $bytes
+            sha256 = $sha256
+            width = $width
+            height = $height
+          }
+          $receipt | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath (Join-Path $outDir 'AUG18_EXACT_SOURCE_RECOVERY_RECEIPT.json') -Encoding UTF8
+          $receipt | ConvertTo-Json -Depth 10
+
+      - name: Upload exact recovered source and receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: vera-aug18-exact-source-${{ github.run_id }}
+          path: ${{ runner.temp }}\vera-aug18-exact-recovery
+          if-no-files-found: error
+          retention-days: 30
