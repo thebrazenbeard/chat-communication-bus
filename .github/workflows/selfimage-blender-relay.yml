@@ -1,0 +1,69 @@
+name: Self Image Blender Relay
+
+on:
+  push:
+    branches:
+      - feature/selfimage-blender-relay-v1
+    paths:
+      - projects/selfimage/blender-relay/requests/**
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: selfimage-blender-relay-v1
+  cancel-in-progress: false
+
+jobs:
+  relay:
+    if: github.actor == 'thebrazenbeard'
+    runs-on: [self-hosted, windows, x64, vera-blender]
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout relay branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Process pending Blender requests
+        id: process
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $artifactRoot = Join-Path '${{ runner.temp }}' 'vera-blender-relay-artifacts'
+          & '${{ github.workspace }}\projects\selfimage\blender-relay\relay\Process-PendingRequests.ps1' `
+            -Workspace '${{ github.workspace }}' `
+            -ArtifactRoot $artifactRoot
+
+      - name: Upload Blender relay artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vera-blender-relay-${{ github.run_id }}
+          path: ${{ runner.temp }}\vera-blender-relay-artifacts
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Commit durable result receipts
+        if: always()
+        shell: pwsh
+        run: |
+          git config user.name 'vera-blender-relay'
+          git config user.email 'vera-blender-relay@users.noreply.github.com'
+          git add -- 'projects/selfimage/blender-relay/results/*.json'
+          if (-not (git diff --cached --quiet)) {
+            git commit -m 'Self Image Blender relay: record result receipts'
+            git pull --rebase origin '${{ github.ref_name }}'
+            git push origin "HEAD:${{ github.ref_name }}"
+          } else {
+            Write-Host 'No new durable result receipts to commit.'
+          }
+
+      - name: Preserve failure status
+        if: steps.process.outcome == 'failure'
+        shell: pwsh
+        run: |
+          throw 'One or more Blender relay requests failed. Inspect the committed result receipt(s) and workflow artifact.'
