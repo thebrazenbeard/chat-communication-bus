@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "request_id": "relay-body-viewport-20260908-0248",
+  "operation": "viewport_capture",
+  "args": {"max_size": 1400},
+  "created_at": "2026-09-08T02:48:00Z"
+}
