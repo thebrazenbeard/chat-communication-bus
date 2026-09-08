@@ -108,7 +108,7 @@ def test_local_qualification_ignores_only_standard_generated_artifacts() -> None
 def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> None:
     contract = json.loads(CUSTODY.read_text(encoding="utf-8"))
     assert contract["contract"] == "RADAR_SOURCE_CUSTODY_V1"
-    assert contract["version"] == 11
+    assert contract["version"] == 12
     assert contract["status"] == "SOURCE_ONLY_VERIFICATION_CONTRACT"
     assert set(contract["required_globs"]) == {
         "supabase/migrations/*_radar_*.sql",
@@ -144,6 +144,7 @@ def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> N
         "docs/protocol/BUS_MESSAGE_GRAMMAR_V1.json",
         "docs/protocol/RADAR_PROJECTION_JOURNAL_V1.md",
         "tests/fixtures/bus_message_grammar_v1.json",
+        "tests/radar/test_message_grammar.py",
         "tests/radar/test_currentness_recovery_contract.py",
         "tests/radar/test_edge_projection_result_contract.py",
         "tests/radar/test_remote_ref_reconciler.py",
