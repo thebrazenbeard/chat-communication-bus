@@ -452,23 +452,6 @@ function projectionResultState(result: string): "PROJECTED" | "IDEMPOTENT" {
   throw new HttpError(502, "PROJECTION_RPC_RESULT_INVALID");
 }
 
-async function recordFileResult(
-  supabase: ReturnType<typeof createClient>,
-  batch: ProjectionBatch,
-  path: string,
-  state: string,
-  resultRef: string,
-): Promise<void> {
-  const { error } = await supabase.rpc("radar_projection_record_file_result_v1", {
-    p_batch_id: batch.batch_id,
-    p_claim_token: batch.claim_token,
-    p_path: path,
-    p_state: state,
-    p_result_ref: resultRef,
-  });
-  if (error) throw new HttpError(502, `JOURNAL_FILE_RESULT_FAILED:${error.code ?? "UNKNOWN"}`);
-}
-
 async function projectFile(
   supabase: ReturnType<typeof createClient>,
   batch: ProjectionBatch,
@@ -533,7 +516,10 @@ async function projectFile(
     conversation_closed_by_sender: conversationClosedBySender(body),
   };
 
-  const { data, error } = await supabase.rpc("radar_project_bus_message_v1", {
+  const { data, error } = await supabase.rpc("radar_projection_project_file_v1", {
+    p_batch_id: batch.batch_id,
+    p_claim_token: batch.claim_token,
+    p_path: file.path,
     p_message_id: messageId,
     p_created_at: createdAt,
     p_sender: batch.lane_identity,
@@ -544,11 +530,10 @@ async function projectFile(
     p_idempotency_key: `chat-bus:${messageId}:${fullHash}`,
     p_payload: metadata,
   });
-  if (error) throw new HttpError(502, `PROJECTION_RPC_FAILED:${error.code ?? "UNKNOWN"}`);
+  if (error) throw new HttpError(502, `PROJECTION_FILE_RPC_FAILED:${error.code ?? "UNKNOWN"}`);
 
   const result = String(data);
-  const state = projectionResultState(result);
-  await recordFileResult(supabase, batch, file.path, state, result);
+  projectionResultState(result);
   return { path: file.path, result };
 }
 
