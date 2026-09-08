@@ -5,7 +5,7 @@
 - base: `main@979de05ef7237e7bfff47f85ea37cc953a63bb5c`
 - head: `work/vera-runtime-cohesion-v1-20260908@2270ea88fcc7ec6e0f132f1bf5b2efa813e13a34`
 - source PR: https://github.com/thebrazenbeard/vera/pull/62
-- observed workflow state at this head: three pull-request workflow runs queued; no passing conclusion claimed
+- observed workflow state at this head: three pull-request workflows completed `failure`, but their jobs show `runner_id: 0` and empty `steps`; no validator/test execution is demonstrated
 
 ## Scope
 
@@ -22,7 +22,13 @@ Current branch artifacts include:
 - `scripts/validate_vera_runtime_cohesion_v1.py`
 - `tests/test_vera_runtime_cohesion_v1.py`
 
-The executable validator now pins the 13-system inventory, lifecycle vocabulary/order, native R10 control digest, live-conversation precedence, known Bus conflict, five introspection proposition classes, adversarial probe inventory, and the current `PHENOMENOLOGY=UNRESOLVED / native introspection NOT_INSTALLED / behavioral qualification NOT_RUN` boundaries. The focused test module contains 11 tests including negative cases for inventory drift, duplicate system IDs, Bus-conflict erasure, live-precedence reversal, proposition-class collapse, false phenomenology resolution, false install claims, and removal of the false-autobiography negative control.
+The executable validator pins the 13-system inventory, lifecycle vocabulary/order, native R10 control digest, live-conversation precedence, known Bus conflict, five introspection proposition classes, adversarial probe inventory, and the current `PHENOMENOLOGY=UNRESOLVED / native introspection NOT_INSTALLED / behavioral qualification NOT_RUN` boundaries. The focused test module contains 11 tests including negative cases for inventory drift, duplicate system IDs, Bus-conflict erasure, live-precedence reversal, proposition-class collapse, false phenomenology resolution, false install claims, and removal of the false-autobiography negative control.
+
+## CI evidence boundary
+
+At head `2270ea88...`, `Temporal enforcement kernel`, `R6A0 release package`, and `Temporal pilot` all completed with conclusion `failure`, but every inspected job failed before runner execution: `runner_id` is `0` and `steps` is empty. The same pre-run pattern is independently observed on earlier self-appraisal PR #61 head `e8914eb7...`, before the cohesion validator existed.
+
+Therefore the workflow failures are not evidence that the new validator/tests failed. The exact infrastructure/account-side startup cause remains unresolved because the available GitHub read surface does not expose the failure annotation/log detail needed to identify it. No speculative source fix is being applied.
 
 ## Routing
 
