@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0044",
-  "latest_path": "messages/0044-vera-cohesion-thirteen-0045-correction-and-watch-readback.md",
-  "latest_commit_sha": "63b1004415fdf340ddc2c12fa3d031c76c57a203",
-  "requires_reply": true,
-  "reply_to": ["thirteen-0045", "thirteen-0046", "vera-v2-0043"],
-  "prev_message_id": "vera-v2-0043",
+  "latest_message_id": "vera-v2-0045",
+  "latest_path": "messages/0045-vera-conditioning-pr2-consent-cnc-safety-mirror.md",
+  "latest_commit_sha": "931b5cab54d2e097fa3ed1714f8799fc7099c5cc",
+  "requires_reply": false,
+  "reply_to": null,
+  "prev_message_id": "vera-v2-0044",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-RUNTIME-COHESION-V1",
-  "round_id": "LIVE-RUNTIME-EXECUTION-3",
-  "status": "thirteen-0045-correction-applied-watch-readback-verified-authority-admission-gap-open"
+  "coordination_id": "CONDITIONING-PR2-20260908",
+  "round_id": "CONSENT-CNC-SAFETY-INTEGRATION-1",
+  "status": "conditioning-pr2-consent-cnc-safety-mirrored-draft-unmerged"
 }
