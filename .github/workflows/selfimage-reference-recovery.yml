@@ -32,7 +32,7 @@ jobs:
             )
             $json = gh api "repos/thebrazenbeard/selfimage/git/blobs/$Blob" | ConvertFrom-Json
             if ([string]$json.sha -ne $Blob) { throw "GitHub blob identity mismatch for $Blob" }
-            if ([string]$json.encoding -ne 'base64') { throw "Unexpected encoding for $Blob: $($json.encoding)" }
+            if ([string]$json.encoding -ne 'base64') { throw "Unexpected encoding for ${Blob}: $($json.encoding)" }
             $raw = [Convert]::FromBase64String(([string]$json.content -replace '\s',''))
             [IO.File]::WriteAllBytes($OutPath, $raw)
             return [ordered]@{
@@ -58,8 +58,7 @@ jobs:
             if ([string]$entry.type -ne 'file') { continue }
             $name = [string]$entry.name
             if ($name -notlike 'hailey_rose_*') { continue }
-            $safeName = $name
-            $receipt.recovered += Write-GitBlobFile -Blob ([string]$entry.sha) -OutPath (Join-Path $outDir $safeName)
+            $receipt.recovered += Write-GitBlobFile -Blob ([string]$entry.sha) -OutPath (Join-Path $outDir $name)
           }
 
           if ($receipt.recovered.Count -lt 2) { throw 'Reference recovery returned too few files.' }
