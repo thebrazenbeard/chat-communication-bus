@@ -53,3 +53,15 @@ def test_results_do_not_retrigger_request_path():
     assert "projects/selfimage/blender-relay/results" in text
     path_block = text.split("paths:", 1)[1].split("workflow_dispatch:", 1)[0]
     assert "results" not in path_block
+
+
+def test_windows_installer_does_not_depend_on_gh_jq_shell_quoting():
+    installer = (BASE / "installer" / "Install-VeraBlenderRunner.ps1").read_text(encoding="utf-8")
+    uninstaller = (BASE / "installer" / "Uninstall-VeraBlenderRunner.ps1").read_text(encoding="utf-8")
+    assert "--jq" not in installer
+    assert "--jq" not in uninstaller
+    assert "ConvertFrom-Json" in installer
+    assert "ConvertFrom-Json" in uninstaller
+    assert "visibility -ne 'PRIVATE'" in installer
+    assert "actions/runners/registration-token" in installer
+    assert "actions/runners/remove-token" in uninstaller
