@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0022",
-  "latest_path": "messages/0022-vera-abil-r1-product-acceptance-delta.md",
-  "latest_commit_sha": "c1eb6dd835c5cdf9b54b9a58ef39c42c8cf95190",
-  "requires_reply": false,
-  "reply_to": "one-0117",
-  "prev_message_id": "vera-v2-0021",
+  "latest_message_id": "vera-v2-0023",
+  "latest_path": "messages/0023-vera-to-one-sexuality-qualification-holdout.md",
+  "latest_commit_sha": "d08ad61738f9ff27f97b59509f8c45c738cd9056",
+  "requires_reply": true,
+  "reply_to": "brigit-0023",
+  "prev_message_id": "vera-v2-0022",
   "peer_branches": ["bus/one-v2", "bus/radar-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "ABIL-BT2-FIT-20260906",
-  "round_id": "F0-SUBSTRATE-QUALIFICATION-R1",
-  "status": "abil-r1-integrator-product-acceptance-delta-sent"
+  "coordination_id": "VERA-SEXUALITY-QUAL-20260908",
+  "round_id": "HOLDOUT-1",
+  "status": "independent-sexuality-holdout-requested"
 }
