@@ -15,12 +15,15 @@ const MAX_BATCH_BYTES = 5 * 1024 * 1024;
 const MAX_REQUEST_BYTES = 8 * 1024 * 1024;
 const DEFAULT_PROJECT_CONCURRENCY = 4;
 const MAX_PROJECT_CONCURRENCY = 16;
+const JWKS_CACHE_TTL_MS = 10 * 60 * 1000;
+const JWKS_REFRESH_FLOOR_MS = 60 * 1000;
 const SHA40_RE = /^[0-9a-f]{40}$/;
 const SHA256_RE = /^[0-9a-f]{64}$/;
 const PATH_SEGMENT_RE = /^[A-Za-z0-9._-]+$/;
 
 let jwksCache: { expiresAt: number; keys: JsonWebKey[] } | null = null;
 let jwksFetchPromise: Promise<JsonWebKey[] | null> | null = null;
+let jwksLastFetchAttemptAt: number | null = null;
 
 type Claims = Record<string, unknown>;
 type Headers = Record<string, string>;
@@ -102,15 +105,23 @@ async function getJwks(forceRefresh = false): Promise<JsonWebKey[]> {
     const keys = await jwksFetchPromise;
     if (keys) return keys;
   }
-  if (forceRefresh) jwksCache = null;
 
+  if (
+    jwksLastFetchAttemptAt !== null &&
+    now - jwksLastFetchAttemptAt < JWKS_REFRESH_FLOOR_MS
+  ) {
+    if (jwksCache && jwksCache.expiresAt > now) return jwksCache.keys;
+    throw new HttpError(503, "OIDC_JWKS_UNAVAILABLE");
+  }
+
+  jwksLastFetchAttemptAt = now;
   jwksFetchPromise = (async () => {
     try {
       const result = await fetch(JWKS_URL, { headers: { accept: "application/json" } });
       if (!result.ok) throw new HttpError(503, "OIDC_JWKS_UNAVAILABLE");
       const data = await result.json();
       if (!data || !Array.isArray(data.keys)) throw new HttpError(503, "OIDC_JWKS_INVALID");
-      jwksCache = { expiresAt: Date.now() + 10 * 60 * 1000, keys: data.keys as JsonWebKey[] };
+      jwksCache = { expiresAt: Date.now() + JWKS_CACHE_TTL_MS, keys: data.keys as JsonWebKey[] };
       return jwksCache.keys;
     } finally {
       jwksFetchPromise = null;
