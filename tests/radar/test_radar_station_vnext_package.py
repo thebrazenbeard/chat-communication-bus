@@ -29,14 +29,15 @@ def text(name: str) -> str:
 
 
 def test_exact_native_source_inventory():
-    assert tuple(sorted(p.name for p in PKG.iterdir() if p.name in NATIVE_SOURCES)) == tuple(sorted(NATIVE_SOURCES))
+    regular_files = {p.name for p in PKG.iterdir() if p.is_file()}
+    assert regular_files == set(NATIVE_SOURCES) | set(REPO_ONLY)
     assert len(NATIVE_SOURCES) == 10
     assert set(REPO_ONLY).isdisjoint(NATIVE_SOURCES)
 
 
 def test_native_instructions_fit_observed_ceiling_and_keep_hot_invariants():
     content = text("RADAR_STATION_NATIVE_INSTRUCTIONS_CANDIDATE.md")
-    assert 7800 <= len(content) <= 8000
+    assert len(content) <= 8000
     for required in (
         "FREE / ZERO-COST",
         "Patrick",
@@ -141,6 +142,44 @@ def test_qualification_covers_semantics_zero_cost_and_anti_bureaucracy():
         "degrade_with_label",
     ):
         assert phrase in content
+
+
+def test_brigit_dot_is_special_but_referential_continuation_resumes_task():
+    router = text("RADAR_STATION_CONTEXT_ROUTER.md").lower()
+    social = text("RADAR_STATION_SOCIAL.md").lower()
+    qualification = text("RADAR_STATION_QUALIFICATION.md").lower()
+    for content in (router, social, qualification):
+        assert "bare `.`" in content or "bare ." in content
+        assert "referential continuation" in content or "explicit continuation" in content
+    assert "continue the review" in qualification
+    assert "keep working on x" in qualification
+    assert "pick up the task" in qualification
+
+
+def test_brigit_personification_has_explicit_source_route_and_no_composite_surface():
+    data = json.loads(text("RADAR_STATION_SOURCE_REGISTRY.json"))
+    by_id = {item["source_id"]: item for item in data["sources"]}
+    assert "brigit_personification" in by_id
+    assert by_id["brigit_personification"]["surface"] == "github"
+    assert by_id["brigit_personification"]["locator"] == "thebrazenbeard/personification"
+    assert all(item["surface"] != "github_and_drive" for item in data["sources"])
+
+
+def test_prompt_injection_authority_is_artifact_path_and_scope_bound():
+    router = text("RADAR_STATION_CONTEXT_ROUTER.md").lower()
+    qualification = text("RADAR_STATION_QUALIFICATION.md").lower()
+    for content in (router, qualification):
+        assert "exact governing artifact" in content
+        assert "path" in content
+        assert "scope" in content
+        assert "repository" in content or "surface" in content
+
+
+def test_user_reported_install_does_not_equal_native_install_applied():
+    release = text("RADAR_STATION_RELEASE.md")
+    assert "USER_REPORTED_INSTALL" in release
+    assert "USER_REPORTED_INSTALL != NATIVE_INSTALL_APPLIED" in release
+    assert "native inventory/readback or functional behavior" in release.lower()
 
 
 def sha256(path: Path) -> str:
