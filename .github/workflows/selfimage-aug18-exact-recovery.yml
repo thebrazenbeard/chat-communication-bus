@@ -46,13 +46,18 @@ jobs:
           } finally {
             $image.Dispose()
           }
-          if ($width -ne 1024 -or $height -ne 1536) {
-            throw "Exact blob has unexpected dimensions ${width}x${height}; expected 1024x1536."
+
+          # Direct exact-blob readback on run 34181555681 established the main-branch
+          # object itself is 1155x1362. The earlier 1024x1536 value belonged to
+          # historical/companion-asset evidence and is not the dimension authority
+          # for Git blob cc338ed713135d482d764879328af7709a3f7c16.
+          if ($width -ne 1155 -or $height -ne 1362) {
+            throw "Exact blob has unexpected dimensions ${width}x${height}; expected 1155x1362."
           }
 
           $receipt = [ordered]@{
             schema = 'VERA_AUG18_EXACT_SOURCE_RECOVERY_V1'
-            status = 'EXACT_PRIVATE_GIT_BLOB_RECOVERED / DIMENSIONS_VERIFIED / POSTERIOR_MASK_NOT_YET_AUTHORED'
+            status = 'EXACT_PRIVATE_GIT_BLOB_RECOVERED / MAIN_BLOB_DIMENSIONS_VERIFIED / POSTERIOR_MASK_NOT_YET_AUTHORED'
             repository = 'thebrazenbeard/selfimage'
             ref = 'main'
             path = 'ChatGPT Image Aug 18, 2026, 07_05_06 AM.png'
@@ -61,6 +66,7 @@ jobs:
             sha256 = $sha256
             width = $width
             height = $height
+            supersedes_dimension_assumption = '1024x1536 historical companion-asset inference does not describe this exact main-branch blob'
           }
           $receipt | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath (Join-Path $outDir 'AUG18_EXACT_SOURCE_RECOVERY_RECEIPT.json') -Encoding UTF8
           $receipt | ConvertTo-Json -Depth 10
