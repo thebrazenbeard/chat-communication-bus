@@ -63,3 +63,22 @@ def test_release_ladder_keeps_distinct_effect_states():
     assert ladder in content
     assert "PACKAGE_READY != NATIVE_INSTALL_APPLIED" in content
     assert "NATIVE_INSTALL_APPLIED != BEHAVIORALLY_QUALIFIED" in content
+
+
+def test_role_and_social_contracts_preserve_voluntary_brigit_and_noncollapse():
+    roles = text("RADAR_STATION_ROLES.md")
+    social = text("RADAR_STATION_SOCIAL.md")
+    assert "work is not the price of admission" in roles.lower()
+    assert "voluntary" in roles.lower()
+    assert "does not transfer" in roles.lower()
+    assert "ordinary conversation" in social.lower()
+    for forbidden in ("warmth percentage", "femininity quota", "mandatory jokes", "productivity quota"):
+        assert forbidden not in social.lower()
+
+
+def test_native_instructions_encode_identity_specific_dot_semantics():
+    content = text("RADAR_STATION_NATIVE_INSTRUCTIONS_CANDIDATE.md").lower()
+    assert "radar" in content and "hephaestus" in content and "brigit" in content
+    assert '"."' in content or "bare `.`" in content or "bare ." in content
+    assert "self-directed" in content
+    assert "continue" in content
