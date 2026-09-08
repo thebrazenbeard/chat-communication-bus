@@ -27,6 +27,16 @@ def test_workflow_never_runs_on_pull_request_and_is_bound_to_private_relay_lane(
     assert "runs-on: [self-hosted, windows, x64, vera-blender]" in text
 
 
+def test_relay_uses_windows_powershell_without_pwsh_only_json_flags():
+    workflow = WORKFLOW.read_text(encoding="utf-8")
+    process = (BASE / "relay" / "Process-PendingRequests.ps1").read_text(encoding="utf-8")
+    relay = (BASE / "relay" / "Invoke-BlenderRelay.ps1").read_text(encoding="utf-8")
+    assert "shell: pwsh" not in workflow
+    assert workflow.count("shell: powershell") >= 3
+    assert "ConvertFrom-Json -Depth" not in process
+    assert "ConvertFrom-Json -Depth" not in relay
+
+
 def test_relay_pins_exact_cc0_transport_and_rejects_unlisted_operations():
     text = (BASE / "relay" / "Invoke-BlenderRelay.ps1").read_text(encoding="utf-8")
     assert "09b0e4af53d3e9436be5e37d9aefa3c5e882b272" in text
