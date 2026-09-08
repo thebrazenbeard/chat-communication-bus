@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$RemovalToken,
+    [string]$Repo = 'thebrazenbeard/chat-communication-bus',
     [string]$RunnerDir = "$env:USERPROFILE\vera-blender-runner",
     [switch]$KeepFiles
 )
@@ -23,25 +23,35 @@ foreach ($proc in $running) {
 
 $config = Join-Path $RunnerDir 'config.cmd'
 if (Test-Path -LiteralPath (Join-Path $RunnerDir '.runner')) {
-    if ([string]::IsNullOrWhiteSpace($RemovalToken)) {
-        $RemovalToken = Read-Host 'Paste a fresh GitHub self-hosted runner removal token (or press Enter to leave GitHub registration intact)'
-    }
-    if (-not [string]::IsNullOrWhiteSpace($RemovalToken)) {
+    $gh = Get-Command gh -ErrorAction SilentlyContinue
+    if (-not $gh) {
+        Write-Warning 'GitHub CLI is unavailable; local startup is disabled but the GitHub runner registration cannot be removed automatically.'
+    } else {
+        & $gh.Source auth status --hostname github.com 2>$null
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host 'GitHub login is required once to request the short-lived runner removal token.'
+            & $gh.Source auth login --hostname github.com --git-protocol https --web
+            if ($LASTEXITCODE -ne 0) { throw 'GitHub authentication failed; local startup is disabled but GitHub runner registration remains.' }
+        }
+
+        $removalToken = (& $gh.Source api --method POST "repos/$Repo/actions/runners/remove-token" --jq '.token').Trim()
+        if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($removalToken)) {
+            throw 'Could not obtain a short-lived GitHub runner removal token.'
+        }
         Push-Location $RunnerDir
         try {
-            & $config remove --unattended --token $RemovalToken
+            & $config remove --unattended --token $removalToken
             if ($LASTEXITCODE -ne 0) { throw "GitHub runner removal failed with exit code $LASTEXITCODE." }
         } finally {
             Pop-Location
+            $removalToken = $null
         }
-    } else {
-        Write-Warning 'Local startup was disabled, but GitHub runner registration was not removed because no removal token was supplied.'
     }
 }
 
 if (-not $KeepFiles -and (Test-Path -LiteralPath $RunnerDir)) {
     if (Test-Path -LiteralPath (Join-Path $RunnerDir '.runner')) {
-        Write-Warning "Runner files were kept because registration state still exists at '$RunnerDir'."
+        Write-Warning "Runner files were kept because GitHub registration state still exists at '$RunnerDir'."
     } else {
         Remove-Item -LiteralPath $RunnerDir -Recurse -Force
         Write-Host "Removed runner directory '$RunnerDir'."
