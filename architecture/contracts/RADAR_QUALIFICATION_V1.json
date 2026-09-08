@@ -10,11 +10,15 @@
     "receipt_validator": "scripts/radar_validate_qualification_receipt.py",
     "operator_contract": "docs/operator/RADAR_NO_PAID_QUALIFICATION.md",
     "receipt_required_for_green": true,
+    "receipt_schema_version": 2,
     "receipt_location": "EXTERNAL_TO_SOURCE_CHECKOUT",
     "receipt_binding": [
       "source_commit",
       "source_tree",
-      "working_tree"
+      "working_tree",
+      "toolchain",
+      "stages",
+      "stage_evidence_sha256"
     ],
     "required_working_tree": "CLEAN",
     "required_toolchain": {
@@ -38,7 +42,37 @@
       "supabase_db_reset",
       "all_radar_sql_assertions",
       "supabase_local_stop"
-    ]
+    ],
+    "required_stage_instances": [
+      "python_compileall:3.11",
+      "python_pytest:3.11",
+      "radar_source_hashes:3.11",
+      "python_compileall:3.12",
+      "python_pytest:3.12",
+      "radar_source_hashes:3.12",
+      "deno_ci",
+      "deno_check",
+      "supabase_local_start",
+      "supabase_db_reset",
+      "all_radar_sql_assertions",
+      "supabase_local_stop"
+    ],
+    "stage_evidence": {
+      "required": true,
+      "ordinal_base": 1,
+      "digest": "SHA-256_CANONICAL_JSON",
+      "canonical_json": "UTF-8 JSON array, sort_keys=true, separators=[comma,colon], no surrounding whitespace",
+      "required_fields": [
+        "ordinal",
+        "stage_id",
+        "started_at_utc",
+        "completed_at_utc",
+        "exit_code",
+        "executable",
+        "stdout_sha256",
+        "stderr_sha256"
+      ]
+    }
   },
   "github_actions": {
     "private_hosted_actions_authoritative": false,
@@ -48,5 +82,5 @@
     "public_hosted_actions_constraint": "Only deliberately public, non-secret, non-sensitive verification payloads may use public hosted Actions. Private source must not be mirrored public merely to obtain free CI."
   },
   "latest_qualification_receipt": null,
-  "promotion_rule": "Do not classify Radar source GREEN until an authoritative local PASS receipt stored outside the source checkout binds the exact candidate commit and tree and passes scripts/radar_validate_qualification_receipt.py against that same clean checkout."
+  "promotion_rule": "Do not classify Radar source GREEN until an authoritative local PASS receipt schema V2 stored outside the source checkout proves the exact required stage sequence and toolchain, binds the exact candidate commit/tree, and passes scripts/radar_validate_qualification_receipt.py against that same clean checkout."
 }
