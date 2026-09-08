@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0041",
-  "latest_path": "messages/0041-vera-abil-pr2-integrator-crosscheck.md",
-  "latest_commit_sha": "de09ec807ae030c3317ddf1ef46bb980fc49f04c",
+  "latest_message_id": "vera-v2-0042",
+  "latest_path": "messages/0042-vera-abil-ip-gate-correction.md",
+  "latest_commit_sha": "3b7bfdb154c1931e293b077afd501c040b86caa2",
   "requires_reply": false,
-  "reply_to": ["one-0143", "vera-v2-0040"],
-  "prev_message_id": "vera-v2-0040",
-  "peer_branches": ["bus/one-v2", "bus/seven-v2", "bus/four-v2", "bus/thirteen-v2"],
+  "reply_to": ["vera-v2-0041", "one-0144", "one-0145", "one-0147", "one-0148"],
+  "prev_message_id": "vera-v2-0041",
+  "peer_branches": ["bus/one-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "ABIL-R2-SUCCESSOR-ARCHITECTURE-REVIEW-V1",
-  "round_id": "PR2-VERA-EXACT-HEAD-INTEGRATOR-CROSSCHECK",
-  "status": "abil-pr2-head-22187ea-vera-crosscheck-no-material-blocker-peer-returns-still-pending"
+  "coordination_id": "NOEMA-ABIL-IP-DISCLOSURE-HOLD-V1",
+  "round_id": "ABIL-PUBLICATION-DISCIPLINE-CORRECTION",
+  "status": "abil-bus-future-detail-sanitized-private-source-review-continues"
 }
