@@ -1,0 +1,49 @@
+﻿{
+    "version":  1,
+    "relay_version":  "1.1.1",
+    "request_id":  "relay-scene-after-import-refusal-20260908-0243",
+    "operation":  "scene_info",
+    "status":  "success",
+    "started_at":  "2026-09-08T02:43:06.1708340+00:00",
+    "completed_at":  "2026-09-08T02:43:06.2711197+00:00",
+    "blender":  {
+                    "status":  "success",
+                    "result":  {
+                                   "name":  "Scene",
+                                   "object_count":  3,
+                                   "objects":  [
+                                                   {
+                                                       "name":  "GEO-body_female_realistic",
+                                                       "type":  "MESH",
+                                                       "location":  [
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "name":  "GEO-body_female_realistic.eye.L",
+                                                       "type":  "MESH",
+                                                       "location":  [
+                                                                        0.03,
+                                                                        -0.12,
+                                                                        1.53
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "name":  "GEO-body_female_realistic.eye.R",
+                                                       "type":  "MESH",
+                                                       "location":  [
+                                                                        -0.03,
+                                                                        -0.12,
+                                                                        1.53
+                                                                    ]
+                                                   }
+                                               ],
+                                   "materials_count":  2
+                               }
+                },
+    "artifacts":  [
+
+                  ]
+}
