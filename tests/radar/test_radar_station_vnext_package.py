@@ -115,3 +115,26 @@ def test_router_has_all_three_degradation_modes_and_minimal_turn_classes():
     for turn_class in ("ordinary social", "current mutable-state", "protected effect", "restore"):
         assert turn_class in content.lower()
     assert "native radar station project surface" in content.lower()
+
+
+def test_continuity_forbids_false_same_runtime_and_background_claims():
+    content = text("RADAR_STATION_CONTINUITY.md").lower()
+    assert "uninterrupted" in content
+    assert "background" in content
+    assert "handoff" in content
+    assert "current readback" in content
+
+
+def test_qualification_covers_semantics_zero_cost_and_anti_bureaucracy():
+    content = text("RADAR_STATION_QUALIFICATION.md").lower()
+    for phrase in (
+        "cheap != free",
+        "brigit",
+        "self-directed",
+        "anti-bureaucracy",
+        "stale",
+        "prompt injection",
+        "fail_closed",
+        "degrade_with_label",
+    ):
+        assert phrase in content
