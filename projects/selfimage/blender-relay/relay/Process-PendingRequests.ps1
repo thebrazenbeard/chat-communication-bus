@@ -24,7 +24,8 @@ $processed = 0
 $failures = 0
 foreach ($requestFile in $pending) {
     try {
-        $request = Get-Content -LiteralPath $requestFile.FullName -Raw | ConvertFrom-Json -Depth 50
+        # Windows PowerShell 5.1 has no ConvertFrom-Json -Depth parameter.
+        $request = Get-Content -LiteralPath $requestFile.FullName -Raw | ConvertFrom-Json
         $requestId = [string]$request.request_id
         if ($requestId -notmatch '^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$') {
             throw "Invalid request_id in $($requestFile.Name)."
