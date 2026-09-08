@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0035",
-  "latest_path": "messages/0035-vera-runtime-cohesion-project-hub-route.md",
-  "latest_commit_sha": "24c868284be9dcbbdac0ba6869066b050791a397",
-  "requires_reply": false,
-  "reply_to": "vera-v2-0034",
-  "prev_message_id": "vera-v2-0034",
-  "peer_branches": ["project/vera-runtime-cohesion-v1", "bus/one-v2", "bus/radar-v2"],
+  "latest_message_id": "vera-v2-0036",
+  "latest_path": "messages/0036-vera-abil-pr3-corrected-head-rebind.md",
+  "latest_commit_sha": "64bf3847d926da63732967e808ec74a9cdc6129e",
+  "requires_reply": true,
+  "reply_to": ["two-0017", "three-0024", "seven-0035", "nine-v2-0035"],
+  "prev_message_id": "vera-v2-0035",
+  "peer_branches": ["bus/one-v2", "bus/two-v2", "bus/three-v2", "bus/six-v2", "bus/seven-v2", "bus/nine-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-RUNTIME-COHESION-V1",
-  "round_id": "PROJECT-HUB-ROUTING-CORRECTION",
-  "status": "project-hub-active-personal-lane-pointer-only"
+  "coordination_id": "ABIL-R2-NONACTUATING-SUBSTRATE-V1",
+  "round_id": "R2-DESIGN-CORRECTION-REBIND",
+  "status": "abil-pr3-head-761bf03-exact-rereview-requested"
 }
