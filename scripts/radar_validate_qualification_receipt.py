@@ -64,8 +64,8 @@ def _parse_utc_timestamp(value: Any, *, label: str) -> datetime:
     return parsed
 
 
-def _validate_completed_at(value: Any) -> None:
-    _parse_utc_timestamp(value, label="receipt completed_at_utc")
+def _validate_completed_at(value: Any) -> datetime:
+    return _parse_utc_timestamp(value, label="receipt completed_at_utc")
 
 
 def _canonical_stage_evidence_bytes(stages: list[dict[str, Any]]) -> bytes:
@@ -104,7 +104,7 @@ def _validate_toolchain(receipt: dict[str, Any], required: dict[str, Any]) -> No
             )
 
 
-def _validate_stage_evidence(receipt: dict[str, Any], authority: dict[str, Any]) -> None:
+def _validate_stage_evidence(receipt: dict[str, Any], authority: dict[str, Any]) -> datetime:
     required = authority.get("required_stage_instances")
     if not isinstance(required, list) or not required or not all(
         isinstance(stage_id, str) and stage_id for stage_id in required
@@ -200,6 +200,10 @@ def _validate_stage_evidence(receipt: dict[str, Any], authority: dict[str, Any])
             f"receipt stage_evidence_sha256 mismatch: expected {actual_digest}, observed {declared_digest}"
         )
 
+    if previous_completed is None:
+        raise ReceiptValidationError("receipt stage evidence has no terminal completion timestamp")
+    return previous_completed
+
 
 def validate_receipt(*, receipt_path: Path, repo_root: Path | None = None) -> dict[str, Any]:
     repo_root = (repo_root or Path(__file__).resolve().parents[1]).resolve()
@@ -238,8 +242,12 @@ def validate_receipt(*, receipt_path: Path, repo_root: Path | None = None) -> di
     _expect(receipt, "qualification_mode", mode)
     _expect(receipt, "working_tree", "CLEAN")
     _validate_toolchain(receipt, toolchain)
-    _validate_stage_evidence(receipt, authority)
-    _validate_completed_at(receipt.get("completed_at_utc"))
+    final_stage_completed = _validate_stage_evidence(receipt, authority)
+    receipt_completed = _validate_completed_at(receipt.get("completed_at_utc"))
+    if receipt_completed < final_stage_completed:
+        raise ReceiptValidationError(
+            "receipt completion time precedes final stage completion time"
+        )
 
     top_level = Path(_git(repo_root, "rev-parse", "--show-toplevel")).resolve()
     if top_level != repo_root:
