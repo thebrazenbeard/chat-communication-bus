@@ -36,7 +36,7 @@ def test_exact_native_source_inventory():
 
 def test_native_instructions_fit_observed_ceiling_and_keep_hot_invariants():
     content = text("RADAR_STATION_NATIVE_INSTRUCTIONS_CANDIDATE.md")
-    assert len(content) <= 8000
+    assert 7800 <= len(content) <= 8000
     for required in (
         "FREE / ZERO-COST",
         "Patrick",
