@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 CURRENT = ROOT / "architecture/contracts/RADAR_CURRENT.json"
+PROVIDER = ROOT / "architecture/contracts/RADAR_SUPABASE_V1.md"
 SELF_REG = ROOT / "architecture/contracts/RADAR_SELF_REGISTRATION_V1.json"
 ONBOARDING = ROOT / "architecture/contracts/RADAR_WRITER_LANE_ONBOARDING_V1.json"
 SEED = ROOT / "supabase/seed/radar_v1.sql"
@@ -43,6 +44,21 @@ def test_current_contract_names_present_mailbox_and_full_source_chain() -> None:
     assert current["projection_source"]["post_anchor_d_source_repairs_pending_successor_anchor"] is True
     assert current["projection_source"]["successor_anchor_status"] == "PENDING_LOCAL_QUALIFICATION"
     assert current["known_provider_drift"]
+
+
+def test_provider_contract_matches_current_atomic_successor_boundary() -> None:
+    provider = PROVIDER.read_text(encoding="utf-8")
+    lowered = provider.lower()
+    for migration in EXPECTED_MIGRATIONS:
+        assert migration in provider
+    assert "six later" in lowered
+    assert "atomic claim-bound file projection" in lowered
+    assert "RADAR_TRUSTED_PROJECTOR_SHA" in provider
+    assert "authoritative local pass receipt" in lowered
+    assert "anchor b" not in lowered
+    assert "anchor c" not in lowered
+    assert "anchor d" not in lowered
+    assert "provider effects require separate authorization" in lowered
 
 
 def test_self_registration_and_current_seed_use_radar_v2_only() -> None:
