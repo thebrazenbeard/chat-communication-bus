@@ -109,7 +109,10 @@ class FakeRunner:
         if command[:2] == ["py", "-3.12"] and "import sys" in joined:
             return self._result(command, stdout=b"3.12\n")
         if command[:2] == ["deno", "--version"]:
-            return self._result(command, stdout=b"deno 2.9.6\nv8 fixture\ntypescript fixture\n")
+            return self._result(
+                command,
+                stdout=b"deno 2.9.6 (stable, release, x86_64-pc-windows-msvc)\nv8 fixture\ntypescript fixture\n",
+            )
         if command[:2] == ["supabase", "--version"]:
             return self._result(command, stdout=b"2.116.0\n")
         if command[:2] == ["docker", "info"]:
