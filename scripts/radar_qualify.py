@@ -564,17 +564,25 @@ def qualify(
             shutil.rmtree(path, ignore_errors=True)
 
 
+def _absolute_receipt_path(value: str) -> Path:
+    path = Path(value)
+    if not path.is_absolute():
+        raise argparse.ArgumentTypeError("receipt path must be absolute")
+    return path
+
+
 def _build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Run the authoritative no-paid Radar qualification engine for the current Windows profile."
+        description="Run the authoritative no-paid Radar qualification engine for the current Windows profile.",
+        allow_abbrev=False,
     )
     parser.add_argument(
         "--receipt-path",
-        "-ReceiptPath",
         dest="receipt_path",
         required=True,
+        type=_absolute_receipt_path,
         metavar="PATH",
-        help="External path where the schema-V2 qualification receipt will be written.",
+        help="Absolute external path where the schema-V2 qualification receipt will be written.",
     )
     return parser
 

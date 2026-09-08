@@ -5,7 +5,7 @@
   "policy": "NO_PAID_SERVICES",
   "authoritative_qualification": {
     "mode": "LOCAL_NO_PAID_SERVICES",
-    "platform": "windows_powershell",
+    "platform": "windows",
     "engine": "scripts/radar_qualify.py",
     "windows_launcher": "scripts/radar_local_qualify.ps1",
     "runner": "scripts/radar_local_qualify.ps1",
@@ -75,7 +75,8 @@
         "stdout_sha256",
         "stderr_sha256"
       ]
-    }
+    },
+    "launcher_identity_evidentiary": false
   },
   "github_actions": {
     "private_hosted_actions_authoritative": false,

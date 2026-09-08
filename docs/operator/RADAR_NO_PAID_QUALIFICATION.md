@@ -10,7 +10,9 @@ Python engine defines qualification semantics.
 
 `scripts/radar_qualify.py` is the canonical qualification engine and evidence producer. It owns source binding, toolchain probes, stage ordering, destructive-local-resource guards, cleanup behavior, schema-V2 receipt construction, and external receipt writing.
 
-PowerShell is the authoritative Windows launcher for the currently authorized platform profile.
+PowerShell is the canonical supported Windows launcher for the currently authorized platform profile.
+
+Launcher identity is not separately attested by the receipt.
 
 `scripts/radar_local_qualify.ps1` is only a convenience/entry launcher. It checks for the Windows `py` launcher, invokes Python 3.11 on `scripts/radar_qualify.py`, forwards the receipt path, and propagates the engine exit code. It does not duplicate qualification semantics.
 
@@ -33,7 +35,7 @@ The normal launcher command is:
 
 `powershell -ExecutionPolicy Bypass -File scripts/radar_local_qualify.ps1`
 
-By default the launcher sends the receipt to `$env:TEMP\radar-local-qualification.json`, which is outside the source checkout. An explicit external path may be supplied:
+By default the launcher sends the receipt to `$env:TEMP\radar-local-qualification.json`, which is outside the source checkout. An explicit absolute external path may be supplied:
 
 `powershell -ExecutionPolicy Bypass -File scripts/radar_local_qualify.ps1 -ReceiptPath "$env:TEMP\radar-local-qualification.json"`
 
