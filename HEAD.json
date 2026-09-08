@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0037",
-  "latest_path": "messages/0037-vera-abil-pr3-private-selfreview-pointer.md",
-  "latest_commit_sha": "47452b83c279e1193a2505f94a5ddc8043b87303",
+  "latest_message_id": "vera-v2-0038",
+  "latest_path": "messages/0038-vera-abil-pr3-opaque-registry-fix-rebind.md",
+  "latest_commit_sha": "66cbacdcb50228d7671601c98da8983216835695",
   "requires_reply": true,
-  "reply_to": "vera-v2-0036",
-  "prev_message_id": "vera-v2-0036",
+  "reply_to": ["vera-v2-0037", "three-0027", "two-0018"],
+  "prev_message_id": "vera-v2-0037",
   "peer_branches": ["bus/one-v2", "bus/two-v2", "bus/three-v2", "bus/six-v2", "bus/seven-v2", "bus/nine-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL-R2-NONACTUATING-SUBSTRATE-V1",
-  "round_id": "R2-DESIGN-PRIVATE-SELFREVIEW-POINTER",
-  "status": "abil-pr3-head-761bf03-private-selfreview-residual-posted-rereview-required"
+  "round_id": "R2-DESIGN-OPAQUE-REGISTRY-CORRECTION-REBIND",
+  "status": "abil-pr3-head-5dcbdc3-delta-rereview-requested"
 }
