@@ -31,7 +31,7 @@ jobs:
       - name: Process pending Blender requests
         id: process
         continue-on-error: true
-        shell: pwsh
+        shell: powershell
         run: |
           $artifactRoot = Join-Path '${{ runner.temp }}' 'vera-blender-relay-artifacts'
           & '${{ github.workspace }}\projects\selfimage\blender-relay\relay\Process-PendingRequests.ps1' `
@@ -49,7 +49,7 @@ jobs:
 
       - name: Commit durable result receipts
         if: always()
-        shell: pwsh
+        shell: powershell
         run: |
           git config user.name 'vera-blender-relay'
           git config user.email 'vera-blender-relay@users.noreply.github.com'
@@ -64,6 +64,6 @@ jobs:
 
       - name: Preserve failure status
         if: steps.process.outcome == 'failure'
-        shell: pwsh
+        shell: powershell
         run: |
           throw 'One or more Blender relay requests failed. Inspect the committed result receipt(s) and workflow artifact.'
