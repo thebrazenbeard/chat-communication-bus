@@ -8,7 +8,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$RelayVersion = '1.0.0'
+$RelayVersion = '1.1.0'
 $HostName = '127.0.0.1'
 $Port = 9876
 $AllowedOperations = @(
@@ -19,6 +19,7 @@ $AllowedOperations = @(
     'world_state',
     'viewport_capture',
     'mesh_audit',
+    'scene_audit_v1',
     'import_exact_cc0',
     'save_blend_copy',
     'export_scene_glb'
@@ -30,6 +31,9 @@ $ExactCc0 = @{
     Sha256 = '835d2bf3b55f7e7249bc8fbaa98f40d51e88c7fde55653884d67e6bdd658c8e0'
     GitBlobSha1 = 'df189d7ff267ab47fd6069232395401391399868'
 }
+
+$RelayRoot = Split-Path -Parent $PSScriptRoot
+$ApprovedSceneAudit = Join-Path $RelayRoot 'approved-scripts\selfimage_blender_scene_audit_v1.py'
 
 function Write-JsonFile {
     param([Parameter(Mandatory=$true)]$Object, [Parameter(Mandatory=$true)][string]$Path)
@@ -64,7 +68,11 @@ function Send-BlenderCommand {
     $client.ReceiveTimeout = $TimeoutMs
     $client.SendTimeout = $TimeoutMs
     try {
-        $client.Connect($HostName, $Port)
+        $async = $client.BeginConnect($HostName, $Port, $null, $null)
+        if (-not $async.AsyncWaitHandle.WaitOne([Math]::Min($TimeoutMs, 5000))) {
+            throw "Timed out connecting to Blender MCP at ${HostName}:$Port."
+        }
+        $client.EndConnect($async)
         $stream = $client.GetStream()
         $payload = @{ type = $Type; params = $Params } | ConvertTo-Json -Compress -Depth 50
         $outBytes = [System.Text.Encoding]::UTF8.GetBytes($payload)
@@ -102,7 +110,7 @@ function Invoke-FixedBlenderPython {
 function Assert-SafeRequestId {
     param([Parameter(Mandatory=$true)][string]$RequestId)
     if ($RequestId -notmatch '^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$') {
-        throw "Invalid request_id."
+        throw 'Invalid request_id.'
     }
 }
 
@@ -188,6 +196,13 @@ for obj in bpy.context.scene.objects:
     payload["objects"].append(row)
 print(json.dumps(payload, sort_keys=True))
 '@
+            $blenderResponse = Invoke-FixedBlenderPython -Code $code
+        }
+        'scene_audit_v1' {
+            if (-not (Test-Path -LiteralPath $ApprovedSceneAudit)) {
+                throw 'Approved Self Image scene audit script is missing from the checked-out relay source.'
+            }
+            $code = Get-Content -LiteralPath $ApprovedSceneAudit -Raw
             $blenderResponse = Invoke-FixedBlenderPython -Code $code
         }
         'import_exact_cc0' {
