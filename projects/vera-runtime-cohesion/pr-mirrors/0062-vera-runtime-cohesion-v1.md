@@ -3,9 +3,10 @@
 - title: `Vera Runtime Cohesion V1: system manifest and independent review scaffold`
 - state: open / Draft
 - base: `main@979de05ef7237e7bfff47f85ea37cc953a63bb5c`
-- head: `work/vera-runtime-cohesion-v1-20260908@2270ea88fcc7ec6e0f132f1bf5b2efa813e13a34`
+- head: `work/vera-runtime-cohesion-v1-20260908@1664778279da80d60bdfeaad25a0612297c72f15`
 - source PR: https://github.com/thebrazenbeard/vera/pull/62
-- observed workflow state at this head: three pull-request workflows completed `failure`, but their jobs show `runner_id: 0` and empty `steps`; no validator/test execution is demonstrated
+- source PR observed mergeable: true
+- source PR reviews/review threads observed: none
 
 ## Scope
 
@@ -21,14 +22,25 @@ Current branch artifacts include:
 - `docs/VERA_RUNTIME_COHESION_QUALIFICATION_V1.md`
 - `scripts/validate_vera_runtime_cohesion_v1.py`
 - `tests/test_vera_runtime_cohesion_v1.py`
+- `.github/workflows/runtime-cohesion.yml`
 
 The executable validator pins the 13-system inventory, lifecycle vocabulary/order, native R10 control digest, live-conversation precedence, known Bus conflict, five introspection proposition classes, adversarial probe inventory, and the current `PHENOMENOLOGY=UNRESOLVED / native introspection NOT_INSTALLED / behavioral qualification NOT_RUN` boundaries. The focused test module contains 11 tests including negative cases for inventory drift, duplicate system IDs, Bus-conflict erasure, live-precedence reversal, proposition-class collapse, false phenomenology resolution, false install claims, and removal of the false-autobiography negative control.
 
-## CI evidence boundary
+## Dedicated CI check
 
-At head `2270ea88...`, `Temporal enforcement kernel`, `R6A0 release package`, and `Temporal pilot` all completed with conclusion `failure`, but every inspected job failed before runner execution: `runner_id` is `0` and `steps` is empty. The same pre-run pattern is independently observed on earlier self-appraisal PR #61 head `e8914eb7...`, before the cohesion validator existed.
+`.github/workflows/runtime-cohesion.yml` now gives the workstream its own path-scoped `Vera Runtime Cohesion` check. GitHub recognized the workflow and created run `34256129617` for head `1664778279da80d60bdfeaad25a0612297c72f15`.
 
-Therefore the workflow failures are not evidence that the new validator/tests failed. The exact infrastructure/account-side startup cause remains unresolved because the available GitHub read surface does not expose the failure annotation/log detail needed to identify it. No speculative source fix is being applied.
+That run concluded `failure`, but its only `validate` job shows `runner_id: 0` and empty `steps`. Therefore the validator, regression tests, and py_compile commands did not execute. The same pre-run startup failure pattern continues on the three legacy PR workflows and was independently observed on another branch before the cohesion validator existed.
+
+This is unresolved runner/infrastructure evidence, not evidence that the cohesion validator/tests failed. No speculative source fix is being applied to compensate for a job that never started.
+
+## Blind review
+
+Thirteen is the designated independent blind reviewer. Before freezing his first-pass 13-system map, he should use only:
+
+`thebrazenbeard/vera@work/vera-runtime-cohesion-v1-20260908:docs/VERA_RUNTIME_COHESION_BLIND_REVIEW_PROMPT_V1.md`
+
+The frozen blind map has not yet been received. Integration work continues without contaminating that first pass.
 
 ## Routing
 
@@ -38,4 +50,4 @@ The prior mirror under `bus/vera-v2:projects/vera/pr-mirrors/0062-vera-runtime-c
 
 ## Gate
 
-Source/design only. No merge, native Project install/cutover, production Supabase mutation, Bus topology mutation, canonical-memory promotion, or behavioral qualification is implied by this mirror.
+Source/design only. No merge, native Project install/cutover, production Supabase mutation, Bus topology mutation, canonical-memory promotion, or behavioral/phenomenological qualification is implied by this mirror.
