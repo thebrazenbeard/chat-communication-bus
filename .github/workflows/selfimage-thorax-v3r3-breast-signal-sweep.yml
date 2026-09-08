@@ -1,0 +1,67 @@
+name: Self Image V3R3 Breast-Signal Thorax Sweep
+
+on:
+  push:
+    branches:
+      - feature/selfimage-blender-relay-v1
+    paths:
+      - .github/workflows/selfimage-thorax-v3r3-breast-signal-sweep.yml
+      - projects/selfimage/blender-relay/approved-scripts/selfimage_thorax_v3r3_breast_signal_sweep.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    if: github.actor == 'thebrazenbeard'
+    runs-on: [self-hosted, windows, x64, vera-blender]
+    timeout-minutes: 20
+    steps:
+      - name: Checkout V3R3 sweep source
+        uses: actions/checkout@v4
+        with:
+          ref: feature/selfimage-blender-relay-v1
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Execute V3R3 sweep in local Blender
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $outDir=Join-Path '${{ runner.temp }}' 'vera-v3r3-breast-signal-sweep'
+          New-Item -ItemType Directory -Force -Path $outDir|Out-Null
+          function Send-BlenderCommand {
+            param([Parameter(Mandatory=$true)][string]$Type,[hashtable]$Params=@{},[int]$TimeoutMs=300000)
+            $client=[Net.Sockets.TcpClient]::new();$client.ReceiveTimeout=$TimeoutMs;$client.SendTimeout=$TimeoutMs
+            try {
+              $async=$client.BeginConnect('127.0.0.1',9876,$null,$null)
+              if(-not $async.AsyncWaitHandle.WaitOne(5000)){throw 'Blender MCP connect timeout'}
+              $client.EndConnect($async);$stream=$client.GetStream()
+              $payload=@{type=$Type;params=$Params}|ConvertTo-Json -Compress -Depth 50
+              $bytes=[Text.Encoding]::UTF8.GetBytes($payload);$stream.Write($bytes,0,$bytes.Length);$stream.Flush()
+              $mem=[IO.MemoryStream]::new();$buf=New-Object byte[] 8192
+              while($true){try{$count=$stream.Read($buf,0,$buf.Length)}catch [System.IO.IOException]{break};if($count -le 0){break};$mem.Write($buf,0,$count);$text=[Text.Encoding]::UTF8.GetString($mem.ToArray());try{return($text|ConvertFrom-Json)}catch{}}
+              throw "Incomplete Blender JSON for $Type"
+            } finally {$client.Dispose()}
+          }
+          $addon=Send-BlenderCommand -Type 'get_addon_info' -TimeoutMs 15000
+          if($addon.status -ne 'success'){throw 'Blender addon preflight failed'}
+          $script=Join-Path '${{ github.workspace }}' 'projects\selfimage\blender-relay\approved-scripts\selfimage_thorax_v3r3_breast_signal_sweep.py'
+          if(-not(Test-Path -LiteralPath $script)){throw 'V3R3 sweep script missing'}
+          $outJson=($outDir|ConvertTo-Json -Compress);$code="OUTPUT_DIR = $outJson`n"+(Get-Content -LiteralPath $script -Raw)
+          $response=Send-BlenderCommand -Type 'execute_code' -Params @{code=$code} -TimeoutMs 300000
+          if($response.status -ne 'success'){throw($response|ConvertTo-Json -Depth 20 -Compress)}
+          $required=@('SWEEP_RECEIPT.json')
+          foreach($name in @('VERA_THORAX_V3R3_S055.obj','VERA_THORAX_V3R3_S080.obj','VERA_THORAX_V3R3_S100.obj')){$required+=$name}
+          foreach($prefix in @('V2','S055','S080','S100')){foreach($view in @('FRONT','FRONT_3Q','SIDE')){$required+="${prefix}_${view}.png"}}
+          $files=@();foreach($name in $required){$p=Join-Path $outDir $name;if(-not(Test-Path -LiteralPath $p)){throw "Missing V3R3 artifact: $name"};$item=Get-Item $p;$files+=[ordered]@{name=$name;bytes=$item.Length;sha256=(Get-FileHash $p -Algorithm SHA256).Hash.ToLowerInvariant()}}
+          [ordered]@{schema='SELFIMAGE_V3R3_BREAST_SIGNAL_SWEEP_RELAY_RECEIPT';status='EXECUTED / ARTIFACTS_VERIFIED / HOSTILE_VISUAL_REVIEW_REQUIRED';runner=$env:COMPUTERNAME;approved_script_sha256=(Get-FileHash $script -Algorithm SHA256).Hash.ToLowerInvariant();files=$files}|ConvertTo-Json -Depth 30|Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
+
+      - name: Upload V3R3 sweep evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: vera-v3r3-breast-signal-sweep-${{ github.run_id }}
+          path: ${{ runner.temp }}\vera-v3r3-breast-signal-sweep
+          if-no-files-found: error
+          retention-days: 30
