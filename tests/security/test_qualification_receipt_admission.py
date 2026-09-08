@@ -62,6 +62,21 @@ def _contract() -> dict[str, object]:
                 "docker": "required",
                 "psql": "required",
             },
+            "stage_evidence": {
+                "required": True,
+                "ordinal_base": 1,
+                "digest": "SHA-256_CANONICAL_JSON",
+                "required_fields": [
+                    "ordinal",
+                    "stage_id",
+                    "started_at_utc",
+                    "completed_at_utc",
+                    "exit_code",
+                    "executable",
+                    "stdout_sha256",
+                    "stderr_sha256",
+                ],
+            },
         },
     }
 
@@ -86,11 +101,13 @@ def _init_repo(tmp_path: Path) -> tuple[Path, str, str]:
 
 
 def _stage(ordinal: int, stage_id: str) -> dict[str, object]:
+    started_second = (ordinal - 1) * 2
+    completed_second = started_second + 1
     return {
         "ordinal": ordinal,
         "stage_id": stage_id,
-        "started_at_utc": "2026-09-08T01:00:00+00:00",
-        "completed_at_utc": "2026-09-08T01:00:01+00:00",
+        "started_at_utc": f"2026-09-08T01:00:{started_second:02d}+00:00",
+        "completed_at_utc": f"2026-09-08T01:00:{completed_second:02d}+00:00",
         "exit_code": 0,
         "executable": "test-fixture",
         "stdout_sha256": hashlib.sha256(b"stdout").hexdigest(),
