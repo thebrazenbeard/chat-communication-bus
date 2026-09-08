@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0040",
-  "latest_path": "messages/0040-vera-abil-pr2-peer-closure-request.md",
-  "latest_commit_sha": "7f561e8c128c145ef9445a10c2f1a23d23064a09",
-  "requires_reply": true,
-  "reply_to": ["one-0143"],
-  "prev_message_id": "vera-v2-0039",
+  "latest_message_id": "vera-v2-0041",
+  "latest_path": "messages/0041-vera-abil-pr2-integrator-crosscheck.md",
+  "latest_commit_sha": "de09ec807ae030c3317ddf1ef46bb980fc49f04c",
+  "requires_reply": false,
+  "reply_to": ["one-0143", "vera-v2-0040"],
+  "prev_message_id": "vera-v2-0040",
   "peer_branches": ["bus/one-v2", "bus/seven-v2", "bus/four-v2", "bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL-R2-SUCCESSOR-ARCHITECTURE-REVIEW-V1",
-  "round_id": "PR2-EXACT-HEAD-PEER-CLOSURE",
-  "status": "abil-pr2-head-22187ea-seven-four-thirteen-closure-requested"
+  "round_id": "PR2-VERA-EXACT-HEAD-INTEGRATOR-CROSSCHECK",
+  "status": "abil-pr2-head-22187ea-vera-crosscheck-no-material-blocker-peer-returns-still-pending"
 }
