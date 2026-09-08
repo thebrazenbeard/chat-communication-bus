@@ -1,0 +1,19 @@
+﻿{
+    "version":  1,
+    "relay_version":  "1.1.1",
+    "request_id":  "vera-postimport-mesh-audit-20260908-0244",
+    "operation":  "mesh_audit",
+    "status":  "success",
+    "started_at":  "2026-09-08T02:44:39.3881000+00:00",
+    "completed_at":  "2026-09-08T02:44:39.4878153+00:00",
+    "blender":  {
+                    "status":  "success",
+                    "result":  {
+                                   "executed":  true,
+                                   "result":  "{\"active_object\": \"GEO-body_female_realistic\", \"objects\": [{\"color_attributes\": [], \"dimensions\": [0.8422614336013794, 0.28393885493278503, 1.639373779296875], \"edges\": 127020, \"location\": [0.0, 0.0, 0.0], \"loops\": 254040, \"materials\": [], \"modifiers\": [], \"name\": \"GEO-body_female_realistic\", \"polygons\": 84680, \"rotation_euler\": [0.0, 0.0, 0.0], \"scale\": [1.0, 1.0, 1.0], \"type\": \"MESH\", \"uv_layers\": [], \"vertices\": 42342}, {\"color_attributes\": [], \"dimensions\": [0.023998109623789787, 0.02389596402645111, 0.024022473022341728], \"edges\": 2720, \"location\": [0.03288137912750244, -0.1216067522764206, 1.5344409942626953], \"loops\": 3264, \"materials\": [], \"modifiers\": [], \"name\": \"GEO-body_female_realistic.eye.L\", \"polygons\": 1088, \"rotation_euler\": [0.0, 0.0, 0.0], \"scale\": [0.8616507053375244, 0.8616507053375244, 0.8616507053375244], \"type\": \"MESH\", \"uv_layers\": [], \"vertices\": 2176}, {\"color_attributes\": [], \"dimensions\": [0.02400452457368374, 0.023917371407151222, 0.02402246929705143], \"edges\": 2720, \"location\": [-0.03282523155212402, -0.12019778788089752, 1.5344384908676147], \"loops\": 3264, \"materials\": [], \"modifiers\": [], \"name\": \"GEO-body_female_realistic.eye.R\", \"polygons\": 1088, \"rotation_euler\": [0.0, 0.0, 0.0], \"scale\": [0.8616505861282349, 0.8616505861282349, 0.8616505861282349], \"type\": \"MESH\", \"uv_layers\": [], \"vertices\": 2176}], \"scene\": \"Scene\"}\n"
+                               }
+                },
+    "artifacts":  [
+
+                  ]
+}

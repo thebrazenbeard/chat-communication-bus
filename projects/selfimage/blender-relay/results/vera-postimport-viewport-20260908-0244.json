@@ -1,0 +1,26 @@
+﻿{
+    "version":  1,
+    "relay_version":  "1.1.1",
+    "request_id":  "vera-postimport-viewport-20260908-0244",
+    "operation":  "viewport_capture",
+    "status":  "success",
+    "started_at":  "2026-09-08T02:44:39.5304865+00:00",
+    "completed_at":  "2026-09-08T02:44:39.7376728+00:00",
+    "blender":  {
+                    "status":  "success",
+                    "result":  {
+                                   "success":  true,
+                                   "width":  783,
+                                   "height":  880,
+                                   "filepath":  "C:\\Users\\patri\\vera-blender-runner\\_work\\_temp\\vera-blender-relay-artifacts\\vera-postimport-viewport-20260908-0244\\viewport-vera-postimport-viewport-20260908-0244.png",
+                                   "method":  "offscreen"
+                               }
+                },
+    "artifacts":  [
+                      {
+                          "name":  "viewport-vera-postimport-viewport-20260908-0244.png",
+                          "bytes":  256947,
+                          "sha256":  "652e344468185b80853ce0672d1e698b40c560c78796134cf95abcc24500dd93"
+                      }
+                  ]
+}
