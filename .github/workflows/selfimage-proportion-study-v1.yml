@@ -1,0 +1,105 @@
+name: Self Image Proportion Study V1
+
+on:
+  push:
+    branches:
+      - feature/selfimage-blender-relay-v1
+    paths:
+      - .github/workflows/selfimage-proportion-study-v1.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  study:
+    if: github.actor == 'thebrazenbeard'
+    runs-on: [self-hosted, windows, x64, vera-blender]
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout fixed study source
+        uses: actions/checkout@v4
+        with:
+          ref: feature/selfimage-blender-relay-v1
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Execute fixed approved study in local Blender
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $outDir = Join-Path '${{ runner.temp }}' 'vera-proportion-study-v1'
+          New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+
+          function Send-BlenderCommand {
+            param([Parameter(Mandatory=$true)][string]$Type, [hashtable]$Params = @{}, [int]$TimeoutMs = 180000)
+            $client = [System.Net.Sockets.TcpClient]::new()
+            $client.ReceiveTimeout = $TimeoutMs
+            $client.SendTimeout = $TimeoutMs
+            try {
+              $async = $client.BeginConnect('127.0.0.1', 9876, $null, $null)
+              if (-not $async.AsyncWaitHandle.WaitOne(5000)) { throw 'Timed out connecting to Blender MCP at 127.0.0.1:9876.' }
+              $client.EndConnect($async)
+              $stream = $client.GetStream()
+              $payload = @{ type = $Type; params = $Params } | ConvertTo-Json -Compress -Depth 50
+              $bytes = [Text.Encoding]::UTF8.GetBytes($payload)
+              $stream.Write($bytes, 0, $bytes.Length)
+              $stream.Flush()
+              $memory = [IO.MemoryStream]::new()
+              $buffer = New-Object byte[] 8192
+              while ($true) {
+                try { $count = $stream.Read($buffer, 0, $buffer.Length) } catch [IO.IOException] { break }
+                if ($count -le 0) { break }
+                $memory.Write($buffer, 0, $count)
+                $text = [Text.Encoding]::UTF8.GetString($memory.ToArray())
+                try { return ($text | ConvertFrom-Json) } catch { }
+              }
+              throw "Blender did not return complete JSON for '$Type'."
+            } finally { $client.Dispose() }
+          }
+
+          $addon = Send-BlenderCommand -Type 'get_addon_info' -TimeoutMs 15000
+          if ($addon.status -ne 'success') { throw 'Blender addon preflight failed.' }
+
+          $scriptPath = Join-Path '${{ github.workspace }}' 'projects\selfimage\blender-relay\approved-scripts\selfimage_proportion_study_v1.py'
+          if (-not (Test-Path -LiteralPath $scriptPath)) { throw 'Approved proportion-study script missing.' }
+          $outJson = ($outDir | ConvertTo-Json -Compress)
+          $code = "OUTPUT_DIR = $outJson`n" + (Get-Content -LiteralPath $scriptPath -Raw)
+          $response = Send-BlenderCommand -Type 'execute_code' -Params @{ code = $code } -TimeoutMs 300000
+          if ($response.status -ne 'success') { throw ($response | ConvertTo-Json -Depth 20 -Compress) }
+
+          $required = @(
+            'BASELINE_FRONT.png','BASELINE_FRONT_3Q.png','BASELINE_SIDE.png','BASELINE_REAR_3Q.png','BASELINE_REAR.png',
+            'STUDY_FRONT.png','STUDY_FRONT_3Q.png','STUDY_SIDE.png','STUDY_REAR_3Q.png','STUDY_REAR.png',
+            'VERA_PROPORTION_STUDY_V1.blend','VERA_PROPORTION_STUDY_V1_METRICS.json'
+          )
+          $files = @()
+          foreach ($name in $required) {
+            $path = Join-Path $outDir $name
+            if (-not (Test-Path -LiteralPath $path)) { throw "Expected study artifact missing: $name" }
+            $item = Get-Item -LiteralPath $path
+            $files += [ordered]@{
+              name = $name
+              bytes = $item.Length
+              sha256 = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+            }
+          }
+          $receipt = [ordered]@{
+            schema = 'SELFIMAGE_PROPORTION_STUDY_RELAY_RECEIPT_V1'
+            status = 'EXECUTED / ARTIFACTS_VERIFIED / VISUAL_REVIEW_REQUIRED / NO_STAGE_A_PASS'
+            runner = $env:COMPUTERNAME
+            blender_addon = $addon.result
+            approved_script_sha256 = (Get-FileHash -LiteralPath $scriptPath -Algorithm SHA256).Hash.ToLowerInvariant()
+            files = $files
+          }
+          $receipt | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
+          $receipt | ConvertTo-Json -Depth 30
+
+      - name: Upload study evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: vera-proportion-study-v1-${{ github.run_id }}
+          path: ${{ runner.temp }}\vera-proportion-study-v1
+          if-no-files-found: error
+          retention-days: 30
