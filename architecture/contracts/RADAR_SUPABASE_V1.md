@@ -8,7 +8,7 @@ GitHub remains canonical source. Supabase is a rebuildable projection/runtime an
 
 Current source/recovery authority is `architecture/contracts/RADAR_SOURCE_CUSTODY_V1.json` plus the ordered `supabase/migrations/*_radar_*.sql` chain. Historical short migration filenames in older receipts are not current recovery paths.
 
-The current Radar source chain, through 2026-09-06, is:
+The current Radar source chain, through 2026-09-08, is:
 
 1. `20260902120716_radar_control_plane_v1.sql`
 2. `20260902120826_radar_realtime_v1.sql`
@@ -23,16 +23,24 @@ The current Radar source chain, through 2026-09-06, is:
 11. `20260906133630_radar_node_routing_hardening_v1.sql`
 12. `20260906154101_radar_projection_journal_v1.sql`
 13. `20260906165117_radar_projection_journal_api_v1.sql`
+14. `20260908010500_radar_projection_atomic_file_v1.sql`
 
-## Fresh provider readback — 2026-09-06
+## Provider readback boundary
 
-The provider migration ledger currently contains Radar migrations only through `20260903113314_radar_operator_views_v1`. The five later source migrations above are not applied.
+The last recorded provider readback is dated 2026-09-06. At that readback, the provider migration ledger contained Radar migrations only through `20260903113314_radar_operator_views_v1`. Six later source migrations in the current Git chain are therefore unapplied relative to that recorded provider state:
 
-Readback also confirms the provider does not currently have the GitHub OIDC replay-guard table, projection-journal lane/batch tables, or the projection-journal public RPC bridge. Therefore provider state is `PARTIAL_NOT_CURRENT` relative to Git source.
+- thread-closure semantics;
+- durable GitHub OIDC JTI replay guard;
+- node-bound routing/lease hardening;
+- projection lane/batch/file journal;
+- journal PostgREST API;
+- atomic claim-bound file projection.
 
-The live Edge function `github-bus-ingest` is ACTIVE version 3 with `verify_jwt=true`. That gateway setting currently preempts the intended custom GitHub OIDC admission path. Immutable projection anchor B (`7076c73595d5a572e0f374c3a495b29982d92bed`) and its body-bound Edge source are source-only and are not deployed/configured in the provider.
+The recorded provider therefore remains `PARTIAL_NOT_CURRENT` relative to current Git source. This section is historical readback status, not a claim that the provider was freshly queried after 2026-09-06.
 
-These facts are status evidence only. They do not authorize migration application, Edge deployment, changing `verify_jwt`, setting `RADAR_TRUSTED_PROJECTOR_SHA`, or seeding projection cursors.
+The recorded live Edge function `github-bus-ingest` is ACTIVE version 3 with `verify_jwt=true`. That gateway setting preempts the intended custom GitHub OIDC admission path before the function's verifier can admit a GitHub Actions OIDC bearer. The current body-bound Edge source, replay guard, projection journal/API, atomic claim-bound file projection, and projection cursors are not established as live provider state by the recorded readback.
+
+These facts are status evidence only. They do not authorize migration application, Edge deployment, changing `verify_jwt`, setting `RADAR_TRUSTED_PROJECTOR_SHA`, seeding projection cursors, or activating the dispatcher.
 
 ## Current self-registration model
 
@@ -47,7 +55,7 @@ Current mailbox: `bus/radar-v2`.
 
 The seed deliberately does not call `touch_node()` and therefore cannot establish runtime liveness or routing authority by itself.
 
-Historical references to `bus/radar-v1` or `radar/control-plane-v1` remain provenance only.
+Historical references to predecessor mailbox/control branches remain provenance only.
 
 ## Node-level routing security
 
@@ -57,24 +65,36 @@ Once `20260906133630_radar_node_routing_hardening_v1.sql` is applied, active sub
 
 Historical September-2 documentation that described exactly five low-volume Radar publication tables is superseded. Later source migrations add additional publication members where appropriate. Recovery verification must inspect actual publication membership after rebuilding the full current chain and run the current SQL assertions; do not use the old five-table list as a present-tense invariant.
 
-## Projection trust chain
+## Projection trust and atomic journal boundary
 
 Current source design uses:
 
-- default-branch central dispatcher with `workflow_run` wakeup plus five-minute scheduled backstop;
-- immutable reusable trusted projector anchored by exact commit SHA;
+- a default-branch central dispatcher with `workflow_run` wakeup plus five-minute scheduled backstop;
+- immutable reusable trusted-projector source selected by exact commit SHA;
 - writer branches as inert Git objects, never executable trusted source;
-- durable per-lane projection cursors and fenced batch/file journal state;
+- remote-tracking writer-ref reads without materializing local writer branches;
+- durable per-lane projection cursors plus fenced batch/file journal state;
 - exact-body SHA-256-bound GitHub OIDC audience/header;
 - fresh JTI per request, consumed after cryptographic body binding and before semantic JSON parsing;
-- deploy-time `RADAR_TRUSTED_PROJECTOR_SHA` equal to reviewed immutable projection anchor B.
+- atomic claim-bound file projection through `radar_projection_project_file_v1`;
+- one SQL transaction that validates the claim token/lease, lane cursor, control/topology cut, exact claimed path, sender/source binding, message projection result, and terminal journal state;
+- normalized claim-sensitive lock order `lane -> batch -> file`;
+- service-role revocation of the legacy standalone message-projection and standalone file-result mutation paths after the atomic-file migration.
 
-None of those source properties should be interpreted as a live-provider claim until migration/deployment/configuration/cursor readback proves the effect.
+Provider `RADAR_TRUSTED_PROJECTOR_SHA` may be set only to the exact immutable successor projector source cut bound by an authoritative local PASS receipt and the current reviewed contracts. Historical frozen projector references are evidence only and are not valid deployment targets merely because they were previously current.
+
+None of these source properties should be interpreted as a live-provider claim until migration/deployment/configuration/cursor readback proves the effect.
+
+## Qualification boundary
+
+Private hosted GitHub Actions are non-authoritative for Radar. The authoritative qualification route is `LOCAL_NO_PAID_SERVICES` through `scripts/radar_local_qualify.ps1` under `architecture/contracts/RADAR_QUALIFICATION_V1.json`.
+
+An authoritative local PASS receipt must bind the exact successor source commit, source tree, and clean working tree before that source cut can be treated as deployment-eligible. Static review, historical action receipts, or a previously frozen projector reference are not substitutes.
 
 ## Historical provider receipts
 
-September-2 receipts showing exact custody and successful tests for the base control/realtime migrations remain valid historical evidence at the scope they actually tested. The Vera logical-identity repair is likewise historical evidence. Those receipts do not establish currentness for later migrations, current writer lanes, current Realtime publication membership, or the current projection trust chain.
+September-2 receipts showing exact custody and successful tests for the base control/realtime migrations remain valid historical evidence at the scope they actually tested. Later historical projector/action receipts likewise remain evidence only at their original scope. Those receipts do not establish currentness for later migrations, current writer lanes, current Realtime publication membership, atomic projection, or the current projection trust chain.
 
 ## Recovery rule
 
-Follow `docs/operator/RECOVERY.md`: verify source custody, rebuild/test the full Git-held chain locally, compare provider ledger to source, apply only missing migrations under authorization, seed current registration only after the chain exists, then explicitly bootstrap projection cursors from reviewed activation evidence. Never recover current topology from dated cutover snapshots or mutable provider definitions when canonical Git source exists.
+Follow `docs/operator/RECOVERY.md`: verify source custody and the authoritative local PASS receipt, rebuild/test the full Git-held chain locally, compare provider ledger to source, apply only missing migrations under separate authorization, seed current registration only after the chain exists, deliberately bootstrap projection cursors from reviewed activation evidence, configure only the exact qualified immutable successor projector SHA, and canary the complete Git -> OIDC -> Edge -> atomic projection -> journal finalize -> provider readback path before broader activation. Never recover current topology from dated cutover snapshots or mutable provider definitions when canonical Git source exists.
