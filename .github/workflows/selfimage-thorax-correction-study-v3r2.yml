@@ -6,6 +6,7 @@ on:
       - feature/selfimage-blender-relay-v1
     paths:
       - .github/workflows/selfimage-thorax-correction-study-v3r2.yml
+      - projects/selfimage/blender-relay/approved-scripts/selfimage_thorax_correction_study_v3r2_vera_field.py
   workflow_dispatch:
 
 permissions:
@@ -49,12 +50,8 @@ jobs:
               $mem=[IO.MemoryStream]::new()
               $buf=New-Object byte[] 8192
               while($true){
-                try {
-                  $count=$stream.Read($buf,0,$buf.Length)
-                }
-                catch [System.IO.IOException] {
-                  break
-                }
+                try { $count=$stream.Read($buf,0,$buf.Length) }
+                catch [System.IO.IOException] { break }
                 if($count -le 0){break}
                 $mem.Write($buf,0,$count)
                 $text=[Text.Encoding]::UTF8.GetString($mem.ToArray())
@@ -62,9 +59,7 @@ jobs:
               }
               throw "Incomplete Blender JSON for $Type"
             }
-            finally {
-              $client.Dispose()
-            }
+            finally { $client.Dispose() }
           }
 
           $addon=Send-BlenderCommand -Type 'get_addon_info' -TimeoutMs 15000
@@ -76,17 +71,8 @@ jobs:
           $response=Send-BlenderCommand -Type 'execute_code' -Params @{code=$code} -TimeoutMs 300000
           if($response.status -ne 'success'){throw ($response|ConvertTo-Json -Depth 20 -Compress)}
 
-          $required=@(
-            'VERA_THORAX_CORRECTION_STUDY_V3R2.blend',
-            'VERA_THORAX_CORRECTION_STUDY_V3R2_METRICS.json',
-            'V2_PARENT_PROJECT.obj',
-            'V3R2_THORAX_CANDIDATE_PROJECT.obj'
-          )
-          foreach($prefix in @('V2','V3R2')){
-            foreach($view in @('FRONT','FRONT_3Q','SIDE','REAR_3Q','REAR')){
-              $required += "${prefix}_${view}.png"
-            }
-          }
+          $required=@('VERA_THORAX_CORRECTION_STUDY_V3R2.blend','VERA_THORAX_CORRECTION_STUDY_V3R2_METRICS.json','V2_PARENT_PROJECT.obj','V3R2_THORAX_CANDIDATE_PROJECT.obj')
+          foreach($prefix in @('V2','V3R2')){ foreach($view in @('FRONT','FRONT_3Q','SIDE','REAR_3Q','REAR')){ $required += "${prefix}_${view}.png" } }
           $files=@()
           foreach($name in $required){
             $path=Join-Path $outDir $name
@@ -94,13 +80,7 @@ jobs:
             $item=Get-Item -LiteralPath $path
             $files += [ordered]@{name=$name;bytes=$item.Length;sha256=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()}
           }
-          $receipt=[ordered]@{
-            schema='SELFIMAGE_THORAX_CORRECTION_RELAY_RECEIPT_V3R2'
-            status='EXECUTED / ARTIFACTS_VERIFIED / HOSTILE_VISUAL_REVIEW_REQUIRED / NO_STAGE_A_PASS'
-            runner=$env:COMPUTERNAME
-            approved_script_sha256=(Get-FileHash -LiteralPath $script -Algorithm SHA256).Hash.ToLowerInvariant()
-            files=$files
-          }
+          $receipt=[ordered]@{schema='SELFIMAGE_THORAX_CORRECTION_RELAY_RECEIPT_V3R2';status='EXECUTED / ARTIFACTS_VERIFIED / HOSTILE_VISUAL_REVIEW_REQUIRED / NO_STAGE_A_PASS';runner=$env:COMPUTERNAME;approved_script_sha256=(Get-FileHash -LiteralPath $script -Algorithm SHA256).Hash.ToLowerInvariant();files=$files}
           $receipt|ConvertTo-Json -Depth 30|Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
 
       - name: Upload V3R2 evidence
