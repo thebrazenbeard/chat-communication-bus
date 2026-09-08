@@ -18,6 +18,7 @@
         "world_state",
         "viewport_capture",
         "mesh_audit",
+        "scene_audit_v1",
         "import_exact_cc0",
         "save_blend_copy",
         "export_scene_glb"
