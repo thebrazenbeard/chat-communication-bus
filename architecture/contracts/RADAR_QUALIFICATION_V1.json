@@ -76,7 +76,8 @@
         "stderr_sha256"
       ]
     },
-    "launcher_identity_evidentiary": false
+    "launcher_identity_evidentiary": false,
+    "platform_identity_evidentiary": false
   },
   "github_actions": {
     "private_hosted_actions_authoritative": false,
