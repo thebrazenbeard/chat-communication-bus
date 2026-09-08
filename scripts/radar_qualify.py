@@ -279,10 +279,12 @@ def _probe_toolchain(
             raise QualificationError(f"Python {version} required; observed {_stdout_text(result)!r}")
 
     deno = _checked(runner, ["deno", "--version"], repo_root, label="Deno probe")
-    deno_version = _stdout_text(deno).splitlines()[0] if _stdout_text(deno) else ""
+    deno_identity = _stdout_text(deno).splitlines()[0] if _stdout_text(deno) else ""
+    deno_parts = deno_identity.split()
+    deno_version = deno_parts[1] if len(deno_parts) >= 2 and deno_parts[0] == "deno" else ""
     expected_deno = required.get("deno")
-    if deno_version != f"deno {expected_deno}":
-        raise QualificationError(f"Deno {expected_deno} required; observed {deno_version!r}")
+    if deno_version != expected_deno:
+        raise QualificationError(f"Deno {expected_deno} required; observed {deno_identity!r}")
 
     supabase = _checked(runner, ["supabase", "--version"], repo_root, label="Supabase CLI probe")
     expected_supabase = required.get("supabase_cli")
