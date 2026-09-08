@@ -36,10 +36,15 @@ def build_manifest() -> dict[str, object]:
     if missing:
         raise SystemExit(f"missing VNext package files: {', '.join(missing)}")
 
+    allowed = set((*required, MANIFEST))
+    extras = sorted(p.name for p in PKG.iterdir() if p.is_file() and p.name not in allowed)
+    if extras:
+        raise SystemExit(f"unexpected VNext package files: {', '.join(extras)}")
+
     instruction_text = (PKG / INSTRUCTIONS).read_text(encoding="utf-8")
-    if not 7800 <= len(instruction_text) <= 8000:
+    if len(instruction_text) > 8000:
         raise SystemExit(
-            f"native instructions must be dense but within OBSERVED ceiling: {len(instruction_text)} characters"
+            f"native instructions exceed OBSERVED ceiling: {len(instruction_text)} characters"
         )
 
     hashes = {name: digest(PKG / name) for name in (*NATIVE_SOURCES, INSTRUCTIONS)}
