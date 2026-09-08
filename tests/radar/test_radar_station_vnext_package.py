@@ -141,3 +141,20 @@ def test_qualification_covers_semantics_zero_cost_and_anti_bureaucracy():
         "degrade_with_label",
     ):
         assert phrase in content
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def test_install_manifest_matches_current_package_bytes():
+    manifest = json.loads(text("RADAR_STATION_INSTALL_MANIFEST.json"))
+    assert manifest["native_source_count"] == 10
+    assert tuple(manifest["native_sources"]) == NATIVE_SOURCES
+    assert manifest["native_instructions_character_count"] == len(text("RADAR_STATION_NATIVE_INSTRUCTIONS_CANDIDATE.md"))
+    assert manifest["native_install_applied"] is False
+    assert manifest["behaviorally_qualified"] is False
+    assert manifest["patrick_accepted"] is False
+    assert manifest["active"] is False
+    for relpath, digest in manifest["sha256"].items():
+        assert sha256(PKG / relpath) == digest
