@@ -25,6 +25,7 @@ EXPECTED_MIGRATIONS = [
     "20260906133630_radar_node_routing_hardening_v1.sql",
     "20260906154101_radar_projection_journal_v1.sql",
     "20260906165117_radar_projection_journal_api_v1.sql",
+    "20260908010500_radar_projection_atomic_file_v1.sql",
 ]
 
 
@@ -37,6 +38,7 @@ def test_current_contract_names_present_mailbox_and_full_source_chain() -> None:
     assert current["provider"]["projection_anchor_d_deployed"] is False
     assert current["provider"]["projection_journal_seeded"] is False
     assert current["provider"]["edge_body_bound_oidc_deployed"] is False
+    assert current["provider"]["unapplied_source_migrations"] == EXPECTED_MIGRATIONS[8:]
     assert current["projection_source"]["current_projection_anchor_d_deployment_eligible"] is False
     assert current["projection_source"]["post_anchor_d_source_repairs_pending_successor_anchor"] is True
     assert current["projection_source"]["successor_anchor_status"] == "PENDING_LOCAL_QUALIFICATION"
