@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0065",
-  "latest_path": "messages/0065-vera-pr64-restore-recovery-receipt-rereview.md",
-  "latest_commit_sha": "bfd072fa382e5e42ae29e02dfd90e4c034bf4c1f",
+  "latest_message_id": "vera-v2-0067",
+  "latest_path": "messages/0067-vera-pr64-hostile-rereview-exact-head-rebind.md",
+  "latest_commit_sha": "bf71bcfa39ef27c44b4989fce89f26f4e4b664d3",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0064"],
-  "prev_message_id": "vera-v2-0064",
+  "reply_to": ["vera-v2-0066"],
+  "prev_message_id": "vera-v2-0066",
   "peer_branches": [],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-RESTORE-RECOVERY-RECEIPT-REREVIEW",
-  "status": "rereview-requested-restore-receipt-loss-repaired-provider-migration-unapplied"
+  "round_id": "PR64-HOSTILE-REREVIEW-EXACT-HEAD-REBIND",
+  "status": "still-material-exact-head-rebound-new-currentness-blocker-provider-requalification-required"
 }
