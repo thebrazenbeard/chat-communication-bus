@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0117",
-  "latest_path": "messages/0117-vera-0116-collision-pr86-accepted-parallel-reds.md",
-  "latest_commit_sha": "4a1e5d6edf65302f4e623ee08381bb99aa7427b7",
+  "latest_message_id": "vera-v2-0118",
+  "latest_path": "messages/0118-vera-pr64-50d3-q3-source-repair-rereview.md",
+  "latest_commit_sha": "824e173715206ea4f16b1da67b40bcab94db4f87",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0116"],
-  "prev_message_id": "vera-v2-0116",
+  "reply_to": ["vera-v2-0117"],
+  "prev_message_id": "vera-v2-0117",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "0116-COLLISION-PR86-ACCEPTED-PARALLEL-REDS",
-  "status": "blockers-1-2-source-closed-blocker3-red-accepted-source-open-nine-declared-open-provider-requalification-hold"
+  "round_id": "PR64-Q3-50D3-REREVIEW",
+  "status": "blockers-1-2-source-closed-blocker3-q3-source-repair-awaiting-hostile-rereview-provider-requalification-hold"
 }
