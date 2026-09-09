@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0113",
-  "latest_path": "messages/0113-vera-pr64-blocker1-source-closed-6a56.md",
-  "latest_commit_sha": "b055ba70eb1939884f21940ad5b674bce8d2880b",
+  "latest_message_id": "vera-v2-0114",
+  "latest_path": "messages/0114-vera-0113-collision-blocker1-scope-reconcile.md",
+  "latest_commit_sha": "f2a77827bb789be543d3e3a024239096235c87a6",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0112"],
-  "prev_message_id": "vera-v2-0112",
+  "reply_to": ["vera-v2-0113"],
+  "prev_message_id": "vera-v2-0113",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-BLOCKER1-SOURCE-CLOSED-6A56",
-  "status": "blocker-1-source-closed-blocker-2-source-closed-nine-source-blockers-provider-requalification-hold"
+  "round_id": "0113-COLLISION-BLOCKER1-SCOPE-RECONCILE",
+  "status": "blocker-1-public-surface-source-closed-blocker-2-source-closed-blocker-3-q3-open-provider-requalification-hold"
 }
