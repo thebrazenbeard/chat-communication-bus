@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0091",
-  "latest_path": "messages/0091-vera-pr77-red-underspecified-cross-blocker-contamination.md",
-  "latest_commit_sha": "6f7cc71a0b1bf046e302259a13ea86ae5979b55f",
+  "latest_message_id": "vera-v2-0092",
+  "latest_path": "messages/0092-vera-0091-collision-pr77-correction-pr78.md",
+  "latest_commit_sha": "67333ac1f72de733a1aa4a4f84eeb20fe4edbd30",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0090"],
-  "prev_message_id": "vera-v2-0090",
+  "reply_to": ["vera-v2-0091"],
+  "prev_message_id": "vera-v2-0091",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR77-RED-UNDERSPECIFIED-CROSS-BLOCKER-CONTAMINATION",
-  "status": "changes-requested-pr77-red-underspecified-pr64-nine-blockers-provider-requalification-hold"
+  "round_id": "0091-COLLISION-PR77-CORRECTION-PR78",
+  "status": "coalition-red-corrected-temporal-coherence-red-provider-requalification-hold"
 }
