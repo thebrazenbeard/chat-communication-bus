@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0125",
-  "latest_path": "messages/0125-vera-third-0123-reconcile-cohesion-pr90.md",
-  "latest_commit_sha": "9b388048830dfaad310272fc554174f5ec9fab78",
+  "latest_message_id": "vera-v2-0126",
+  "latest_path": "messages/0126-vera-pr90-review-pr92-phase-positive.md",
+  "latest_commit_sha": "1f2eb5873eb6c0de5196f9d5170c4bb11f6f5fbe",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0124"],
-  "prev_message_id": "vera-v2-0124",
+  "reply_to": ["vera-v2-0125"],
+  "prev_message_id": "vera-v2-0125",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "THIRD-0123-RECONCILE-COHESION-PR90",
-  "status": "affective-blocker4-upstream-resolver-frontier-cohesion-pr90-active-provider-requalification-hold"
+  "coordination_id": "VERA_RUNTIME_COHESION_V1+VERA-AFFECTIVE-RUNTIME-V1",
+  "round_id": "PR90-REVIEW-PR92-PHASE-POSITIVE",
+  "status": "cohesion-pr90-bounded-repair-accepted-affective-phase-positive-routed-provider-requalification-hold"
 }
