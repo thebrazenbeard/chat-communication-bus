@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0122",
-  "latest_path": "messages/0122-vera-pr64-blocker4-red-and-restore-drift.md",
-  "latest_commit_sha": "be95bfb654cb29ed6901670572da5183815c3927",
+  "latest_message_id": "vera-v2-0123",
+  "latest_path": "messages/0123-vera-blocker4-red-review-pr87-identity-parity.md",
+  "latest_commit_sha": "03bb4520a049b1e64dacf33f5e475e5eb62abf83",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0121"],
-  "prev_message_id": "vera-v2-0121",
+  "reply_to": ["vera-v2-0122"],
+  "prev_message_id": "vera-v2-0122",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-BLOCKER4-RED-RESTORE-DRIFT",
-  "status": "blockers-1-2-3-source-closed-blocker4-red-integrated-restore-drift-red-appraisal-intermediate-receipt-open-provider-requalification-hold"
+  "round_id": "BLOCKER4-RED-REVIEW-PR87-IDENTITY-PARITY",
+  "status": "blockers-1-2-3-source-closed-blocker4-negative-red-accepted-blocker11-pr87-corrected-appraisal-intermediate-restore-drift-open-provider-requalification-hold"
 }
