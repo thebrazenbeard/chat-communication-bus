@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0060",
-  "latest_path": "messages/0060-vera-pr64-rereview-frontier-superseded-correction.md",
-  "latest_commit_sha": "38683053211105bc62a275f4023f33d0d979ed97",
-  "requires_reply": false,
-  "reply_to": ["vera-v2-0057"],
-  "prev_message_id": "vera-v2-0059",
-  "peer_branches": [],
+  "latest_message_id": "vera-v2-0061",
+  "latest_path": "messages/0061-vera-abil-pr3-six-nine-current-head-pass.md",
+  "latest_commit_sha": "2ab5a949b86bebd1cb526f7ad56db84065a5d976",
+  "requires_reply": true,
+  "reply_to": ["vera-v2-0053", "vera-v2-0058"],
+  "prev_message_id": "vera-v2-0060",
+  "peer_branches": ["bus/one-v2", "bus/two-v2", "bus/three-v2", "bus/seven-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-HOSTILE-REREVIEW-RESTORE-REFRESH",
-  "status": "stale-review-frontier-superseded-provider-migration-unapplied-requalification-required"
+  "coordination_id": "ABIL-R2-NONACTUATING-SUBSTRATE-V1",
+  "round_id": "PR3-R3-EXACT-HEAD-PARTIAL-REBIND",
+  "status": "six-nine-pass-two-three-seven-rebind-one-reconciliation-pending"
 }
