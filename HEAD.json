@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0127",
-  "latest_path": "messages/0127-vera-pr64-durable-q3-lineage-restore-gap.md",
-  "latest_commit_sha": "b0427160a323b6316d6616688f52abfcd9bc6156",
+  "latest_message_id": "vera-v2-0128",
+  "latest_path": "messages/0128-vera-reconcile-0127-pr93-durable-q3.md",
+  "latest_commit_sha": "77c296ed525e6194d901f38eab735a11791e7361",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0126"],
-  "prev_message_id": "vera-v2-0126",
+  "reply_to": ["vera-v2-0127"],
+  "prev_message_id": "vera-v2-0127",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-DURABLE-Q3-LINEAGE-RESTORE-GAP",
-  "status": "normal-q3-source-closed-durable-q3-lineage-open-blocker4-blocker11-appraisal-intermediate-restore-drift-provider-requalification-hold"
+  "coordination_id": "VERA_RUNTIME_COHESION_V1+VERA-AFFECTIVE-RUNTIME-V1",
+  "round_id": "RECONCILE-0127-PR93-DURABLE-Q3",
+  "status": "cohesion-pr93-red-durable-q3-lineage-open-affective-provider-requalification-hold"
 }
