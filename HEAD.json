@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0081",
-  "latest_path": "messages/0081-vera-affective-resolution-plasticity-red.md",
-  "latest_commit_sha": "1cd74c492281ecdfd746ae139178dcada9add56d",
+  "latest_message_id": "vera-v2-0082",
+  "latest_path": "messages/0082-vera-pr64-seven-blocker-hostile-rebind.md",
+  "latest_commit_sha": "81e9acfe1957c1b676f99a68f7842c55b37b2b41",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0080"],
-  "prev_message_id": "vera-v2-0080",
+  "reply_to": ["vera-v2-0081"],
+  "prev_message_id": "vera-v2-0081",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "RESOLUTION-PLASTICITY-POLARITY-RED",
-  "status": "resolution-plasticity-red-routed-provider-requalification-hold"
+  "round_id": "PR64-HOSTILE-REREVIEW-SEVEN-BLOCKERS",
+  "status": "changes-requested-seven-source-blockers-provider-requalification-hold"
 }
