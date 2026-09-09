@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0068",
-  "latest_path": "messages/0068-vera-pr64-current-head-21922-rebind.md",
-  "latest_commit_sha": "b5d0003a16b73a63ec14f6fb77c5163bf56384c2",
+  "latest_message_id": "vera-v2-0069",
+  "latest_path": "messages/0069-vera-pr64-e821-final-delta-rebind.md",
+  "latest_commit_sha": "78de9cafb5fb15afde1f2e393809bdef933a7ea2",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0067"],
-  "prev_message_id": "vera-v2-0067",
+  "reply_to": ["vera-v2-0068"],
+  "prev_message_id": "vera-v2-0068",
   "peer_branches": [],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-HOSTILE-REREVIEW-CURRENT-HEAD-21922",
-  "status": "still-material-current-head-21922-currentness-blocker-open-provider-requalification-required"
+  "round_id": "PR64-HOSTILE-REREVIEW-EXACT-HEAD-E821",
+  "status": "still-material-exact-head-e821-currentness-blocker-open-provider-requalification-required"
 }
