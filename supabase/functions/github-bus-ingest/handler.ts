@@ -21,8 +21,15 @@ const SHA40_RE = /^[0-9a-f]{40}$/;
 const SHA256_RE = /^[0-9a-f]{64}$/;
 const PATH_SEGMENT_RE = /^[A-Za-z0-9._-]+$/;
 
-let jwksCache: { expiresAt: number; keys: JsonWebKey[] } | null = null;
-let jwksFetchPromise: Promise<JsonWebKey[] | null> | null = null;
+type GithubJwk = JsonWebKey & { kid?: string };
+type RpcError = { code?: string } | null;
+type RadarRpcResult = { data: unknown; error: RpcError };
+type RadarRpcClient = {
+  rpc(name: string, args?: Record<string, unknown>): PromiseLike<RadarRpcResult>;
+};
+
+let jwksCache: { expiresAt: number; keys: GithubJwk[] } | null = null;
+let jwksFetchPromise: Promise<GithubJwk[]> | null = null;
 let jwksLastFetchAttemptAt: number | null = null;
 
 type Claims = Record<string, unknown>;
@@ -98,7 +105,7 @@ function b64urlJson(value: string): Record<string, unknown> {
   }
 }
 
-async function getJwks(forceRefresh = false): Promise<JsonWebKey[]> {
+async function getJwks(forceRefresh = false): Promise<GithubJwk[]> {
   const now = Date.now();
   if (!forceRefresh && jwksCache && jwksCache.expiresAt > now) return jwksCache.keys;
   if (jwksFetchPromise) {
@@ -121,7 +128,7 @@ async function getJwks(forceRefresh = false): Promise<JsonWebKey[]> {
       if (!result.ok) throw new HttpError(503, "OIDC_JWKS_UNAVAILABLE");
       const data = await result.json();
       if (!data || !Array.isArray(data.keys)) throw new HttpError(503, "OIDC_JWKS_INVALID");
-      jwksCache = { expiresAt: Date.now() + JWKS_CACHE_TTL_MS, keys: data.keys as JsonWebKey[] };
+      jwksCache = { expiresAt: Date.now() + JWKS_CACHE_TTL_MS, keys: data.keys as GithubJwk[] };
       return jwksCache.keys;
     } finally {
       jwksFetchPromise = null;
@@ -172,8 +179,8 @@ async function verifyGithubOidc(token: string, expectedAudience: string): Promis
   const ok = await crypto.subtle.verify(
     "RSASSA-PKCS1-v1_5",
     key,
-    b64urlBytes(parts[2]),
-    new TextEncoder().encode(`${parts[0]}.${parts[1]}`),
+    toArrayBuffer(b64urlBytes(parts[2])),
+    toArrayBuffer(new TextEncoder().encode(`${parts[0]}.${parts[1]}`)),
   );
   if (!ok) throw new HttpError(401, "OIDC_SIGNATURE_INVALID");
 
@@ -213,7 +220,7 @@ async function verifyGithubOidc(token: string, expectedAudience: string): Promis
 }
 
 async function consumeGithubOidcJti(
-  supabase: ReturnType<typeof createClient>,
+  supabase: RadarRpcClient,
   claims: Claims,
 ): Promise<void> {
   const jti = stringClaim(claims, "jti");
@@ -233,8 +240,14 @@ function hex(buffer: ArrayBuffer): string {
   return Array.from(new Uint8Array(buffer), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
+function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
+  const copy = new Uint8Array(bytes.byteLength);
+  copy.set(bytes);
+  return copy.buffer;
+}
+
 async function sha256(bytes: Uint8Array): Promise<string> {
-  return hex(await crypto.subtle.digest("SHA-256", bytes));
+  return hex(await crypto.subtle.digest("SHA-256", toArrayBuffer(bytes)));
 }
 
 async function readRequestBodyBounded(req: Request, maxBytes: number): Promise<Uint8Array> {
@@ -277,7 +290,7 @@ async function gitBlobSha1(bytes: Uint8Array): Promise<string> {
   const combined = new Uint8Array(prefix.length + bytes.length);
   combined.set(prefix);
   combined.set(bytes, prefix.length);
-  return hex(await crypto.subtle.digest("SHA-1", combined));
+  return hex(await crypto.subtle.digest("SHA-1", toArrayBuffer(combined)));
 }
 
 function base64Bytes(value: string): Uint8Array {
@@ -521,7 +534,7 @@ function projectionResultState(result: string): "PROJECTED" | "IDEMPOTENT" {
 }
 
 async function projectFile(
-  supabase: ReturnType<typeof createClient>,
+  supabase: RadarRpcClient,
   batch: ProjectionBatch,
   file: SourceFile,
 ): Promise<{ path: string; result: string }> {
@@ -606,7 +619,7 @@ async function projectFile(
 }
 
 async function handleOperation(
-  supabase: ReturnType<typeof createClient>,
+  supabase: RadarRpcClient,
   raw: Record<string, unknown>,
 ): Promise<Record<string, unknown>> {
   if (raw.protocol_version !== 2) throw new HttpError(422, "PROTOCOL_VERSION_INVALID");
@@ -720,7 +733,7 @@ Deno.serve(async (req: Request) => {
     if (!supabaseUrl || !serviceKey) throw new HttpError(503, "PROVIDER_CONFIGURATION_MISSING");
     const supabase = createClient(supabaseUrl, serviceKey, {
       auth: { persistSession: false, autoRefreshToken: false },
-    });
+    }) as unknown as RadarRpcClient;
 
     // A cryptographically valid, exact-body-bound token is burned before any
     // semantic parsing. Malformed bound requests cannot be replayed indefinitely.
