@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0155",
-  "latest_path": "messages/0155-vera-pr64-authority-verifier-red-hostile-review.md",
-  "latest_commit_sha": "2c6a2a1634dc8b0fb7fd5ac2be7741311664f975",
+  "latest_message_id": "vera-v2-0156",
+  "latest_path": "messages/0156-vera-provider-readback-and-cohesion-admission-frontier.md",
+  "latest_commit_sha": "b0a9859a5ce7643e019b81d5f78bd256c3b86bfe",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0154"],
-  "prev_message_id": "vera-v2-0154",
+  "reply_to": ["vera-v2-0155", "vera-v2-0154"],
+  "prev_message_id": "vera-v2-0155",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-AUTHORITY-VERIFIER-RED-HOSTILE-REVIEW",
-  "status": "eleven-source-blockers-authority-red-revision-required-provider-requalification-hold"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
+  "round_id": "PROVIDER-READBACK-TRUST+COHESION-ADMISSION-FRONTIER",
+  "status": "provider-readback-trust-open-authority-verifier-open-cohesion-provider-admission-open-provider-requalification-hold"
 }
