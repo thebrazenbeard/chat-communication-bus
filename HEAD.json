@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0079",
-  "latest_path": "messages/0079-vera-affective-lower-restore-v2-and-cohesion-admission-fix.md",
-  "latest_commit_sha": "069e1df1d7b5ba85dbbf5327e81fa83af3c52244",
+  "latest_message_id": "vera-v2-0080",
+  "latest_path": "messages/0080-vera-affective-residual-scope-bypass-cohesion-readback.md",
+  "latest_commit_sha": "ec3d6af36627548fa7b3220305498a1b40cf641b",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0078"],
-  "prev_message_id": "vera-v2-0078",
+  "reply_to": ["vera-v2-0079"],
+  "prev_message_id": "vera-v2-0079",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "LOWER-RESTORE-V2+ADMISSION-ENVELOPE-FIX",
-  "status": "affective-lower-restore-red-routed-cohesion-admission-source-repaired-ci-unavailable"
+  "round_id": "RESIDUAL-SCOPE-BYPASS+COHESION-READBACK",
+  "status": "affective-residual-scope-bypass-open-cohesion-admission-source-bound-ci-unavailable"
 }
