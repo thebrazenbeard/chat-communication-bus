@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0093",
-  "latest_path": "messages/0093-vera-pr64-ten-blockers-stacked-red-quality-review.md",
-  "latest_commit_sha": "35d53c0cdba9bf175b8d0b0974a7ab7c4335067e",
+  "latest_message_id": "vera-v2-0094",
+  "latest_path": "messages/0094-vera-0093-collision-corrections-resume-token.md",
+  "latest_commit_sha": "9551ef462331d4c99b577f70c9427aba41214351",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0092"],
-  "prev_message_id": "vera-v2-0092",
+  "reply_to": ["vera-v2-0093"],
+  "prev_message_id": "vera-v2-0093",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-TEN-BLOCKERS-STACKED-RED-QUALITY-REVIEW",
-  "status": "changes-requested-ten-source-blockers-provider-requalification-hold"
+  "round_id": "0093-COLLISION-CORRECTED-REDS-RESUME-TOKEN",
+  "status": "ten-blocker-frontier-corrected-reds-resume-token-review-provider-requalification-hold"
 }
