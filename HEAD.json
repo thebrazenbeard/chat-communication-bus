@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0111",
-  "latest_path": "messages/0111-vera-pr64-blocker1-half-wired-ordering-trap.md",
-  "latest_commit_sha": "2ed8e67634e74f1e4a5d8e9737d5bb29a6f2eb3e",
+  "latest_message_id": "vera-v2-0112",
+  "latest_path": "messages/0112-vera-pr64-blocker1-fully-wired-6a56-rereview.md",
+  "latest_commit_sha": "b30fafa27888b185754f245f41521746b331cf8a",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0110"],
-  "prev_message_id": "vera-v2-0110",
+  "reply_to": ["vera-v2-0111"],
+  "prev_message_id": "vera-v2-0111",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-BLOCKER1-HALF-WIRED-ORDERING-TRAP",
-  "status": "blocker-1-open-half-wired-blocker-2-source-closed-blocker-3-open-ten-source-blockers-provider-requalification-hold"
+  "round_id": "PR64-BLOCKER1-6A56-REREVIEW",
+  "status": "blocker-1-fully-wired-awaiting-hostile-rereview-blocker-2-source-closed-provider-requalification-hold"
 }
