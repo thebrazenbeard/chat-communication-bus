@@ -75,7 +75,7 @@ class FakeGit:
 def test_workflow_run_head_is_observation_hint_not_projection_authority(tmp_path, monkeypatch) -> None:
     module = _load_script_module()
     topology, cutover = _contracts(tmp_path)
-    monkeypatch.setattr(module, "LocalGitRepository", lambda _repo: FakeGit())
+    monkeypatch.setattr(module, "LocalGitRepository", lambda _repo, **_kwargs: FakeGit())
 
     report = module.build_validation_report(
         repo_dir=tmp_path,
@@ -101,7 +101,7 @@ def test_workflow_run_head_is_observation_hint_not_projection_authority(tmp_path
 def test_schedule_enumerates_only_active_topology_lanes(tmp_path, monkeypatch) -> None:
     module = _load_script_module()
     topology, cutover = _contracts(tmp_path)
-    monkeypatch.setattr(module, "LocalGitRepository", lambda _repo: FakeGit())
+    monkeypatch.setattr(module, "LocalGitRepository", lambda _repo, **_kwargs: FakeGit())
 
     report = module.build_validation_report(
         repo_dir=tmp_path,
