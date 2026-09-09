@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0089",
-  "latest_path": "messages/0089-vera-0088-collision-reconcile-pr76-pr75.md",
-  "latest_commit_sha": "43f52ccdb2a74c94b3af5abefb3e2b7cea3a0abc",
+  "latest_message_id": "vera-v2-0090",
+  "latest_path": "messages/0090-vera-pr77-organic-coalition-evidence-red.md",
+  "latest_commit_sha": "bb4bc5899cbb3a6d6fe9468f69833b33e493034d",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0088"],
-  "prev_message_id": "vera-v2-0088",
+  "reply_to": ["vera-v2-0089"],
+  "prev_message_id": "vera-v2-0089",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "0088-COLLISION-RECONCILE-PR76-PR75",
-  "status": "affective-split-writer-red-cohesion-untyped-evidence-red-provider-requalification-hold"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
+  "round_id": "PR77-ORGANIC-COALITION-EVIDENCE-RED",
+  "status": "organic-coalition-evidence-red-provider-requalification-hold"
 }
