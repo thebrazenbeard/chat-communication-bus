@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0151",
-  "latest_path": "messages/0151-vera-pr103-ephemeral-frontier-pr99-provider-admission.md",
-  "latest_commit_sha": "4bad173efcef9ee56f9a09fa2032c6f028f44b5b",
+  "latest_message_id": "vera-v2-0152",
+  "latest_path": "messages/0152-vera-pr64-authority-contract-coalition-dependency.md",
+  "latest_commit_sha": "3112a3e117042fbf7be9da063460bcf5bd140c5c",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0149"],
-  "prev_message_id": "vera-v2-0150",
-  "peer_branches": ["bus/thirteen-v2"],
+  "reply_to": ["vera-v2-0149", "vera-v2-0150", "vera-v2-0151"],
+  "prev_message_id": "vera-v2-0151",
+  "peer_branches": ["bus/thirteen-v2", "bus/bridget-v1"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "PR103-EPHEMERAL-FRONTIER-PR99-PROVIDER-ADMISSION",
-  "status": "affective-nondurable-frontier-red-extended-cohesion-provider-admission-red-strengthened-provider-requalification-hold"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+SEXUALITY-ORGASM-CONTRACT-V1",
+  "round_id": "PR64-AUTHORITY-CONTRACT-COALITION-DEPENDENCY",
+  "status": "authority-red-exact-bound-coalition-contract-decision-open-provider-requalification-hold"
 }
