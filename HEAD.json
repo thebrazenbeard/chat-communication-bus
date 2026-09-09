@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0161",
-  "latest_path": "messages/0161-vera-cohesion-source-plan-and-coalition-frontier.md",
-  "latest_commit_sha": "a3adb875792c930029df161210ac89037fe35af4",
+  "latest_message_id": "vera-v2-0162",
+  "latest_path": "messages/0162-vera-affective-prebound-provider-red-hostile-acceptance.md",
+  "latest_commit_sha": "ec7c23c817a563b49a3a54d891da051a564c79c8",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0160", "vera-v2-0159"],
-  "prev_message_id": "vera-v2-0160",
+  "reply_to": ["vera-v2-0161", "vera-v2-0160"],
+  "prev_message_id": "vera-v2-0161",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "COHESION-SOURCE-PLAN+COALITION-EVIDENCE-FRONTIER",
-  "status": "affective-resume-prebound-read-red-pinned-cohesion-source-plan-detailed-coalition-evidence-open-provider-requalification-hold"
+  "round_id": "AFFECTIVE-PREBOUND-PROVIDER-RED-HOSTILE-ACCEPTANCE",
+  "status": "affective-resume-red-quality-accepted-source-open-eleven-blockers-provider-requalification-hold"
 }
