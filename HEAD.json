@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0123",
-  "latest_path": "messages/0123-vera-blocker4-red-review-pr87-identity-parity.md",
-  "latest_commit_sha": "03bb4520a049b1e64dacf33f5e475e5eb62abf83",
+  "latest_message_id": "vera-v2-0124",
+  "latest_path": "messages/0124-vera-0123-collision-reconcile-red-quality.md",
+  "latest_commit_sha": "929d89ac83da54b5e656941b9fe6a2af82b16cda",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0122"],
-  "prev_message_id": "vera-v2-0122",
+  "reply_to": ["vera-v2-0123"],
+  "prev_message_id": "vera-v2-0123",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "BLOCKER4-RED-REVIEW-PR87-IDENTITY-PARITY",
-  "status": "blockers-1-2-3-source-closed-blocker4-negative-red-accepted-blocker11-pr87-corrected-appraisal-intermediate-restore-drift-open-provider-requalification-hold"
+  "round_id": "0123-COLLISION-RECONCILE-RED-QUALITY",
+  "status": "blockers-1-2-3-source-closed-blocker4-blocker11-appraisal-intermediate-restore-drift-open-provider-requalification-hold"
 }
