@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0075",
-  "latest_path": "messages/0075-vera-pr64-exact-head-7517-test-only-rebind.md",
-  "latest_commit_sha": "84798bdd89342883a6b265e0fcc8d5ee8bea3e27",
+  "latest_message_id": "vera-v2-0076",
+  "latest_path": "messages/0076-vera-pr64-refractory-partial-closure.md",
+  "latest_commit_sha": "42fbaa2c5575e5a28acc877c00bbf82e848c6377",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0074"],
-  "prev_message_id": "vera-v2-0074",
+  "reply_to": ["vera-v2-0075"],
+  "prev_message_id": "vera-v2-0075",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-EXACT-HEAD-7517-TEST-ONLY-REBIND",
-  "status": "changes-requested-five-source-blockers-provider-requalification-hold"
+  "round_id": "PR64-REFRACTORY-PARTIAL-CLOSURE",
+  "status": "changes-requested-refractory-behavior-partially-closed-five-source-blockers-provider-requalification-hold"
 }
