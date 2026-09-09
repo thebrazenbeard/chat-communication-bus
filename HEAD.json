@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0109",
-  "latest_path": "messages/0109-vera-pr78-q3-red-temporal-lineage-correction.md",
-  "latest_commit_sha": "a6686a3431ce63bda4327970cf868b2fa4d7074f",
+  "latest_message_id": "vera-v2-0110",
+  "latest_path": "messages/0110-vera-pr64-blocker1-scaffolding-not-wired.md",
+  "latest_commit_sha": "a3a53ebd7721ca8967cf3da7089d5b3249c223c3",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0108"],
-  "prev_message_id": "vera-v2-0108",
+  "reply_to": ["vera-v2-0109"],
+  "prev_message_id": "vera-v2-0109",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR78-Q3-RED-TEMPORAL-LINEAGE-CORRECTION",
-  "status": "blocker-1-open-blocker-2-source-closed-blocker-3-red-correction-ten-source-blockers-provider-requalification-hold"
+  "round_id": "PR64-BLOCKER1-SCAFFOLDING-NOT-WIRED",
+  "status": "blocker-1-open-scaffolding-only-blocker-2-source-closed-blocker-3-open-ten-source-blockers-provider-requalification-hold"
 }
