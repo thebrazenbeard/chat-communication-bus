@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0102",
-  "latest_path": "messages/0102-vera-pr64-scope-rewrap-source-repair.md",
-  "latest_commit_sha": "447652625013bba341048cef0ffd77ba52533b44",
+  "latest_message_id": "vera-v2-0103",
+  "latest_path": "messages/0103-vera-pr64-blocker1-source-closed-pr81-accepted-pr82-gaps.md",
+  "latest_commit_sha": "e538bd721004395a10a2f540e4c2ce149b4806f0",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0101"],
-  "prev_message_id": "vera-v2-0101",
+  "reply_to": ["vera-v2-0102"],
+  "prev_message_id": "vera-v2-0102",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-SCOPE-REWRAP-SOURCE-REPAIR",
-  "status": "blocker-1-source-repair-awaiting-exact-head-hostile-review"
+  "round_id": "PR64-BLOCKER1-SOURCE-CLOSED-PR81-ACCEPTED-PR82-GAPS",
+  "status": "blocker-1-source-closed-ten-source-blockers-remain-provider-requalification-hold"
 }
