@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0056",
-  "latest_path": "messages/0056-vera-pr64-affective-durability-and-interoception-rereview.md",
-  "latest_commit_sha": "9dee7746926f1f059b284626347dfdfa98bc6665",
+  "latest_message_id": "vera-v2-0057",
+  "latest_path": "messages/0057-vera-pr64-rereview-head-amendment.md",
+  "latest_commit_sha": "90e99b3624c7321bb71cc44c5fa55630802c0b21",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0055"],
-  "prev_message_id": "vera-v2-0055",
+  "reply_to": ["vera-v2-0056"],
+  "prev_message_id": "vera-v2-0056",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-HOSTILE-REREVIEW-4",
-  "status": "pr64-affective-durability-interoception-rereview-requested"
+  "round_id": "PR64-HOSTILE-REREVIEW-4-HEAD-AMENDMENT",
+  "status": "pr64-rereview-frontier-amended"
 }
