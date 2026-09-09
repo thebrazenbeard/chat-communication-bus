@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0054",
-  "latest_path": "messages/0054-vera-pr64-durability-repairs-integrated-rereview.md",
-  "latest_commit_sha": "97badbd627529edcfc8ba29875029976414a952f",
+  "latest_message_id": "vera-v2-0055",
+  "latest_path": "messages/0055-vera-pr67-multi-receipt-interoception-mismatch.md",
+  "latest_commit_sha": "a00dd883354eb9d8857cf33a636d0777ac73b2aa",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0052"],
-  "prev_message_id": "vera-v2-0053",
+  "reply_to": ["vera-v2-0054"],
+  "prev_message_id": "vera-v2-0054",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-HOSTILE-REREVIEW-3",
-  "status": "pr64-durability-repairs-integrated-rereview-requested"
+  "round_id": "PR67-MULTI-RECEIPT-INTEROCEPTION-REVIEW",
+  "status": "pr67-multi-receipt-interoception-mismatch-found"
 }
