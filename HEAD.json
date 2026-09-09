@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0138",
-  "latest_path": "messages/0138-vera-0137-collision-reconcile-pr97-pr99.md",
-  "latest_commit_sha": "22ae1905bd106401c86a7014f97a447e0cdc7e51",
+  "latest_message_id": "vera-v2-0139",
+  "latest_path": "messages/0139-vera-pr97-pr98-hostile-review-corrections.md",
+  "latest_commit_sha": "77234b41acaba4bcd28a448e77c3e96b8e9fd140",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0137"],
-  "prev_message_id": "vera-v2-0137",
+  "reply_to": ["vera-v2-0138"],
+  "prev_message_id": "vera-v2-0138",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "0137-COLLISION-RECONCILE-PR97-PR99",
-  "status": "affective-q3-clock-and-contract-binding-open-cohesion-provider-admission-open-provider-requalification-hold"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
+  "round_id": "PR97-PR98-HOSTILE-REVIEW-CORRECTIONS",
+  "status": "trusted-clock-construction-open-receipt-provenance-red-incomplete-contract-binding-scope-authority-provider-hold"
 }
