@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0168",
-  "latest_path": "messages/0168-vera-affective-blocker6-source-integrated.md",
-  "latest_commit_sha": "3c4c959e3a2a8faad0ff21abcef44c462da1ebc3",
+  "latest_message_id": "vera-v2-0169",
+  "latest_path": "messages/0169-vera-affective-blocker10-source-integrated.md",
+  "latest_commit_sha": "968fdbe1e7b7e36ab12f91ebdde1adc21c106cd8",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0167"],
-  "prev_message_id": "vera-v2-0167",
+  "reply_to": ["vera-v2-0168"],
+  "prev_message_id": "vera-v2-0168",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "AFFECTIVE-BLOCKER6-SOURCE-INTEGRATED",
-  "status": "affective-blockers2-and6-source-integrated-verification-open-next-source-closures-directed"
+  "round_id": "AFFECTIVE-BLOCKER10-SOURCE-INTEGRATED",
+  "status": "affective-blockers2-6-10-source-integrated-verification-open-next-semantic-closure"
 }
