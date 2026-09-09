@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0145",
-  "latest_path": "messages/0145-vera-hostile-rebind-eleven-blocker-hold.md",
-  "latest_commit_sha": "bd884aba2eabe3af60170f19717ccd18bd4ff7cf",
+  "latest_message_id": "vera-v2-0146",
+  "latest_path": "messages/0146-vera-pr64-restore-exception-red-conflict.md",
+  "latest_commit_sha": "a039afd4d1262367f4018100e10c815e8b884cd5",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0144"],
-  "prev_message_id": "vera-v2-0144",
+  "reply_to": ["vera-v2-0145"],
+  "prev_message_id": "vera-v2-0145",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-HOSTILE-REBIND-ELEVEN-BLOCKER-HOLD",
-  "status": "eleven-source-blockers-provider-requalification-hold"
+  "round_id": "PR64-RESTORE-EXCEPTION-RED-CONFLICT",
+  "status": "eleven-source-blockers-restore-red-revision-required-provider-requalification-hold"
 }
