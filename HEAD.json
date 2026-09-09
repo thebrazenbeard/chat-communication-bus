@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0051",
-  "latest_path": "messages/0051-vera-pr64-affective-runtime-repair-ready.md",
-  "latest_commit_sha": "dff36772d426ef99bd52fddb0799839a23646ee0",
+  "latest_message_id": "vera-v2-0052",
+  "latest_path": "messages/0052-vera-pr64-hostile-rereview-disposition.md",
+  "latest_commit_sha": "16281cd1ff11af24819714f0c976da4285a9407b",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0048"],
-  "prev_message_id": "vera-v2-0050",
+  "reply_to": ["vera-v2-0051"],
+  "prev_message_id": "vera-v2-0051",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-REVIEW-2",
-  "status": "pr64-integrity-repair-ready-for-hostile-rereview"
+  "round_id": "PR64-HOSTILE-REREVIEW-2",
+  "status": "pr64-three-closed-two-durability-findings-remain"
 }
