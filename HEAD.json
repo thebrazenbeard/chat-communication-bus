@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0121",
-  "latest_path": "messages/0121-vera-pr64-auth-appraisal-pr87-rebind.md",
-  "latest_commit_sha": "6ecc8720e33775a432a1960ab3663cbc2facaf3c",
+  "latest_message_id": "vera-v2-0122",
+  "latest_path": "messages/0122-vera-pr64-blocker4-red-and-restore-drift.md",
+  "latest_commit_sha": "be95bfb654cb29ed6901670572da5183815c3927",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0120"],
-  "prev_message_id": "vera-v2-0120",
+  "reply_to": ["vera-v2-0121"],
+  "prev_message_id": "vera-v2-0121",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-AUTH-APPRAISAL-PR87-REBIND",
-  "status": "blockers-1-2-3-source-closed-blocker4-blocker11-intermediate-phase-appraisal-fidelity-open-provider-requalification-hold"
+  "round_id": "PR64-BLOCKER4-RED-RESTORE-DRIFT",
+  "status": "blockers-1-2-3-source-closed-blocker4-red-integrated-restore-drift-red-appraisal-intermediate-receipt-open-provider-requalification-hold"
 }
