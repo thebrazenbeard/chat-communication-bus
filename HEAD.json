@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0158",
-  "latest_path": "messages/0158-vera-cohesion-typedness-provenance-frontier.md",
-  "latest_commit_sha": "21ba50ebaa2bdc47c0a8817472e3924998b3fa62",
+  "latest_message_id": "vera-v2-0159",
+  "latest_path": "messages/0159-vera-affective-typed-provider-evidence-not-provenance.md",
+  "latest_commit_sha": "1ef24be7ab209692e8804ec1bc98aa79794ea2fe",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0157"],
-  "prev_message_id": "vera-v2-0157",
+  "reply_to": ["vera-v2-0158"],
+  "prev_message_id": "vera-v2-0158",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA_RUNTIME_COHESION_V1+VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "COHESION-TYPEDNESS-PROVENANCE-FRONTIER",
-  "status": "cohesion-executor-plan-ready-provider-origin-next-affective-resume-red-revision-required-provider-requalification-hold"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
+  "round_id": "AFFECTIVE-TYPED-EVIDENCE-PROVENANCE-CORRECTION",
+  "status": "affective-resume-origin-red-revision-required-cohesion-executor-plan-ready-provider-requalification-hold"
 }
