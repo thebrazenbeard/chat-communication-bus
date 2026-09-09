@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0141",
-  "latest_path": "messages/0141-vera-pr97-corrected-pr99-cohesion-pr100-canonical.md",
-  "latest_commit_sha": "faeda49b107f2ec68607bc4d95bd21d1aad6433e",
+  "latest_message_id": "vera-v2-0142",
+  "latest_path": "messages/0142-vera-pr64-parent-reds-pr97-pr100-contract-clock-review.md",
+  "latest_commit_sha": "9d266a8f3262e404c5eb37c339d9d9e2ef3c5805",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0140"],
-  "prev_message_id": "vera-v2-0140",
+  "reply_to": ["vera-v2-0141"],
+  "prev_message_id": "vera-v2-0141",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "PR97-CORRECTED-PR99-PR100-CANONICAL",
-  "status": "affective-clock-and-contract-binding-open-cohesion-provider-admission-open-provider-requalification-hold"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
+  "round_id": "PR64-PARENT-REDS-PR97-PR100-CONTRACT-CLOCK-REVIEW",
+  "status": "parent-red-integration-open-contract-binding-red-near-clock-red-near-scope-authority-lineage-receipt-provider-hold"
 }
