@@ -93,4 +93,5 @@ def test_edge_exposes_only_fenced_projection_operations() -> None:
     ):
         assert operation in source
     assert "radar_projection_seed_lane_v1" not in source
-    assert "radar_projection_record_file_result_v1" in source
+    assert "radar_projection_project_file_v1" in source
+    assert "radar_projection_record_file_result_v1" not in source
