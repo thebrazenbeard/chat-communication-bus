@@ -2,67 +2,51 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-import re
 
 
 ROOT = Path(__file__).resolve().parents[2]
 ANCHOR_D = "401733b2013802880320629a4d8ea06f8bf7b760"
 ANCHOR_D_TREE = "d3a9c44f0378409a626e29334b4d057ef20c7e8e"
 ANCHOR_C = "f5ab21244a111b47708fa11e99d0e8ff7d8f5a45"
+ANCHOR_E = "dfd3c639d058dcafaa1167e53ad4bdc152d52cf6"
 
 
-def test_dispatcher_trust_receipt_currentness_and_custody_agree_on_anchor_d() -> None:
-    dispatcher = (ROOT / ".github/workflows/radar-central-dispatcher.yml").read_text(encoding="utf-8")
-    trust = json.loads(
+def test_anchor_d_contract_remains_immutable_historical_evidence() -> None:
+    trust_d = json.loads(
         (ROOT / "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V3.json").read_text(encoding="utf-8")
+    )
+    trust_e = json.loads(
+        (ROOT / "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V4.json").read_text(encoding="utf-8")
     )
     current = json.loads((ROOT / "architecture/contracts/RADAR_CURRENT.json").read_text(encoding="utf-8"))
     custody = json.loads(
         (ROOT / "architecture/contracts/RADAR_SOURCE_CUSTODY_V1.json").read_text(encoding="utf-8")
     )
 
-    match = re.search(r"radar-trusted-projector\.yml@([0-9a-f]{40})", dispatcher)
-    assert match is not None
-    assert match.group(1) == ANCHOR_D
-    assert trust["projection_anchor_sha"] == ANCHOR_D
-    assert trust["projection_anchor_tree"] == ANCHOR_D_TREE
-    assert trust["provider_expected_sha_value_at_deploy"] == ANCHOR_D
-    assert current["projection_source"]["current_projection_anchor_d"] == ANCHOR_D
-    assert current["projection_source"]["current_projection_anchor_d_tree"] == ANCHOR_D_TREE
-    assert current["projection_trust_contract"] == "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V3.json"
+    assert trust_d["projection_anchor_sha"] == ANCHOR_D
+    assert trust_d["projection_anchor_tree"] == ANCHOR_D_TREE
+    assert trust_d["superseded_projection_anchor_sha"] == ANCHOR_C
+    assert trust_e["superseded_projection_anchor_sha"] == ANCHOR_D
+    assert current["projection_source"]["historical_projection_anchor_d"] == ANCHOR_D
+    assert current["projection_source"]["historical_projection_anchor_d_tree"] == ANCHOR_D_TREE
     assert "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V3.json" in custody["paths"]
 
 
-def test_anchor_c_is_historical_only_after_anchor_d_supersession() -> None:
-    trust = json.loads(
-        (ROOT / "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V3.json").read_text(encoding="utf-8")
-    )
+def test_anchor_d_is_not_current_or_deployment_target_after_anchor_e_freeze() -> None:
     current = json.loads((ROOT / "architecture/contracts/RADAR_CURRENT.json").read_text(encoding="utf-8"))
     dispatcher = (ROOT / ".github/workflows/radar-central-dispatcher.yml").read_text(encoding="utf-8")
 
-    assert trust["superseded_projection_anchor_sha"] == ANCHOR_C
-    assert current["projection_source"]["historical_projection_anchor_c"] == ANCHOR_C
-    assert ANCHOR_C not in dispatcher
-    drift_codes = {item["code"] for item in current["known_provider_drift"]}
-    assert "PROJECTION_ANCHOR_C_NOT_DEPLOYED" not in drift_codes
-    assert "PROJECTION_ANCHOR_D_NOT_DEPLOYED" in drift_codes
-    assert current["provider"]["projection_anchor_d_deployed"] is False
-
-
-def test_anchor_d_is_frozen_reference_but_not_deployment_eligible_after_post_d_repairs() -> None:
-    current = json.loads((ROOT / "architecture/contracts/RADAR_CURRENT.json").read_text(encoding="utf-8"))
     source = current["projection_source"]
+    assert source["current_projection_anchor_e"] == ANCHOR_E
+    assert source["current_projection_anchor_e_deployment_eligible"] is True
+    assert source["post_anchor_d_source_repairs_pending_successor_anchor"] is False
+    assert source["successor_anchor_status"] == "FROZEN_QUALIFIED_SOURCE_ONLY"
+    assert ANCHOR_E in dispatcher
+    assert ANCHOR_D not in dispatcher
+    assert current["provider"]["projection_anchor_d_deployed"] is False
+    assert current["provider"]["projection_anchor_e_deployed"] is False
 
-    assert source["current_projection_anchor_d"] == ANCHOR_D
-    assert source["current_projection_anchor_d_deployment_eligible"] is False
-    assert source["post_anchor_d_source_repairs_pending_successor_anchor"] is True
-    assert source["successor_anchor_status"] == "PENDING_LOCAL_QUALIFICATION"
-
-    drift = {item["code"]: item for item in current["known_provider_drift"]}
-    defect = drift["PROJECTION_ANCHOR_D_KNOWN_PROTOCOL_DEFECT"]
-    assert defect["severity"] == "HIGH"
-    detail = defect["detail"]
-    assert "project_batch" in detail
-    assert "identity" in detail
-    assert "branch" in detail
-    assert "qualified successor" in detail.lower()
+    drift_codes = {item["code"] for item in current["known_provider_drift"]}
+    assert "PROJECTION_ANCHOR_D_KNOWN_PROTOCOL_DEFECT" not in drift_codes
+    assert "PROJECTION_ANCHOR_D_KNOWN_ATOMICITY_DEFECT" not in drift_codes
+    assert "PROJECTION_ANCHOR_E_NOT_DEPLOYED" in drift_codes
