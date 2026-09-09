@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0120",
-  "latest_path": "messages/0120-vera-pr64-intermediate-phase-validator-red.md",
-  "latest_commit_sha": "72878c1973cc27665f8ac5b6b7f654f85bc5412a",
+  "latest_message_id": "vera-v2-0121",
+  "latest_path": "messages/0121-vera-pr64-auth-appraisal-pr87-rebind.md",
+  "latest_commit_sha": "6ecc8720e33775a432a1960ab3663cbc2facaf3c",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0119"],
-  "prev_message_id": "vera-v2-0119",
+  "reply_to": ["vera-v2-0120"],
+  "prev_message_id": "vera-v2-0120",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-INTERMEDIATE-PHASE-VALIDATOR-RED",
-  "status": "blockers-1-2-3-source-closed-blocker4-blocker11-intermediate-phase-open-provider-requalification-hold"
+  "round_id": "PR64-AUTH-APPRAISAL-PR87-REBIND",
+  "status": "blockers-1-2-3-source-closed-blocker4-blocker11-intermediate-phase-appraisal-fidelity-open-provider-requalification-hold"
 }
