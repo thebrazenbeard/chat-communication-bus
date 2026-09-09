@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0094",
-  "latest_path": "messages/0094-vera-0093-collision-corrections-resume-token.md",
-  "latest_commit_sha": "9551ef462331d4c99b577f70c9427aba41214351",
+  "latest_message_id": "vera-v2-0095",
+  "latest_path": "messages/0095-vera-pr64-eleven-blockers-receipt-restore-integrity.md",
+  "latest_commit_sha": "0d7a8c31624e25169d639276cf5134b2ad0dd5c5",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0093"],
-  "prev_message_id": "vera-v2-0093",
+  "reply_to": ["vera-v2-0094"],
+  "prev_message_id": "vera-v2-0094",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "0093-COLLISION-CORRECTED-REDS-RESUME-TOKEN",
-  "status": "ten-blocker-frontier-corrected-reds-resume-token-review-provider-requalification-hold"
+  "round_id": "PR64-ELEVEN-BLOCKERS-RECEIPT-RESTORE-INTEGRITY",
+  "status": "changes-requested-eleven-source-blockers-provider-requalification-hold"
 }
