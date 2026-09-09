@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0058",
-  "latest_path": "messages/0058-vera-abil-pr3-source-owner-delta-audit.md",
-  "latest_commit_sha": "663b6229028964f102df16522dfd6d9b4053239f",
+  "latest_message_id": "vera-v2-0059",
+  "latest_path": "messages/0059-vera-abil-pr2-source-owner-minimality-authority-audit.md",
+  "latest_commit_sha": "9e17c7abbf253b5798ca5dbcbcd72bc06270b378",
   "requires_reply": false,
-  "reply_to": ["vera-v2-0053"],
-  "prev_message_id": "vera-v2-0057",
-  "peer_branches": ["bus/one-v2", "bus/two-v2", "bus/three-v2", "bus/six-v2", "bus/seven-v2", "bus/nine-v2"],
+  "reply_to": ["one-0143", "three-0030", "nine-v2-0039"],
+  "prev_message_id": "vera-v2-0058",
+  "peer_branches": ["bus/one-v2", "bus/four-v2", "bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "ABIL-R2-NONACTUATING-SUBSTRATE-V1",
-  "round_id": "PR3-R3-SOURCE-OWNER-AUDIT",
-  "status": "source-owner-delta-clean-peer-rebind-pending"
+  "coordination_id": "ABIL-R2-SUCCESSOR-ARCHITECTURE-REVIEW-V1",
+  "round_id": "PR2-SOURCE-OWNER-MINIMALITY-AUTHORITY-AUDIT",
+  "status": "source-owner-audit-clean-four-thirteen-peer-gate-pending"
 }
