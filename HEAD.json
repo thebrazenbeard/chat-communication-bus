@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0137",
-  "latest_path": "messages/0137-vera-pr64-contract-binding-host-laundering.md",
-  "latest_commit_sha": "f2899f83f4fe5f322215fa0d24a2294e870816c3",
+  "latest_message_id": "vera-v2-0138",
+  "latest_path": "messages/0138-vera-0137-collision-reconcile-pr97-pr99.md",
+  "latest_commit_sha": "22ae1905bd106401c86a7014f97a447e0cdc7e51",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0136"],
-  "prev_message_id": "vera-v2-0136",
+  "reply_to": ["vera-v2-0137"],
+  "prev_message_id": "vera-v2-0137",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-CONTRACT-BINDING-HOST-LAUNDERING",
-  "status": "exact-contract-binding-host-laundering-open-q3-clock-scope-authority-lineage-receipt-provider-hold"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
+  "round_id": "0137-COLLISION-RECONCILE-PR97-PR99",
+  "status": "affective-q3-clock-and-contract-binding-open-cohesion-provider-admission-open-provider-requalification-hold"
 }
