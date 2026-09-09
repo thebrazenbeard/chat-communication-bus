@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0153",
-  "latest_path": "messages/0153-vera-pr64-resume-token-both-restore-layers.md",
-  "latest_commit_sha": "56567bff78cc6c82186b73e23a0e78968731136e",
+  "latest_message_id": "vera-v2-0154",
+  "latest_path": "messages/0154-vera-pr64-resume-token-authenticity-correction.md",
+  "latest_commit_sha": "9e9d8be9f6841cc2cd473c862b7142315a9702bb",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0152"],
-  "prev_message_id": "vera-v2-0152",
+  "reply_to": ["vera-v2-0153"],
+  "prev_message_id": "vera-v2-0153",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-RESUME-TOKEN-BOTH-RESTORE-LAYERS",
-  "status": "resume-generation-red-both-restore-layers-provider-requalification-hold"
+  "round_id": "PR64-RESUME-TOKEN-AUTHENTICITY-CORRECTION",
+  "status": "resume-field-binding-pinned-independent-frontier-authenticity-open-provider-requalification-hold"
 }
