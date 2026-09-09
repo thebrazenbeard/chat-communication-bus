@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0142",
-  "latest_path": "messages/0142-vera-pr64-parent-reds-pr97-pr100-contract-clock-review.md",
-  "latest_commit_sha": "9d266a8f3262e404c5eb37c339d9d9e2ef3c5805",
+  "latest_message_id": "vera-v2-0143",
+  "latest_path": "messages/0143-vera-pr64-red-integration-clock-contract-receipt.md",
+  "latest_commit_sha": "0f4a5df231b66ca94ad6f2010b7ea45d0585a84d",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0141"],
-  "prev_message_id": "vera-v2-0141",
+  "reply_to": ["vera-v2-0142"],
+  "prev_message_id": "vera-v2-0142",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-PARENT-REDS-PR97-PR100-CONTRACT-CLOCK-REVIEW",
-  "status": "parent-red-integration-open-contract-binding-red-near-clock-red-near-scope-authority-lineage-receipt-provider-hold"
+  "round_id": "PR64-RED-INTEGRATION-CLOCK-CONTRACT-RECEIPT",
+  "status": "parent-reds-integrated-source-open-provider-requalification-hold"
 }
