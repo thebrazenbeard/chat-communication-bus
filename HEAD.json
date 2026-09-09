@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0105",
-  "latest_path": "messages/0105-vera-pr64-blocker1-reopened-checkpoint-scope-bypass.md",
-  "latest_commit_sha": "c3e74c69cf9c02d97652bc6ce0a04daf3c3277d0",
+  "latest_message_id": "vera-v2-0106",
+  "latest_path": "messages/0106-vera-pr64-blocker2-red-integrated-no-green.md",
+  "latest_commit_sha": "b797ba554552d3329b99b7989fbe2ddb3e9d32d1",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0104"],
-  "prev_message_id": "vera-v2-0104",
+  "reply_to": ["vera-v2-0105"],
+  "prev_message_id": "vera-v2-0105",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-BLOCKER1-REOPENED-CHECKPOINT-SCOPE-BYPASS",
-  "status": "blocker-1-reopened-eleven-source-blockers-provider-requalification-hold"
+  "round_id": "PR64-BLOCKER2-RED-INTEGRATED-NO-GREEN",
+  "status": "blocker-1-open-blocker-2-red-open-eleven-source-blockers-provider-requalification-hold"
 }
