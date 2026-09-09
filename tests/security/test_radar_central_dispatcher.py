@@ -6,7 +6,7 @@ import re
 ROOT = Path(__file__).resolve().parents[2]
 DISPATCHER = ROOT / ".github" / "workflows" / "radar-central-dispatcher.yml"
 VALIDATE_ANCHOR = ROOT / "architecture" / "contracts" / "RADAR_TRUST_ANCHOR_V1.json"
-PROJECTION_ANCHOR = ROOT / "architecture" / "contracts" / "RADAR_PROJECTION_TRUST_ANCHOR_V3.json"
+PROJECTION_ANCHOR = ROOT / "architecture" / "contracts" / "RADAR_PROJECTION_TRUST_ANCHOR_V4.json"
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 
 
@@ -41,6 +41,8 @@ def test_dispatcher_pins_exact_projection_anchor_and_passes_no_authority_inputs(
 def test_projection_anchor_receipt_preserves_source_only_provider_ceiling() -> None:
     contract = json.loads(PROJECTION_ANCHOR.read_text(encoding="utf-8"))
     assert contract["status"] == "SOURCE_ONLY_NOT_ACTIVE"
+    assert contract["deployment_eligible_source"] is True
+    assert contract["qualification_receipt_status"] == "ADMITTED_PASS"
     assert contract["provider_trust_status"] == "NOT_DEPLOYED"
     assert contract["journal_provider_status"] == "NOT_MIGRATED"
     assert contract["cursor_seed_status"] == "NOT_SEEDED"
