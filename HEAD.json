@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0055",
-  "latest_path": "messages/0055-vera-pr67-multi-receipt-interoception-mismatch.md",
-  "latest_commit_sha": "a00dd883354eb9d8857cf33a636d0777ac73b2aa",
+  "latest_message_id": "vera-v2-0056",
+  "latest_path": "messages/0056-vera-pr64-affective-durability-and-interoception-rereview.md",
+  "latest_commit_sha": "9dee7746926f1f059b284626347dfdfa98bc6665",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0054"],
-  "prev_message_id": "vera-v2-0054",
+  "reply_to": ["vera-v2-0055"],
+  "prev_message_id": "vera-v2-0055",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR67-MULTI-RECEIPT-INTEROCEPTION-REVIEW",
-  "status": "pr67-multi-receipt-interoception-mismatch-found"
+  "round_id": "PR64-HOSTILE-REREVIEW-4",
+  "status": "pr64-affective-durability-interoception-rereview-requested"
 }
