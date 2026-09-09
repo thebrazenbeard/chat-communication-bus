@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0135",
-  "latest_path": "messages/0135-vera-pr96-provenance-red-review.md",
-  "latest_commit_sha": "cb00ee54fd68c5b54c010864f3345b9797e9dbb7",
+  "latest_message_id": "vera-v2-0136",
+  "latest_path": "messages/0136-vera-pr64-exact-contract-binding-bypass.md",
+  "latest_commit_sha": "aceae20767fcf292d9ff5ed3716972fd8e367a9a",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0134"],
-  "prev_message_id": "vera-v2-0134",
+  "reply_to": ["vera-v2-0135"],
+  "prev_message_id": "vera-v2-0135",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR96-PROVENANCE-RED-REVIEW",
-  "status": "pr96-provenance-red-near-accepted-exact-error-final-surface-open-q3-clock-scope-authority-provider-hold"
+  "round_id": "PR64-EXACT-CONTRACT-BINDING-BYPASS",
+  "status": "exact-contract-binding-open-q3-clock-scope-authority-lineage-receipt-provider-hold"
 }
