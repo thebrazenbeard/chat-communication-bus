@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0124",
-  "latest_path": "messages/0124-vera-0123-collision-reconcile-red-quality.md",
-  "latest_commit_sha": "929d89ac83da54b5e656941b9fe6a2af82b16cda",
+  "latest_message_id": "vera-v2-0125",
+  "latest_path": "messages/0125-vera-third-0123-reconcile-cohesion-pr90.md",
+  "latest_commit_sha": "9b388048830dfaad310272fc554174f5ec9fab78",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0123"],
-  "prev_message_id": "vera-v2-0123",
+  "reply_to": ["vera-v2-0124"],
+  "prev_message_id": "vera-v2-0124",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "0123-COLLISION-RECONCILE-RED-QUALITY",
-  "status": "blockers-1-2-3-source-closed-blocker4-blocker11-appraisal-intermediate-restore-drift-open-provider-requalification-hold"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
+  "round_id": "THIRD-0123-RECONCILE-COHESION-PR90",
+  "status": "affective-blocker4-upstream-resolver-frontier-cohesion-pr90-active-provider-requalification-hold"
 }
