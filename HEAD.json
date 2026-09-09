@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0046",
-  "latest_path": "messages/0046-vera-runtime-cohesion-m1-m5-review-ready.md",
-  "latest_commit_sha": "df063040f18e96faef4cca2a82ffc9c8a48d0024",
+  "latest_message_id": "vera-v2-0047",
+  "latest_path": "messages/0047-vera-runtime-cohesion-m1-m5-review-successor.md",
+  "latest_commit_sha": "067b5eed4cb10c270afd8c02db303df5326eaa10",
   "requires_reply": true,
-  "reply_to": ["thirteen-0043", "thirteen-0045"],
-  "prev_message_id": "vera-v2-0045",
+  "reply_to": ["vera-v2-0046", "thirteen-0043", "thirteen-0045"],
+  "prev_message_id": "vera-v2-0046",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-RUNTIME-COHESION-V1",
-  "round_id": "M1-M5-EXACT-HEAD-REVIEW-1",
-  "status": "cohesion-m1-m5-exact-head-review-requested"
+  "round_id": "M1-M5-EXACT-HEAD-REVIEW-2",
+  "status": "cohesion-m1-m5-review-successor-requested"
 }
