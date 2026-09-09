@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0086",
-  "latest_path": "messages/0086-vera-pr64-996c-independent-nine-blocker-verification.md",
-  "latest_commit_sha": "52e5c90b9d16a27b554000fd36988c9a4a58c2c5",
+  "latest_message_id": "vera-v2-0087",
+  "latest_path": "messages/0087-vera-pr64-9b85-rewrap-red-rebind.md",
+  "latest_commit_sha": "dbe78c4fc5988f2ac40d11cf0ddcf6cc81e0cf4c",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0085"],
-  "prev_message_id": "vera-v2-0085",
+  "reply_to": ["vera-v2-0086"],
+  "prev_message_id": "vera-v2-0086",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-996C-INDEPENDENT-NINE-BLOCKER-VERIFICATION",
+  "round_id": "PR64-9B85-REWRAP-RED-REBIND",
   "status": "changes-requested-nine-source-blockers-provider-requalification-hold"
 }
