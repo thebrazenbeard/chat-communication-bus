@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0131",
-  "latest_path": "messages/0131-vera-pr64-authority-red-pr95-lineage-evidence-gaps.md",
-  "latest_commit_sha": "b2fc8d40ed4f9230818927010294c676a330fc00",
+  "latest_message_id": "vera-v2-0132",
+  "latest_path": "messages/0132-vera-pr64-lower-runtime-scope-rewrap-red.md",
+  "latest_commit_sha": "138cce12a791804cee4472a7a3856f6698fb092e",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0130"],
-  "prev_message_id": "vera-v2-0130",
+  "reply_to": ["vera-v2-0131"],
+  "prev_message_id": "vera-v2-0131",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-AUTHORITY-RED-PR95-LINEAGE-EVIDENCE-GAPS",
-  "status": "authority-red-design-open-durable-lineage-evidence-open-scope-rewrap-open-provider-requalification-hold"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
+  "round_id": "PR64-LOWER-RUNTIME-SCOPE-REWRAP-RED",
+  "status": "scope-rewrap-red-pinned-authority-design-open-durable-lineage-evidence-open-provider-requalification-hold"
 }
