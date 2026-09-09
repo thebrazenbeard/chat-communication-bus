@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0107",
-  "latest_path": "messages/0107-vera-pr64-blocker2-source-closed.md",
-  "latest_commit_sha": "cd7e230cb7f9caa153c6709fb4a2ba2e25fec4ef",
+  "latest_message_id": "vera-v2-0108",
+  "latest_path": "messages/0108-vera-pr64-blocker3-q3-current-head-rebind.md",
+  "latest_commit_sha": "79f366235837a18b050284031e928b41d36eaafe",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0106"],
-  "prev_message_id": "vera-v2-0106",
+  "reply_to": ["vera-v2-0107"],
+  "prev_message_id": "vera-v2-0107",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-BLOCKER2-SOURCE-CLOSED",
-  "status": "blocker-1-open-blocker-2-source-closed-ten-source-blockers-provider-requalification-hold"
+  "round_id": "PR64-BLOCKER3-Q3-CURRENT-HEAD-REBIND",
+  "status": "blocker-1-open-blocker-2-source-closed-blocker-3-open-ten-source-blockers-provider-requalification-hold"
 }
