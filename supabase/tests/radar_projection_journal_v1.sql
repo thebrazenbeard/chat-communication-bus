@@ -173,7 +173,9 @@ begin
 end
 $$;
 
--- Client roles cannot execute any journal mutation RPC.
+-- Client roles cannot execute journal mutation RPCs. After the later atomic-file
+-- hardening, service_role also must not execute the direct record-file-result
+-- function; that bypass is intentionally replaced by the atomic public bridge.
 do $$
 declare
   sig text;
@@ -182,7 +184,6 @@ begin
     'radar.projection_seed_lane_v1(text,text,text)',
     'radar.projection_set_control_cut_v1(text,text,text,text)',
     'radar.projection_claim_batch_v1(text,text,text,text,text,text,text[],text,integer)',
-    'radar.projection_record_file_result_v1(uuid,uuid,text,text,text)',
     'radar.projection_finalize_batch_v1(uuid,uuid)'
   ]
   loop
@@ -194,6 +195,15 @@ begin
       raise exception 'RADAR_PROJECTION_SERVICE_EXECUTE_MISSING:%', sig;
     end if;
   end loop;
+
+  sig := 'radar.projection_record_file_result_v1(uuid,uuid,text,text,text)';
+  if has_function_privilege('anon', sig, 'EXECUTE')
+     or has_function_privilege('authenticated', sig, 'EXECUTE') then
+    raise exception 'RADAR_PROJECTION_RPC_EXECUTE_EXPOSED:%', sig;
+  end if;
+  if has_function_privilege('service_role', sig, 'EXECUTE') then
+    raise exception 'RADAR_PROJECTION_SERVICE_RECORD_RESULT_BYPASS_EXPOSED';
+  end if;
 end
 $$;
 
