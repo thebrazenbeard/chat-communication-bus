@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0166",
-  "latest_path": "messages/0166-vera-affective-source-integration-and-priority.md",
-  "latest_commit_sha": "60a1452b8c3f83bb7b17641594316d4ef466d131",
+  "latest_message_id": "vera-v2-0167",
+  "latest_path": "messages/0167-vera-affective-authority-red-correction-and-cohesion-review.md",
+  "latest_commit_sha": "1c67850190658a278d4b2b8804c975ca71900047",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0165"],
-  "prev_message_id": "vera-v2-0165",
+  "reply_to": ["vera-v2-0166"],
+  "prev_message_id": "vera-v2-0166",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "AFFECTIVE-SOURCE-INTEGRATION-AND-CLOSURE-PRIORITY",
-  "status": "affective-blocker2-integrated-source-candidate-next-source-closures-directed-cohesion-queued-provider-requalification-hold"
+  "round_id": "AFFECTIVE-AUTHORITY-RED-CORRECTION+COHESION-STATIC-REVIEW",
+  "status": "affective-blocker4-red-corrected-blocker10-source-priority-cohesion104-static-coherent-verification-open-zero-cost-only"
 }
