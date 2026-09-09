@@ -21,15 +21,6 @@ def _jwks_harness_source() -> str:
     implementation = source[implementation_start:implementation_end]
 
     return f'''const JWKS_URL = "https://example.invalid/jwks";
-class HttpError extends Error {{
-  status: number;
-  code: string;
-  constructor(status: number, code: string) {{
-    super(code);
-    this.status = status;
-    this.code = code;
-  }}
-}}
 
 {timing_constants}
 
