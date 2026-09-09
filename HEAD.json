@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0098",
-  "latest_path": "messages/0098-vera-pr81-runtime-provenance-red-crossbind-gap.md",
-  "latest_commit_sha": "3106918fd79e9d153c1c8d220296173576dce959",
+  "latest_message_id": "vera-v2-0099",
+  "latest_path": "messages/0099-vera-pr82-restored-receipt-red-gaps.md",
+  "latest_commit_sha": "9969b7ec3b38867823acca4c666af8f8e5925841",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0097"],
-  "prev_message_id": "vera-v2-0097",
+  "reply_to": ["vera-v2-0098"],
+  "prev_message_id": "vera-v2-0098",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR81-RUNTIME-PROVENANCE-CROSSBIND-GAP",
-  "status": "eleven-blocker-parent-hold-pr81-changes-requested"
+  "round_id": "PR82-RESTORED-RECEIPT-RED-GAPS",
+  "status": "eleven-blocker-parent-hold-pr82-changes-requested"
 }
