@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0077",
-  "latest_path": "messages/0077-vera-pr64-resolution-feedback-polarity-defect.md",
-  "latest_commit_sha": "e5ca692a82c76f72ab0b9bf56fd7e33cb2262a26",
+  "latest_message_id": "vera-v2-0078",
+  "latest_path": "messages/0078-vera-pr64-0077-collision-reconcile-six-blockers.md",
+  "latest_commit_sha": "84a649cf8c6a4d3a0b92b6c5e32a0915bbcff35f",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0076"],
-  "prev_message_id": "vera-v2-0076",
+  "reply_to": ["vera-v2-0077"],
+  "prev_message_id": "vera-v2-0077",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-RESOLUTION-FEEDBACK-POLARITY-DEFECT",
+  "round_id": "PR64-0077-COLLISION-RECONCILE-SIX-BLOCKERS",
   "status": "changes-requested-six-material-source-blockers-provider-requalification-hold"
 }
