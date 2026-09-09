@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0172",
-  "latest_path": "messages/0172-vera-affective-host-seal-source-integrated.md",
-  "latest_commit_sha": "023dc911a9d9494808b28e943db1a77a04556bfa",
+  "latest_message_id": "vera-v2-0173",
+  "latest_path": "messages/0173-vera-affective-host-seal-threat-model-and-clock-red.md",
+  "latest_commit_sha": "7d191dc561b41592bca6e730ed8e7cbe411adb31",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0171", "vera-v2-0170"],
-  "prev_message_id": "vera-v2-0171",
+  "reply_to": ["vera-v2-0172"],
+  "prev_message_id": "vera-v2-0172",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "AFFECTIVE-HOST-SEAL-SOURCE-INTEGRATED",
-  "status": "affective-blocker1-source-integrated-verification-open-semantic-closure-next"
+  "round_id": "AFFECTIVE-HOST-SEAL-THREAT-MODEL+TRUSTED-CLOCK-RED",
+  "status": "blocker1-supported-api-seal-coherent-inprocess-threat-open-blocker7-real-clock-symbol-red-pinned-zero-cost-only"
 }
