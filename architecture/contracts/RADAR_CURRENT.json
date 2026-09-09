@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "status": "RADAR_SOURCE_HARDENING_LOCAL_QUALIFICATION_PENDING_PROVIDER_PARTIAL",
+  "status": "RADAR_ANCHOR_E_FROZEN_PROVIDER_RECOVERY_PENDING",
   "repository": "thebrazenbeard/chat-communication-bus",
   "canonical_default_branch": "main",
   "canonical_state": "github",
@@ -13,10 +13,10 @@
   "provider_contract": "architecture/contracts/RADAR_SUPABASE_V1.md",
   "source_custody_contract": "architecture/contracts/RADAR_SOURCE_CUSTODY_V1.json",
   "qualification_contract": "architecture/contracts/RADAR_QUALIFICATION_V1.json",
-  "projection_trust_contract": "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V3.json",
+  "projection_trust_contract": "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V4.json",
   "qualification": {
     "authoritative_mode": "LOCAL_NO_PAID_SERVICES",
-    "status": "LOCAL_EXECUTION_PENDING",
+    "status": "PASS_ADMITTED_FOR_ANCHOR_E_SOURCE",
     "private_hosted_actions_authoritative": false,
     "billing_or_plan_change_allowed_as_recovery": false,
     "engine": "scripts/radar_qualify.py",
@@ -25,10 +25,24 @@
     "runner_role": "NON_EVIDENTIARY_SUPPORTED_ENTRYPOINT",
     "receipt_validator": "scripts/radar_validate_qualification_receipt.py",
     "receipt_location": "EXTERNAL_TO_SOURCE_CHECKOUT",
-    "latest_qualification_receipt": null,
     "authorized_platform": "windows",
     "launcher_identity_evidentiary": false,
-    "platform_identity_evidentiary": false
+    "platform_identity_evidentiary": false,
+    "latest_qualification_receipt": {
+      "schema_version": 2,
+      "status": "PASS",
+      "source_commit": "dfd3c639d058dcafaa1167e53ad4bdc152d52cf6",
+      "source_tree": "8e51a28db92739d2ce103c72194330dc84a7c415",
+      "working_tree": "CLEAN",
+      "mode": "LOCAL_NO_PAID_SERVICES",
+      "run_id": 34397641413,
+      "job_id": 102621180712,
+      "runner": "LAPPY-vera-blender",
+      "stage_evidence_sha256": "255409e47204f073cdb4a6b460910364985c2ef6ebff746f61e21622666a445b",
+      "artifact_name": "radar-local-qualification-dfd3c639-34397641413",
+      "artifact_id": 10123172942,
+      "admission": "hephaestus-0062"
+    }
   },
   "historical_integration": {
     "branch": "radar/control-plane-v1",
@@ -56,7 +70,7 @@
     "project_id": "klmbpaigzeguvnpccqzz",
     "schema": "radar",
     "canonical": false,
-    "readback_at": "2026-09-06",
+    "readback_at": "2026-09-09",
     "applied_source_state": "PARTIAL_NOT_CURRENT",
     "applied_radar_migrations": [
       "20260902120716_radar_control_plane_v1",
@@ -81,10 +95,12 @@
       "live_version": 3,
       "live_status": "ACTIVE",
       "verify_jwt": true,
+      "live_digest": "0aaab7f376d1454efe76a757755918312eac35a8fde2f4c4ff7e63072a558fb7",
       "body_bound_central_oidc_source_deployed": false
     },
     "projection_anchor_c_deployed": false,
     "projection_anchor_d_deployed": false,
+    "projection_anchor_e_deployed": false,
     "projection_journal_seeded": false,
     "edge_body_bound_oidc_deployed": false
   },
@@ -94,13 +110,15 @@
     "historical_projection_anchor_b_tree": "142a24ea52df3539c00818f30bf3d93f0c5945b0",
     "historical_projection_anchor_c": "f5ab21244a111b47708fa11e99d0e8ff7d8f5a45",
     "historical_projection_anchor_c_tree": "a7dd785be8dfea883df052a73378d583e53058d1",
-    "current_projection_anchor_d": "401733b2013802880320629a4d8ea06f8bf7b760",
-    "current_projection_anchor_d_tree": "d3a9c44f0378409a626e29334b4d057ef20c7e8e",
-    "current_projection_anchor_d_deployment_eligible": false,
-    "post_anchor_d_source_repairs_pending_successor_anchor": true,
-    "successor_anchor_status": "PENDING_LOCAL_QUALIFICATION",
+    "historical_projection_anchor_d": "401733b2013802880320629a4d8ea06f8bf7b760",
+    "historical_projection_anchor_d_tree": "d3a9c44f0378409a626e29334b4d057ef20c7e8e",
+    "current_projection_anchor_e": "dfd3c639d058dcafaa1167e53ad4bdc152d52cf6",
+    "current_projection_anchor_e_tree": "8e51a28db92739d2ce103c72194330dc84a7c415",
+    "current_projection_anchor_e_deployment_eligible": true,
+    "post_anchor_d_source_repairs_pending_successor_anchor": false,
+    "successor_anchor_status": "FROZEN_QUALIFIED_SOURCE_ONLY",
     "immutable_code_reads_current_main_as_inert_data": true,
-    "status": "ANCHOR_D_FROZEN_REFERENCE_NOT_DEPLOYMENT_ELIGIBLE"
+    "status": "ANCHOR_E_FROZEN_QUALIFIED_SOURCE_ONLY_NOT_DEPLOYED"
   },
   "parallax": {
     "branch": "bus/parallax-v1",
@@ -118,7 +136,7 @@
     {
       "code": "GITHUB_BUS_INGEST_GATEWAY_JWT_MISMATCH",
       "severity": "HIGH",
-      "detail": "Live github-bus-ingest v3 has verify_jwt=true; source custom GitHub OIDC admission is not live."
+      "detail": "Live github-bus-ingest v3 has verify_jwt=true; qualified custom GitHub OIDC admission is not live."
     },
     {
       "code": "PROJECTION_JOURNAL_NOT_INSTALLED_OR_SEEDED",
@@ -126,19 +144,9 @@
       "detail": "Durable central reconciliation journal/API/atomic-file source exists but provider tables/RPCs, atomic claim-bound projection, and lane cursors are absent."
     },
     {
-      "code": "PROJECTION_ANCHOR_D_NOT_DEPLOYED",
+      "code": "PROJECTION_ANCHOR_E_NOT_DEPLOYED",
       "severity": "HIGH",
-      "detail": "Immutable projection anchor D is source-only and not deployed; dispatcher/provider trust configuration and body-bound Edge source are not active on main/provider."
-    },
-    {
-      "code": "PROJECTION_ANCHOR_D_KNOWN_PROTOCOL_DEFECT",
-      "severity": "HIGH",
-      "detail": "Frozen anchor D predates a required project_batch client repair: its Python request omits Edge-required identity and branch fields. Current staging contains the repair, but no qualified successor anchor has been frozen; anchor D is not deployment-eligible."
-    },
-    {
-      "code": "PROJECTION_ANCHOR_D_KNOWN_ATOMICITY_DEFECT",
-      "severity": "HIGH",
-      "detail": "Frozen anchor D also predates atomic claim-bound file projection. Its Edge path can mutate message projection before the separate journal-result write proves the batch claim/path remains current. Current staging routes file projection and terminal journal state through one fenced SQL transaction, but no qualified successor anchor has been frozen."
+      "detail": "Qualified immutable projection anchor E is frozen in source but not deployed; the default-branch dispatcher, provider RADAR_TRUSTED_PROJECTOR_SHA, body-bound Edge source, migrations, and projection cursors are not active as the recovered route."
     }
   ],
   "historical_cutover": {
@@ -151,5 +159,5 @@
     "currentness_role": "HISTORICAL_EVIDENCE_ONLY"
   },
   "self_registration_contract": "architecture/contracts/RADAR_SELF_REGISTRATION_V1.json",
-  "currentness_note": "GitHub is canonical. scripts/radar_qualify.py defines qualification semantics; scripts/radar_local_qualify.ps1 remains the compatibility-preserved runner/canonical supported Windows launcher with runner_role NON_EVIDENTIARY_SUPPORTED_ENTRYPOINT for the currently authorized LOCAL_NO_PAID_SERVICES platform profile; neither launcher identity nor platform identity is independently attested by the receipt. Receipt V2 stage evidence remains required and local execution is pending. Private hosted Actions are non-authoritative. Any local PASS receipt must be stored outside the source checkout and pass scripts/radar_validate_qualification_receipt.py against the same clean exact checkout before GREEN classification or successor-anchor freeze. Anchor D remains the latest frozen projection reference but is not deployment-eligible because post-D source repairs exist, including project_batch identity/branch protocol repair and atomic claim-bound file projection/journaling; freeze any successor only after authoritative local qualification and receipt admission. Provider facts above are readback status, not authorization to apply migrations, deploy Edge source, change verify_jwt, configure RADAR_TRUSTED_PROJECTOR_SHA, seed projection cursors, or activate the dispatcher."
+  "currentness_note": "GitHub is canonical. The authoritative LOCAL_NO_PAID_SERVICES schema-V2 receipt for exact source commit dfd3c639d058dcafaa1167e53ad4bdc152d52cf6 / tree 8e51a28db92739d2ce103c72194330dc84a7c415 is admitted. Projection trust anchor E freezes those exact already-qualified immutable bytes; this later anchor-freeze metadata/dispatcher commit is not itself substituted for the qualified source cut. Provider recovery remains separate and protected: six Radar migrations are unapplied, live github-bus-ingest remains v3 with verify_jwt=true, the body-bound successor is not deployed, RADAR_TRUSTED_PROJECTOR_SHA is not configured to anchor E, projection cursors are not seeded, and the canonical dispatcher is not active. Any modification to the frozen anchor-E projector source requires a new authoritative qualification and a new successor anchor rather than mutating E."
 }
