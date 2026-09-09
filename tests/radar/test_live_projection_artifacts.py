@@ -41,7 +41,7 @@ def test_edge_function_uses_body_bound_github_oidc_before_service_role_effects()
     assert "x-radar-body-sha256" in source
     assert "thebrazenbeard/chat-communication-bus" in source
     assert "RSASSA-PKCS1-v1_5" in source
-    assert "radar_project_bus_message_v1" in source
+    assert "radar_projection_project_file_v1" in source
     assert "SUPABASE_SERVICE_ROLE_KEY" in source
     assert "body_sha256" in source
     assert "content_base64" in source
