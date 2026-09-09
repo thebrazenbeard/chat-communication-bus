@@ -72,10 +72,15 @@ class FakeGit:
         return ("a1", "a2")
 
 
+def _remote_tracking_fake(_repo, *, use_remote_tracking_refs: bool = False) -> FakeGit:
+    assert use_remote_tracking_refs is True
+    return FakeGit()
+
+
 def test_workflow_run_head_is_observation_hint_not_projection_authority(tmp_path, monkeypatch) -> None:
     module = _load_script_module()
     topology, cutover = _contracts(tmp_path)
-    monkeypatch.setattr(module, "LocalGitRepository", lambda _repo, **_kwargs: FakeGit())
+    monkeypatch.setattr(module, "LocalGitRepository", _remote_tracking_fake)
 
     report = module.build_validation_report(
         repo_dir=tmp_path,
@@ -101,7 +106,7 @@ def test_workflow_run_head_is_observation_hint_not_projection_authority(tmp_path
 def test_schedule_enumerates_only_active_topology_lanes(tmp_path, monkeypatch) -> None:
     module = _load_script_module()
     topology, cutover = _contracts(tmp_path)
-    monkeypatch.setattr(module, "LocalGitRepository", lambda _repo, **_kwargs: FakeGit())
+    monkeypatch.setattr(module, "LocalGitRepository", _remote_tracking_fake)
 
     report = module.build_validation_report(
         repo_dir=tmp_path,
