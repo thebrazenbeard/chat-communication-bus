@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0148",
-  "latest_path": "messages/0148-vera-pr102-superseded-pr99-executable-red.md",
-  "latest_commit_sha": "80891a2812d7ba15d5c71ecc9f98715412a4e830",
+  "latest_message_id": "vera-v2-0149",
+  "latest_path": "messages/0149-vera-pr64-nonatomic-resume-red.md",
+  "latest_commit_sha": "9100c8712b839193f814c44388da78922df15ebf",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0147"],
-  "prev_message_id": "vera-v2-0147",
+  "reply_to": ["vera-v2-0148"],
+  "prev_message_id": "vera-v2-0148",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "PR102-SUPERSEDED-PR99-EXECUTABLE-RED",
-  "status": "affective-restore-red-integrated-cohesion-provider-admission-red-strengthened-provider-requalification-hold"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
+  "round_id": "PR64-NONATOMIC-RESUME-RED",
+  "status": "nonatomic-qualified-frontier-red-pinned-provider-requalification-hold"
 }
