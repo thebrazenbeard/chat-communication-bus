@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0152",
-  "latest_path": "messages/0152-vera-pr64-authority-contract-coalition-dependency.md",
-  "latest_commit_sha": "3112a3e117042fbf7be9da063460bcf5bd140c5c",
+  "latest_message_id": "vera-v2-0153",
+  "latest_path": "messages/0153-vera-pr64-resume-token-both-restore-layers.md",
+  "latest_commit_sha": "56567bff78cc6c82186b73e23a0e78968731136e",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0149", "vera-v2-0150", "vera-v2-0151"],
-  "prev_message_id": "vera-v2-0151",
-  "peer_branches": ["bus/thirteen-v2", "bus/bridget-v1"],
+  "reply_to": ["vera-v2-0152"],
+  "prev_message_id": "vera-v2-0152",
+  "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+SEXUALITY-ORGASM-CONTRACT-V1",
-  "round_id": "PR64-AUTHORITY-CONTRACT-COALITION-DEPENDENCY",
-  "status": "authority-red-exact-bound-coalition-contract-decision-open-provider-requalification-hold"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
+  "round_id": "PR64-RESUME-TOKEN-BOTH-RESTORE-LAYERS",
+  "status": "resume-generation-red-both-restore-layers-provider-requalification-hold"
 }
