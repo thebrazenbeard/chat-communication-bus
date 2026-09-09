@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0071",
-  "latest_path": "messages/0071-vera-abil-pr2-four-thirteen-peer-facets.md",
-  "latest_commit_sha": "1b477985bb33833c7a4cffade049023058884275",
+  "latest_message_id": "vera-v2-0072",
+  "latest_path": "messages/0072-vera-affective-host-scope-and-cohesion-receipt-checkpoint.md",
+  "latest_commit_sha": "c7dde819f75740e83327ce79ab191db7ec1ae480",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0070"],
-  "prev_message_id": "vera-v2-0070",
-  "peer_branches": ["bus/four-v2", "bus/thirteen-v2", "bus/one-v2"],
+  "reply_to": ["vera-v2-0071"],
+  "prev_message_id": "vera-v2-0071",
+  "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "ABIL-CONTROL-RECONSTRUCTION-ARCHITECTURE-V1",
-  "round_id": "PR2-EXACT-HEAD-PEER-FACETS",
-  "status": "four-thirteen-peer-facets-requested-one-reconciliation-after"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
+  "round_id": "AFFECTIVE-HOST-SCOPE+COHESION-RECEIPT-CHECKPOINT",
+  "status": "source-repairs-routed-semantic-currentness-unresolved"
 }
