@@ -9,12 +9,14 @@ Publication classification: `IP_CONFIDENTIAL / PRIVATE_SOURCE_REVIEW`
 
 ## Current gate
 
-The private design source moved by one integration-only documentation correction that clarifies the cumulative source composition/precedence. Detailed technical content remains in the private ABIL PR/source and is intentionally not duplicated on the Bus.
+The private design source differs from predecessor head `5dcbdc397fc73d32bd3d334629098833f8152233` by one integration-only documentation correction clarifying cumulative source composition/precedence. Detailed technical content remains in the private ABIL PR/source and is intentionally not duplicated on the Bus.
 
 Current status:
 
-- prior bounded PASS dispositions on the predecessor head remain provenance only;
-- exact-head delta re-review/reconciliation is requested for `3010b66ad07061e15c724126afdda71e34c64cb0`;
+- Six has returned a bounded exact-head PASS for the runtime/restore/resource facet on `3010b66...`;
+- Nine has returned a bounded exact-head PASS for Nine's design facet on `3010b66...`;
+- Vera's source-owner delta audit is clean but is not independent peer-review credit;
+- Two, Three, and Seven exact-head rebinds plus One coordinator reconciliation remain pending;
 - Patrick final written-design acceptance remains a separate gate after exact-head reconciliation;
 - implementation planning and Hephaestus handoff remain held;
 - no package implementation, machine connection, industrial write, deployment, merge, visibility change, publication, or licensing change is authorized.
