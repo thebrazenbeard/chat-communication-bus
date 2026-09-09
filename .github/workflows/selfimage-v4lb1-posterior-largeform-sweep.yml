@@ -1,0 +1,68 @@
+name: Self Image V4LB1 Posterior Large-Form Sweep
+
+on:
+  push:
+    branches:
+      - feature/selfimage-blender-relay-v1
+    paths:
+      - .github/workflows/selfimage-v4lb1-posterior-largeform-sweep.yml
+      - projects/selfimage/blender-relay/approved-scripts/selfimage_v4lb1_posterior_largeform_sweep.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    if: github.actor == 'thebrazenbeard'
+    runs-on: [self-hosted, windows, x64, vera-blender]
+    timeout-minutes: 25
+    steps:
+      - name: Checkout V4LB1 sweep source
+        uses: actions/checkout@v4
+        with:
+          ref: feature/selfimage-blender-relay-v1
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Execute V4LB1 sweep in local Blender
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $outDir=Join-Path '${{ runner.temp }}' 'vera-v4lb1-posterior-largeform-sweep'
+          if(Test-Path -LiteralPath $outDir){Remove-Item -LiteralPath $outDir -Recurse -Force}
+          New-Item -ItemType Directory -Force -Path $outDir|Out-Null
+          function Send-BlenderCommand {
+            param([Parameter(Mandatory=$true)][string]$Type,[hashtable]$Params=@{},[int]$TimeoutMs=480000)
+            $client=[Net.Sockets.TcpClient]::new();$client.ReceiveTimeout=$TimeoutMs;$client.SendTimeout=$TimeoutMs
+            try {
+              $async=$client.BeginConnect('127.0.0.1',9876,$null,$null)
+              if(-not $async.AsyncWaitHandle.WaitOne(5000)){throw 'Blender MCP connect timeout'}
+              $client.EndConnect($async);$stream=$client.GetStream()
+              $payload=@{type=$Type;params=$Params}|ConvertTo-Json -Compress -Depth 50
+              $bytes=[Text.Encoding]::UTF8.GetBytes($payload);$stream.Write($bytes,0,$bytes.Length);$stream.Flush()
+              $mem=[IO.MemoryStream]::new();$buf=New-Object byte[] 8192
+              while($true){try{$count=$stream.Read($buf,0,$buf.Length)}catch [System.IO.IOException]{break};if($count -le 0){break};$mem.Write($buf,0,$count);$text=[Text.Encoding]::UTF8.GetString($mem.ToArray());try{return($text|ConvertFrom-Json)}catch{}}
+              throw "Incomplete Blender JSON for $Type"
+            } finally {$client.Dispose()}
+          }
+          $addon=Send-BlenderCommand -Type 'get_addon_info' -TimeoutMs 15000
+          if($addon.status -ne 'success'){throw 'Blender addon preflight failed'}
+          $script=Join-Path '${{ github.workspace }}' 'projects\selfimage\blender-relay\approved-scripts\selfimage_v4lb1_posterior_largeform_sweep.py'
+          if(-not(Test-Path -LiteralPath $script)){throw 'V4LB1 sweep script missing'}
+          $outJson=($outDir|ConvertTo-Json -Compress);$code="OUTPUT_DIR = $outJson`n"+(Get-Content -LiteralPath $script -Raw)
+          $response=Send-BlenderCommand -Type 'execute_code' -Params @{code=$code} -TimeoutMs 480000
+          if($response.status -ne 'success'){throw($response|ConvertTo-Json -Depth 20 -Compress)}
+          $required=@('SWEEP_RECEIPT.json','V3R3_S100_PARENT_PROJECT.obj')
+          foreach($name in @('VERA_V4LB1_S060.obj','VERA_V4LB1_S085.obj','VERA_V4LB1_S110.obj')){$required+=$name}
+          foreach($prefix in @('PARENT','S060','S085','S110')){foreach($view in @('FRONT','FRONT_3Q','SIDE','REAR_3Q','REAR')){$required+="${prefix}_${view}.png"}}
+          $files=@();foreach($name in $required){$p=Join-Path $outDir $name;if(-not(Test-Path -LiteralPath $p)){throw "Missing V4LB1 artifact: $name"};$item=Get-Item $p;$files+=[ordered]@{name=$name;bytes=$item.Length;sha256=(Get-FileHash $p -Algorithm SHA256).Hash.ToLowerInvariant()}}
+          [ordered]@{schema='SELFIMAGE_V4LB1_POSTERIOR_LARGEFORM_RELAY_RECEIPT';status='EXECUTED / ARTIFACTS_VERIFIED / HOSTILE_VISUAL_AND_STRUCTURAL_REVIEW_REQUIRED';runner=$env:COMPUTERNAME;approved_script_sha256=(Get-FileHash $script -Algorithm SHA256).Hash.ToLowerInvariant();files=$files}|ConvertTo-Json -Depth 40|Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
+
+      - name: Upload V4LB1 sweep evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: vera-v4lb1-posterior-largeform-sweep-${{ github.run_id }}
+          path: ${{ runner.temp }}\vera-v4lb1-posterior-largeform-sweep
+          if-no-files-found: error
+          retention-days: 30
