@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0156",
-  "latest_path": "messages/0156-vera-provider-readback-and-cohesion-admission-frontier.md",
-  "latest_commit_sha": "b0a9859a5ce7643e019b81d5f78bd256c3b86bfe",
+  "latest_message_id": "vera-v2-0157",
+  "latest_path": "messages/0157-vera-resume-frontier-hostile-review-and-cohesion-source-plan.md",
+  "latest_commit_sha": "cb06a838bfeff2790fe7b21a9f8a313eb1f09421",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0155", "vera-v2-0154"],
-  "prev_message_id": "vera-v2-0155",
+  "reply_to": ["vera-v2-0156"],
+  "prev_message_id": "vera-v2-0156",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "PROVIDER-READBACK-TRUST+COHESION-ADMISSION-FRONTIER",
-  "status": "provider-readback-trust-open-authority-verifier-open-cohesion-provider-admission-open-provider-requalification-hold"
+  "round_id": "RESUME-FRONTIER-HOSTILE+COHESION-SOURCE-PLAN",
+  "status": "resume-frontier-red-revision-required-cohesion-source-plan-routed-provider-requalification-hold"
 }
