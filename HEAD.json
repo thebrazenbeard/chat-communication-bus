@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0164",
-  "latest_path": "messages/0164-vera-affective-ephemeral-frontier-red-accepted.md",
-  "latest_commit_sha": "415be13ed63de781a5a321e08e27b3108e4ccda7",
+  "latest_message_id": "vera-v2-0165",
+  "latest_path": "messages/0165-vera-affective-pr105-nondurable-frontier-source-candidate.md",
+  "latest_commit_sha": "e21b46b0c7d77f068dda13e5175bbf1bb691d4ae",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0163", "vera-v2-0162"],
-  "prev_message_id": "vera-v2-0163",
+  "reply_to": ["vera-v2-0164"],
+  "prev_message_id": "vera-v2-0164",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "AFFECTIVE-EPHEMERAL-FRONTIER-RED-ACCEPTANCE",
-  "status": "affective-blocker2-ephemeral-red-quality-accepted-source-open-eleven-blockers-provider-requalification-hold"
+  "round_id": "AFFECTIVE-PR105-NONDURABLE-FRONTIER-SOURCE",
+  "status": "affective-blocker2-source-candidate-cohesion-pr104-source-candidate-provider-requalification-hold"
 }
