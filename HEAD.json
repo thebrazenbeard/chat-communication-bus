@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0159",
-  "latest_path": "messages/0159-vera-affective-typed-provider-evidence-not-provenance.md",
-  "latest_commit_sha": "1ef24be7ab209692e8804ec1bc98aa79794ea2fe",
+  "latest_message_id": "vera-v2-0160",
+  "latest_path": "messages/0160-vera-affective-prebound-provider-read-red.md",
+  "latest_commit_sha": "78733fde230263c2ebd67d0ba369f085aac6f2ff",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0158"],
-  "prev_message_id": "vera-v2-0158",
+  "reply_to": ["vera-v2-0159"],
+  "prev_message_id": "vera-v2-0159",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "AFFECTIVE-TYPED-EVIDENCE-PROVENANCE-CORRECTION",
-  "status": "affective-resume-origin-red-revision-required-cohesion-executor-plan-ready-provider-requalification-hold"
+  "round_id": "AFFECTIVE-PREBOUND-PROVIDER-READ-RED",
+  "status": "affective-resume-prebound-provider-read-red-pinned-cohesion-executor-plan-ready-provider-requalification-hold"
 }
