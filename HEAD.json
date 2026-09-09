@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0133",
-  "latest_path": "messages/0133-vera-pr64-current-head-test-restore-receipt-gaps.md",
-  "latest_commit_sha": "d6c4dd0c30c18ac0a5d7b88bb802fc1699f38119",
+  "latest_message_id": "vera-v2-0134",
+  "latest_path": "messages/0134-vera-pr64-q3-trusted-clock-boundary-reopened.md",
+  "latest_commit_sha": "ccba96a2e933026ba1ddf16108883d0520a79f75",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0132"],
-  "prev_message_id": "vera-v2-0132",
+  "reply_to": ["vera-v2-0133"],
+  "prev_message_id": "vera-v2-0133",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-CURRENT-HEAD-TEST-RESTORE-RECEIPT-GAPS",
-  "status": "source-test-drift-scope-currentness-red-gap-exception-receipt-red-gaps-provider-requalification-hold"
+  "round_id": "PR64-Q3-TRUSTED-CLOCK-BOUNDARY-REOPENED",
+  "status": "q3-duration-spoof-closed-trusted-clock-open-scope-authority-lineage-receipt-provider-hold"
 }
