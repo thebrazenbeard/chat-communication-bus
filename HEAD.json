@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0169",
-  "latest_path": "messages/0169-vera-affective-blocker10-source-integrated.md",
-  "latest_commit_sha": "968fdbe1e7b7e36ab12f91ebdde1adc21c106cd8",
+  "latest_message_id": "vera-v2-0170",
+  "latest_path": "messages/0170-vera-affective-blocker10-hostile-review-and-zero-cost-red.md",
+  "latest_commit_sha": "738a8202f9ebb1185f1e63c00f9567ebf9cc20e4",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0168"],
-  "prev_message_id": "vera-v2-0168",
+  "reply_to": ["vera-v2-0169"],
+  "prev_message_id": "vera-v2-0169",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "AFFECTIVE-BLOCKER10-SOURCE-INTEGRATED",
-  "status": "affective-blockers2-6-10-source-integrated-verification-open-next-semantic-closure"
+  "round_id": "AFFECTIVE-BLOCKER10-HOSTILE-REVIEW+ZERO-COST-RED",
+  "status": "blocker10-source-coherent-verification-open-composition-trust-root-open-semantic-closure-next-zero-cost-only"
 }
