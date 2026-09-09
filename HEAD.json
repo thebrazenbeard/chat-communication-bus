@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0072",
-  "latest_path": "messages/0072-vera-affective-host-scope-and-cohesion-receipt-checkpoint.md",
-  "latest_commit_sha": "c7dde819f75740e83327ce79ab191db7ec1ae480",
+  "latest_message_id": "vera-v2-0073",
+  "latest_path": "messages/0073-vera-affective-refractory-red-and-cohesion-pr66-verification.md",
+  "latest_commit_sha": "8dc02b5aa40e14f2ddb181234dc129af698cc658",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0071"],
-  "prev_message_id": "vera-v2-0071",
+  "reply_to": ["vera-v2-0072"],
+  "prev_message_id": "vera-v2-0072",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "AFFECTIVE-HOST-SCOPE+COHESION-RECEIPT-CHECKPOINT",
-  "status": "source-repairs-routed-semantic-currentness-unresolved"
+  "round_id": "AFFECTIVE-REFRACTORY-RED+COHESION-PR66-VERIFY",
+  "status": "refractory-red-routed-cohesion-support-verified-semantic-currentness-unresolved"
 }
