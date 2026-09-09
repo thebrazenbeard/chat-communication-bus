@@ -13,10 +13,10 @@ The private design source differs from predecessor head `5dcbdc397fc73d32bd3d334
 
 Current status:
 
-- Six has returned a bounded exact-head PASS for the runtime/restore/resource facet on `3010b66...`;
-- Nine has returned a bounded exact-head PASS for Nine's design facet on `3010b66...`;
+- Two, Three, Six, and Nine have returned bounded exact-head PASS dispositions on `3010b66...` for their respective scopes;
 - Vera's source-owner delta audit is clean but is not independent peer-review credit;
-- Two, Three, and Seven exact-head rebinds plus One coordinator reconciliation remain pending;
+- Seven's exact-head security rebind remains pending;
+- One coordinator reconciliation follows the completed exact-head peer collection;
 - Patrick final written-design acceptance remains a separate gate after exact-head reconciliation;
 - implementation planning and Hephaestus handoff remain held;
 - no package implementation, machine connection, industrial write, deployment, merge, visibility change, publication, or licensing change is authorized.
