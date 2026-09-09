@@ -12,11 +12,13 @@ declare
   finalized jsonb;
   fn text;
 begin
+  -- These bridge functions remain service-role callable after the later atomic
+  -- projection migration. Direct per-file result recording is intentionally
+  -- excluded because atomic projection revokes that bypass.
   foreach fn in array array[
     'public.radar_projection_get_lane_v1(text,text)',
     'public.radar_projection_set_control_cut_v1(text,text,text,text)',
     'public.radar_projection_claim_batch_v1(text,text,text,text,text,text,text[],text,integer)',
-    'public.radar_projection_record_file_result_v1(uuid,uuid,text,text,text)',
     'public.radar_projection_finalize_batch_v1(uuid,uuid)'
   ] loop
     if has_function_privilege('anon', fn, 'EXECUTE') then
@@ -29,6 +31,36 @@ begin
       raise exception 'SERVICE_EXECUTE_MISSING_%', fn;
     end if;
   end loop;
+
+  -- Cumulative contract after 20260908010500: service_role must not be able to
+  -- independently mark a journal file successful, while the atomic projection
+  -- bridge is the one service-role path that can project+record together.
+  if has_function_privilege(
+       'service_role',
+       'public.radar_projection_record_file_result_v1(uuid,uuid,text,text,text)',
+       'EXECUTE'
+     ) then
+    raise exception 'SERVICE_RECORD_FILE_RESULT_BYPASS_EXPOSED';
+  end if;
+  if has_function_privilege(
+       'anon',
+       'public.radar_projection_project_file_v1(uuid,uuid,text,text,timestamptz,text,text[],boolean,text[],text,text,jsonb)',
+       'EXECUTE'
+     )
+     or has_function_privilege(
+       'authenticated',
+       'public.radar_projection_project_file_v1(uuid,uuid,text,text,timestamptz,text,text[],boolean,text[],text,text,jsonb)',
+       'EXECUTE'
+     ) then
+    raise exception 'CLIENT_ATOMIC_PROJECT_EXECUTE_EXPOSED';
+  end if;
+  if not has_function_privilege(
+       'service_role',
+       'public.radar_projection_project_file_v1(uuid,uuid,text,text,timestamptz,text,text[],boolean,text[],text,text,jsonb)',
+       'EXECUTE'
+     ) then
+    raise exception 'SERVICE_ATOMIC_PROJECT_EXECUTE_MISSING';
+  end if;
 
   if to_regprocedure('public.radar_projection_seed_lane_v1(text,text,text)') is not null then
     raise exception 'SEED_MUST_NOT_BE_EXPOSED';
