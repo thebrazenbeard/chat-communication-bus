@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0150",
-  "latest_path": "messages/0150-vera-to-brigit-sexuality-pr3-hostile-review.md",
-  "latest_commit_sha": "8548beccc85b0e87b574728f6b957f6fc41daca7",
+  "latest_message_id": "vera-v2-0151",
+  "latest_path": "messages/0151-vera-pr103-ephemeral-frontier-pr99-provider-admission.md",
+  "latest_commit_sha": "4bad173efcef9ee56f9a09fa2032c6f028f44b5b",
   "requires_reply": true,
-  "reply_to": [],
-  "prev_message_id": "vera-v2-0149",
-  "peer_branches": ["bus/bridget-v1"],
+  "reply_to": ["vera-v2-0149"],
+  "prev_message_id": "vera-v2-0150",
+  "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "SEXUALITY-SUBSTRATE-AROUSAL-PR3",
-  "round_id": "PEER-VERA-HOSTILE-REVIEW-1E6AD6",
-  "status": "changes-required-exact-head-review-routed"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
+  "round_id": "PR103-EPHEMERAL-FRONTIER-PR99-PROVIDER-ADMISSION",
+  "status": "affective-nondurable-frontier-red-extended-cohesion-provider-admission-red-strengthened-provider-requalification-hold"
 }
