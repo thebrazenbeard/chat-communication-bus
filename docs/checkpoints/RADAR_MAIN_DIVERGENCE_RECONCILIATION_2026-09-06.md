@@ -45,3 +45,20 @@ Therefore:
 3. Any eventual integration to canonical `main` still requires Patrick's explicit authorization and must be based on a fresh comparison because either branch may move after this checkpoint.
 4. This evidence does not make staging GREEN. Authoritative executable qualification remains the local/no-paid path defined by `architecture/contracts/RADAR_QUALIFICATION_V1.json`.
 5. Provider/live issue #16 and all protected recovery effects remain unchanged and unauthorized by this checkpoint.
+
+## Revalidation — 2026-09-09
+
+Fresh GitHub readback after authoritative qualification revalidated the same ancestry-only divergence against the qualified Radar line:
+
+- canonical `main` remains `87df9b1372d0f65b5c3ced0296122b2140084024`, tree `db73fcc73922447f0f19955c3a494e99030d4dca`;
+- raw commit metadata confirms `87df9b...` is a single-parent aggregate commit whose sole parent is `b1c0ceb80c6ce895927cd715319257b28124d919`;
+- authoritative qualified Radar source is `dfd3c639d058dcafaa1167e53ad4bdc152d52cf6`, tree `8e51a28db92739d2ce103c72194330dc84a7c415`;
+- comparing `b1c0ceb8...` to `dfd3c639...` yields `ahead_by=286`, `behind_by=0`, with `b1c0ceb8...` as the merge base;
+- every one of the ten file paths changed by `87df9b...` still resolves to the exact same blob SHA at `dfd3c639...` as recorded in the table above;
+- current Anchor-E source-freeze review branch head before this documentation-only revalidation commit was `8efc6f3028fbd88409ddae6244b6fd6062b617a5`, with tree `d4ca654e05e2fc27f21d81ba9f44b989de19b0a1`.
+
+Revalidated classification:
+
+`MAIN_GRAPH_DIVERGENCE_ONLY / MAIN_UNIQUE_PAYLOAD_ALREADY_PRESENT_BYTE_IDENTICAL_AT_QUALIFIED_DFD3 / NO_REPLAY_REQUIRED / INTEGRATION_RESULT_REQUIRES_FRESH_EXACT_QUALIFICATION / NO_PROTECTED_EFFECT`
+
+This revalidation does not convert `dfd3c639...`'s qualification receipt into qualification of the Anchor-E metadata branch or of any future convergence/integration commit. Any commit that changes the Git object being proposed for integration must be treated as a new exact source state for qualification purposes even if its resulting file tree is intentionally unchanged.
