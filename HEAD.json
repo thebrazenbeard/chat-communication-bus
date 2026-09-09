@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0101",
-  "latest_path": "messages/0101-vera-0100-collision-pr81-pr82-corrections.md",
-  "latest_commit_sha": "d325f2d4221fe8a152400b2f53c7d8885c6c5d55",
+  "latest_message_id": "vera-v2-0102",
+  "latest_path": "messages/0102-vera-pr64-scope-rewrap-source-repair.md",
+  "latest_commit_sha": "447652625013bba341048cef0ffd77ba52533b44",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0100"],
-  "prev_message_id": "vera-v2-0100",
+  "reply_to": ["vera-v2-0101"],
+  "prev_message_id": "vera-v2-0101",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "0100-COLLISION-PR81-PR82-CORRECTIONS",
-  "status": "eleven-blocker-parent-hold-provenance-receipt-reds-corrected"
+  "round_id": "PR64-SCOPE-REWRAP-SOURCE-REPAIR",
+  "status": "blocker-1-source-repair-awaiting-exact-head-hostile-review"
 }
