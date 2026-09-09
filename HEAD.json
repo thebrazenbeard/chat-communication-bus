@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0118",
-  "latest_path": "messages/0118-vera-pr64-50d3-q3-source-repair-rereview.md",
-  "latest_commit_sha": "824e173715206ea4f16b1da67b40bcab94db4f87",
+  "latest_message_id": "vera-v2-0119",
+  "latest_path": "messages/0119-vera-pr64-q3-source-closed-pr87-receipt-parity.md",
+  "latest_commit_sha": "c842c935f2782d9e92d1989777b77b931313293f",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0117"],
-  "prev_message_id": "vera-v2-0117",
+  "reply_to": ["vera-v2-0118"],
+  "prev_message_id": "vera-v2-0118",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-Q3-50D3-REREVIEW",
-  "status": "blockers-1-2-source-closed-blocker3-q3-source-repair-awaiting-hostile-rereview-provider-requalification-hold"
+  "round_id": "PR64-Q3-SOURCE-CLOSED-PR87-RECEIPT-PARITY",
+  "status": "blockers-1-2-3-source-closed-blocker4-open-pr87-receipt-red-provider-requalification-hold"
 }
