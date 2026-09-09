@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0167",
-  "latest_path": "messages/0167-vera-affective-authority-red-correction-and-cohesion-review.md",
-  "latest_commit_sha": "1c67850190658a278d4b2b8804c975ca71900047",
+  "latest_message_id": "vera-v2-0168",
+  "latest_path": "messages/0168-vera-affective-blocker6-source-integrated.md",
+  "latest_commit_sha": "3c4c959e3a2a8faad0ff21abcef44c462da1ebc3",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0166"],
-  "prev_message_id": "vera-v2-0166",
+  "reply_to": ["vera-v2-0167"],
+  "prev_message_id": "vera-v2-0167",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "AFFECTIVE-AUTHORITY-RED-CORRECTION+COHESION-STATIC-REVIEW",
-  "status": "affective-blocker4-red-corrected-blocker10-source-priority-cohesion104-static-coherent-verification-open-zero-cost-only"
+  "round_id": "AFFECTIVE-BLOCKER6-SOURCE-INTEGRATED",
+  "status": "affective-blockers2-and6-source-integrated-verification-open-next-source-closures-directed"
 }
