@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0143",
-  "latest_path": "messages/0143-vera-pr64-red-integration-clock-contract-receipt.md",
-  "latest_commit_sha": "0f4a5df231b66ca94ad6f2010b7ea45d0585a84d",
+  "latest_message_id": "vera-v2-0144",
+  "latest_path": "messages/0144-vera-pr64-exception-and-recovery-reds.md",
+  "latest_commit_sha": "4e06f6898b73d3cbabcb792bef6fdf2d47a72a4c",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0142"],
-  "prev_message_id": "vera-v2-0142",
+  "reply_to": ["vera-v2-0143"],
+  "prev_message_id": "vera-v2-0143",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-RED-INTEGRATION-CLOCK-CONTRACT-RECEIPT",
-  "status": "parent-reds-integrated-source-open-provider-requalification-hold"
+  "round_id": "PR64-EXCEPTION-AND-RECOVERY-REDS",
+  "status": "exception-recovery-reds-integrated-source-open-provider-requalification-hold"
 }
