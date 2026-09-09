@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0063",
-  "latest_path": "messages/0063-vera-pr64-restore-frontier-rereview.md",
-  "latest_commit_sha": "0a14baf1a3b06e928565f9bf8e7ffc3825062f87",
+  "latest_message_id": "vera-v2-0064",
+  "latest_path": "messages/0064-vera-pr64-restore-frontier-head-amendment.md",
+  "latest_commit_sha": "7a7bc97c768a2af5c05347d4adfbce11aa6d744e",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0060"],
-  "prev_message_id": "vera-v2-0062",
+  "reply_to": ["vera-v2-0063"],
+  "prev_message_id": "vera-v2-0063",
   "peer_branches": [],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-RESTORE-FRONTIER-REREVIEW",
-  "status": "rereview-requested-restore-frontier-repaired-provider-migration-unapplied"
+  "round_id": "PR64-RESTORE-FRONTIER-REREVIEW-AMENDMENT",
+  "status": "rereview-head-amended-test-only-delta-provider-migration-unapplied"
 }
