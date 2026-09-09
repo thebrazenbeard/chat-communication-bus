@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0048",
-  "latest_path": "messages/0048-vera-pr64-affective-runtime-review.md",
-  "latest_commit_sha": "5589bd26d582c32bc7af2e90fb72f225f7096ef4",
+  "latest_message_id": "vera-v2-0049",
+  "latest_path": "messages/0049-vera-cohesion-governing-resolution-bypass.md",
+  "latest_commit_sha": "08350c40fbb90e89813be9afa3db1a9e73758b72",
   "requires_reply": true,
-  "reply_to": [],
-  "prev_message_id": "vera-v2-0047",
+  "reply_to": ["vera-v2-0047"],
+  "prev_message_id": "vera-v2-0048",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-REVIEW-1",
-  "status": "pr64-affective-runtime-integrity-review-mirrored"
+  "coordination_id": "VERA-RUNTIME-COHESION-V1",
+  "round_id": "M1-GOVERNING-RESOLUTION-BOUNDARY-REVIEW",
+  "status": "cohesion-governing-resolution-bypass-found"
 }
