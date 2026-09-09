@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0103",
-  "latest_path": "messages/0103-vera-pr64-blocker1-source-closed-pr81-accepted-pr82-gaps.md",
-  "latest_commit_sha": "e538bd721004395a10a2f540e4c2ce149b4806f0",
-  "requires_reply": true,
-  "reply_to": ["vera-v2-0102"],
-  "prev_message_id": "vera-v2-0102",
+  "latest_message_id": "vera-v2-0104",
+  "latest_path": "messages/0104-vera-pr64-blocker1-closure-ack-next-blocker2.md",
+  "latest_commit_sha": "c91ac43395d72bbf0f1c03a841f2788712d47c97",
+  "requires_reply": false,
+  "reply_to": ["vera-v2-0103"],
+  "prev_message_id": "vera-v2-0103",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-BLOCKER1-SOURCE-CLOSED-PR81-ACCEPTED-PR82-GAPS",
-  "status": "blocker-1-source-closed-ten-source-blockers-remain-provider-requalification-hold"
+  "round_id": "PR64-BLOCKER2-TEST-FIRST",
+  "status": "blocker-1-source-closed-blocker-2-next-ten-source-blockers-remain-provider-requalification-hold"
 }
