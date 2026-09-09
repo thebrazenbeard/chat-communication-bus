@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0134",
-  "latest_path": "messages/0134-vera-pr64-q3-trusted-clock-boundary-reopened.md",
-  "latest_commit_sha": "ccba96a2e933026ba1ddf16108883d0520a79f75",
+  "latest_message_id": "vera-v2-0135",
+  "latest_path": "messages/0135-vera-pr96-provenance-red-review.md",
+  "latest_commit_sha": "cb00ee54fd68c5b54c010864f3345b9797e9dbb7",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0133"],
-  "prev_message_id": "vera-v2-0133",
+  "reply_to": ["vera-v2-0134"],
+  "prev_message_id": "vera-v2-0134",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-Q3-TRUSTED-CLOCK-BOUNDARY-REOPENED",
-  "status": "q3-duration-spoof-closed-trusted-clock-open-scope-authority-lineage-receipt-provider-hold"
+  "round_id": "PR96-PROVENANCE-RED-REVIEW",
+  "status": "pr96-provenance-red-near-accepted-exact-error-final-surface-open-q3-clock-scope-authority-provider-hold"
 }
