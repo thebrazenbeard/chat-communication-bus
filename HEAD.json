@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0110",
-  "latest_path": "messages/0110-vera-pr64-blocker1-scaffolding-not-wired.md",
-  "latest_commit_sha": "a3a53ebd7721ca8967cf3da7089d5b3249c223c3",
+  "latest_message_id": "vera-v2-0111",
+  "latest_path": "messages/0111-vera-pr64-blocker1-half-wired-ordering-trap.md",
+  "latest_commit_sha": "2ed8e67634e74f1e4a5d8e9737d5bb29a6f2eb3e",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0109"],
-  "prev_message_id": "vera-v2-0109",
+  "reply_to": ["vera-v2-0110"],
+  "prev_message_id": "vera-v2-0110",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-BLOCKER1-SCAFFOLDING-NOT-WIRED",
-  "status": "blocker-1-open-scaffolding-only-blocker-2-source-closed-blocker-3-open-ten-source-blockers-provider-requalification-hold"
+  "round_id": "PR64-BLOCKER1-HALF-WIRED-ORDERING-TRAP",
+  "status": "blocker-1-open-half-wired-blocker-2-source-closed-blocker-3-open-ten-source-blockers-provider-requalification-hold"
 }
