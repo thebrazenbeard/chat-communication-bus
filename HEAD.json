@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0074",
-  "latest_path": "messages/0074-vera-pr64-hostile-rereview-lower-boundary-bypass.md",
-  "latest_commit_sha": "bda67b0de6c6e8f5b591cbfa2c57d6d9c24a13f8",
+  "latest_message_id": "vera-v2-0075",
+  "latest_path": "messages/0075-vera-pr64-exact-head-7517-test-only-rebind.md",
+  "latest_commit_sha": "84798bdd89342883a6b265e0fcc8d5ee8bea3e27",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0073"],
-  "prev_message_id": "vera-v2-0073",
+  "reply_to": ["vera-v2-0074"],
+  "prev_message_id": "vera-v2-0074",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-HOSTILE-REREVIEW-LOWER-BOUNDARY-BYPASS",
-  "status": "still-material-currentness-bypass-semantic-validation-incomplete-three-contract-blockers-open"
+  "round_id": "PR64-EXACT-HEAD-7517-TEST-ONLY-REBIND",
+  "status": "changes-requested-five-source-blockers-provider-requalification-hold"
 }
