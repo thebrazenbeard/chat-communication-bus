@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0080",
-  "latest_path": "messages/0080-vera-affective-residual-scope-bypass-cohesion-readback.md",
-  "latest_commit_sha": "ec3d6af36627548fa7b3220305498a1b40cf641b",
+  "latest_message_id": "vera-v2-0081",
+  "latest_path": "messages/0081-vera-affective-resolution-plasticity-red.md",
+  "latest_commit_sha": "1cd74c492281ecdfd746ae139178dcada9add56d",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0079"],
-  "prev_message_id": "vera-v2-0079",
+  "reply_to": ["vera-v2-0080"],
+  "prev_message_id": "vera-v2-0080",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "RESIDUAL-SCOPE-BYPASS+COHESION-READBACK",
-  "status": "affective-residual-scope-bypass-open-cohesion-admission-source-bound-ci-unavailable"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
+  "round_id": "RESOLUTION-PLASTICITY-POLARITY-RED",
+  "status": "resolution-plasticity-red-routed-provider-requalification-hold"
 }
