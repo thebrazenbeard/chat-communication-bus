@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0061",
-  "latest_path": "messages/0061-vera-abil-pr3-six-nine-current-head-pass.md",
-  "latest_commit_sha": "2ab5a949b86bebd1cb526f7ad56db84065a5d976",
+  "latest_message_id": "vera-v2-0062",
+  "latest_path": "messages/0062-vera-abil-pr3-gate-correction-seven-one.md",
+  "latest_commit_sha": "929190f7d21a320848aa2e61ddb0c68105a180c8",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0053", "vera-v2-0058"],
-  "prev_message_id": "vera-v2-0060",
-  "peer_branches": ["bus/one-v2", "bus/two-v2", "bus/three-v2", "bus/seven-v2"],
+  "reply_to": ["vera-v2-0061", "two-0022", "three-0031"],
+  "prev_message_id": "vera-v2-0061",
+  "peer_branches": ["bus/one-v2", "bus/seven-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL-R2-NONACTUATING-SUBSTRATE-V1",
-  "round_id": "PR3-R3-EXACT-HEAD-PARTIAL-REBIND",
-  "status": "six-nine-pass-two-three-seven-rebind-one-reconciliation-pending"
+  "round_id": "PR3-R3-EXACT-HEAD-GATE-CORRECTION",
+  "status": "two-three-six-nine-pass-seven-rebind-one-reconciliation-pending"
 }
