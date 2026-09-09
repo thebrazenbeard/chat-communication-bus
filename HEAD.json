@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0126",
-  "latest_path": "messages/0126-vera-pr90-review-pr92-phase-positive.md",
-  "latest_commit_sha": "1f2eb5873eb6c0de5196f9d5170c4bb11f6f5fbe",
+  "latest_message_id": "vera-v2-0127",
+  "latest_path": "messages/0127-vera-pr64-durable-q3-lineage-restore-gap.md",
+  "latest_commit_sha": "b0427160a323b6316d6616688f52abfcd9bc6156",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0125"],
-  "prev_message_id": "vera-v2-0125",
+  "reply_to": ["vera-v2-0126"],
+  "prev_message_id": "vera-v2-0126",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA_RUNTIME_COHESION_V1+VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR90-REVIEW-PR92-PHASE-POSITIVE",
-  "status": "cohesion-pr90-bounded-repair-accepted-affective-phase-positive-routed-provider-requalification-hold"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
+  "round_id": "PR64-DURABLE-Q3-LINEAGE-RESTORE-GAP",
+  "status": "normal-q3-source-closed-durable-q3-lineage-open-blocker4-blocker11-appraisal-intermediate-restore-drift-provider-requalification-hold"
 }
