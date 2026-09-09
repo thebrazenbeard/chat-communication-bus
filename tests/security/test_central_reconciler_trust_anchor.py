@@ -17,7 +17,9 @@ def test_reusable_projector_self_resolves_called_workflow_sha_from_oidc() -> Non
     assert "ACTIONS_ID_TOKEN_REQUEST_TOKEN" in source
     assert "job_workflow_ref" in source
     assert "job_workflow_sha" in source
-    assert "thebrazenbeard/chat-communication-bus/.github/workflows/radar-trusted-projector.yml@" in source
+    assert 'repository = "thebrazenbeard/chat-communication-bus"' in source
+    assert 'workflow_path = ".github/workflows/radar-trusted-projector.yml"' in source
+    assert 'expected_ref = f"{repository}/{workflow_path}@{job_workflow_sha}"' in source
     assert "GITHUB_OUTPUT" in source
 
 
