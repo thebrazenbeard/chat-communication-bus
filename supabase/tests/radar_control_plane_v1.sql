@@ -65,20 +65,17 @@ $$;
 do $$
 declare
   fn record;
-  sig text;
 begin
   for fn in
-    select p.oid, n.nspname as schema_name, p.proname,
-           pg_get_function_identity_arguments(p.oid) as args
+    select p.oid, p.oid::regprocedure::text as sig
     from pg_proc p
     join pg_namespace n on p.pronamespace = n.oid
     where n.nspname = 'radar'
   loop
-    sig := format('radar.%s(%s)', fn.proname, fn.args);
-    -- has_function_privilege accepts a function signature; test anon/authenticated
-    if has_function_privilege('anon', sig, 'EXECUTE')
-       or has_function_privilege('authenticated', sig, 'EXECUTE') then
-      raise exception 'RADAR_FUNCTION_EXECUTE_EXPOSED:%', sig;
+    -- Use the OID overload so named identity arguments are never reparsed as type names.
+    if has_function_privilege('anon', fn.oid, 'EXECUTE')
+       or has_function_privilege('authenticated', fn.oid, 'EXECUTE') then
+      raise exception 'RADAR_FUNCTION_EXECUTE_EXPOSED:%', fn.sig;
     end if;
   end loop;
 end
