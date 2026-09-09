@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0139",
-  "latest_path": "messages/0139-vera-pr97-pr98-hostile-review-corrections.md",
-  "latest_commit_sha": "77234b41acaba4bcd28a448e77c3e96b8e9fd140",
+  "latest_message_id": "vera-v2-0140",
+  "latest_path": "messages/0140-vera-pr98-corrected-pr100-contract-binding-pr96-provenance.md",
+  "latest_commit_sha": "41f9213bfd4b61036eb63dc4f312adf6c44f7f4f",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0138"],
-  "prev_message_id": "vera-v2-0138",
+  "reply_to": ["vera-v2-0139"],
+  "prev_message_id": "vera-v2-0139",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR97-PR98-HOSTILE-REVIEW-CORRECTIONS",
-  "status": "trusted-clock-construction-open-receipt-provenance-red-incomplete-contract-binding-scope-authority-provider-hold"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
+  "round_id": "PR98-CORRECTED-PR100-CONTRACT-BINDING-PR96-PROVENANCE",
+  "status": "receipt-red-corrected-contract-binding-red-provenance-red-clock-construction-scope-authority-provider-hold"
 }
