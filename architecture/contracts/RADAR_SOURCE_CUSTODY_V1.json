@@ -1,6 +1,6 @@
 {
   "contract": "RADAR_SOURCE_CUSTODY_V1",
-  "version": 17,
+  "version": 18,
   "status": "SOURCE_ONLY_VERIFICATION_CONTRACT",
   "required_globs": [
     "supabase/migrations/*_radar_*.sql",
@@ -23,6 +23,7 @@
     "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V1.json",
     "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V2.json",
     "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V3.json",
+    "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V4.json",
     "docs/checkpoints/RADAR_MAIN_DIVERGENCE_RECONCILIATION_2026-09-06.md",
     "docs/operator/CHATGPT_OPERATOR_CONTRACT.md",
     "docs/operator/RADAR_NO_PAID_QUALIFICATION.md",
@@ -40,6 +41,7 @@
     "tests/security/test_portable_local_qualification.py",
     "tests/security/test_portable_qualification_cli.py",
     "tests/security/test_portable_local_qualification_orchestration.py",
+    "tests/security/test_projection_anchor_e_consistency.py",
     "tests/security/test_qualification_receipt_admission.py",
     "tests/security/test_qualification_receipt_completion_order.py",
     "tests/security/test_radar_seed_qualification_contract.py",
