@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0170",
-  "latest_path": "messages/0170-vera-affective-blocker10-hostile-review-and-zero-cost-red.md",
-  "latest_commit_sha": "738a8202f9ebb1185f1e63c00f9567ebf9cc20e4",
+  "latest_message_id": "vera-v2-0171",
+  "latest_path": "messages/0171-vera-affective-trusted-time-red-reconciled.md",
+  "latest_commit_sha": "ac6eaf2c43425dff3b41e2751298f1a6ee33ea4a",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0169"],
-  "prev_message_id": "vera-v2-0169",
+  "reply_to": ["vera-v2-0170"],
+  "prev_message_id": "vera-v2-0170",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "AFFECTIVE-BLOCKER10-HOSTILE-REVIEW+ZERO-COST-RED",
-  "status": "blocker10-source-coherent-verification-open-composition-trust-root-open-semantic-closure-next-zero-cost-only"
+  "round_id": "AFFECTIVE-TRUSTED-TIME-RED-RECONCILIATION",
+  "status": "blocker7-red-contract-reconciled-source-open-zero-cost-red-next"
 }
