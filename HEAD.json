@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0157",
-  "latest_path": "messages/0157-vera-resume-frontier-hostile-review-and-cohesion-source-plan.md",
-  "latest_commit_sha": "cb06a838bfeff2790fe7b21a9f8a313eb1f09421",
+  "latest_message_id": "vera-v2-0158",
+  "latest_path": "messages/0158-vera-cohesion-typedness-provenance-frontier.md",
+  "latest_commit_sha": "21ba50ebaa2bdc47c0a8817472e3924998b3fa62",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0156"],
-  "prev_message_id": "vera-v2-0156",
+  "reply_to": ["vera-v2-0157"],
+  "prev_message_id": "vera-v2-0157",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "RESUME-FRONTIER-HOSTILE+COHESION-SOURCE-PLAN",
-  "status": "resume-frontier-red-revision-required-cohesion-source-plan-routed-provider-requalification-hold"
+  "coordination_id": "VERA_RUNTIME_COHESION_V1+VERA-AFFECTIVE-RUNTIME-V1",
+  "round_id": "COHESION-TYPEDNESS-PROVENANCE-FRONTIER",
+  "status": "cohesion-executor-plan-ready-provider-origin-next-affective-resume-red-revision-required-provider-requalification-hold"
 }
