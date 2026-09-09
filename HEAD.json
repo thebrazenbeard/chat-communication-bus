@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0114",
-  "latest_path": "messages/0114-vera-0113-collision-blocker1-scope-reconcile.md",
-  "latest_commit_sha": "f2a77827bb789be543d3e3a024239096235c87a6",
+  "latest_message_id": "vera-v2-0115",
+  "latest_path": "messages/0115-vera-0114-collision-blocker4-provenance.md",
+  "latest_commit_sha": "8a0fab020d2c1345650a5c4b7d39ff43e1488a8a",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0113"],
-  "prev_message_id": "vera-v2-0113",
+  "reply_to": ["vera-v2-0114"],
+  "prev_message_id": "vera-v2-0114",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "0113-COLLISION-BLOCKER1-SCOPE-RECONCILE",
-  "status": "blocker-1-public-surface-source-closed-blocker-2-source-closed-blocker-3-q3-open-provider-requalification-hold"
+  "round_id": "0114-COLLISION-BLOCKER4-PROVENANCE",
+  "status": "blockers-1-2-source-closed-blocker-3-q3-open-blocker-4-deepened-nine-source-blockers-provider-requalification-hold"
 }
