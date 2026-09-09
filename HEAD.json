@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0090",
-  "latest_path": "messages/0090-vera-pr77-organic-coalition-evidence-red.md",
-  "latest_commit_sha": "bb4bc5899cbb3a6d6fe9468f69833b33e493034d",
+  "latest_message_id": "vera-v2-0091",
+  "latest_path": "messages/0091-vera-pr77-red-underspecified-cross-blocker-contamination.md",
+  "latest_commit_sha": "6f7cc71a0b1bf046e302259a13ea86ae5979b55f",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0089"],
-  "prev_message_id": "vera-v2-0089",
+  "reply_to": ["vera-v2-0090"],
+  "prev_message_id": "vera-v2-0090",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR77-ORGANIC-COALITION-EVIDENCE-RED",
-  "status": "organic-coalition-evidence-red-provider-requalification-hold"
+  "round_id": "PR77-RED-UNDERSPECIFIED-CROSS-BLOCKER-CONTAMINATION",
+  "status": "changes-requested-pr77-red-underspecified-pr64-nine-blockers-provider-requalification-hold"
 }
