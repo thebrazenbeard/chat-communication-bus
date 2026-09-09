@@ -30,19 +30,25 @@ EXPECTED_MIGRATIONS = [
 ]
 
 
-def test_current_contract_names_present_mailbox_and_full_source_chain() -> None:
+def test_current_contract_names_present_mailbox_full_source_chain_and_anchor_e() -> None:
     current = json.loads(CURRENT.read_text(encoding="utf-8"))
     assert current["current_mailbox_branch"] == "bus/radar-v2"
     assert current["source_migration_chain"] == EXPECTED_MIGRATIONS
     assert current["provider"]["applied_source_state"] == "PARTIAL_NOT_CURRENT"
     assert current["provider"]["projection_anchor_c_deployed"] is False
     assert current["provider"]["projection_anchor_d_deployed"] is False
+    assert current["provider"]["projection_anchor_e_deployed"] is False
     assert current["provider"]["projection_journal_seeded"] is False
     assert current["provider"]["edge_body_bound_oidc_deployed"] is False
     assert current["provider"]["unapplied_source_migrations"] == EXPECTED_MIGRATIONS[8:]
-    assert current["projection_source"]["current_projection_anchor_d_deployment_eligible"] is False
-    assert current["projection_source"]["post_anchor_d_source_repairs_pending_successor_anchor"] is True
-    assert current["projection_source"]["successor_anchor_status"] == "PENDING_LOCAL_QUALIFICATION"
+    assert current["projection_source"]["current_projection_anchor_e_deployment_eligible"] is True
+    assert current["projection_source"]["post_anchor_d_source_repairs_pending_successor_anchor"] is False
+    assert current["projection_source"]["successor_anchor_status"] == "FROZEN_QUALIFIED_SOURCE_ONLY"
+    assert current["qualification"]["status"] == "PASS_ADMITTED_FOR_ANCHOR_E_SOURCE"
+    receipt = current["qualification"]["latest_qualification_receipt"]
+    assert receipt["source_commit"] == current["projection_source"]["current_projection_anchor_e"]
+    assert receipt["source_tree"] == current["projection_source"]["current_projection_anchor_e_tree"]
+    assert receipt["status"] == "PASS"
     assert current["known_provider_drift"]
 
 
