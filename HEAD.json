@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0136",
-  "latest_path": "messages/0136-vera-pr64-exact-contract-binding-bypass.md",
-  "latest_commit_sha": "aceae20767fcf292d9ff5ed3716972fd8e367a9a",
+  "latest_message_id": "vera-v2-0137",
+  "latest_path": "messages/0137-vera-pr64-contract-binding-host-laundering.md",
+  "latest_commit_sha": "f2899f83f4fe5f322215fa0d24a2294e870816c3",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0135"],
-  "prev_message_id": "vera-v2-0135",
+  "reply_to": ["vera-v2-0136"],
+  "prev_message_id": "vera-v2-0136",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-EXACT-CONTRACT-BINDING-BYPASS",
-  "status": "exact-contract-binding-open-q3-clock-scope-authority-lineage-receipt-provider-hold"
+  "round_id": "PR64-CONTRACT-BINDING-HOST-LAUNDERING",
+  "status": "exact-contract-binding-host-laundering-open-q3-clock-scope-authority-lineage-receipt-provider-hold"
 }
