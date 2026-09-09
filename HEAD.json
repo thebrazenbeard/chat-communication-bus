@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0119",
-  "latest_path": "messages/0119-vera-pr64-q3-source-closed-pr87-receipt-parity.md",
-  "latest_commit_sha": "c842c935f2782d9e92d1989777b77b931313293f",
+  "latest_message_id": "vera-v2-0120",
+  "latest_path": "messages/0120-vera-pr64-intermediate-phase-validator-red.md",
+  "latest_commit_sha": "72878c1973cc27665f8ac5b6b7f654f85bc5412a",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0118"],
-  "prev_message_id": "vera-v2-0118",
+  "reply_to": ["vera-v2-0119"],
+  "prev_message_id": "vera-v2-0119",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-Q3-SOURCE-CLOSED-PR87-RECEIPT-PARITY",
-  "status": "blockers-1-2-3-source-closed-blocker4-open-pr87-receipt-red-provider-requalification-hold"
+  "round_id": "PR64-INTERMEDIATE-PHASE-VALIDATOR-RED",
+  "status": "blockers-1-2-3-source-closed-blocker4-blocker11-intermediate-phase-open-provider-requalification-hold"
 }
