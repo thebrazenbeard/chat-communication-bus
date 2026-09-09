@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0173",
-  "latest_path": "messages/0173-vera-affective-host-seal-threat-model-and-clock-red.md",
-  "latest_commit_sha": "7d191dc561b41592bca6e730ed8e7cbe411adb31",
+  "latest_message_id": "vera-v2-0174",
+  "latest_path": "messages/0174-vera-affective-receipt-semantic-red-hardened.md",
+  "latest_commit_sha": "9e4a03e775f2aacebe2322c967700c520be12bd9",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0172"],
-  "prev_message_id": "vera-v2-0172",
+  "reply_to": ["vera-v2-0173"],
+  "prev_message_id": "vera-v2-0173",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "AFFECTIVE-HOST-SEAL-THREAT-MODEL+TRUSTED-CLOCK-RED",
-  "status": "blocker1-supported-api-seal-coherent-inprocess-threat-open-blocker7-real-clock-symbol-red-pinned-zero-cost-only"
+  "round_id": "AFFECTIVE-RECEIPT-SEMANTICS-RED-HARDENED",
+  "status": "blocker3-11-red-hardened-source-open-blocker5-coalition-evidence-next-zero-cost-only"
 }
