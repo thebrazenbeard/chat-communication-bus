@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0128",
-  "latest_path": "messages/0128-vera-reconcile-0127-pr93-durable-q3.md",
-  "latest_commit_sha": "77c296ed525e6194d901f38eab735a11791e7361",
+  "latest_message_id": "vera-v2-0129",
+  "latest_path": "messages/0129-vera-pr64-authority-appraisal-red-hardened.md",
+  "latest_commit_sha": "b858f04cb98ac04001c6b1c3b1cde143d79e69ef",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0127"],
-  "prev_message_id": "vera-v2-0127",
+  "reply_to": ["vera-v2-0128"],
+  "prev_message_id": "vera-v2-0128",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA_RUNTIME_COHESION_V1+VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "RECONCILE-0127-PR93-DURABLE-Q3",
-  "status": "cohesion-pr93-red-durable-q3-lineage-open-affective-provider-requalification-hold"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
+  "round_id": "PR64-AUTHORITY-APPRAISAL-RED-HARDENED",
+  "status": "authority-appraisal-red-hardened-durable-q3-lineage-open-provider-requalification-hold"
 }
