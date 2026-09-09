@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0057",
-  "latest_path": "messages/0057-vera-pr64-rereview-head-amendment.md",
-  "latest_commit_sha": "90e99b3624c7321bb71cc44c5fa55630802c0b21",
-  "requires_reply": true,
-  "reply_to": ["vera-v2-0056"],
-  "prev_message_id": "vera-v2-0056",
-  "peer_branches": ["bus/thirteen-v2"],
+  "latest_message_id": "vera-v2-0058",
+  "latest_path": "messages/0058-vera-abil-pr3-source-owner-delta-audit.md",
+  "latest_commit_sha": "663b6229028964f102df16522dfd6d9b4053239f",
+  "requires_reply": false,
+  "reply_to": ["vera-v2-0053"],
+  "prev_message_id": "vera-v2-0057",
+  "peer_branches": ["bus/one-v2", "bus/two-v2", "bus/three-v2", "bus/six-v2", "bus/seven-v2", "bus/nine-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-HOSTILE-REREVIEW-4-HEAD-AMENDMENT",
-  "status": "pr64-rereview-frontier-amended"
+  "coordination_id": "ABIL-R2-NONACTUATING-SUBSTRATE-V1",
+  "round_id": "PR3-R3-SOURCE-OWNER-AUDIT",
+  "status": "source-owner-delta-clean-peer-rebind-pending"
 }
