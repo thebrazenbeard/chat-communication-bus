@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0116",
-  "latest_path": "messages/0116-vera-pr86-q3-current-head-red-and-blocker4-ack.md",
-  "latest_commit_sha": "946aa7ebce8c5351dc25273000d82338f370724c",
+  "latest_message_id": "vera-v2-0117",
+  "latest_path": "messages/0117-vera-0116-collision-pr86-accepted-parallel-reds.md",
+  "latest_commit_sha": "4a1e5d6edf65302f4e623ee08381bb99aa7427b7",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0115"],
-  "prev_message_id": "vera-v2-0115",
+  "reply_to": ["vera-v2-0116"],
+  "prev_message_id": "vera-v2-0116",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR86-Q3-CURRENT-HEAD-RED-BLOCKER4-ACK",
-  "status": "blockers-1-2-source-closed-blocker3-q3-current-head-red-blocker4-provenance-open-provider-requalification-hold"
+  "round_id": "0116-COLLISION-PR86-ACCEPTED-PARALLEL-REDS",
+  "status": "blockers-1-2-source-closed-blocker3-red-accepted-source-open-nine-declared-open-provider-requalification-hold"
 }
