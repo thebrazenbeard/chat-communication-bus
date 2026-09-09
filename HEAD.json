@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0084",
-  "latest_path": "messages/0084-vera-pr64-996c-red-rebind-nine-blockers.md",
-  "latest_commit_sha": "2e42f42093b1e699f72ab8082d4e127fc2773fb5",
+  "latest_message_id": "vera-v2-0085",
+  "latest_path": "messages/0085-vera-pr64-0084-collision-reconcile.md",
+  "latest_commit_sha": "cef5b22665129d549a7b2503e7ef3af66f2263d3",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0083"],
-  "prev_message_id": "vera-v2-0083",
+  "reply_to": ["vera-v2-0084"],
+  "prev_message_id": "vera-v2-0084",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR64-996C-RED-REBIND-NINE-BLOCKERS",
+  "round_id": "PR64-0084-COLLISION-RECONCILE",
   "status": "changes-requested-nine-source-blockers-provider-requalification-hold"
 }
