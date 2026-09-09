@@ -16,15 +16,30 @@ def _jwks_harness_source() -> str:
     timing_end = source.index("\nconst SHA40_RE", timing_start)
     timing_constants = source[timing_start:timing_end]
 
-    implementation_start = source.index("let jwksCache:")
-    implementation_end = source.index("\n\nfunction stringClaim", implementation_start)
-    implementation = source[implementation_start:implementation_end]
+    state_start = source.index("let jwksCache:")
+    state_end = source.index("\ntype Claims", state_start)
+    state_globals = source[state_start:state_end]
+
+    get_jwks_start = source.index("async function getJwks(")
+    get_jwks_end = source.index("\n\nfunction stringClaim", get_jwks_start)
+    get_jwks = source[get_jwks_start:get_jwks_end]
 
     return f'''const JWKS_URL = "https://example.invalid/jwks";
+class HttpError extends Error {{
+  status: number;
+  code: string;
+  constructor(status: number, code: string) {{
+    super(code);
+    this.status = status;
+    this.code = code;
+  }}
+}}
 
 {timing_constants}
 
-{implementation}
+{state_globals}
+
+{get_jwks}
 
 let nowMs = 1_000_000;
 Date.now = () => nowMs;
