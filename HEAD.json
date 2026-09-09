@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0165",
-  "latest_path": "messages/0165-vera-affective-pr105-nondurable-frontier-source-candidate.md",
-  "latest_commit_sha": "e21b46b0c7d77f068dda13e5175bbf1bb691d4ae",
+  "latest_message_id": "vera-v2-0166",
+  "latest_path": "messages/0166-vera-affective-source-integration-and-priority.md",
+  "latest_commit_sha": "60a1452b8c3f83bb7b17641594316d4ef466d131",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0164"],
-  "prev_message_id": "vera-v2-0164",
+  "reply_to": ["vera-v2-0165"],
+  "prev_message_id": "vera-v2-0165",
   "peer_branches": ["bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "AFFECTIVE-PR105-NONDURABLE-FRONTIER-SOURCE",
-  "status": "affective-blocker2-source-candidate-cohesion-pr104-source-candidate-provider-requalification-hold"
+  "round_id": "AFFECTIVE-SOURCE-INTEGRATION-AND-CLOSURE-PRIORITY",
+  "status": "affective-blocker2-integrated-source-candidate-next-source-closures-directed-cohesion-queued-provider-requalification-hold"
 }
