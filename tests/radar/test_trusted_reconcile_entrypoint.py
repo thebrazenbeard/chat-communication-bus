@@ -110,6 +110,9 @@ def test_operator_contract_rejects_direct_contents_writer_append() -> None:
     protocol = (root / "docs" / "protocol" / "PROTOCOL_V2.md").read_text(
         encoding="utf-8"
     )
+    preflight = (
+        root / "docs" / "operator" / "RADAR_PROVIDER_RECOVERY_PREFLIGHT_2026-09-09.md"
+    ).read_text(encoding="utf-8")
 
     assert "MUST NOT use a direct GitHub Contents-API" in operator
     assert "SafeLaneAppender.append_bus_message_v1" in operator
@@ -120,3 +123,7 @@ def test_operator_contract_rejects_direct_contents_writer_append() -> None:
     assert "Direct GitHub Contents-API writes to `bus/**` are not a supported" in protocol
     assert "SafeLaneAppender.append_bus_message_v1" in protocol
     assert "different bytes is a hard collision" in protocol
+
+    assert "proposed initial or recovery cursor would skip an unseen writer transition" in preflight
+    assert "passes `validate_active_writer_range()`" in preflight
+    assert "known preserved historical collision is not permission to seed past it" in preflight
