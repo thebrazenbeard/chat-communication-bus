@@ -72,6 +72,9 @@ def build_validation_report(
             row["workflow_run_head_hint"] = observed_hint
             row["hint_matches_observed_head"] = observed_hint == target.observed_head
 
+        if target.disposition is AncestryDisposition.DIVERGED_HISTORY:
+            raise ReconcileError(f"DIVERGED_HISTORY:{identity}:{target.branch}")
+
         if target.disposition is AncestryDisposition.FORWARD:
             commits = validate_active_writer_range(
                 repo_dir,
