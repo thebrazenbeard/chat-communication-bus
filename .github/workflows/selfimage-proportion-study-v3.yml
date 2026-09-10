@@ -31,6 +31,9 @@ jobs:
           $ErrorActionPreference='Stop'
           $outDir=Join-Path '${{ runner.temp }}' 'vera-proportion-study-v3'
           New-Item -ItemType Directory -Force -Path $outDir|Out-Null
+          $sourceCommit='${{ github.sha }}'
+          $sourceTree=(& git -C '${{ github.workspace }}' rev-parse 'HEAD^{tree}').Trim()
+          if($LASTEXITCODE -ne 0 -or $sourceTree -notmatch '^[0-9a-f]{40}$'){throw 'Could not resolve exact V3 source tree'}
           function Send-BlenderCommand {
             param([Parameter(Mandatory=$true)][string]$Type,[hashtable]$Params=@{},[int]$TimeoutMs=300000)
             $client=[Net.Sockets.TcpClient]::new();$client.ReceiveTimeout=$TimeoutMs;$client.SendTimeout=$TimeoutMs
@@ -46,7 +49,7 @@ jobs:
           $outJson=($outDir|ConvertTo-Json -Compress);$code="OUTPUT_DIR = $outJson`n"+(Get-Content -LiteralPath $script -Raw);$response=Send-BlenderCommand -Type 'execute_code' -Params @{code=$code} -TimeoutMs 300000;if($response.status -ne 'success'){throw($response|ConvertTo-Json -Depth 20 -Compress)}
           $required=@('VERA_PROPORTION_STUDY_V3.blend','VERA_PROPORTION_STUDY_V3_METRICS.json');foreach($prefix in @('BASELINE','V2','V3')){foreach($view in @('FRONT','FRONT_3Q','SIDE','REAR_3Q','REAR')){$required+="${prefix}_${view}.png"}}
           $files=@();foreach($name in $required){$path=Join-Path $outDir $name;if(-not(Test-Path -LiteralPath $path)){throw "Missing V3 artifact: $name"};$item=Get-Item -LiteralPath $path;$files+=[ordered]@{name=$name;bytes=$item.Length;sha256=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()}}
-          $receipt=[ordered]@{schema='SELFIMAGE_PROPORTION_STUDY_RELAY_RECEIPT_V3';status='EXECUTED / ARTIFACTS_VERIFIED / VISUAL_REVIEW_REQUIRED / NO_STAGE_A_PASS';runner=$env:COMPUTERNAME;approved_script_sha256=(Get-FileHash -LiteralPath $script -Algorithm SHA256).Hash.ToLowerInvariant();files=$files};$receipt|ConvertTo-Json -Depth 30|Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
+          $receipt=[ordered]@{schema='SELFIMAGE_PROPORTION_STUDY_RELAY_RECEIPT_V3';status='EXECUTED / ARTIFACTS_VERIFIED / VISUAL_REVIEW_REQUIRED / NO_STAGE_A_PASS';source_commit=$sourceCommit;source_tree=$sourceTree;runner=$env:COMPUTERNAME;approved_script_sha256=(Get-FileHash -LiteralPath $script -Algorithm SHA256).Hash.ToLowerInvariant();files=$files};$receipt|ConvertTo-Json -Depth 30|Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
 
       - name: Upload V3 evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
