@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from radar.trusted_reconciler import AncestryDisposition, ReconcileTarget
+from radar.trusted_reconciler import AncestryDisposition, ReconcileError, ReconcileTarget
 from radar.writer_lanes import WriterLaneError
 
 
@@ -127,3 +127,46 @@ def test_operator_contract_rejects_direct_contents_writer_append() -> None:
     assert "proposed initial or recovery cursor would skip an unseen writer transition" in preflight
     assert "passes `validate_active_writer_range()`" in preflight
     assert "known preserved historical collision is not permission to seed past it" in preflight
+
+
+class _DivergedReconciler:
+    def __init__(self, *args, **kwargs) -> None:
+        pass
+
+    def derive_target(self, identity: str) -> ReconcileTarget:
+        assert identity == "yin"
+        return ReconcileTarget(
+            identity="yin",
+            branch="bus/yin-v2",
+            projected_head=None,
+            base_head="a0",
+            observed_head="evil1",
+            commits=(),
+            disposition=AncestryDisposition.DIVERGED_HISTORY,
+            bootstrap=True,
+        )
+
+
+def test_validate_only_diverged_history_fails_closed(monkeypatch, tmp_path) -> None:
+    module = _load_entrypoint()
+    monkeypatch.setattr(
+        module,
+        "requested_identities",
+        lambda **_kwargs: (("yin",), None),
+    )
+    monkeypatch.setattr(
+        module,
+        "LocalGitRepository",
+        lambda *_args, **_kwargs: object(),
+    )
+    monkeypatch.setattr(module, "TrustedReconciler", _DivergedReconciler)
+
+    with pytest.raises(ReconcileError, match=r"DIVERGED_HISTORY:yin:bus/yin-v2"):
+        module.build_validation_report(
+            repo_dir=tmp_path,
+            topology_path=tmp_path / "topology.json",
+            cutover_path=tmp_path / "cutover.json",
+            event_name="schedule",
+            event={},
+            repository="thebrazenbeard/chat-communication-bus",
+        )
