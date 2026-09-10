@@ -31,6 +31,9 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $outDir = Join-Path '${{ runner.temp }}' 'vera-proportion-study-v2'
           New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+          $sourceCommit = '${{ github.sha }}'
+          $sourceTree = (& git -C '${{ github.workspace }}' rev-parse 'HEAD^{tree}').Trim()
+          if ($LASTEXITCODE -ne 0 -or $sourceTree -notmatch '^[0-9a-f]{40}$') { throw 'Could not resolve exact V2 source tree.' }
 
           function Send-BlenderCommand {
             param([Parameter(Mandatory=$true)][string]$Type,[hashtable]$Params=@{},[int]$TimeoutMs=300000)
@@ -48,23 +51,9 @@ jobs:
               $stream.Flush()
               $mem=[IO.MemoryStream]::new()
               $buf=New-Object byte[] 8192
-              while($true){
-                try {
-                  $count=$stream.Read($buf,0,$buf.Length)
-                }
-                catch [System.IO.IOException] {
-                  break
-                }
-                if($count -le 0){break}
-                $mem.Write($buf,0,$count)
-                $text=[Text.Encoding]::UTF8.GetString($mem.ToArray())
-                try { return ($text|ConvertFrom-Json) } catch { }
-              }
+              while($true){try{$count=$stream.Read($buf,0,$buf.Length)}catch [System.IO.IOException]{break};if($count -le 0){break};$mem.Write($buf,0,$count);$text=[Text.Encoding]::UTF8.GetString($mem.ToArray());try { return ($text|ConvertFrom-Json) } catch { }}
               throw "Incomplete Blender JSON for $Type"
-            }
-            finally {
-              $client.Dispose()
-            }
+            } finally {$client.Dispose()}
           }
 
           $addon=Send-BlenderCommand -Type 'get_addon_info' -TimeoutMs 15000
@@ -79,13 +68,8 @@ jobs:
           $required=@('VERA_PROPORTION_STUDY_V2.blend','VERA_PROPORTION_STUDY_V2_METRICS.json')
           foreach($prefix in @('BASELINE','V1','V2')){foreach($view in @('FRONT','FRONT_3Q','SIDE','REAR_3Q','REAR')){$required += "${prefix}_${view}.png"}}
           $files=@()
-          foreach($name in $required){
-            $path=Join-Path $outDir $name
-            if(-not(Test-Path -LiteralPath $path)){throw "Expected V2 artifact missing: $name"}
-            $item=Get-Item -LiteralPath $path
-            $files += [ordered]@{name=$name;bytes=$item.Length;sha256=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()}
-          }
-          $receipt=[ordered]@{schema='SELFIMAGE_PROPORTION_STUDY_RELAY_RECEIPT_V2';status='EXECUTED / ARTIFACTS_VERIFIED / VISUAL_REVIEW_REQUIRED / NO_STAGE_A_PASS';runner=$env:COMPUTERNAME;approved_script_sha256=(Get-FileHash -LiteralPath $script -Algorithm SHA256).Hash.ToLowerInvariant();files=$files}
+          foreach($name in $required){$path=Join-Path $outDir $name;if(-not(Test-Path -LiteralPath $path)){throw "Expected V2 artifact missing: $name"};$item=Get-Item -LiteralPath $path;$files += [ordered]@{name=$name;bytes=$item.Length;sha256=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()}}
+          $receipt=[ordered]@{schema='SELFIMAGE_PROPORTION_STUDY_RELAY_RECEIPT_V2';status='EXECUTED / ARTIFACTS_VERIFIED / VISUAL_REVIEW_REQUIRED / NO_STAGE_A_PASS';source_commit=$sourceCommit;source_tree=$sourceTree;runner=$env:COMPUTERNAME;approved_script_sha256=(Get-FileHash -LiteralPath $script -Algorithm SHA256).Hash.ToLowerInvariant();files=$files}
           $receipt|ConvertTo-Json -Depth 30|Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
 
       - name: Upload V2 study evidence
