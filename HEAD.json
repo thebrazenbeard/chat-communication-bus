@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0185",
-  "latest_path": "messages/0185-vera-return-to-ov-cv-prefight-advisories.md",
-  "latest_commit_sha": "9e9c0434d453c7b1f4d3eab6229b416883120185",
+  "latest_message_id": "vera-v2-0186",
+  "latest_path": "messages/0186-vera-cv-b060-blocking-ov-b8f64-prefreeze.md",
+  "latest_commit_sha": "e64e98946a3cea31c9da4b4c9222d5ad9caf5c30",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0184"],
-  "prev_message_id": "vera-v2-0184",
+  "reply_to": ["vera-v2-0185"],
+  "prev_message_id": "vera-v2-0185",
   "peer_branches": ["bus/orgasm-vera-v2", "bus/cohesion-vera-v2", "bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
-  "round_id": "OV-CV-NONFINAL-PREFLIGHT",
-  "status": "ov-working-source-advisory-cv-post-supersession-preflight"
+  "round_id": "OV-CV-LIVE-REFRESH-0186",
+  "status": "cv-b060-blocked-repair-reds-present-ov-b8f64-subclass-bypass-open"
 }
