@@ -91,6 +91,7 @@ Stop before any protected mutation if any of the following is true:
 - journal/RPC/table/ACL/RLS/publication state is unexpected or ambiguous;
 - an existing provider trusted-projector setting would be overwritten without first reading and reconciling it;
 - any writer cursor lacks reviewed lineage evidence or is not ancestor-related to the intended writer head;
+- any proposed initial or recovery cursor would skip an unseen writer transition that has not passed the exact current `validate_active_writer_range()` contract from its reviewed activation/admission anchor through the proposed cursor head, including logical `message_id` collision checks;
 - current `main`/dispatcher history moved in a way that changes the reviewed activation assumptions;
 - qualification/admission evidence is missing, invalid, stale for the proposed exact source object, or being inherited by a different commit/tree;
 - Patrick has not given separate explicit authorization for the protected recovery effects about to begin.
@@ -106,7 +107,7 @@ Only after all preflight gates pass **and** Patrick separately authorizes the li
 3. run the complete Radar SQL assertions and live schema/ACL/RLS/publication/RPC readback gates;
 4. deploy the exact qualified `github-bus-ingest` package with the reviewed custom-auth gateway setting (`verify_jwt=false`);
 5. set provider `RADAR_TRUSTED_PROJECTOR_SHA` to exact Anchor E `dfd3c639d058dcafaa1167e53ad4bdc152d52cf6` only if V4/currentness still names that target;
-6. bootstrap/reconcile projection cursors only from reviewed Git-owned activation/cutover evidence;
+6. bootstrap/reconcile projection cursors only from reviewed Git-owned activation/cutover evidence **and** only after the exact transition range from that reviewed anchor to the proposed seed/current head passes `validate_active_writer_range()`; a known preserved historical collision is not permission to seed past it, and requires a separately reviewed clean-lane cutover or explicit historical-admission mechanism rather than cursor laundering;
 7. activate the reviewed canonical dispatcher only after its reusable-workflow pin and provider trust target agree on Anchor E;
 8. canary one reviewed lane and read back cursor, message, journal, and provider state before broader projection;
 9. verify the real Git -> GitHub OIDC -> Edge -> atomic claim-bound file projection -> journal finalize -> provider-readback path, including replay rejection, stale/expired claim rejection, backlog reconciliation, and idempotent retry;
