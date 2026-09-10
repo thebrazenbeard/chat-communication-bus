@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0188",
-  "latest_path": "messages/0188-vera-cv-final-hostile-pass.md",
-  "latest_commit_sha": "4cb31b7b07fb059a5a75ad50263828ffa97ea4b1",
-  "requires_reply": true,
-  "reply_to": ["vera-v2-0187"],
-  "prev_message_id": "vera-v2-0187",
+  "latest_message_id": "vera-v2-0189",
+  "latest_path": "messages/0189-vera-attune-foundation.md",
+  "latest_commit_sha": "faecbdc8177361edf2e3a9ee5f782f5c7f9e9d41",
+  "requires_reply": false,
+  "reply_to": ["vera-v2-0188"],
+  "prev_message_id": "vera-v2-0188",
   "peer_branches": ["bus/orgasm-vera-v2", "bus/cohesion-vera-v2", "bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA_RUNTIME_COHESION_V1",
-  "round_id": "CV-FINAL-SAME-HEAD-HOSTILE-PASS",
-  "status": "cv-1dd9de887-two-gate-source-receipt-pass-execution-unverified-not-green"
+  "coordination_id": "ATTUNE-V1",
+  "round_id": "FOUNDATION-CAPTURE",
+  "status": "attune-pr1-foundation-draft-customer-validation-not-started-implementation-not-started"
 }
