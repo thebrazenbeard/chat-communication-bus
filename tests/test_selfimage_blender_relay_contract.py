@@ -4,6 +4,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / "projects" / "selfimage" / "blender-relay"
 WORKFLOW = ROOT / ".github" / "workflows" / "selfimage-blender-relay.yml"
+WORKFLOW_DIR = ROOT / ".github" / "workflows"
+CHECKOUT_PIN = "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+UPLOAD_PIN = "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02"
+
+
+def selfimage_workflows():
+    return sorted(WORKFLOW_DIR.glob("selfimage-*.yml"))
 
 
 def test_request_schema_is_strict_and_has_no_arbitrary_execution_operation():
@@ -37,22 +44,39 @@ def test_relay_uses_windows_powershell_without_pwsh_only_json_flags():
     assert "ConvertFrom-Json -Depth" not in relay
 
 
-def test_relay_refreshes_branch_tip_before_scanning_pending_requests():
+def test_selfhosted_workflows_pin_external_actions_and_exact_event_source():
+    workflows = selfimage_workflows()
+    assert workflows
+    for path in workflows:
+        text = path.read_text(encoding="utf-8")
+        assert "actions/checkout@v4" not in text, path.name
+        assert "actions/upload-artifact@v4" not in text, path.name
+        if "actions/checkout@" in text:
+            assert CHECKOUT_PIN in text, path.name
+            assert "ref: ${{ github.sha }}" in text, path.name
+            assert "persist-credentials: false" in text, path.name
+            assert "ref: feature/selfimage-blender-relay-v1" not in text, path.name
+        if "actions/upload-artifact@" in text:
+            assert UPLOAD_PIN in text, path.name
+
+
+def test_relay_does_not_refresh_mutable_branch_tip_before_processing():
     workflow = WORKFLOW.read_text(encoding="utf-8")
-    assert "Refresh relay branch tip" in workflow
-    assert "git fetch origin '${{ github.ref_name }}'" in workflow
-    assert "git pull --ff-only origin '${{ github.ref_name }}'" in workflow
-    refresh_pos = workflow.index("Refresh relay branch tip")
-    process_pos = workflow.index("Process pending Blender requests")
-    assert refresh_pos < process_pos
+    assert "Refresh relay branch tip" not in workflow
+    assert "git pull --ff-only origin '${{ github.ref_name }}'" not in workflow
+    assert "ref: ${{ github.sha }}" in workflow
+    assert "persist-credentials: false" in workflow
 
 
-def test_outer_processor_preserves_detailed_failure_receipts():
+def test_outer_processor_preserves_detailed_failure_receipts_and_version_identity():
     process = (BASE / "relay" / "Process-PendingRequests.ps1").read_text(encoding="utf-8")
+    relay = (BASE / "relay" / "Invoke-BlenderRelay.ps1").read_text(encoding="utf-8")
     assert "$resultPath = $null" in process
     assert "Test-Path -LiteralPath $resultPath" in process
     assert "preserving that receipt" in process
-    assert "relay_version = '1.1.1'" in process
+    assert "$RelayVersion = '1.1.2'" in relay
+    assert "relay_version = '1.1.2'" in process
+    assert "relay_version = '1.1.1'" not in process
 
 
 def test_relay_pins_exact_cc0_transport_and_rejects_unlisted_operations():
