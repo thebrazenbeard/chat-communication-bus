@@ -100,3 +100,23 @@ def test_validate_only_propagates_logical_message_id_collision(monkeypatch, tmp_
             event={},
             repository="thebrazenbeard/chat-communication-bus",
         )
+
+
+def test_operator_contract_rejects_direct_contents_writer_append() -> None:
+    root = Path(__file__).resolve().parents[2]
+    operator = (root / "docs" / "operator" / "CHATGPT_OPERATOR_CONTRACT.md").read_text(
+        encoding="utf-8"
+    )
+    protocol = (root / "docs" / "protocol" / "PROTOCOL_V2.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "MUST NOT use a direct GitHub Contents-API" in operator
+    assert "SafeLaneAppender.append_bus_message_v1" in operator
+    assert "move the writer-lane ref non-force only" in operator
+    assert "collision-resistant suffix" in operator
+
+    assert "raw writer-lane Git ref advance is observation, not admission" in protocol
+    assert "Direct GitHub Contents-API writes to `bus/**` are not a supported" in protocol
+    assert "SafeLaneAppender.append_bus_message_v1" in protocol
+    assert "different bytes is a hard collision" in protocol
