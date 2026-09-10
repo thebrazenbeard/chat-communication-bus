@@ -7,6 +7,7 @@ WORKFLOW = ROOT / ".github" / "workflows" / "selfimage-blender-relay.yml"
 WORKFLOW_DIR = ROOT / ".github" / "workflows"
 CHECKOUT_PIN = "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
 UPLOAD_PIN = "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02"
+DOWNLOAD_PIN = "actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093"
 RUNNER_SHA256 = "1150692afa94e71f872017e254ea55b6eece1eece3fe7e3a6d4c93d0a1b85cfc"
 
 
@@ -52,6 +53,7 @@ def test_selfhosted_workflows_pin_external_actions_and_exact_event_source():
         text = path.read_text(encoding="utf-8")
         assert "actions/checkout@v4" not in text, path.name
         assert "actions/upload-artifact@v4" not in text, path.name
+        assert "actions/download-artifact@v4" not in text, path.name
         if "actions/checkout@" in text:
             assert CHECKOUT_PIN in text, path.name
             assert "ref: ${{ github.sha }}" in text, path.name
@@ -59,6 +61,8 @@ def test_selfhosted_workflows_pin_external_actions_and_exact_event_source():
             assert "ref: feature/selfimage-blender-relay-v1" not in text, path.name
         if "actions/upload-artifact@" in text:
             assert UPLOAD_PIN in text, path.name
+        if "actions/download-artifact@" in text:
+            assert DOWNLOAD_PIN in text, path.name
 
 
 def test_all_standalone_blender_studies_emit_exact_source_provenance():
@@ -86,8 +90,26 @@ def test_relay_does_not_refresh_mutable_branch_tip_before_processing():
     assert "ref: ${{ github.sha }}" in workflow
     assert "persist-credentials: false" in workflow
     process_pos = workflow.index("Process pending Blender requests")
+    publish_job_pos = workflow.index("publish_receipts:")
     token_pos = workflow.index("GH_TOKEN: ${{ github.token }}")
-    assert process_pos < token_pos
+    assert process_pos < publish_job_pos < token_pos
+
+
+def test_blender_execution_job_is_read_only_and_write_token_isolated_to_publisher():
+    workflow = WORKFLOW.read_text(encoding="utf-8")
+    assert "permissions:\n  contents: read" in workflow
+    relay_block = workflow.split("  relay:\n", 1)[1].split("  publish_receipts:\n", 1)[0]
+    publisher_block = workflow.split("  publish_receipts:\n", 1)[1]
+    assert "contents: write" not in relay_block
+    assert "GH_TOKEN: ${{ github.token }}" not in relay_block
+    assert "Process pending Blender requests" in relay_block
+    assert "permissions:\n      contents: write" in publisher_block
+    assert "GH_TOKEN: ${{ github.token }}" in publisher_block
+    assert "Process pending Blender requests" not in publisher_block
+    assert DOWNLOAD_PIN in publisher_block
+    assert "Validate and overlay receipt-only payload" in publisher_block
+    assert "Unexpected receipt filename" in publisher_block
+    assert "Receipt is not valid JSON" in publisher_block
 
 
 def test_relay_receipts_bind_executed_commit_tree_and_version_identity():
@@ -128,6 +150,20 @@ def test_runner_bootstrap_is_pinned_ephemeral_and_low_privilege():
     assert "$env:GITHUB_RUNNER_ADMIN_TOKEN = $null" in installer
 
 
+def test_runner_uninstaller_uses_only_process_scoped_admin_authority():
+    uninstaller = (BASE / "installer" / "Uninstall-VeraBlenderRunner.ps1").read_text(encoding="utf-8")
+    assert "$RequiredWindowsAccount = 'vera-blender-runner'" in uninstaller
+    assert "WindowsBuiltInRole]::Administrator" in uninstaller
+    assert "GITHUB_RUNNER_ADMIN_TOKEN" in uninstaller
+    assert "$env:GITHUB_RUNNER_ADMIN_TOKEN = $null" in uninstaller
+    assert "$env:GH_TOKEN = $adminToken" in uninstaller
+    assert "$env:GH_TOKEN = $priorGhToken" in uninstaller
+    assert "gh auth status" not in uninstaller
+    assert "gh auth login" not in uninstaller
+    assert "Persistent gh login is not accepted" in uninstaller
+    assert "actions/runners/remove-token" in uninstaller
+
+
 def test_relay_pins_exact_cc0_transport_and_rejects_unlisted_operations():
     text = (BASE / "relay" / "Invoke-BlenderRelay.ps1").read_text(encoding="utf-8")
     assert "09b0e4af53d3e9436be5e37d9aefa3c5e882b272" in text
@@ -164,5 +200,6 @@ def test_windows_installer_and_uninstaller_use_json_without_gh_jq_quoting():
     assert "ConvertFrom-Json" in installer
     assert "ConvertFrom-Json" in uninstaller
     assert "visibility -ne 'PRIVATE'" in installer
+    assert "visibility -ne 'PRIVATE'" in uninstaller
     assert "actions/runners/registration-token" in installer
     assert "actions/runners/remove-token" in uninstaller
