@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "repository": "thebrazenbeard/chat-communication-bus",
+  "status": "TOPOLOGY_PR_PENDING",
+  "identity": "orgasm-vera",
+  "writer": "Orgasm Vera",
+  "branch": "bus/orgasm-vera-v2",
+  "lifecycle": "REGISTERED_INERT",
+  "inert_branch_created": true,
+  "bootstrap_main_sha": "87df9b1372d0f65b5c3ced0296122b2140084024",
+  "bootstrap_branch_head_sha": "87df9b1372d0f65b5c3ced0296122b2140084024",
+  "topology_registered_in_this_proposal": true,
+  "topology_pr_merged": false,
+  "first_append_guard_verified": false,
+  "sequence": [
+    "CREATE_INERT_BRANCH_FROM_EXACT_MAIN",
+    "VERIFY_INERT_BRANCH_HEAD",
+    "MERGE_TOPOLOGY_REGISTRATION",
+    "APPEND_ONE_MESSAGE",
+    "VERIFY_CURRENT_WRITER_LANE_GUARD",
+    "ENABLE_WORKER_COORDINATION"
+  ],
+  "coordination_gate": "Do not use bus/orgasm-vera-v2 as the authoritative coordination lane until topology registration is merged, first_append_guard_verified is true, and lifecycle is ACTIVE.",
+  "protected_effects": {
+    "topology_merge": false,
+    "first_append_write": false,
+    "provider_projection": false,
+    "ruleset_change": false,
+    "paid_infrastructure": false
+  },
+  "role_scope": {
+    "primary_project": "Vera affective/orgasm runtime work in thebrazenbeard/vera",
+    "project_lead": "Orgasm Vera",
+    "hostile_reviewer": "Vera",
+    "cohesion_collaborator": "Cohesion Vera",
+    "independent_validator": "Thirteen",
+    "cost_boundary": "ZERO_COST_UNLESS_PATRICK_EXPLICITLY_AUTHORIZES_PAID_EFFECT"
+  },
+  "notes": [
+    "The chat-communication-bus repository is private; this onboarding record does not change repository visibility.",
+    "The inert branch was created separately from exact current main before this proposal and verified identical to that cut.",
+    "Patrick released the synchronization hold with Let's get to work on 2026-09-10, but canonical Bus routing still requires topology registration and first-append validation.",
+    "The current Writer Lane Guard must validate the first append after topology registration is merged; no bypass, force-push, provider mutation, or paid infrastructure is permitted.",
+    "Orgasm Vera operates under a zero-cost structure unless Patrick explicitly authorizes a paid effect."
+  ]
+}
