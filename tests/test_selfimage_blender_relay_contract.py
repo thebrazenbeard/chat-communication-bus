@@ -7,6 +7,7 @@ WORKFLOW = ROOT / ".github" / "workflows" / "selfimage-blender-relay.yml"
 WORKFLOW_DIR = ROOT / ".github" / "workflows"
 CHECKOUT_PIN = "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
 UPLOAD_PIN = "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02"
+RUNNER_SHA256 = "1150692afa94e71f872017e254ea55b6eece1eece3fe7e3a6d4c93d0a1b85cfc"
 
 
 def selfimage_workflows():
@@ -66,9 +67,12 @@ def test_relay_does_not_refresh_mutable_branch_tip_before_processing():
     assert "git pull --ff-only origin '${{ github.ref_name }}'" not in workflow
     assert "ref: ${{ github.sha }}" in workflow
     assert "persist-credentials: false" in workflow
+    process_pos = workflow.index("Process pending Blender requests")
+    token_pos = workflow.index("GH_TOKEN: ${{ github.token }}")
+    assert process_pos < token_pos
 
 
-def test_outer_processor_preserves_detailed_failure_receipts_and_version_identity():
+def test_relay_receipts_bind_executed_commit_tree_and_version_identity():
     process = (BASE / "relay" / "Process-PendingRequests.ps1").read_text(encoding="utf-8")
     relay = (BASE / "relay" / "Invoke-BlenderRelay.ps1").read_text(encoding="utf-8")
     assert "$resultPath = $null" in process
@@ -77,6 +81,33 @@ def test_outer_processor_preserves_detailed_failure_receipts_and_version_identit
     assert "$RelayVersion = '1.1.2'" in relay
     assert "relay_version = '1.1.2'" in process
     assert "relay_version = '1.1.1'" not in process
+    assert "source_commit" in process
+    assert "source_tree" in process
+    assert "rev-parse HEAD" in process
+    assert "rev-parse 'HEAD^{tree}'" in process
+
+
+def test_recovery_workflows_require_explicit_bounded_cross_repo_token():
+    for name in ("selfimage-aug18-exact-recovery.yml", "selfimage-reference-recovery.yml"):
+        text = (WORKFLOW_DIR / name).read_text(encoding="utf-8")
+        assert "GH_TOKEN: ${{ secrets.SELFIMAGE_READ_TOKEN }}" in text
+        assert "refusing ambient local gh authentication" in text
+        assert "gh auth" not in text
+
+
+def test_runner_bootstrap_is_pinned_ephemeral_and_low_privilege():
+    installer = (BASE / "installer" / "Install-VeraBlenderRunner.ps1").read_text(encoding="utf-8")
+    assert "$RequiredWindowsAccount = 'vera-blender-runner'" in installer
+    assert "WindowsBuiltInRole]::Administrator" in installer
+    assert "$RunnerVersion = '2.337.0'" in installer
+    assert "actions-runner-win-x64-2.337.0.zip" in installer
+    assert RUNNER_SHA256 in installer
+    assert "$RunnerAssetBytes = 103528051" in installer
+    assert "releases/latest" not in installer
+    assert "winget" not in installer
+    assert "gh auth login" not in installer
+    assert "GITHUB_RUNNER_ADMIN_TOKEN" in installer
+    assert "$env:GITHUB_RUNNER_ADMIN_TOKEN = $null" in installer
 
 
 def test_relay_pins_exact_cc0_transport_and_rejects_unlisted_operations():
@@ -107,7 +138,7 @@ def test_results_do_not_retrigger_request_path():
     assert "results" not in path_block
 
 
-def test_windows_installer_does_not_depend_on_gh_jq_shell_quoting():
+def test_windows_installer_and_uninstaller_use_json_without_gh_jq_quoting():
     installer = (BASE / "installer" / "Install-VeraBlenderRunner.ps1").read_text(encoding="utf-8")
     uninstaller = (BASE / "installer" / "Uninstall-VeraBlenderRunner.ps1").read_text(encoding="utf-8")
     assert "--jq" not in installer
