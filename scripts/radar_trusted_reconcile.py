@@ -22,8 +22,15 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from radar.trusted_reconciler import LocalGitRepository, ReconcileError, TrustedReconciler  # noqa: E402
+from radar.trusted_lane_validation import validate_active_writer_range  # noqa: E402
+from radar.trusted_reconciler import (  # noqa: E402
+    AncestryDisposition,
+    LocalGitRepository,
+    ReconcileError,
+    TrustedReconciler,
+)
 from radar.trusted_wakeup import load_caller_event, requested_identities  # noqa: E402
+from radar.writer_lanes import WriterLaneError  # noqa: E402
 
 
 class UninitializedCursorJournal:
@@ -60,9 +67,24 @@ def build_validation_report(
         target = reconciler.derive_target(identity)
         row = asdict(target)
         row["disposition"] = target.disposition.value
+        row["writer_range_validated"] = False
         if observed_hint is not None:
             row["workflow_run_head_hint"] = observed_hint
             row["hint_matches_observed_head"] = observed_hint == target.observed_head
+
+        if target.disposition is AncestryDisposition.FORWARD:
+            commits = validate_active_writer_range(
+                repo_dir,
+                identity=identity,
+                base=target.base_head,
+                head=target.observed_head,
+                topology_path=topology_path,
+                cutover_path=cutover_path,
+            )
+            if commits != target.commits:
+                raise ReconcileError("TRUSTED_RANGE_MISMATCH")
+            row["writer_range_validated"] = True
+
         targets.append(row)
 
     return {
@@ -108,4 +130,8 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (ReconcileError, WriterLaneError) as exc:
+        print(str(exc), file=sys.stderr)
+        raise SystemExit(1)
