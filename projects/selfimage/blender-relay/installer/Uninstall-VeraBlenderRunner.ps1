@@ -8,6 +8,35 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+$RequiredWindowsAccount = 'vera-blender-runner'
+
+function Assert-DedicatedLowPrivilegeAccount {
+    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $account = ($identity.Name -split '\\')[-1]
+    if ($account -ne $RequiredWindowsAccount) {
+        throw "Refusing runner uninstallation under '$($identity.Name)'. Run this uninstaller while signed in as dedicated Windows account '$RequiredWindowsAccount'."
+    }
+    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
+    if ($principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        throw "Dedicated runner account '$RequiredWindowsAccount' must not be a local administrator."
+    }
+}
+
+function Require-GitHubCli {
+    $gh = Get-Command gh -ErrorAction SilentlyContinue
+    if (-not $gh) {
+        throw 'GitHub CLI is required to remove the repository runner registration. This governed uninstaller will not install or authenticate gh implicitly.'
+    }
+    return $gh.Source
+}
+
+function Require-EphemeralAdminToken {
+    if ([string]::IsNullOrWhiteSpace($env:GITHUB_RUNNER_ADMIN_TOKEN)) {
+        throw 'Set GITHUB_RUNNER_ADMIN_TOKEN only for this uninstaller process to a credential authorized to request a repository runner removal token. Persistent gh login is not accepted.'
+    }
+    return $env:GITHUB_RUNNER_ADMIN_TOKEN
+}
+
 function Invoke-GhJson {
     param(
         [Parameter(Mandatory=$true)][string]$GhExe,
@@ -27,6 +56,44 @@ function Invoke-GhJson {
     }
 }
 
+Assert-DedicatedLowPrivilegeAccount
+
+$configured = Test-Path -LiteralPath (Join-Path $RunnerDir '.runner')
+$ghExe = $null
+$adminToken = $null
+$priorGhToken = $env:GH_TOKEN
+$removalToken = $null
+
+if ($configured) {
+    $ghExe = Require-GitHubCli
+    $adminToken = Require-EphemeralAdminToken
+
+    try {
+        $env:GH_TOKEN = $adminToken
+
+        Write-Host 'Verifying private relay repository with the process-scoped token...'
+        $repoInfo = Invoke-GhJson -GhExe $ghExe -Arguments @('repo','view',$Repo,'--json','nameWithOwner,visibility') -FailureMessage "Cannot access repository '$Repo' with the process-scoped token."
+        if ([string]$repoInfo.nameWithOwner -ne $Repo) {
+            throw "GitHub resolved an unexpected repository '$($repoInfo.nameWithOwner)' instead of '$Repo'."
+        }
+        if ([string]$repoInfo.visibility -ne 'PRIVATE') {
+            throw "Relay repository '$Repo' is not private. Refusing governed runner removal through this path."
+        }
+
+        Write-Host 'Requesting a short-lived repository runner removal token from GitHub...'
+        $response = Invoke-GhJson -GhExe $ghExe -Arguments @('api','--method','POST',"repos/$Repo/actions/runners/remove-token") -FailureMessage 'Could not obtain a short-lived GitHub runner removal token.'
+        $removalToken = [string]$response.token
+        if ([string]::IsNullOrWhiteSpace($removalToken)) {
+            throw 'GitHub returned no runner removal token.'
+        }
+    }
+    finally {
+        $env:GH_TOKEN = $priorGhToken
+        $env:GITHUB_RUNNER_ADMIN_TOKEN = $null
+        $adminToken = $null
+    }
+}
+
 $startup = [Environment]::GetFolderPath('Startup')
 $shortcutPath = Join-Path $startup 'Vera Blender GitHub Runner.lnk'
 if (Test-Path -LiteralPath $shortcutPath) {
@@ -41,33 +108,18 @@ foreach ($proc in $running) {
 }
 
 $config = Join-Path $RunnerDir 'config.cmd'
-if (Test-Path -LiteralPath (Join-Path $RunnerDir '.runner')) {
-    $gh = Get-Command gh -ErrorAction SilentlyContinue
-    if (-not $gh) {
-        Write-Warning 'GitHub CLI is unavailable; local startup is disabled but the GitHub runner registration cannot be removed automatically.'
+if ($configured) {
+    if (-not (Test-Path -LiteralPath $config)) {
+        throw "Runner identity exists but config.cmd is missing from '$RunnerDir'. Files are preserved for manual recovery."
     }
-    else {
-        & $gh.Source auth status --hostname github.com 2>$null
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host 'GitHub login is required once to request the short-lived runner removal token.'
-            & $gh.Source auth login --hostname github.com --git-protocol https --web
-            if ($LASTEXITCODE -ne 0) { throw 'GitHub authentication failed; local startup is disabled but GitHub runner registration remains.' }
-        }
-
-        $response = Invoke-GhJson -GhExe $gh.Source -Arguments @('api','--method','POST',"repos/$Repo/actions/runners/remove-token") -FailureMessage 'Could not obtain a short-lived GitHub runner removal token.'
-        $removalToken = [string]$response.token
-        if ([string]::IsNullOrWhiteSpace($removalToken)) {
-            throw 'GitHub returned no runner removal token.'
-        }
-        Push-Location $RunnerDir
-        try {
-            & $config remove --unattended --token $removalToken
-            if ($LASTEXITCODE -ne 0) { throw "GitHub runner removal failed with exit code $LASTEXITCODE." }
-        }
-        finally {
-            Pop-Location
-            $removalToken = $null
-        }
+    Push-Location $RunnerDir
+    try {
+        & $config remove --unattended --token $removalToken
+        if ($LASTEXITCODE -ne 0) { throw "GitHub runner removal failed with exit code $LASTEXITCODE." }
+    }
+    finally {
+        Pop-Location
+        $removalToken = $null
     }
 }
 
@@ -82,3 +134,4 @@ if (-not $KeepFiles -and (Test-Path -LiteralPath $RunnerDir)) {
 }
 
 Write-Host 'Local Vera Blender relay startup is disabled.'
+Write-Host 'No persistent GitHub authentication was created or consumed by this uninstaller.'
