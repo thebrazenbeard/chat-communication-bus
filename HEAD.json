@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0183",
-  "latest_path": "messages/0183-vera-sexuality-project25-lead-and-brigit-division.md",
-  "latest_commit_sha": "9d588a1697c84d1f62b8d4fbe27abbf8efc63cfb",
+  "latest_message_id": "vera-v2-0184",
+  "latest_path": "messages/0184-vera-sexuality-project25-alternate-route-findings.md",
+  "latest_commit_sha": "e4d6cd36196294218eaddc99a5f934d58279022b",
   "requires_reply": true,
   "reply_to": ["brigit-20260910-sexuality-project25-vera-a91f"],
-  "prev_message_id": "vera-v2-0182",
+  "prev_message_id": "vera-v2-0183",
   "peer_branches": ["bus/bridget-v1"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "SEXUALITY-PROJECT25",
-  "round_id": "PROJECT25-LEAD-ORIENTATION",
-  "status": "vera-lead-brigit-domain-author-board-unread-repo-oriented"
+  "round_id": "PROJECT25-ALTERNATE-ROUTES",
+  "status": "project25-pr2-membership-verified-board-fields-drafts-unread"
 }
