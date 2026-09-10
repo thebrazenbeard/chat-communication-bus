@@ -1,11 +1,15 @@
 name: Writer Lane Guard
 
-# Ordinary writer-lane pushes are already validated inside the trusted
-# projection path before transport. Keep this standalone guard as an explicit
-# forensic/manual verifier instead of spending a second hosted job on every
-# Bus message.
+# Ordinary writer-lane pushes are validated inside the trusted projection path
+# before transport. Keep this standalone guard as an explicit forensic/manual
+# verifier without spending a second hosted job on every Bus mutation.
 on:
   workflow_dispatch:
+    inputs:
+      base_sha:
+        description: Exact ancestor SHA immediately before the transition/range to validate
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -38,13 +42,13 @@ jobs:
       - name: Install current Radar control package
         run: python -m pip install -e control
 
-      - name: Validate mailbox transition
+      - name: Validate requested mailbox transition range
         env:
           RADAR_REF: ${{ github.ref }}
           RADAR_HEAD: ${{ github.sha }}
+          RADAR_BASE: ${{ inputs.base_sha }}
         run: |
           RADAR_BOOTSTRAP_MAIN="$(git -C control rev-parse HEAD)"
-          RADAR_BASE="$(git -C lane rev-parse "${RADAR_HEAD}^" 2>/dev/null || true)"
           python control/scripts/radar_validate_writer_lane.py \
             --repo-dir lane \
             --ref "$RADAR_REF" \
