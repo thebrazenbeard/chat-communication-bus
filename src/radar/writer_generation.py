@@ -4,6 +4,8 @@ import re
 from typing import Mapping, Iterable
 
 _SHA40 = re.compile(r'^[0-9a-fA-F]{40}$')
+_SHA256 = re.compile(r'^[0-9a-fA-F]{64}$')
+_CURSOR_STATES = frozenset({'OBSERVED_PRESENT', 'OBSERVED_ABSENT'})
 
 
 class WriterGenerationError(RuntimeError):
@@ -20,6 +22,12 @@ def _sha(value, code: str) -> str:
     return value.lower()
 
 
+def _sha256(value, code: str) -> str:
+    if not isinstance(value, str) or _SHA256.fullmatch(value) is None:
+        _fail(code)
+    return value.lower()
+
+
 def _workflow_map(value, code: str) -> dict[str, str]:
     if not isinstance(value, Mapping):
         _fail(code)
@@ -29,6 +37,52 @@ def _workflow_map(value, code: str) -> dict[str, str]:
             _fail(code)
         out[name] = sha.lower()
     return out
+
+
+def _history_evidence(value, identity: str, expected_head: str) -> dict[str, object]:
+    if not isinstance(value, Mapping):
+        _fail(f'HISTORY_EVIDENCE_MISSING:{identity}')
+    if value.get('state') != 'COMPLETE':
+        _fail(f'HISTORY_INCOMPLETE:{identity}')
+    observed_head = _sha(value.get('observed_head_sha'), f'HISTORY_HEAD_INVALID:{identity}')
+    if observed_head != expected_head:
+        _fail(f'HISTORY_HEAD_MISMATCH:{identity}')
+    message_count = value.get('message_count')
+    if not isinstance(message_count, int) or isinstance(message_count, bool) or message_count < 0:
+        _fail(f'HISTORY_MESSAGE_COUNT_INVALID:{identity}')
+    digest = _sha256(value.get('message_history_digest_sha256'), f'HISTORY_DIGEST_INVALID:{identity}')
+    return {
+        'state': 'COMPLETE',
+        'observed_head_sha': observed_head,
+        'message_count': message_count,
+        'message_history_digest_sha256': digest,
+    }
+
+
+def _provider_cursor_evidence(value, identity: str, expected_branch: str) -> dict[str, object]:
+    if not isinstance(value, Mapping):
+        _fail(f'PROVIDER_CURSOR_EVIDENCE_MISSING:{identity}')
+    state = value.get('observation_state')
+    if state not in _CURSOR_STATES:
+        _fail(f'PROVIDER_CURSOR_OBSERVATION_UNRESOLVED:{identity}')
+    branch = value.get('branch')
+    if branch != expected_branch:
+        _fail(f'PROVIDER_CURSOR_BRANCH_MISMATCH:{identity}')
+    projected = value.get('projected_head_sha')
+    if state == 'OBSERVED_ABSENT':
+        if projected is not None:
+            _fail(f'PROVIDER_CURSOR_ABSENT_WITH_HEAD:{identity}')
+        return {
+            'observation_state': state,
+            'branch': branch,
+            'projected_head_sha': None,
+        }
+    projected_head = _sha(projected, f'PROVIDER_CURSOR_HEAD_INVALID:{identity}')
+    return {
+        'observation_state': state,
+        'branch': branch,
+        'projected_head_sha': projected_head,
+    }
 
 
 def build_generation_plan(
@@ -110,6 +164,9 @@ def build_generation_plan(
         if observed_workflows != expected_by_identity[identity]:
             _fail(f'CURRENT_WORKFLOW_INVENTORY_MISMATCH:{identity}')
 
+        history = _history_evidence(inv.get('history_evidence'), identity, head)
+        cursor = _provider_cursor_evidence(inv.get('provider_cursor_evidence'), identity, current_branch)
+
         successor = successor_map[identity]
         if successor == current_branch:
             _fail(f'SUCCESSOR_EQUALS_CURRENT:{identity}')
@@ -120,6 +177,8 @@ def build_generation_plan(
             'identity': identity,
             'predecessor_branch': current_branch,
             'predecessor_head_sha': head,
+            'history_evidence': history,
+            'provider_cursor_evidence': cursor,
             'successor_branch': successor,
             'successor_state': 'PLANNED_INERT',
         })
