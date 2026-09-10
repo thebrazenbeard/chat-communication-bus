@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - "bus/**"
-    paths:
-      - "messages/**"
-      - ".github/workflows/radar-bus-projection.yml"
 
 permissions:
   contents: read
