@@ -6,10 +6,13 @@ import pytest
 
 from radar.branch_bound_append import BranchBindingError, BranchBoundSafeLaneAppender
 from radar.safe_lane_append import (
+    CommitReadback,
     CommittedMessage,
     ControlSnapshot,
+    FileReadback,
     IdentityHistory,
     LaneBinding,
+    SafeAppendError,
 )
 
 
@@ -90,31 +93,58 @@ class ProductionHistory:
 
 
 class ProductionGit:
-    def __init__(self) -> None:
+    def __init__(self, *, allow_ref_update: bool = False) -> None:
         self.created_objects: list[str] = []
         self.ref_updates = 0
+        self.allow_ref_update = allow_ref_update
+        self.current_head = HEAD
+        self.blobs: dict[str, bytes] = {}
+        self.trees: dict[str, tuple[str, str, str]] = {}
+        self.commits: dict[str, CommitReadback] = {}
+        self.files: dict[tuple[str, str], FileReadback] = {}
 
     def read_branch_head(self, branch: str) -> str | None:
-        return HEAD if branch == "bus/four-v2" else None
+        return self.current_head if branch == "bus/four-v2" else None
 
     def read_file_at_commit(self, commit_sha: str, path: str):
-        return None
+        return self.files.get((commit_sha, path))
+
+    def read_commit(self, commit_sha: str):
+        return self.commits.get(commit_sha)
 
     def create_blob(self, content: bytes) -> str:
         self.created_objects.append("blob")
-        return "a" * 40
+        blob_sha = "a" * 40
+        self.blobs[blob_sha] = content
+        return blob_sha
 
     def create_tree(self, base_commit_sha: str, path: str, blob_sha: str) -> str:
         self.created_objects.append("tree")
-        return "b" * 40
+        tree_sha = "b" * 40
+        self.trees[tree_sha] = (base_commit_sha, path, blob_sha)
+        return tree_sha
 
     def create_commit(self, message: str, tree_sha: str, parent_sha: str) -> str:
         self.created_objects.append("commit")
-        return "c" * 40
+        commit_sha = "c" * 40
+        _, path, blob_sha = self.trees[tree_sha]
+        self.commits[commit_sha] = CommitReadback(
+            parent_shas=(parent_sha,),
+            tree_sha=tree_sha,
+            changed_paths=(path,),
+        )
+        self.files[(commit_sha, path)] = FileReadback(
+            blob_sha=blob_sha,
+            content=self.blobs[blob_sha],
+        )
+        return commit_sha
 
     def update_ref_non_force(self, branch: str, candidate_sha: str) -> bool:
         self.ref_updates += 1
-        raise AssertionError("branch mismatch must fail before ref update")
+        if not self.allow_ref_update:
+            raise AssertionError("branch mismatch must fail before ref update")
+        self.current_head = candidate_sha
+        return True
 
 
 def _message(*, branch: str | None = "bus/four-v2") -> str:
@@ -153,8 +183,10 @@ def _appender(control: Control) -> tuple[BranchBoundSafeLaneAppender, FakeGit]:
 
 def _production_appender(
     control: ProductionControl,
+    *,
+    allow_ref_update: bool = False,
 ) -> tuple[BranchBoundSafeLaneAppender, ProductionGit]:
-    git = ProductionGit()
+    git = ProductionGit(allow_ref_update=allow_ref_update)
     return (
         BranchBoundSafeLaneAppender(
             control_source=control,
@@ -240,3 +272,20 @@ def test_real_safe_lane_appender_preserves_second_read_branch_mismatch_taxonomy(
     assert exc.value.code == "WRITER_BRANCH_MISMATCH"
     assert git.created_objects == ["blob", "tree", "commit"]
     assert git.ref_updates == 0
+
+
+def test_postwrite_branch_mismatch_preserves_verified_effect_state():
+    appender, git = _production_appender(
+        ProductionControl("bus/four-v2", "bus/four-v2", "bus/four-v3"),
+        allow_ref_update=True,
+    )
+
+    with pytest.raises(SafeAppendError) as exc:
+        appender.append_bus_message_v1("four", HEAD, _message())
+
+    assert exc.value.code == "RECEIPT_INCOMPLETE"
+    assert exc.value.effect_state == "PRESENT_VERIFIED"
+    assert isinstance(exc.value.__cause__, BranchBindingError)
+    assert exc.value.__cause__.code == "WRITER_BRANCH_MISMATCH"
+    assert git.ref_updates == 1
+    assert git.current_head == "c" * 40
