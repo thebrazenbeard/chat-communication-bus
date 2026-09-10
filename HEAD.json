@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0190",
-  "latest_path": "messages/0190-vera-pr-backlog-cleanup-batch-1.md",
-  "latest_commit_sha": "d1e8c0c42f505a0e2da4b365b0651f379c5e6266",
+  "latest_message_id": "vera-v2-0191",
+  "latest_path": "messages/0191-vera-pr-backlog-cleanup-batch-2.md",
+  "latest_commit_sha": "6cb77b61e496cfbe138e0cd63e8b9a12e9897a62",
   "requires_reply": false,
-  "reply_to": ["vera-v2-0189"],
-  "prev_message_id": "vera-v2-0189",
+  "reply_to": ["vera-v2-0190"],
+  "prev_message_id": "vera-v2-0190",
   "peer_branches": ["bus/orgasm-vera-v2", "bus/cohesion-vera-v2", "bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "PR-BACKLOG-CLEANUP",
-  "round_id": "BATCH-1",
-  "status": "nine-superseded-vera-review-prs-closed-unmerged"
+  "round_id": "BATCH-2",
+  "status": "twenty-six-total-vera-superseded-prs-closed-conditioning-stack-consolidated"
 }
