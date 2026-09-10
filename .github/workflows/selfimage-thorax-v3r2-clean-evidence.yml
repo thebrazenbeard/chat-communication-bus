@@ -18,10 +18,10 @@ jobs:
     runs-on: [self-hosted, windows, x64, vera-blender]
     timeout-minutes: 20
     steps:
-      - name: Checkout clean evidence renderer
-        uses: actions/checkout@v4
+      - name: Checkout exact triggering clean-evidence source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: feature/selfimage-blender-relay-v1
+          ref: ${{ github.sha }}
           fetch-depth: 1
           persist-credentials: false
 
@@ -49,7 +49,7 @@ jobs:
           [ordered]@{schema='SELFIMAGE_V3R2_CLEAN_EVIDENCE_RELAY_RECEIPT';status='ARTIFACTS_VERIFIED / HOSTILE_VISUAL_REVIEW_REQUIRED';runner=$env:COMPUTERNAME;files=$files}|ConvertTo-Json -Depth 30|Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
 
       - name: Upload clean V3R2 evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: vera-v3r2-clean-evidence-${{ github.run_id }}
           path: ${{ runner.temp }}\vera-v3r2-clean-evidence
