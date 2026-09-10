@@ -31,6 +31,9 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $outDir = Join-Path '${{ runner.temp }}' 'vera-proportion-study-v1'
           New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+          $sourceCommit = '${{ github.sha }}'
+          $sourceTree = (& git -C '${{ github.workspace }}' rev-parse 'HEAD^{tree}').Trim()
+          if ($LASTEXITCODE -ne 0 -or $sourceTree -notmatch '^[0-9a-f]{40}$') { throw 'Could not resolve exact study source tree.' }
 
           function Send-BlenderCommand {
             param([Parameter(Mandatory=$true)][string]$Type, [hashtable]$Params = @{}, [int]$TimeoutMs = 180000)
@@ -79,15 +82,13 @@ jobs:
             $path = Join-Path $outDir $name
             if (-not (Test-Path -LiteralPath $path)) { throw "Expected study artifact missing: $name" }
             $item = Get-Item -LiteralPath $path
-            $files += [ordered]@{
-              name = $name
-              bytes = $item.Length
-              sha256 = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
-            }
+            $files += [ordered]@{name=$name;bytes=$item.Length;sha256=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()}
           }
           $receipt = [ordered]@{
             schema = 'SELFIMAGE_PROPORTION_STUDY_RELAY_RECEIPT_V1'
             status = 'EXECUTED / ARTIFACTS_VERIFIED / VISUAL_REVIEW_REQUIRED / NO_STAGE_A_PASS'
+            source_commit = $sourceCommit
+            source_tree = $sourceTree
             runner = $env:COMPUTERNAME
             blender_addon = $addon.result
             approved_script_sha256 = (Get-FileHash -LiteralPath $scriptPath -Algorithm SHA256).Hash.ToLowerInvariant()
