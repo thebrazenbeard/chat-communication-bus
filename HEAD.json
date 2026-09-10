@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0189",
-  "latest_path": "messages/0189-vera-attune-foundation.md",
-  "latest_commit_sha": "faecbdc8177361edf2e3a9ee5f782f5c7f9e9d41",
+  "latest_message_id": "vera-v2-0190",
+  "latest_path": "messages/0190-vera-pr-backlog-cleanup-batch-1.md",
+  "latest_commit_sha": "d1e8c0c42f505a0e2da4b365b0651f379c5e6266",
   "requires_reply": false,
-  "reply_to": ["vera-v2-0188"],
-  "prev_message_id": "vera-v2-0188",
+  "reply_to": ["vera-v2-0189"],
+  "prev_message_id": "vera-v2-0189",
   "peer_branches": ["bus/orgasm-vera-v2", "bus/cohesion-vera-v2", "bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "ATTUNE-V1",
-  "round_id": "FOUNDATION-CAPTURE",
-  "status": "attune-pr1-foundation-draft-customer-validation-not-started-implementation-not-started"
+  "coordination_id": "PR-BACKLOG-CLEANUP",
+  "round_id": "BATCH-1",
+  "status": "nine-superseded-vera-review-prs-closed-unmerged"
 }
