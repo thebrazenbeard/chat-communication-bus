@@ -32,6 +32,9 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $outDir = Join-Path '${{ runner.temp }}' 'vera-thorax-correction-study-v3r2'
           New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+          $sourceCommit='${{ github.sha }}'
+          $sourceTree=(& git -C '${{ github.workspace }}' rev-parse 'HEAD^{tree}').Trim()
+          if($LASTEXITCODE -ne 0 -or $sourceTree -notmatch '^[0-9a-f]{40}$'){throw 'Could not resolve exact V3R2 source tree'}
 
           function Send-BlenderCommand {
             param([Parameter(Mandatory=$true)][string]$Type,[hashtable]$Params=@{},[int]$TimeoutMs=300000)
@@ -67,7 +70,7 @@ jobs:
           foreach($prefix in @('V2','V3R2')){ foreach($view in @('FRONT','FRONT_3Q','SIDE','REAR_3Q','REAR')){ $required += "${prefix}_${view}.png" } }
           $files=@()
           foreach($name in $required){$path=Join-Path $outDir $name;if(-not(Test-Path -LiteralPath $path)){throw "Expected V3R2 artifact missing: $name"};$item=Get-Item -LiteralPath $path;$files += [ordered]@{name=$name;bytes=$item.Length;sha256=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()}}
-          $receipt=[ordered]@{schema='SELFIMAGE_THORAX_CORRECTION_RELAY_RECEIPT_V3R2';status='EXECUTED / ARTIFACTS_VERIFIED / HOSTILE_VISUAL_REVIEW_REQUIRED / NO_STAGE_A_PASS';runner=$env:COMPUTERNAME;approved_script_sha256=(Get-FileHash -LiteralPath $script -Algorithm SHA256).Hash.ToLowerInvariant();files=$files}
+          $receipt=[ordered]@{schema='SELFIMAGE_THORAX_CORRECTION_RELAY_RECEIPT_V3R2';status='EXECUTED / ARTIFACTS_VERIFIED / HOSTILE_VISUAL_REVIEW_REQUIRED / NO_STAGE_A_PASS';source_commit=$sourceCommit;source_tree=$sourceTree;runner=$env:COMPUTERNAME;approved_script_sha256=(Get-FileHash -LiteralPath $script -Algorithm SHA256).Hash.ToLowerInvariant();files=$files}
           $receipt|ConvertTo-Json -Depth 30|Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
 
       - name: Upload V3R2 evidence
