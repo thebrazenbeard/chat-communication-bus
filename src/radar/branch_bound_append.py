@@ -48,24 +48,22 @@ class _BranchCheckingControlSource:
 
 
 def _unwrap_branch_binding_cause(exc: Exception) -> None:
-    """Restore branch taxonomy only while no append effect is established.
+    """Restore the envelope/topology mismatch code only during preflight.
 
-    SafeLaneAppender intentionally normalizes injected control-source failures.
-    The branch-bound surface restores its own mismatch code for the two control
-    reads that occur before the writer ref can move. It must not unwrap a later
-    receipt/readback error, because doing so would erase effect-state evidence
-    such as PRESENT_VERIFIED and could make a retry unsafe.
+    SafeLaneAppender intentionally assigns distinct taxonomy to later control
+    reads. A before-ref failure must remain TOPOLOGY_CHANGED_DURING_APPEND, and a
+    post-write failure must retain its receipt/effect state. Only the initial
+    TOPOLOGY_UNAVAILABLE normalization is safely refined back to this wrapper's
+    WRITER_BRANCH_MISMATCH code.
     """
 
     cause = exc.__cause__
     if not isinstance(cause, BranchBindingError):
         return
 
-    code = getattr(exc, "code", None)
-    effect_state = getattr(exc, "effect_state", None)
     if (
-        code in {"TOPOLOGY_UNAVAILABLE", "TOPOLOGY_CHANGED_DURING_APPEND"}
-        and effect_state == "NONE_ESTABLISHED"
+        getattr(exc, "code", None) == "TOPOLOGY_UNAVAILABLE"
+        and getattr(exc, "effect_state", None) == "NONE_ESTABLISHED"
     ):
         raise cause from exc
 
