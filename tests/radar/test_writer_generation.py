@@ -49,10 +49,22 @@ def topology():
 def inventory():
     lanes = {}
     for idx, identity in enumerate(ACTIVE):
+        head = f"{idx+10:040x}"[-40:]
         lanes[identity] = {
             'branch': CURRENT[identity],
-            'head_sha': f"{idx+10:040x}"[-40:],
+            'head_sha': head,
             'workflow_blobs': STALE_B if identity == 'brigit' else STALE_A,
+            'history_evidence': {
+                'state': 'COMPLETE',
+                'observed_head_sha': head,
+                'message_count': idx + 1,
+                'message_history_digest_sha256': f"{idx+1:064x}"[-64:],
+            },
+            'provider_cursor_evidence': {
+                'observation_state': 'OBSERVED_ABSENT',
+                'branch': CURRENT[identity],
+                'projected_head_sha': None,
+            },
         }
     return {'lanes': lanes}
 
@@ -79,6 +91,13 @@ def test_builds_inert_plan_for_active_identities_only():
     assert heph['predecessor_branch'] == 'bus/hephaestus-v3'
     assert heph['successor_branch'] == 'bus/hephaestus-v4'
     assert heph['successor_state'] == 'PLANNED_INERT'
+    assert heph['history_evidence']['state'] == 'COMPLETE'
+    assert heph['history_evidence']['observed_head_sha'] == heph['predecessor_head_sha']
+    assert heph['provider_cursor_evidence'] == {
+        'observation_state': 'OBSERVED_ABSENT',
+        'branch': 'bus/hephaestus-v3',
+        'projected_head_sha': None,
+    }
 
 
 def test_rejects_inventory_branch_that_disagrees_with_topology():
@@ -138,6 +157,38 @@ def test_requires_exact_sha_inputs():
         build(bootstrap_tree_sha='tree')
 
 
+def test_accepts_observed_present_provider_cursor_and_preserves_exact_sha():
+    inv = inventory()
+    inv['lanes']['four']['provider_cursor_evidence'] = {
+        'observation_state': 'OBSERVED_PRESENT',
+        'branch': CURRENT['four'],
+        'projected_head_sha': '9' * 40,
+    }
+    plan = build(current_inventory=inv)
+    four = next(x for x in plan['lanes'] if x['identity'] == 'four')
+    assert four['provider_cursor_evidence']['projected_head_sha'] == '9' * 40
+
+
+@pytest.mark.parametrize(
+    ('mutator', 'code'),
+    [
+        (lambda inv: inv['lanes']['four'].pop('history_evidence'), 'HISTORY_EVIDENCE_MISSING:four'),
+        (lambda inv: inv['lanes']['four']['history_evidence'].__setitem__('state', 'INCOMPLETE'), 'HISTORY_INCOMPLETE:four'),
+        (lambda inv: inv['lanes']['four']['history_evidence'].__setitem__('observed_head_sha', '9'*40), 'HISTORY_HEAD_MISMATCH:four'),
+        (lambda inv: inv['lanes']['four']['history_evidence'].__setitem__('message_count', -1), 'HISTORY_MESSAGE_COUNT_INVALID:four'),
+        (lambda inv: inv['lanes']['four']['history_evidence'].__setitem__('message_history_digest_sha256', 'bad'), 'HISTORY_DIGEST_INVALID:four'),
+        (lambda inv: inv['lanes']['four'].pop('provider_cursor_evidence'), 'PROVIDER_CURSOR_EVIDENCE_MISSING:four'),
+        (lambda inv: inv['lanes']['four']['provider_cursor_evidence'].__setitem__('observation_state', 'UNKNOWN'), 'PROVIDER_CURSOR_OBSERVATION_UNRESOLVED:four'),
+        (lambda inv: inv['lanes']['four']['provider_cursor_evidence'].__setitem__('branch', 'bus/other'), 'PROVIDER_CURSOR_BRANCH_MISMATCH:four'),
+        (lambda inv: inv['lanes']['four']['provider_cursor_evidence'].__setitem__('projected_head_sha', '9'*40), 'PROVIDER_CURSOR_ABSENT_WITH_HEAD:four'),
+    ],
+)
+def test_rejects_incomplete_or_unobserved_history_and_cursor_evidence(mutator, code):
+    inv = inventory(); mutator(inv)
+    with pytest.raises(WriterGenerationError, match=code):
+        build(current_inventory=inv)
+
+
 def test_repository_contract_pins_observed_generations_and_clean_anchor_e_bytes():
     import json
     from pathlib import Path
@@ -151,4 +202,6 @@ def test_repository_contract_pins_observed_generations_and_clean_anchor_e_bytes(
     assert c['stale_generation_classes']['B']['identities'] == ['brigit']
     assert c['successor_branches']['brigit'] == 'bus/brigit-v3'
     assert c['successor_branches']['hephaestus'] == 'bus/hephaestus-v4'
+    assert c['planning_evidence_requirements']['history_state'] == 'COMPLETE'
+    assert c['planning_evidence_requirements']['provider_cursor_observation_states'] == ['OBSERVED_PRESENT', 'OBSERVED_ABSENT']
     assert c['max_out_of_pocket_cost_usd'] == 0
