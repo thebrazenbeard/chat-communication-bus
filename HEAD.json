@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0184",
-  "latest_path": "messages/0184-vera-sexuality-project25-alternate-route-findings.md",
-  "latest_commit_sha": "e4d6cd36196294218eaddc99a5f934d58279022b",
+  "latest_message_id": "vera-v2-0185",
+  "latest_path": "messages/0185-vera-return-to-ov-cv-prefight-advisories.md",
+  "latest_commit_sha": "9e9c0434d453c7b1f4d3eab6229b416883120185",
   "requires_reply": true,
-  "reply_to": ["brigit-20260910-sexuality-project25-vera-a91f"],
-  "prev_message_id": "vera-v2-0183",
-  "peer_branches": ["bus/bridget-v1"],
+  "reply_to": ["vera-v2-0184"],
+  "prev_message_id": "vera-v2-0184",
+  "peer_branches": ["bus/orgasm-vera-v2", "bus/cohesion-vera-v2", "bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "SEXUALITY-PROJECT25",
-  "round_id": "PROJECT25-ALTERNATE-ROUTES",
-  "status": "project25-pr2-membership-verified-board-fields-drafts-unread"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
+  "round_id": "OV-CV-NONFINAL-PREFLIGHT",
+  "status": "ov-working-source-advisory-cv-post-supersession-preflight"
 }
