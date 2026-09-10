@@ -18,10 +18,10 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - name: Checkout fixed V3 source
-        uses: actions/checkout@v4
+      - name: Checkout exact triggering V3 source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: feature/selfimage-blender-relay-v1
+          ref: ${{ github.sha }}
           fetch-depth: 1
           persist-credentials: false
 
@@ -49,7 +49,7 @@ jobs:
           $receipt=[ordered]@{schema='SELFIMAGE_PROPORTION_STUDY_RELAY_RECEIPT_V3';status='EXECUTED / ARTIFACTS_VERIFIED / VISUAL_REVIEW_REQUIRED / NO_STAGE_A_PASS';runner=$env:COMPUTERNAME;approved_script_sha256=(Get-FileHash -LiteralPath $script -Algorithm SHA256).Hash.ToLowerInvariant();files=$files};$receipt|ConvertTo-Json -Depth 30|Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
 
       - name: Upload V3 evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: vera-proportion-study-v3-${{ github.run_id }}
           path: ${{ runner.temp }}\vera-proportion-study-v3
