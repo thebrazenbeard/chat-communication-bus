@@ -48,15 +48,25 @@ class _BranchCheckingControlSource:
 
 
 def _unwrap_branch_binding_cause(exc: Exception) -> None:
-    """Preserve branch-binding taxonomy through the lower-level safe appender.
+    """Restore branch taxonomy only while no append effect is established.
 
-    SafeLaneAppender intentionally normalizes failures from an injected control
-    source. When this wrapper's own control source is the cause, restore that
-    more specific public error instead of leaking the generic topology wrapper.
+    SafeLaneAppender intentionally normalizes injected control-source failures.
+    The branch-bound surface restores its own mismatch code for the two control
+    reads that occur before the writer ref can move. It must not unwrap a later
+    receipt/readback error, because doing so would erase effect-state evidence
+    such as PRESENT_VERIFIED and could make a retry unsafe.
     """
 
     cause = exc.__cause__
-    if isinstance(cause, BranchBindingError):
+    if not isinstance(cause, BranchBindingError):
+        return
+
+    code = getattr(exc, "code", None)
+    effect_state = getattr(exc, "effect_state", None)
+    if (
+        code in {"TOPOLOGY_UNAVAILABLE", "TOPOLOGY_CHANGED_DURING_APPEND"}
+        and effect_state == "NONE_ESTABLISHED"
+    ):
         raise cause from exc
 
 
