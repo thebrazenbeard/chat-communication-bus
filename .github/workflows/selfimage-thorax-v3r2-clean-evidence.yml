@@ -31,6 +31,9 @@ jobs:
           $ErrorActionPreference='Stop'
           $outDir=Join-Path '${{ runner.temp }}' 'vera-v3r2-clean-evidence'
           New-Item -ItemType Directory -Force -Path $outDir|Out-Null
+          $sourceCommit='${{ github.sha }}'
+          $sourceTree=(& git -C '${{ github.workspace }}' rev-parse 'HEAD^{tree}').Trim()
+          if($LASTEXITCODE -ne 0 -or $sourceTree -notmatch '^[0-9a-f]{40}$'){throw 'Could not resolve exact V3R2 evidence source tree'}
           function Send-BlenderCommand {
             param([Parameter(Mandatory=$true)][string]$Type,[hashtable]$Params=@{},[int]$TimeoutMs=300000)
             $client=[Net.Sockets.TcpClient]::new();$client.ReceiveTimeout=$TimeoutMs;$client.SendTimeout=$TimeoutMs
@@ -46,7 +49,7 @@ jobs:
           $outJson=($outDir|ConvertTo-Json -Compress);$code="OUTPUT_DIR = $outJson`n"+(Get-Content -LiteralPath $script -Raw);$response=Send-BlenderCommand -Type 'execute_code' -Params @{code=$code} -TimeoutMs 300000;if($response.status -ne 'success'){throw($response|ConvertTo-Json -Depth 20 -Compress)}
           $required=@('CLEAN_RENDER_RECEIPT.json');foreach($prefix in @('V2','V3R2')){foreach($view in @('FRONT','FRONT_3Q','SIDE','REAR_3Q','REAR')){$required+="${prefix}_${view}_CLEAN.png"}}
           $files=@();foreach($name in $required){$p=Join-Path $outDir $name;if(-not(Test-Path -LiteralPath $p)){throw "Missing clean evidence artifact: $name"};$item=Get-Item $p;$files+=[ordered]@{name=$name;bytes=$item.Length;sha256=(Get-FileHash $p -Algorithm SHA256).Hash.ToLowerInvariant()}}
-          [ordered]@{schema='SELFIMAGE_V3R2_CLEAN_EVIDENCE_RELAY_RECEIPT';status='ARTIFACTS_VERIFIED / HOSTILE_VISUAL_REVIEW_REQUIRED';runner=$env:COMPUTERNAME;files=$files}|ConvertTo-Json -Depth 30|Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
+          [ordered]@{schema='SELFIMAGE_V3R2_CLEAN_EVIDENCE_RELAY_RECEIPT';status='ARTIFACTS_VERIFIED / HOSTILE_VISUAL_REVIEW_REQUIRED';source_commit=$sourceCommit;source_tree=$sourceTree;runner=$env:COMPUTERNAME;files=$files}|ConvertTo-Json -Depth 30|Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
 
       - name: Upload clean V3R2 evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
