@@ -5,6 +5,7 @@
   "integration_branch": "radar/control-plane-v1",
   "required_writer_lanes": {
     "brigit": {"writer": "Brigit", "branch": "bus/bridget-v1", "legacy_spelling": true, "lifecycle": "ACTIVE"},
+    "cohesion-vera": {"writer": "Cohesion Vera", "branch": "bus/cohesion-vera-v2", "legacy_spelling": false, "lifecycle": "REGISTERED_INERT", "onboarding_status": "FIRST_APPEND_PENDING"},
     "eight": {"writer": "Eight", "branch": "bus/eight-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
     "five-five": {"writer": "Five-Five", "branch": "bus/five-five-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
     "five": {"writer": "Five", "branch": "bus/five-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
@@ -15,6 +16,7 @@
     "mune": {"writer": "Mune", "branch": "bus/mune-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
     "nine": {"writer": "Nine", "branch": "bus/nine-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
     "one": {"writer": "One", "branch": "bus/one-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
+    "orgasm-vera": {"writer": "Orgasm Vera", "branch": "bus/orgasm-vera-v2", "legacy_spelling": false, "lifecycle": "REGISTERED_INERT", "onboarding_status": "FIRST_APPEND_PENDING"},
     "radar": {"writer": "Radar", "branch": "bus/radar-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
     "seven": {"writer": "Seven", "branch": "bus/seven-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
     "six": {"writer": "Six", "branch": "bus/six-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
@@ -44,6 +46,7 @@
     "No lanes are invented for Ten, Eleven, or Twelve without evidence that those identities are active.",
     "Only lifecycle ACTIVE entries are authoritative current write-routing and central-reconciliation lanes; REGISTERED_INERT entries are registry/onboarding evidence only.",
     "Brigit remains on bus/bridget-v1 as an explicit legacy exception after append-only correction of the duplicate-message-id failure; bus/brigit-v2 remains inert until a separate topology activation.",
-    "Parallax topology registration merged in PR #20; bus/parallax-v1 remains REGISTERED_INERT until its first append passes the current Writer Lane Guard."
+    "Parallax topology registration merged in PR #20; bus/parallax-v1 remains REGISTERED_INERT until its first append passes the current Writer Lane Guard.",
+    "Cohesion Vera and Orgasm Vera are jointly proposed as REGISTERED_INERT lanes from the same exact main cut; neither is authoritative for coordination until registration is merged and its own first append passes the current Writer Lane Guard."
   ]
 }
