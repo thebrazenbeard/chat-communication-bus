@@ -18,10 +18,15 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Recover exact canon and Hailey reference files
+      - name: Recover exact canon and Hailey reference files with bounded read token
         shell: powershell
+        env:
+          GH_TOKEN: ${{ secrets.SELFIMAGE_READ_TOKEN }}
         run: |
           $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:GH_TOKEN)) {
+            throw 'SELFIMAGE_READ_TOKEN is not configured; refusing ambient local gh authentication.'
+          }
           $outDir = Join-Path '${{ runner.temp }}' 'selfimage-reference-recovery'
           New-Item -ItemType Directory -Force -Path $outDir | Out-Null
 
