@@ -61,6 +61,24 @@ def test_selfhosted_workflows_pin_external_actions_and_exact_event_source():
             assert UPLOAD_PIN in text, path.name
 
 
+def test_all_standalone_blender_studies_emit_exact_source_provenance():
+    study_names = (
+        "selfimage-proportion-study-v1.yml",
+        "selfimage-proportion-study-v2.yml",
+        "selfimage-proportion-study-v3.yml",
+        "selfimage-thorax-correction-study-v3.yml",
+        "selfimage-thorax-correction-study-v3r2.yml",
+        "selfimage-thorax-v3r2-clean-evidence.yml",
+        "selfimage-thorax-v3r3-breast-signal-sweep.yml",
+        "selfimage-v4lb1-posterior-largeform-sweep.yml",
+    )
+    for name in study_names:
+        text = (WORKFLOW_DIR / name).read_text(encoding="utf-8")
+        assert "source_commit" in text, name
+        assert "source_tree" in text, name
+        assert "rev-parse 'HEAD^{tree}'" in text, name
+
+
 def test_relay_does_not_refresh_mutable_branch_tip_before_processing():
     workflow = WORKFLOW.read_text(encoding="utf-8")
     assert "Refresh relay branch tip" not in workflow
