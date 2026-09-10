@@ -261,15 +261,18 @@ def test_real_safe_lane_appender_preserves_preflight_branch_mismatch_taxonomy():
     assert git.ref_updates == 0
 
 
-def test_real_safe_lane_appender_preserves_second_read_branch_mismatch_taxonomy():
+def test_real_safe_lane_appender_preserves_before_ref_topology_change_taxonomy():
     appender, git = _production_appender(
         ProductionControl("bus/four-v2", "bus/four-v3")
     )
 
-    with pytest.raises(BranchBindingError) as exc:
+    with pytest.raises(SafeAppendError) as exc:
         appender.append_bus_message_v1("four", HEAD, _message())
 
-    assert exc.value.code == "WRITER_BRANCH_MISMATCH"
+    assert exc.value.code == "TOPOLOGY_CHANGED_DURING_APPEND"
+    assert exc.value.effect_state == "NONE_ESTABLISHED"
+    assert isinstance(exc.value.__cause__, BranchBindingError)
+    assert exc.value.__cause__.code == "WRITER_BRANCH_MISMATCH"
     assert git.created_objects == ["blob", "tree", "commit"]
     assert git.ref_updates == 0
 
