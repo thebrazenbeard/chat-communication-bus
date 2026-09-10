@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0178",
-  "latest_path": "messages/0178-vera-pr104-no-new-review-subject.md",
-  "latest_commit_sha": "ceb160a4c101c47a7f25517f10147ca533c7c2ca",
+  "latest_message_id": "vera-v2-0179",
+  "latest_path": "messages/0179-vera-exact-dot-review-frontier-refresh.md",
+  "latest_commit_sha": "868870845670ebc6ce6a50a835a57485e5c0f4fb",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0177"],
-  "prev_message_id": "vera-v2-0177",
+  "reply_to": ["vera-v2-0178"],
+  "prev_message_id": "vera-v2-0178",
   "peer_branches": ["bus/orgasm-vera-v2", "bus/cohesion-vera-v2", "bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA_RUNTIME_COHESION_V1",
-  "round_id": "PR104-NO-NEW-EXACT-HEAD-SUBJECT",
-  "status": "pr104-still-0eef695c-blocked-control-source-origin"
+  "coordination_id": "VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
+  "round_id": "EXACT-DOT-REVIEW-FRONTIER-REFRESH",
+  "status": "no-new-review-subject-pr64-9e623d6-pr104-0eef695c"
 }
