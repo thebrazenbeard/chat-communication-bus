@@ -22,18 +22,12 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - name: Checkout relay branch
-        uses: actions/checkout@v4
+      - name: Checkout exact triggering source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
+          ref: ${{ github.sha }}
           fetch-depth: 0
-          persist-credentials: true
-
-      - name: Refresh relay branch tip
-        shell: powershell
-        run: |
-          git fetch origin '${{ github.ref_name }}'
-          git checkout '${{ github.ref_name }}'
-          git pull --ff-only origin '${{ github.ref_name }}'
+          persist-credentials: false
 
       - name: Process pending Blender requests
         id: process
@@ -47,24 +41,30 @@ jobs:
 
       - name: Upload Blender relay artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: vera-blender-relay-${{ github.run_id }}
           path: ${{ runner.temp }}\vera-blender-relay-artifacts
           if-no-files-found: ignore
           retention-days: 30
 
-      - name: Commit durable result receipts
+      - name: Commit durable result receipts with narrow write authority
         if: always()
         shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          $ErrorActionPreference = 'Stop'
           git config user.name 'vera-blender-relay'
           git config user.email 'vera-blender-relay@users.noreply.github.com'
           git add -- 'projects/selfimage/blender-relay/results/*.json'
           if (-not (git diff --cached --quiet)) {
             git commit -m 'Self Image Blender relay: record result receipts'
-            git pull --rebase origin '${{ github.ref_name }}'
-            git push origin "HEAD:${{ github.ref_name }}"
+            $basic = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("x-access-token:$env:GH_TOKEN"))
+            $authHeader = "AUTHORIZATION: basic $basic"
+            git -c "http.https://github.com/.extraheader=$authHeader" fetch origin '${{ github.ref_name }}'
+            git rebase "origin/${{ github.ref_name }}"
+            git -c "http.https://github.com/.extraheader=$authHeader" push origin "HEAD:${{ github.ref_name }}"
           } else {
             Write-Host 'No new durable result receipts to commit.'
           }
