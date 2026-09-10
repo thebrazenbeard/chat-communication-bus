@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "owner": "thebrazenbeard",
+  "project_number": 10,
+  "expected_title": "Radar's Chat Bus Fix",
+  "status_field": "Status",
+  "allowed_statuses": [
+    "Backlog",
+    "Ready",
+    "In progress",
+    "In review",
+    "Done"
+  ],
+  "item_limit": 100,
+  "authority": "QUEUE_METADATA_ONLY",
+  "transport": "GH_PROJECT_JSON",
+  "mutation_supported": false,
+  "browser_session_api_allowed": false,
+  "max_out_of_pocket_cost_usd": 0
+}
