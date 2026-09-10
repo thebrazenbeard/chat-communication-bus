@@ -70,7 +70,7 @@ foreach ($requestFile in $pending) {
         }
         $fallback = [ordered]@{
             version = 1
-            relay_version = '1.1.1'
+            relay_version = '1.1.2'
             request_id = $fallbackId
             operation = $null
             status = 'failed'
