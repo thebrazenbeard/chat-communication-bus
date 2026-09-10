@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: selfimage-blender-relay-v1
@@ -20,6 +20,8 @@ jobs:
     if: github.actor == 'thebrazenbeard'
     runs-on: [self-hosted, windows, x64, vera-blender]
     timeout-minutes: 20
+    outputs:
+      has_receipts: ${{ steps.receipt_probe.outputs.has_receipts }}
 
     steps:
       - name: Checkout exact triggering source
@@ -39,6 +41,43 @@ jobs:
             -Workspace '${{ github.workspace }}' `
             -ArtifactRoot $artifactRoot
 
+      - name: Stage changed durable receipts without write credentials
+        id: receipt_probe
+        if: always()
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $resultsRel = 'projects/selfimage/blender-relay/results'
+          $stage = Join-Path '${{ runner.temp }}' 'vera-blender-relay-receipts'
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+
+          $changed = @()
+          $changed += @(& git diff --name-only -- "$resultsRel/*.json")
+          $changed += @(& git ls-files --others --exclude-standard -- "$resultsRel/*.json")
+          $changed = @($changed | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
+
+          foreach ($rel in $changed) {
+            $normalized = $rel.Replace('\', '/')
+            if ($normalized -notmatch '^projects/selfimage/blender-relay/results/[A-Za-z0-9._-]+\.json$') {
+              throw "Unexpected durable receipt path: $rel"
+            }
+            $source = Join-Path '${{ github.workspace }}' $rel
+            if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
+              throw "Durable receipt deletion or missing path is not allowed: $rel"
+            }
+            try {
+              Get-Content -LiteralPath $source -Raw | ConvertFrom-Json | Out-Null
+            }
+            catch {
+              throw "Durable receipt is not valid JSON: $rel"
+            }
+            Copy-Item -LiteralPath $source -Destination (Join-Path $stage ([IO.Path]::GetFileName($rel))) -Force
+          }
+
+          $hasReceipts = if ($changed.Count -gt 0) { 'true' } else { 'false' }
+          Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "has_receipts=$hasReceipts"
+          Write-Host "Changed durable receipts staged: $($changed.Count)"
+
       - name: Upload Blender relay artifacts
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -48,8 +87,65 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
-      - name: Commit durable result receipts with narrow write authority
-        if: always()
+      - name: Upload durable receipts for isolated publication
+        if: always() && steps.receipt_probe.outputs.has_receipts == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: vera-blender-relay-receipts-${{ github.run_id }}
+          path: ${{ runner.temp }}\vera-blender-relay-receipts\*.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Preserve failure status
+        if: steps.process.outcome == 'failure'
+        shell: powershell
+        run: |
+          throw 'One or more Blender relay requests failed. Inspect the durable result receipt(s) and workflow artifact.'
+
+  publish_receipts:
+    needs: relay
+    if: always() && needs.relay.outputs.has_receipts == 'true' && github.actor == 'thebrazenbeard'
+    permissions:
+      contents: write
+    runs-on: [self-hosted, windows, x64, vera-blender]
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout exact triggering source for receipt publication
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Download staged durable receipts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: vera-blender-relay-receipts-${{ github.run_id }}
+          path: ${{ runner.temp }}\vera-blender-relay-receipts
+
+      - name: Validate and overlay receipt-only payload
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $sourceDir = Join-Path '${{ runner.temp }}' 'vera-blender-relay-receipts'
+          $destDir = Join-Path '${{ github.workspace }}' 'projects/selfimage/blender-relay/results'
+          $files = @(Get-ChildItem -LiteralPath $sourceDir -File -Filter '*.json')
+          if ($files.Count -eq 0) { throw 'Receipt publication job received no JSON receipts.' }
+          foreach ($file in $files) {
+            if ($file.Name -notmatch '^[A-Za-z0-9._-]+\.json$') {
+              throw "Unexpected receipt filename: $($file.Name)"
+            }
+            try {
+              Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json | Out-Null
+            }
+            catch {
+              throw "Receipt is not valid JSON: $($file.Name)"
+            }
+            Copy-Item -LiteralPath $file.FullName -Destination (Join-Path $destDir $file.Name) -Force
+          }
+
+      - name: Commit durable result receipts with isolated write authority
         shell: powershell
         env:
           GH_TOKEN: ${{ github.token }}
@@ -68,9 +164,3 @@ jobs:
           } else {
             Write-Host 'No new durable result receipts to commit.'
           }
-
-      - name: Preserve failure status
-        if: steps.process.outcome == 'failure'
-        shell: powershell
-        run: |
-          throw 'One or more Blender relay requests failed. Inspect the committed result receipt(s) and workflow artifact.'
