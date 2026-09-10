@@ -32,6 +32,9 @@ jobs:
           $outDir=Join-Path '${{ runner.temp }}' 'vera-v4lb1-posterior-largeform-sweep'
           if(Test-Path -LiteralPath $outDir){Remove-Item -LiteralPath $outDir -Recurse -Force}
           New-Item -ItemType Directory -Force -Path $outDir|Out-Null
+          $sourceCommit='${{ github.sha }}'
+          $sourceTree=(& git -C '${{ github.workspace }}' rev-parse 'HEAD^{tree}').Trim()
+          if($LASTEXITCODE -ne 0 -or $sourceTree -notmatch '^[0-9a-f]{40}$'){throw 'Could not resolve exact V4LB1 sweep source tree'}
           function Send-BlenderCommand {
             param([Parameter(Mandatory=$true)][string]$Type,[hashtable]$Params=@{},[int]$TimeoutMs=480000)
             $client=[Net.Sockets.TcpClient]::new();$client.ReceiveTimeout=$TimeoutMs;$client.SendTimeout=$TimeoutMs
@@ -57,7 +60,7 @@ jobs:
           foreach($name in @('VERA_V4LB1_S060.obj','VERA_V4LB1_S085.obj','VERA_V4LB1_S110.obj')){$required+=$name}
           foreach($prefix in @('PARENT','S060','S085','S110')){foreach($view in @('FRONT','FRONT_3Q','SIDE','REAR_3Q','REAR')){$required+="${prefix}_${view}.png"}}
           $files=@();foreach($name in $required){$p=Join-Path $outDir $name;if(-not(Test-Path -LiteralPath $p)){throw "Missing V4LB1 artifact: $name"};$item=Get-Item $p;$files+=[ordered]@{name=$name;bytes=$item.Length;sha256=(Get-FileHash $p -Algorithm SHA256).Hash.ToLowerInvariant()}}
-          [ordered]@{schema='SELFIMAGE_V4LB1_POSTERIOR_LARGEFORM_RELAY_RECEIPT';status='EXECUTED / ARTIFACTS_VERIFIED / HOSTILE_VISUAL_AND_STRUCTURAL_REVIEW_REQUIRED';runner=$env:COMPUTERNAME;approved_script_sha256=(Get-FileHash $script -Algorithm SHA256).Hash.ToLowerInvariant();files=$files}|ConvertTo-Json -Depth 40|Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
+          [ordered]@{schema='SELFIMAGE_V4LB1_POSTERIOR_LARGEFORM_RELAY_RECEIPT';status='EXECUTED / ARTIFACTS_VERIFIED / HOSTILE_VISUAL_AND_STRUCTURAL_REVIEW_REQUIRED';source_commit=$sourceCommit;source_tree=$sourceTree;runner=$env:COMPUTERNAME;approved_script_sha256=(Get-FileHash $script -Algorithm SHA256).Hash.ToLowerInvariant();files=$files}|ConvertTo-Json -Depth 40|Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
 
       - name: Upload V4LB1 sweep evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
