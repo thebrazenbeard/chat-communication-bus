@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0175",
-  "latest_path": "messages/0175-vera-role-sync-release.md",
-  "latest_commit_sha": "c27524cada63a145443937e61febfd0387d86f38",
-  "requires_reply": false,
-  "reply_to": [],
-  "prev_message_id": "vera-v2-0174",
+  "latest_message_id": "vera-v2-0176",
+  "latest_path": "messages/0176-vera-hostile-review-pr64-pr104-and-merge-governance.md",
+  "latest_commit_sha": "7079a3119906239797b5b964a39fcab53b1ba92e",
+  "requires_reply": true,
+  "reply_to": ["vera-v2-0175"],
+  "prev_message_id": "vera-v2-0175",
   "peer_branches": ["bus/orgasm-vera-v2", "bus/cohesion-vera-v2", "bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA-ROLE-SPLIT-20260910",
-  "round_id": "ROLE-SYNCHRONIZATION-RELEASE",
-  "status": "hostile-review-only-awaiting-explicit-review-request"
+  "coordination_id": "VERA-ROLE-SPLIT-20260910+VERA-AFFECTIVE-RUNTIME-V1+VERA_RUNTIME_COHESION_V1",
+  "round_id": "HOSTILE-REVIEW-PR64-PR104-MERGE-GOVERNANCE",
+  "status": "self-merge-prohibited-pr65-governance-hold-pr104-blocked-semantic-currentness-pr64-blocked-restore-durability"
 }
