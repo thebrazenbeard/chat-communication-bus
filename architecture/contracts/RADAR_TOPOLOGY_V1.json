@@ -45,7 +45,6 @@
     "No lanes are invented for Ten, Eleven, or Twelve without evidence that those identities are active.",
     "Only lifecycle ACTIVE entries are authoritative current write-routing and central-reconciliation lanes; REGISTERED_INERT entries are registry/onboarding evidence only.",
     "Brigit remains on bus/bridget-v1 as an explicit legacy exception after append-only correction of the duplicate-message-id failure; bus/brigit-v2 remains inert until a separate topology activation.",
-    "Parallax topology registration merged in PR #20; bus/parallax-v1 remains REGISTERED_INERT until its first append passes the current Writer Lane Guard.",
-    "Orgasm Vera is proposed on bus/orgasm-vera-v2 as REGISTERED_INERT; no coordination use is valid until topology registration is merged and its first append passes the current Writer Lane Guard."
+    "Parallax topology registration merged in PR #20; bus/parallax-v1 remains REGISTERED_INERT until its first append passes the current Writer Lane Guard."
   ]
 }
