@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "repository": "thebrazenbeard/chat-communication-bus",
+  "status": "SOURCE_PLAN_ONLY / NO_SUCCESSOR_CREATED / NO_ROUTE_CHANGED / NO_PROVIDER_EFFECT",
+  "source_reference_commit": "ded270af1dbd51537bec92904e283da8d4183ff8",
+  "source_reference_tree": "ecf31c90eadf43d6c7d838f1f4cb5c5f50ee7e97",
+  "bootstrap_policy": "EXACT_REVIEWED_CANONICAL_CUT_REQUIRED_AT_EXECUTION; SOURCE_REFERENCE_IS_EVIDENCE_NOT_CURRENTNESS",
+  "clean_bootstrap_workflow_blobs": {
+    "ci.yml": "f2be566e45771b0ebd1055df2eaa3ce167fe724a",
+    "radar-central-dispatcher.yml": "c164a354bd70a67d009d0947243ae8581e41c178",
+    "radar-trusted-projector.yml": "5513b46bb3b10906443c1a453852bff16e349340",
+    "writer-lane-guard.yml": "460403230d93ff33d73204be9c7e900a3510155f"
+  },
+  "stale_generation_classes": {
+    "A": {
+      "identities": ["eight", "five-five", "five", "fng", "four", "hephaestus", "masa", "mune", "nine", "one", "radar", "seven", "six", "thirteen", "three", "two", "vera", "yang", "yin"],
+      "workflow_blobs": {
+        "ci.yml": "e2d1c19efe3f690e1015a496f573d0f90a8ebea3",
+        "radar-bus-projection.yml": "0f900fcd4c2131b914eb453d468eeea8e7fec2f9",
+        "writer-lane-guard.yml": "40b4f5660467badbe0328d9e76d4fee5a231235b"
+      }
+    },
+    "B": {
+      "identities": ["brigit"],
+      "workflow_blobs": {
+        "radar-bus-projection.yml": "cb0269067ea0ddf8efb06391518297d4523db556"
+      }
+    }
+  },
+  "successor_branches": {
+    "brigit": "bus/brigit-v3",
+    "eight": "bus/eight-v3",
+    "five-five": "bus/five-five-v3",
+    "five": "bus/five-v3",
+    "fng": "bus/fng-v3",
+    "four": "bus/four-v3",
+    "hephaestus": "bus/hephaestus-v4",
+    "masa": "bus/masa-v3",
+    "mune": "bus/mune-v3",
+    "nine": "bus/nine-v3",
+    "one": "bus/one-v3",
+    "radar": "bus/radar-v3",
+    "seven": "bus/seven-v3",
+    "six": "bus/six-v3",
+    "thirteen": "bus/thirteen-v3",
+    "three": "bus/three-v3",
+    "two": "bus/two-v3",
+    "vera": "bus/vera-v3",
+    "yang": "bus/yang-v3",
+    "yin": "bus/yin-v3"
+  },
+  "brigit_legacy_note": "bus/brigit-v2 already exists as an inert stale-seed branch and is preserved; it is not reused as the clean successor.",
+  "required_order": [
+    "RECONCILE_CANONICAL_MAIN_TO_REVIEWED_SOURCE",
+    "FRESH_READ_TOPOLOGY_AND_ALL_ACTIVE_LANE_HEADS",
+    "VALIDATE_GENERATION_PLAN_AGAINST_EXACT_BOOTSTRAP_AND_BRANCH_EXISTENCE",
+    "REVIEW_AND_REGISTER_PLANNED_SUCCESSORS_WITHOUT_SWITCHING_CURRENT_ROUTE",
+    "CREATE_SUCCESSORS_FROM_EXACT_BOOTSTRAP",
+    "VERIFY_SUCCESSOR_HEAD_TREE_AND_WORKFLOW_BLOBS",
+    "EXPLICIT_TOPOLOGY_ACTIVATION",
+    "FIRST_APPEND_EXACT_HEAD_VALIDATION",
+    "RETIRE_PREDECESSOR_AFTER_ACTIVATION"
+  ],
+  "forbidden_effects_without_separate_authorization": [
+    "force_push",
+    "history_rewrite",
+    "branch_delete",
+    "in_place_retroactive_workflow_edit",
+    "provider_cursor_seed",
+    "provider_deploy",
+    "topology_activation",
+    "canonical_main_merge_or_ref_move"
+  ],
+  "max_out_of_pocket_cost_usd": 0
+}
