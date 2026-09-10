@@ -47,6 +47,19 @@ class _BranchCheckingControlSource:
         return snapshot
 
 
+def _unwrap_branch_binding_cause(exc: Exception) -> None:
+    """Preserve branch-binding taxonomy through the lower-level safe appender.
+
+    SafeLaneAppender intentionally normalizes failures from an injected control
+    source. When this wrapper's own control source is the cause, restore that
+    more specific public error instead of leaking the generic topology wrapper.
+    """
+
+    cause = exc.__cause__
+    if isinstance(cause, BranchBindingError):
+        raise cause from exc
+
+
 class BranchBoundSafeLaneAppender:
     """Supported append surface that binds envelope branch to trusted topology."""
 
@@ -94,11 +107,17 @@ class BranchBoundSafeLaneAppender:
             history_source=self._history_source,
             git_backend=self._git_backend,
         )
-        return delegate.append_bus_message_v1(
-            identity,
-            expected_lane_head,
-            message_utf8,
-        )
+        try:
+            return delegate.append_bus_message_v1(
+                identity,
+                expected_lane_head,
+                message_utf8,
+            )
+        except BranchBindingError:
+            raise
+        except Exception as exc:
+            _unwrap_branch_binding_cause(exc)
+            raise
 
 
 __all__ = ["BranchBindingError", "BranchBoundSafeLaneAppender"]
