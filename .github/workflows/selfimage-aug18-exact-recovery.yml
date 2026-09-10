@@ -18,17 +18,20 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Recover exact private Self Image blob with existing local gh auth
+      - name: Recover exact private Self Image blob with bounded read token
         shell: powershell
+        env:
+          GH_TOKEN: ${{ secrets.SELFIMAGE_READ_TOKEN }}
         run: |
           $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:GH_TOKEN)) {
+            throw 'SELFIMAGE_READ_TOKEN is not configured; refusing ambient local gh authentication.'
+          }
           $blob = 'cc338ed713135d482d764879328af7709a3f7c16'
           $outDir = Join-Path '${{ runner.temp }}' 'vera-aug18-exact-recovery'
           New-Item -ItemType Directory -Force -Path $outDir | Out-Null
           $png = Join-Path $outDir 'ChatGPT Image Aug 18, 2026, 07_05_06 AM.png'
 
-          # The runner was installed for Patrick's Windows user after `gh auth status`
-          # verified thebrazenbeard. Do not print or export the credential.
           $json = gh api "repos/thebrazenbeard/selfimage/git/blobs/$blob" | ConvertFrom-Json
           if ([string]$json.sha -ne $blob) { throw "GitHub blob identity mismatch: $($json.sha)" }
           if ([string]$json.encoding -ne 'base64') { throw "Unexpected GitHub blob encoding: $($json.encoding)" }
@@ -47,10 +50,6 @@ jobs:
             $image.Dispose()
           }
 
-          # Direct exact-blob readback on run 34181555681 established the main-branch
-          # object itself is 1155x1362. The earlier 1024x1536 value belonged to
-          # historical/companion-asset evidence and is not the dimension authority
-          # for Git blob cc338ed713135d482d764879328af7709a3f7c16.
           if ($width -ne 1155 -or $height -ne 1362) {
             throw "Exact blob has unexpected dimensions ${width}x${height}; expected 1155x1362."
           }
