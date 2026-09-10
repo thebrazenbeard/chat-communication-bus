@@ -1,9 +1,11 @@
 name: Writer Lane Guard
 
+# Ordinary writer-lane pushes are already validated inside the trusted
+# projection path before transport. Keep this standalone guard as an explicit
+# forensic/manual verifier instead of spending a second hosted job on every
+# Bus message.
 on:
-  push:
-    branches:
-      - "bus/**"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -40,9 +42,9 @@ jobs:
         env:
           RADAR_REF: ${{ github.ref }}
           RADAR_HEAD: ${{ github.sha }}
-          RADAR_BASE: ${{ github.event.before }}
         run: |
           RADAR_BOOTSTRAP_MAIN="$(git -C control rev-parse HEAD)"
+          RADAR_BASE="$(git -C lane rev-parse "${RADAR_HEAD}^" 2>/dev/null || true)"
           python control/scripts/radar_validate_writer_lane.py \
             --repo-dir lane \
             --ref "$RADAR_REF" \
