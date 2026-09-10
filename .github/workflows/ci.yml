@@ -4,12 +4,15 @@ on:
   push:
     branches:
       - "main"
-      - "radar/**"
       - "feature/chat-bus-vertical-slice-v1"
   pull_request:
 
 permissions:
   contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
