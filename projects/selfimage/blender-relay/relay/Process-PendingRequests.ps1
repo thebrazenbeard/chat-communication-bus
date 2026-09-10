@@ -11,6 +11,19 @@ $base = Join-Path $Workspace 'projects/selfimage/blender-relay'
 $requestsDir = Join-Path $base 'requests'
 $resultsDir = Join-Path $base 'results'
 $relay = Join-Path $base 'relay/Invoke-BlenderRelay.ps1'
+$sourceCommit = (& git -C $Workspace rev-parse HEAD).Trim()
+if ($LASTEXITCODE -ne 0 -or $sourceCommit -notmatch '^[0-9a-f]{40}$') { throw 'Could not resolve exact relay source commit.' }
+$sourceTree = (& git -C $Workspace rev-parse 'HEAD^{tree}').Trim()
+if ($LASTEXITCODE -ne 0 -or $sourceTree -notmatch '^[0-9a-f]{40}$') { throw 'Could not resolve exact relay source tree.' }
+
+function Add-SourceIdentityToReceipt {
+    param([Parameter(Mandatory=$true)][string]$Path)
+    if (-not (Test-Path -LiteralPath $Path)) { return }
+    $receipt = Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json
+    $receipt | Add-Member -NotePropertyName source_commit -NotePropertyValue $sourceCommit -Force
+    $receipt | Add-Member -NotePropertyName source_tree -NotePropertyValue $sourceTree -Force
+    $receipt | ConvertTo-Json -Depth 40 | Set-Content -LiteralPath $Path -Encoding UTF8
+}
 
 New-Item -ItemType Directory -Force -Path $requestsDir, $resultsDir, $ArtifactRoot | Out-Null
 
@@ -26,7 +39,6 @@ foreach ($requestFile in $pending) {
     $requestId = $null
     $resultPath = $null
     try {
-        # Windows PowerShell 5.1 has no ConvertFrom-Json -Depth parameter.
         $request = Get-Content -LiteralPath $requestFile.FullName -Raw | ConvertFrom-Json
         $requestId = [string]$request.request_id
         if ($requestId -notmatch '^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$') {
@@ -46,6 +58,7 @@ foreach ($requestFile in $pending) {
         Write-Host "Processing Blender relay request $requestId ($($request.operation))."
 
         & $relay -RequestFile $requestFile.FullName -ArtifactDir $jobArtifactDir -ResultFile $resultPath
+        Add-SourceIdentityToReceipt -Path $resultPath
         if ($LASTEXITCODE -ne 0) {
             $failures++
             Write-Warning "Relay request $requestId failed; durable failure receipt was written."
@@ -55,10 +68,8 @@ foreach ($requestFile in $pending) {
     catch {
         $failures++
 
-        # If the bounded relay already wrote a detailed receipt before surfacing
-        # a terminating PowerShell error, preserve that receipt rather than
-        # replacing it with a generic outer fallback.
         if ($resultPath -and (Test-Path -LiteralPath $resultPath)) {
+            Add-SourceIdentityToReceipt -Path $resultPath
             Write-Warning "Relay request $requestId failed after writing its detailed receipt; preserving that receipt."
             Write-Warning $_.Exception.Message
             continue
@@ -71,6 +82,8 @@ foreach ($requestFile in $pending) {
         $fallback = [ordered]@{
             version = 1
             relay_version = '1.1.2'
+            source_commit = $sourceCommit
+            source_tree = $sourceTree
             request_id = $fallbackId
             operation = $null
             status = 'failed'
@@ -86,6 +99,5 @@ foreach ($requestFile in $pending) {
 }
 
 Write-Host "Processed $processed relay request(s); failures: $failures."
-# Preserve results for failed jobs but let the workflow become red when any operation failed.
 if ($failures -gt 0) { exit 2 }
 exit 0
