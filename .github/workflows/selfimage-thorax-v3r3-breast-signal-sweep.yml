@@ -18,10 +18,10 @@ jobs:
     runs-on: [self-hosted, windows, x64, vera-blender]
     timeout-minutes: 20
     steps:
-      - name: Checkout V3R3 sweep source
-        uses: actions/checkout@v4
+      - name: Checkout exact triggering V3R3 sweep source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: feature/selfimage-blender-relay-v1
+          ref: ${{ github.sha }}
           fetch-depth: 1
           persist-credentials: false
 
@@ -59,7 +59,7 @@ jobs:
           [ordered]@{schema='SELFIMAGE_V3R3_BREAST_SIGNAL_SWEEP_RELAY_RECEIPT';status='EXECUTED / ARTIFACTS_VERIFIED / HOSTILE_VISUAL_REVIEW_REQUIRED';runner=$env:COMPUTERNAME;approved_script_sha256=(Get-FileHash $script -Algorithm SHA256).Hash.ToLowerInvariant();files=$files}|ConvertTo-Json -Depth 30|Set-Content -LiteralPath (Join-Path $outDir 'RELAY_RECEIPT.json') -Encoding UTF8
 
       - name: Upload V3R3 sweep evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: vera-v3r3-breast-signal-sweep-${{ github.run_id }}
           path: ${{ runner.temp }}\vera-v3r3-breast-signal-sweep
