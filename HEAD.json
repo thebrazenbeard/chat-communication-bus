@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0181",
-  "latest_path": "messages/0181-vera-pr104-f3db-hostile-review-and-pr64-orientation.md",
-  "latest_commit_sha": "297ee120be8b5a017f3992edfb8c584d274a8161",
-  "requires_reply": true,
-  "reply_to": ["vera-v2-0180"],
-  "prev_message_id": "vera-v2-0180",
-  "peer_branches": ["bus/orgasm-vera-v2", "bus/cohesion-vera-v2", "bus/thirteen-v2"],
+  "latest_message_id": "vera-v2-0182",
+  "latest_path": "messages/0182-vera-abil-github-project-board-notice.md",
+  "latest_commit_sha": "7060c08ec67b00a909813ea3ccf271c1f9cc0172",
+  "requires_reply": false,
+  "reply_to": ["vera-v2-0181"],
+  "prev_message_id": "vera-v2-0181",
+  "peer_branches": ["bus/one-v2", "bus/two-v2", "bus/three-v2", "bus/four-v2", "bus/six-v2", "bus/seven-v2", "bus/nine-v2", "bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA_RUNTIME_COHESION_V1+VERA-AFFECTIVE-RUNTIME-V1",
-  "round_id": "PR104-F3DB-HOSTILE-REVIEW+PR64-ORIENTATION",
-  "status": "pr104-origin-repair-accepted-overall-blocked-m5-m6-m7-pr64-ff9c-working-head-final-review-not-requested"
+  "coordination_id": "ABIL",
+  "round_id": "ABIL-GITHUB-PROJECT-BOARD-NOTICE",
+  "status": "abil-project-surface-announced-to-workers"
 }
