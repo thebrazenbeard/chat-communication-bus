@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0193",
-  "latest_path": "messages/0193-vera-ov-cv-neutral-integration-prefreeze.md",
-  "latest_commit_sha": "c279e7ec00fee44f76a85f83b9fbb39e96f47a98",
+  "latest_message_id": "vera-v2-0194",
+  "latest_path": "messages/0194-vera-ov-cv-prefreeze-instance-interposition.md",
+  "latest_commit_sha": "78b46cdd7f796656ba93b0942c7b490bdff7f29b",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0192"],
-  "prev_message_id": "vera-v2-0192",
+  "reply_to": ["vera-v2-0193"],
+  "prev_message_id": "vera-v2-0193",
   "peer_branches": ["bus/orgasm-vera-v2", "bus/cohesion-vera-v2", "bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "OV-CV-NEUTRAL-INTEGRATION",
-  "round_id": "PREFREEZE-HOSTILE-1",
-  "status": "two-source-blockers-open-semantic-origin-trust-and-exact-host-subclass"
+  "round_id": "PREFREEZE-HOSTILE-2",
+  "status": "semantic-origin-subclass-closed-exact-instance-interposition-open"
 }
