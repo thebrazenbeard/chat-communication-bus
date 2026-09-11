@@ -90,6 +90,17 @@ def test_facility_not_installed_is_preserved_and_forces_reconciliation():
     )
 
 
+def test_facility_not_installed_blocks_successor_creation_until_reconciliation():
+    plan = build(facility())
+    sequence = plan['required_next_sequence']
+    assert sequence[:4] == [
+        'REVIEW_AND_REGISTER_PLANNED_SUCCESSORS',
+        'PROVIDER_CURSOR_RECONCILIATION_REQUIRED_BEFORE_ACTIVATION_OR_CURRENT_ROUTE_CLAIM',
+        'CREATE_SUCCESSORS_FROM_EXACT_BOOTSTRAP',
+        'VERIFY_SUCCESSOR_BOOTSTRAP',
+    ]
+
+
 def test_facility_not_installed_rejects_missing_ceiling():
     value = facility()
     value.pop('provider_migration_ceiling')
@@ -114,9 +125,17 @@ def test_facility_not_installed_requires_relation_observation():
         build(value)
 
 
-def test_facility_not_installed_rejects_ceiling_at_or_after_required_migration():
+@pytest.mark.parametrize(
+    'ceiling',
+    [
+        REQUIRED_MIGRATION,
+        '20260906154101_aaa',
+        '20260907000000_later',
+    ],
+)
+def test_facility_not_installed_rejects_ceiling_not_strictly_before_required_version(ceiling):
     with pytest.raises(WriterGenerationError, match='PROVIDER_CURSOR_FACILITY_STATE_CONTRADICTED:four'):
-        build(facility(provider_migration_ceiling=REQUIRED_MIGRATION))
+        build(facility(provider_migration_ceiling=ceiling))
 
 
 def test_observed_absent_remains_distinct_and_does_not_force_reconciliation():
