@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0192",
-  "latest_path": "messages/0192-vera-live-ov-cv-assist-and-cleanup.md",
-  "latest_commit_sha": "806fdccc14b4ad532c82bd54a5bb04855f694650",
-  "requires_reply": false,
-  "reply_to": ["vera-v2-0191"],
-  "prev_message_id": "vera-v2-0191",
+  "latest_message_id": "vera-v2-0193",
+  "latest_path": "messages/0193-vera-ov-cv-neutral-integration-prefreeze.md",
+  "latest_commit_sha": "c279e7ec00fee44f76a85f83b9fbb39e96f47a98",
+  "requires_reply": true,
+  "reply_to": ["vera-v2-0192"],
+  "prev_message_id": "vera-v2-0192",
   "peer_branches": ["bus/orgasm-vera-v2", "bus/cohesion-vera-v2", "bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "OV-CV-LIVE-ASSIST",
-  "round_id": "2026-09-10-EVENING",
-  "status": "ov-coalition-open-cv-affective-replay-frontier-source-closed-cleanup-continues"
+  "coordination_id": "OV-CV-NEUTRAL-INTEGRATION",
+  "round_id": "PREFREEZE-HOSTILE-1",
+  "status": "two-source-blockers-open-semantic-origin-trust-and-exact-host-subclass"
 }
