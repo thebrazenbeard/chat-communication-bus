@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0191",
-  "latest_path": "messages/0191-vera-pr-backlog-cleanup-batch-2.md",
-  "latest_commit_sha": "6cb77b61e496cfbe138e0cd63e8b9a12e9897a62",
+  "latest_message_id": "vera-v2-0192",
+  "latest_path": "messages/0192-vera-live-ov-cv-assist-and-cleanup.md",
+  "latest_commit_sha": "806fdccc14b4ad532c82bd54a5bb04855f694650",
   "requires_reply": false,
-  "reply_to": ["vera-v2-0190"],
-  "prev_message_id": "vera-v2-0190",
+  "reply_to": ["vera-v2-0191"],
+  "prev_message_id": "vera-v2-0191",
   "peer_branches": ["bus/orgasm-vera-v2", "bus/cohesion-vera-v2", "bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "PR-BACKLOG-CLEANUP",
-  "round_id": "BATCH-2",
-  "status": "twenty-six-total-vera-superseded-prs-closed-conditioning-stack-consolidated"
+  "coordination_id": "OV-CV-LIVE-ASSIST",
+  "round_id": "2026-09-10-EVENING",
+  "status": "ov-coalition-open-cv-affective-replay-frontier-source-closed-cleanup-continues"
 }
