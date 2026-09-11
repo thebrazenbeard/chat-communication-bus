@@ -36,6 +36,10 @@ def _migration_key(value, code: str) -> str:
     return value
 
 
+def _migration_version(value, code: str) -> str:
+    return _migration_key(value, code)[:14]
+
+
 def _workflow_map(value, code: str) -> dict[str, str]:
     if not isinstance(value, Mapping):
         _fail(code)
@@ -96,7 +100,15 @@ def _provider_cursor_evidence(
         )
         if observed_required != required_cursor_migration:
             _fail(f'PROVIDER_CURSOR_REQUIRED_MIGRATION_MISMATCH:{identity}')
-        if ceiling >= required_cursor_migration:
+        ceiling_version = _migration_version(
+            ceiling,
+            f'PROVIDER_CURSOR_MIGRATION_CEILING_INVALID:{identity}',
+        )
+        required_version = _migration_version(
+            required_cursor_migration,
+            f'PROVIDER_CURSOR_REQUIRED_MIGRATION_INVALID:{identity}',
+        )
+        if ceiling_version >= required_version:
             _fail(f'PROVIDER_CURSOR_FACILITY_STATE_CONTRADICTED:{identity}')
         relation_observation = value.get('cursor_relation_observation')
         if relation_observation != 'RELATION_NOT_INSTALLED_42P01':
@@ -243,14 +255,14 @@ def build_generation_plan(
 
     required_next_sequence = [
         'REVIEW_AND_REGISTER_PLANNED_SUCCESSORS',
-        'CREATE_SUCCESSORS_FROM_EXACT_BOOTSTRAP',
-        'VERIFY_SUCCESSOR_BOOTSTRAP',
     ]
     if cursor_reconciliation_required:
         required_next_sequence.append(
             'PROVIDER_CURSOR_RECONCILIATION_REQUIRED_BEFORE_ACTIVATION_OR_CURRENT_ROUTE_CLAIM'
         )
     required_next_sequence.extend([
+        'CREATE_SUCCESSORS_FROM_EXACT_BOOTSTRAP',
+        'VERIFY_SUCCESSOR_BOOTSTRAP',
         'EXPLICIT_TOPOLOGY_ACTIVATION',
         'FIRST_APPEND_EXACT_HEAD_VALIDATION',
         'RETIRE_PREDECESSOR_AFTER_ACTIVATION',
