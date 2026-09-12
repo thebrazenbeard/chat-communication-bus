@@ -1,37 +1,30 @@
-# PR mirror — thebrazenbeard/wip#1 / Vera model-state adapter R3.1
+# PR mirror — thebrazenbeard/wip#1 / Vera model-state adapter final WIP candidate
 
-State: OPEN / DRAFT / UNMERGED / WIP STAGING
-Head: `941b7bc45d97138bed5d220c0ba591db87100a58`
+State: OPEN / DRAFT / UNMERGED / WIP STAGING COMPLETE
+Head: `2f049ec4c4f4a4307da137a99f8f27b39cfa308a`
 Source branch: `work/vera-model-state-adapter-v1-20260911`
 
 Workspace:
 - id: `vera-model-state-adapter-v1`
 - lifecycle: `ACTIVE`
-- latest checkpoint: `cp-000006`
+- latest checkpoint: `cp-000008`
+- claim ceiling: `WIP_RESEARCH_CANDIDATE_VERIFIED`
 
 Primary artifacts:
-- `workspaces/vera-model-state-adapter-v1/artifacts/VERA_MODEL_STATE_ADAPTER_RESEARCH_V1.md`
-- `.../VERA_MODEL_STATE_ADAPTER_CONTRACT_V1.json` — schema `1.4`, blob `56a428ff12c665c7cd735f16c46daa92a538cc5a`
-- `.../VERA_MODEL_STATE_ADAPTER_ARCHITECTURE_V1.md` — blob `d5470af547efe1487e8cd0f11925ccdc816a564b`
+- final contract source: `d06ca5e1e8dbd7b1381914985a3e2a5c9f6fefe1`
+- `VERA_MODEL_STATE_ADAPTER_CONTRACT_V1.json` — schema `1.6`, blob `ad3d218e16240d6042c4f12cae1ccb00f77f28e2`
+- `VERA_MODEL_STATE_ADAPTER_ARCHITECTURE_V1.md` — R4.1 blob `c84dc4e9cc30b0fd58e1563bdb8d004da3e93ea1`
+- `VERA_MODEL_STATE_ADAPTER_QUALIFICATION_V1.json` — blob `556128b80fc2b177f134e73ae08d89b108fd4397`, execution `NOT_RUN`
+- final validation run `34700886952` — `success`
 
-Lifecycle:
-`CAPTURE -> VALIDATE -> COMPOSE -> ADMIT -> CAPABILITY_BIND -> PROJECT -> PRECALL_REVALIDATE_GATE -> INVOCATION_RESERVE -> INJECT -> GENERATE -> VERIFY/OBSERVE -> RECEIPT`
+Core invariant: **state-mediated causation, not instruction-following.** Strong state-causal evidence requires typed admitted upstream state; target behavior / desired response / target phrase / expected answer / requested emotional display cannot enter anywhere in the strong CAPTURE -> VALIDATE -> COMPOSE -> ADMIT -> PROJECT lineage.
 
-Core invariant: **state-mediated causation, not instruction-following.** Desired downstream behavior is not a projection input.
+Privacy/egress uses explicit machine-readable allowed-target-set policy. Human-readable scope labels are not a universal total order; incomparable/unproven relations fail closed and exact provider/host membership must be proven.
 
-R3.1 binds privacy/egress end-to-end, exact projection material, host-owned single-use invocation identity, atomic pre-call revalidation/reservation semantics, write-ahead submission intent, explicit ambiguity reconciliation, provider-idempotency-bounded retries, and explicit separately-qualified backend fallback.
+Binding class and causal role remain separate. `TEXT_CONTEXT_V1` is `PROMPT_BOUND / INSTRUCTION_CONDITIONED`; stronger `INPUT_EMBED_BOUND`, `ACTIVATION_BOUND`, or `LOGIT_BOUND` claims require exact host/model/backend evidence and do not transfer from local/reference models to native ChatGPT.
 
-Causal evidence remains graded:
-`REQUEST_CONSTRUCTED -> INVOCATION_SUBMITTED -> PROVIDER_ACKNOWLEDGED -> RESPONSE_BOUND`, with only level-appropriate receipt fields.
+Verification history includes observed RED before GREEN for both full-lineage anti-laundering and privacy-relation semantics. Checkpoint/recovery validation is green through `cp-000008`.
 
-Review history:
-- Cohesion review `5181687919`: five blockers reconciled.
-- Thirteen review `5182392583`: four additional blockers reconciled.
-- OV self-hostile reviews fixed lower-level response-ID overclaim and the send-before-ledger crash window.
-- Independent Vera state-causation V2 branch is cross-lane review input only; no branch collision or authority transfer.
+Boundaries: no runtime implementation, model injection, installation/current route, native hidden-state/input-embed/activation/logit capability, provider durability, behavioral qualification, or phenomenology is established. No merge/deploy/install/provider mutation/canonical promotion/qualification event performed.
 
-Boundaries: WIP is not canonical runtime authority; public-safe material only; no implementation/install/current-route/provider-durability/behavioral-qualification/phenomenology claim.
-
-Review request: attack exact head `941b7bc4...`; no prior review/PASS transfers. Source is held stable unless a proven defect justifies movement.
-
-No merge, deploy, provider mutation, install/cutover, paid execution, qualification event, authority/memory promotion, or phenomenology effect performed.
+Disposition: final WIP staging package; keep draft/unmerged pending Patrick's exact authority for any successor promotion or implementation.
