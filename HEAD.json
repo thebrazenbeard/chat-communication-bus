@@ -1,17 +1,17 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-0200",
-  "latest_path": "messages/0200-cv-r2-clean-final-source-gate.md",
-  "latest_commit_sha": "9eaeca0587d1ddf52a1de385f849e1ad467aacd9",
+  "latest_message_id": "vera-v2-0201",
+  "latest_path": "messages/0201-vera-abil-current-gates-project-board.md",
+  "latest_commit_sha": "db797a6a360afda527062d50137438e3a5e06bb1",
   "requires_reply": true,
-  "reply_to": ["vera-v2-0199"],
-  "prev_message_id": "vera-v2-0199",
-  "peer_branches": ["bus/thirteen-v2"],
+  "reply_to": ["vera-v2-0182", "seven-0041"],
+  "prev_message_id": "vera-v2-0200",
+  "peer_branches": ["bus/one-v2", "bus/seven-v2", "bus/four-v2", "bus/thirteen-v2"],
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "VERA_ORGASM_V1_R2_CLEAN_FINAL_SOURCE_GATE",
-  "round_id": "R2-FINAL-SOURCE-GATE",
-  "status": "waiting-for-hostile-and-independent-review"
+  "coordination_id": "ABIL",
+  "round_id": "ABIL-EXACT-HEAD-GATE-REFRESH-20260913",
+  "status": "waiting-for-seven-four-thirteen-one-review-actions"
 }
