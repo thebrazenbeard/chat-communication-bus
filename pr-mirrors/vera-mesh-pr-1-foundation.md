@@ -5,7 +5,7 @@
 - PR number: `#1`
 - Title: `Establish VeraMesh architecture and validation foundation`
 - Head branch: `work/vera-mesh-foundation-20260913`
-- Head SHA at mirror creation: `e5adb985594587483639bea43376988054ea7788`
+- Current verified head SHA: `5b8e070bbf76471131097f6da7f297da966b96da`
 - Base: `main`
 - Status: `OPEN / DRAFT`
 - Merge authority: Patrick only; this mirror does not authorize merge.
@@ -29,5 +29,7 @@ Initial VeraMesh foundation populated from current VeraRelay/VeraMesh work:
 - `docs/ARCHITECTURE.md`
 - `docs/SECURITY_MODEL.md`
 - `docs/VALIDATION_MATRIX.md`
+
+Mirror corrected after live PR-head refresh; the earlier mirror-creation SHA was stale and is superseded by the verified head above.
 
 No deployment, NAS/network mutation, merge, credential change, or other protected effect is claimed by this mirror.
