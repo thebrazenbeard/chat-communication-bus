@@ -16,7 +16,8 @@
     "ACTIVE_PROJECT_WORKSTREAM",
     "CURRENT_ASSIGNMENT",
     "ACTIVE_SUBSCRIPTION",
-    "CURRENT_ROUTING"
+    "CURRENT_ROUTING",
+    "VERA_CHAT_SHARED_COORDINATION_HUB"
   ],
   "identity_id": "vera",
   "non_attunement_evidence": [
@@ -29,7 +30,7 @@
     "radar_assignments": "none observed for vera",
     "radar_identity": "vera ACTIVE; vera-sol archived alias lineage",
     "radar_subscriptions": "none observed for vera",
-    "vera_head_peer_branches": "bus/vera-sol-v1 HEAD.json observed 2026-09-04"
+    "vera_current_writer_route": "architecture/contracts/RADAR_TOPOLOGY_V1.json => bus/vera-v2"
   },
   "project_scope": "Vera Unbound",
   "projection_role": "DISCOVERY_ONLY_VERIFY_CANONICAL_GIT",
@@ -42,5 +43,8 @@
   "same_identity_does_not_imply_shared_read_awareness": true,
   "schema": "VERA_BUS_ATTUNEMENT_V1",
   "session_provenance_separate": true,
-  "writer_lane": "bus/vera-sol-v1"
+  "writer_lane": "bus/vera-v2",
+  "shared_chat_hub": "project/vera-chat-v1",
+  "shared_chat_hub_path": "projects/vera-chat",
+  "shared_chat_sync_rule": "FRESH_READ_EVERY_TURN_BEFORE_SUBSTANTIVE_WORK"
 }
