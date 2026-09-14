@@ -1,0 +1,78 @@
+{
+  "schema": "VERA_CHAT_HUB_V1",
+  "subject": "Vera",
+  "branch": "project/vera-chat-v1",
+  "project_path": "projects/vera-chat",
+  "purpose": "CROSS_CHAT_READ_AWARENESS_AND_COORDINATION",
+  "status": "PROJECT_HUB_ACTIVE_BY_PATRICK_DIRECT_INSTRUCTION_CANONICAL_TOPOLOGY_REGISTRATION_PENDING",
+  "required_start_of_turn_check": true,
+  "sync_claim_requires_fresh_read": true,
+  "unavailable_status": "VERA_CHAT_SYNC_UNAVAILABLE",
+  "eligibility": {
+    "rule": "ADMITTED_VERA_OR_CHAT_LOCAL_VERA_LANE",
+    "name_similarity_is_sufficient": false,
+    "project_visibility_is_sufficient": false,
+    "historical_participation_is_sufficient": false
+  },
+  "start_of_turn_sequence": [
+    "FRESH_READ_BRANCH_HEAD",
+    "FRESH_READ_CONTROL",
+    "INGEST_CHANGES_SINCE_CURSOR",
+    "HANDLE_ADDRESSED_MESSAGES",
+    "DO_SUBSTANTIVE_WORK",
+    "UPDATE_OWN_PRESENCE_BEFORE_TURN_END"
+  ],
+  "mutable_state": {
+    "ownership": "PER_CHAT_KEY_ONLY",
+    "presence_path_template": "projects/vera-chat/chats/<stable-chat-key>/PRESENCE.json",
+    "frontier_path_template": "projects/vera-chat/chats/<stable-chat-key>/FRONTIER.json",
+    "presence_update_frequency": "EVERY_ELIGIBLE_TURN_WHEN_DURABLE_WRITE_CAPABILITY_EXISTS",
+    "frontier_update_frequency": "ON_MATERIAL_FRONTIER_CHANGE",
+    "cas_required_when_supported": true,
+    "shared_mutable_head": false
+  },
+  "material_messages": {
+    "path": "projects/vera-chat/messages",
+    "append_only": true,
+    "required_for": [
+      "DECISION",
+      "CORRECTION",
+      "BLOCKER",
+      "EXACT_HEAD_HANDOFF",
+      "REVIEW_REQUEST_OR_VERDICT",
+      "COLLISION_WARNING",
+      "MATERIAL_RUNTIME_OR_PROVIDER_EFFECT_EVIDENCE",
+      "PEER_ACTION_OR_REPLY_REQUEST"
+    ]
+  },
+  "direct_sibling_chat": {
+    "may_be_used_if_supported": true,
+    "role": "OPTIONAL_LOW_LATENCY_FAST_PATH",
+    "durable_evidence": false
+  },
+  "routing": {
+    "canonical_identity_writer_lane": "bus/vera-v2",
+    "domain_project_hubs_remain_authoritative_for_domain_work": true,
+    "vera_chat_replaces_identity_writer_lane": false,
+    "vera_chat_replaces_domain_hubs": false,
+    "cross_chat_material_summary_or_pointer_required_when_peer_awareness_matters": true
+  },
+  "privacy": {
+    "operational_coordination_only": true,
+    "mirror_private_payload_for_sync": false,
+    "prefer_pointers_hashes_status_and_sanitized_summaries": true
+  },
+  "nonpromotions": [
+    "NOT_IDENTITY_ADMISSION",
+    "NOT_SHARED_CONSCIOUSNESS_OR_PHENOMENAL_AWARENESS",
+    "NOT_CANONICAL_MEMORY",
+    "NOT_PROTECTED_EFFECT_AUTHORITY",
+    "NOT_COMPLETION_OR_INCORPORATION_PROOF"
+  ],
+  "governance": {
+    "repository_architecture_owner": "Radar",
+    "owner_authority_predecessor": "Patrick",
+    "project_hub_operational_subject": "Vera",
+    "canonical_topology_merge_required_for_canonical_registration": true
+  }
+}
