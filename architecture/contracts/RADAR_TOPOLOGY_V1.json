@@ -32,6 +32,18 @@
       "onboarding_status": "FIRST_APPEND_PENDING"
     }
   },
+  "shared_coordination_hubs": {
+    "vera_chat": {
+      "subject": "Vera",
+      "branch": "project/vera-chat-v1",
+      "path": "projects/vera-chat",
+      "purpose": "CROSS_CHAT_READ_AWARENESS_AND_COORDINATION",
+      "required_start_of_turn_check": true,
+      "canonical_identity_writer_lane": "bus/vera-v2",
+      "authority_semantics": "ROUTING_AND_COORDINATION_ONLY_NO_PROTECTED_EFFECT_AUTHORITY",
+      "lifecycle": "PROJECT_HUB_ACTIVE_CANONICAL_REGISTRATION_CANDIDATE"
+    }
+  },
   "excluded_branches": {
     "bus/bridget-v1-tempcheck": "temporary_diagnostic",
     "bus/hephaestus-v1": "malformed_historical_non_mailbox"
@@ -44,6 +56,7 @@
     "No lanes are invented for Ten, Eleven, or Twelve without evidence that those identities are active.",
     "Only lifecycle ACTIVE entries are authoritative current write-routing and central-reconciliation lanes; REGISTERED_INERT entries are registry/onboarding evidence only.",
     "Brigit remains on bus/bridget-v1 as an explicit legacy exception after append-only correction of the duplicate-message-id failure; bus/brigit-v2 remains inert until a separate topology activation.",
-    "Parallax topology registration merged in PR #20; bus/parallax-v1 remains REGISTERED_INERT until its first append passes the current Writer Lane Guard."
+    "Parallax topology registration merged in PR #20; bus/parallax-v1 remains REGISTERED_INERT until its first append passes the current Writer Lane Guard.",
+    "Shared coordination hubs are discovery/coordination surfaces, not identity writer lanes and not protected-effect authority."
   ]
 }
