@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import re
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / "projects" / "selfimage" / "blender-relay"
@@ -42,8 +43,8 @@ def test_relay_uses_windows_powershell_without_pwsh_only_json_flags():
     relay = (BASE / "relay" / "Invoke-BlenderRelay.ps1").read_text(encoding="utf-8")
     assert "shell: pwsh" not in workflow
     assert workflow.count("shell: powershell") >= 3
-    assert "ConvertFrom-Json -Depth" not in process
-    assert "ConvertFrom-Json -Depth" not in relay
+    assert not any("ConvertFrom-Json -Depth" in line and not line.lstrip().startswith("#") for line in process.splitlines())
+    assert not any("ConvertFrom-Json -Depth" in line and not line.lstrip().startswith("#") for line in relay.splitlines())
 
 
 def test_selfhosted_workflows_pin_external_actions_and_exact_event_source():
@@ -89,27 +90,21 @@ def test_relay_does_not_refresh_mutable_branch_tip_before_processing():
     assert "git pull --ff-only origin '${{ github.ref_name }}'" not in workflow
     assert "ref: ${{ github.sha }}" in workflow
     assert "persist-credentials: false" in workflow
-    process_pos = workflow.index("Process pending Blender requests")
-    publish_job_pos = workflow.index("publish_receipts:")
-    token_pos = workflow.index("GH_TOKEN: ${{ github.token }}")
-    assert process_pos < publish_job_pos < token_pos
+    assert "Process pending Blender requests" in workflow
+    assert "publish_receipts:" not in workflow
+    assert "GH_TOKEN: ${{ github.token }}" not in workflow
 
 
-def test_blender_execution_job_is_read_only_and_write_token_isolated_to_publisher():
+def test_blender_execution_job_is_read_only_and_receipts_remain_artifacts_until_trusted_publisher():
     workflow = WORKFLOW.read_text(encoding="utf-8")
     assert "permissions:\n  contents: read" in workflow
-    relay_block = workflow.split("  relay:\n", 1)[1].split("  publish_receipts:\n", 1)[0]
-    publisher_block = workflow.split("  publish_receipts:\n", 1)[1]
-    assert "contents: write" not in relay_block
-    assert "GH_TOKEN: ${{ github.token }}" not in relay_block
-    assert "Process pending Blender requests" in relay_block
-    assert "permissions:\n      contents: write" in publisher_block
-    assert "GH_TOKEN: ${{ github.token }}" in publisher_block
-    assert "Process pending Blender requests" not in publisher_block
-    assert DOWNLOAD_PIN in publisher_block
-    assert "Validate and overlay receipt-only payload" in publisher_block
-    assert "Unexpected receipt filename" in publisher_block
-    assert "Receipt is not valid JSON" in publisher_block
+    assert "Process pending Blender requests" in workflow
+    assert "Upload durable receipts for isolated publication" in workflow
+    assert "publish_receipts:" not in workflow
+    assert "contents: write" not in workflow
+    assert "GH_TOKEN: ${{ github.token }}" not in workflow
+    assert "git push" not in workflow
+    assert "Repository publication is intentionally disabled until a separately trusted publisher boundary exists." in workflow
 
 
 def test_relay_receipts_bind_executed_commit_tree_and_version_identity():
@@ -132,7 +127,7 @@ def test_recovery_workflows_require_explicit_bounded_cross_repo_token():
         text = (WORKFLOW_DIR / name).read_text(encoding="utf-8")
         assert "GH_TOKEN: ${{ secrets.SELFIMAGE_READ_TOKEN }}" in text
         assert "refusing ambient local gh authentication" in text
-        assert "gh auth" not in text
+        assert re.search(r"(?im)^(?!\s*#).*?\bgh(?:\.exe)?\s+auth\b", text) is None
 
 
 def test_runner_bootstrap_is_pinned_ephemeral_and_low_privilege():
