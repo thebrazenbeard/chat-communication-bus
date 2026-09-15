@@ -108,7 +108,7 @@ def test_local_qualification_ignores_only_standard_generated_artifacts() -> None
 def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> None:
     contract = json.loads(CUSTODY.read_text(encoding="utf-8"))
     assert contract["contract"] == "RADAR_SOURCE_CUSTODY_V1"
-    assert contract["version"] == 17
+    assert contract["version"] == 20
     assert contract["status"] == "SOURCE_ONLY_VERIFICATION_CONTRACT"
     assert set(contract["required_globs"]) == {
         "supabase/migrations/*_radar_*.sql",
@@ -139,9 +139,11 @@ def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> N
         "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V1.json",
         "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V2.json",
         "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V3.json",
+        "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V4.json",
         "docs/checkpoints/RADAR_MAIN_DIVERGENCE_RECONCILIATION_2026-09-06.md",
         "docs/operator/CHATGPT_OPERATOR_CONTRACT.md",
         "docs/operator/RADAR_NO_PAID_QUALIFICATION.md",
+        "docs/operator/RADAR_SUPABASE_PY_READBACK_V1.md",
         "docs/operator/RECOVERY.md",
         "docs/protocol/BUS_MESSAGE_GRAMMAR_V1.json",
         "docs/protocol/RADAR_PROJECTION_JOURNAL_V1.md",
@@ -150,21 +152,28 @@ def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> N
         "tests/radar/test_currentness_recovery_contract.py",
         "tests/radar/test_edge_projection_result_contract.py",
         "tests/radar/test_remote_ref_reconciler.py",
+        "tests/radar/test_supabase_provider_reader.py",
+        "tests/radar/test_supabase_provider_reader_contract.py",
+        "tests/radar/test_supabase_readback_cli.py",
         "tests/security/test_body_bound_edge_ordering.py",
         "tests/security/test_jwks_refresh_throttle_behavior.py",
         "tests/security/test_no_paid_qualification_consistency.py",
         "tests/security/test_portable_local_qualification.py",
         "tests/security/test_portable_local_qualification_orchestration.py",
         "tests/security/test_portable_qualification_cli.py",
+        "tests/security/test_projection_anchor_d_consistency.py",
+        "tests/security/test_projection_anchor_e_consistency.py",
         "tests/security/test_qualification_receipt_admission.py",
         "tests/security/test_qualification_receipt_completion_order.py",
         "tests/security/test_radar_seed_qualification_contract.py",
+        "tests/security/test_radar_central_dispatcher.py",
         "tests/security/test_reproducible_ci_custody.py",
         "pyproject.toml",
         "scripts/radar_local_qualify.ps1",
         "scripts/radar_qualify.py",
         "scripts/radar_validate_qualification_receipt.py",
         "scripts/radar_source_hashes.py",
+        "scripts/radar_supabase_readback.py",
         "scripts/radar_trusted_project.py",
         "scripts/radar_trusted_reconcile.py",
         "src/radar/body_bound_oidc.py",
@@ -172,6 +181,7 @@ def test_source_custody_manifest_covers_dynamic_sql_and_fixed_trust_roots() -> N
         "src/radar/github_actions_oidc.py",
         "src/radar/message_grammar.py",
         "src/radar/reconciliation_journal.py",
+        "src/radar/supabase_provider_reader.py",
         "src/radar/trusted_control_snapshot.py",
         "src/radar/trusted_lane_validation.py",
         "src/radar/trusted_reconciler.py",

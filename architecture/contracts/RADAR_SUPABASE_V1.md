@@ -85,6 +85,16 @@ Provider `RADAR_TRUSTED_PROJECTOR_SHA` may be set only to the exact immutable su
 
 None of these source properties should be interpreted as a live-provider claim until migration/deployment/configuration/cursor readback proves the effect.
 
+## Provider access planes
+
+Radar keeps provider write ingress, provider management, and provider qualification/readback as separate trust planes. The official `supabase-py` client is the preferred optional client for independent read-only data-plane readback. Its results remain non-canonical evidence and do not supersede Git custody or exact source qualification.
+
+`supabase-py` does not replace provider management: migration-ledger inspection, migration application, Edge deployment/configuration, secrets, and gateway metadata still require the reviewed provider-management/CLI path. It also does not replace GitHub OIDC ingress: the trusted projector still obtains a GitHub Actions OIDC token and sends it to `github-bus-ingest`, whose reviewed configuration remains `verify_jwt = false` so the function's custom GitHub OIDC verifier can authenticate that non-Supabase token.
+
+The guaranteed SDK readback surface in the current source design is the read-only public RPC `public.radar_projection_get_lane_v1`. Reads of `radar.identity_message_status_v2` and `radar.open_assignments_v1` are useful capability probes only when the `radar` schema is exposed through PostgREST; source grants alone do not prove that exposure. No generic table or RPC mutation escape hatch belongs in the readback adapter.
+
+External gateways such as Cloudflare Workers, Envoy, Kong, or APISIX may be evaluated later as defense-in-depth or self-hosting components, but none is a required dependency for the hosted recovery path. PostgreSQL-wire gatekeepers such as `jit-db-gatekeeper` or `pg-gateway` are self-hosting/future architecture references, not current hosted-provider controls.
+
 ## Qualification boundary
 
 Private hosted GitHub Actions are non-authoritative for Radar. The authoritative qualification route is `LOCAL_NO_PAID_SERVICES` through `scripts/radar_local_qualify.ps1` under `architecture/contracts/RADAR_QUALIFICATION_V1.json`.

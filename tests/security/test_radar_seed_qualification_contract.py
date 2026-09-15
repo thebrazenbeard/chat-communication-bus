@@ -29,9 +29,9 @@ def test_local_reset_executes_current_radar_recovery_seed() -> None:
     }
 
 
-def test_source_custody_v17_binds_recovery_seed_and_registration_contract() -> None:
+def test_source_custody_v20_binds_recovery_seed_and_registration_contract() -> None:
     custody = json.loads(CUSTODY.read_text(encoding="utf-8"))
-    assert custody["version"] == 17
+    assert custody["version"] == 20
     paths = set(custody["paths"])
     assert "supabase/seed/radar_v1.sql" in paths
     assert "architecture/contracts/RADAR_SELF_REGISTRATION_V1.json" in paths
