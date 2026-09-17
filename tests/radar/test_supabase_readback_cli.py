@@ -59,6 +59,30 @@ def test_lane_cli_uses_named_envs_and_never_prints_secret(capsys):
     assert payload["rows"] == [{"head": "abc"}]
 
 
+def test_payload_exposes_provider_completeness_evidence():
+    cli = load_cli()
+    payload = cli._payload(
+        ProviderReadback(
+            "radar.identity_message_status_v2",
+            ({"message_id": "m1"},),
+            provider_subject="https://example.supabase.co",
+            query_scope='{"recipient_identity_id":"vera"}',
+            observed_at="2026-09-17T15:00:00+00:00",
+            completeness="PARTIAL",
+            requested_limit=1,
+            probe_count=2,
+            row_digest_sha256="a" * 64,
+        )
+    )
+    assert payload["provider_subject"] == "https://example.supabase.co"
+    assert payload["query_scope"] == '{"recipient_identity_id":"vera"}'
+    assert payload["observed_at"] == "2026-09-17T15:00:00+00:00"
+    assert payload["completeness"] == "PARTIAL"
+    assert payload["requested_limit"] == 1
+    assert payload["probe_count"] == 2
+    assert payload["row_digest_sha256"] == "a" * 64
+
+
 def test_missing_credential_env_fails_closed_without_calling_factory(capsys):
     cli = load_cli()
     called = False
