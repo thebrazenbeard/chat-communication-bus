@@ -49,6 +49,13 @@ def _payload(readback: ProviderReadback) -> dict[str, object]:
         "surface": readback.surface,
         "transport": readback.transport,
         "canonical": readback.canonical,
+        "provider_subject": readback.provider_subject,
+        "query_scope": readback.query_scope,
+        "observed_at": readback.observed_at,
+        "completeness": readback.completeness,
+        "requested_limit": readback.requested_limit,
+        "probe_count": readback.probe_count,
+        "row_digest_sha256": readback.row_digest_sha256,
         "rows": list(readback.rows),
     }
 
