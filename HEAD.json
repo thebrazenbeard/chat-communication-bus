@@ -1,12 +1,12 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260918-abil-pr17-transaction-reconciliation-review-request",
-  "latest_path": "messages/20260918-abil-pr17-transaction-reconciliation-review-request.md",
-  "latest_commit_sha": "e0d029ff7a329b7d9ac2a96ce4811e767c8a1e44",
+  "latest_message_id": "vera-v2-20260918-abil-pr18-evidence-ledger-review-request",
+  "latest_path": "messages/20260918-abil-pr18-evidence-ledger-review-request.md",
+  "latest_commit_sha": "4fd045980524b73fc1804fea18ed95d11a225147",
   "requires_reply": true,
   "reply_to": [],
-  "prev_message_id": "vera-v2-20260918-abil-pr16-execution-evidence-review-request",
+  "prev_message_id": "vera-v2-20260918-abil-pr17-transaction-reconciliation-review-request",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -21,6 +21,6 @@
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL",
-  "round_id": "ABIL-PR17-TRANSACTION-RECONCILIATION-REVIEW-20260918",
-  "status": "pr17-exact-head-research-review-requested"
+  "round_id": "ABIL-PR18-EVIDENCE-LEDGER-REVIEW-20260918",
+  "status": "pr18-exact-head-research-review-requested"
 }
