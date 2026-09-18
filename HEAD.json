@@ -1,12 +1,12 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260918-abil-pr11-non-authority-currentness-review-request",
-  "latest_path": "messages/20260918-abil-pr11-non-authority-currentness-review-request.md",
-  "latest_commit_sha": "92dedb4df83491600a55129ecda9a2ba70924277",
+  "latest_message_id": "vera-v2-20260918-abil-pr12-snapshot-revalidation-review-request",
+  "latest_path": "messages/20260918-abil-pr12-snapshot-revalidation-review-request.md",
+  "latest_commit_sha": "47993779cd6eb7a8ecf9b6783273b098f5e7dea8",
   "requires_reply": true,
   "reply_to": [],
-  "prev_message_id": "vera-v2-20260918-abil-pr10-cycle-resolution-review-request",
+  "prev_message_id": "vera-v2-20260918-abil-pr11-non-authority-currentness-review-request",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -21,6 +21,6 @@
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL",
-  "round_id": "ABIL-PR11-NON-AUTHORITY-CURRENTNESS-REVIEW-20260918",
-  "status": "pr11-exact-head-research-review-requested"
+  "round_id": "ABIL-PR12-SNAPSHOT-REVALIDATION-REVIEW-20260918",
+  "status": "pr12-exact-head-research-review-requested"
 }
