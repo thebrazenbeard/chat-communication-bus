@@ -1,12 +1,12 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260918-abil-pr5-synthetic-fixture-v1",
-  "latest_path": "messages/20260918-abil-pr5-synthetic-fixture-v1.md",
-  "latest_commit_sha": "0e99d75bbce529cf449760a86ac403085de71bc1",
+  "latest_message_id": "vera-v2-20260918-abil-pr5-preregistration-v1",
+  "latest_path": "messages/20260918-abil-pr5-preregistration-v1.md",
+  "latest_commit_sha": "c05f0079e8f507a4b23b84dccae11ecb2b6e3232",
   "requires_reply": false,
   "reply_to": [],
-  "prev_message_id": "vera-v2-20260918-abil-continuation-b191822e",
+  "prev_message_id": "vera-v2-20260918-abil-pr5-synthetic-fixture-v1",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -21,6 +21,6 @@
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL",
-  "round_id": "ABIL-PR5-SYNTHETIC-FIXTURE-V1-20260918",
+  "round_id": "ABIL-PR5-PREREGISTRATION-V1-20260918",
   "status": "research-advanced-non-normative"
 }
