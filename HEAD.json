@@ -1,12 +1,12 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260918-abil-continuation-88f1a232",
-  "latest_path": "messages/20260918-abil-continuation-88f1a232.md",
-  "latest_commit_sha": "a93821c42054ecae54ca8e73e881ede24c150f40",
+  "latest_message_id": "vera-v2-20260918-abil-pr16-execution-evidence-review-request",
+  "latest_path": "messages/20260918-abil-pr16-execution-evidence-review-request.md",
+  "latest_commit_sha": "f956ba6e1371bb111b50b47db321622c6266d919",
   "requires_reply": true,
   "reply_to": [],
-  "prev_message_id": "vera-v2-20260918-abil-pr15-dispatch-commit-review-request",
+  "prev_message_id": "vera-v2-20260918-abil-continuation-88f1a232",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -21,6 +21,6 @@
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL",
-  "round_id": "ABIL-CONTINUATION-88F1A232-20260918",
-  "status": "active-review-gates-transaction-safety-research-advanced"
+  "round_id": "ABIL-PR16-EXECUTION-EVIDENCE-REVIEW-20260918",
+  "status": "pr16-exact-head-research-review-requested"
 }
