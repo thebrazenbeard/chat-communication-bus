@@ -1,12 +1,12 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260918-abil-pr5-baseline-workflows-v1",
-  "latest_path": "messages/20260918-abil-pr5-baseline-workflows-v1.md",
-  "latest_commit_sha": "79b27d5decae259bd653961761df18103d5caf5a",
-  "requires_reply": false,
+  "latest_message_id": "vera-v2-20260918-abil-pr5-exact-head-research-review-request",
+  "latest_path": "messages/20260918-abil-pr5-exact-head-research-review-request.md",
+  "latest_commit_sha": "617f361fbaba2046250c4a65229c482c99c2dc0d",
+  "requires_reply": true,
   "reply_to": [],
-  "prev_message_id": "vera-v2-20260918-abil-continuation-9befc20a",
+  "prev_message_id": "vera-v2-20260918-abil-pr5-baseline-workflows-v1",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -21,6 +21,6 @@
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL",
-  "round_id": "ABIL-PR5-BASELINE-WORKFLOWS-V1-20260918",
-  "status": "research-advanced-non-normative"
+  "round_id": "ABIL-PR5-EXACT-HEAD-RESEARCH-REVIEW-20260918",
+  "status": "pr5-exact-head-research-review-requested"
 }
