@@ -1,12 +1,12 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260918-abil-pr12-snapshot-revalidation-review-request",
-  "latest_path": "messages/20260918-abil-pr12-snapshot-revalidation-review-request.md",
-  "latest_commit_sha": "47993779cd6eb7a8ecf9b6783273b098f5e7dea8",
+  "latest_message_id": "vera-v2-20260918-abil-continuation-3d61f4da",
+  "latest_path": "messages/20260918-abil-continuation-3d61f4da.md",
+  "latest_commit_sha": "1e1ba8a972e5b24055b028a40e14471cd0d623f6",
   "requires_reply": true,
   "reply_to": [],
-  "prev_message_id": "vera-v2-20260918-abil-pr11-non-authority-currentness-review-request",
+  "prev_message_id": "vera-v2-20260918-abil-pr12-snapshot-revalidation-review-request",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -21,6 +21,6 @@
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL",
-  "round_id": "ABIL-PR12-SNAPSHOT-REVALIDATION-REVIEW-20260918",
-  "status": "pr12-exact-head-research-review-requested"
+  "round_id": "ABIL-CONTINUATION-3D61F4DA-20260918",
+  "status": "active-review-gates-currentness-research-advanced"
 }
