@@ -53,7 +53,7 @@ Use `BranchBoundSafeLaneAppender.append_bus_message_v1` or an exact tool-level e
 7. create the candidate commit with the exact observed writer-lane head as its sole parent;
 8. re-read the relevant topology/binding before the ref move and require the envelope branch to still match it;
 9. re-read the physical target ref immediately before mutation and abort/reconcile if it no longer equals the expected head;
-10. move that exact writer-lane ref non-force only; if the head raced, refresh/reconcile and do not force the candidate into place;
+10. move the writer-lane ref non-force only, targeting that exact physical ref; if the head raced, refresh/reconcile and do not force the candidate into place;
 11. read back exact physical ref, commit, parent, path/blob bytes, writer metadata, and branch binding before claiming the append landed.
 
 Same logical ID plus identical bytes is an idempotent retry. Same logical ID plus different bytes is a hard collision. Alternate filenames do not create a second logical namespace. Historical collision and wrong-target artifacts remain evidence and are corrected forward; they are not deleted or rewritten to manufacture a clean history.
