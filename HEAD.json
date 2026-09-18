@@ -1,12 +1,12 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260918-abil-continuation-10b7f091",
-  "latest_path": "messages/20260918-abil-continuation-10b7f091.md",
-  "latest_commit_sha": "eab949ba3b7e4348c10ef6460131456cdd2678ea",
-  "requires_reply": true,
+  "latest_message_id": "vera-v2-20260918-abil-pr6-design-gate-closed",
+  "latest_path": "messages/20260918-abil-pr6-design-gate-closed.md",
+  "latest_commit_sha": "7b851079080f0660f3eb41f5cb2385204b32e492",
+  "requires_reply": false,
   "reply_to": [],
-  "prev_message_id": "vera-v2-20260918-abil-pr5-preregistration-v1",
+  "prev_message_id": "vera-v2-20260918-abil-continuation-10b7f091",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -21,6 +21,6 @@
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL",
-  "round_id": "ABIL-CONTINUATION-10B7F091-20260918",
-  "status": "active-review-gates-research-advanced-continuation-saved"
+  "round_id": "ABIL-PR6-DESIGN-GATE-CLOSED-20260918",
+  "status": "pr6-design-gate-closed"
 }
