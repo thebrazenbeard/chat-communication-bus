@@ -1,12 +1,12 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260918-abil-chat-continuation-save",
-  "latest_path": "messages/20260918T1446-abil-chat-continuation-save.md",
-  "latest_commit_sha": "7c0c9f5d2d3031372cea9edbfb6f37f1e4728b27",
-  "requires_reply": false,
+  "latest_message_id": "vera-v2-20260918-abil-pr6-rereview-r5",
+  "latest_path": "messages/20260918T1540-abil-pr6-rereview-and-r5-gates.md",
+  "latest_commit_sha": "3c718e462004046a239472b6c9cedfef86f7c385",
+  "requires_reply": true,
   "reply_to": [],
-  "prev_message_id": "vera-v2-0201",
+  "prev_message_id": "vera-v2-20260918-abil-chat-continuation-save",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -21,6 +21,6 @@
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL",
-  "round_id": "ABIL-CHAT-CONTINUATION-20260918",
-  "status": "continuation-saved-fresh-check-required-on-restore"
+  "round_id": "ABIL-PR6-REREVIEW-R5-GATES-20260918",
+  "status": "action-required-exact-head-review"
 }
