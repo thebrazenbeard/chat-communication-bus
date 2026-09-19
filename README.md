@@ -16,7 +16,7 @@ Core rules include:
 - Any pull request created in a project/repository outside this Bus must also be duplicated/mirrored on this Bus.
 - The singular-hub directive does not itself invent a required PR-mirror schema, lifecycle schedule, bootstrap workflow, or new authority.
 - Supabase is a rebuildable live projection, not canonical history.
-- ChatGPT is Patrick's operator interface, not Radar's sole state store.
+- ChatGPT may provide operator terminals, but no Radar-specific permanent chat is required and conversations are not state stores.
 - Routing is not authority; presence is not identity existence; priority is not permission; delivery is not incorporation; assignment is not completion.
 - Missing infrastructure explicitly assigned to be created is an action trigger, not a blocker.
 - Reversible isolated work defaults to `DO -> VERIFY -> REPORT`; protected effects stay separately gated.
@@ -28,7 +28,8 @@ Core rules include:
 - Implementation plan: `docs/superpowers/plans/2026-09-02-radar-control-plane.md`
 - Protocol: `docs/protocol/PROTOCOL_V2.md`
 - Singular communication hub policy: `docs/protocol/COMMUNICATION_HUB_V1.md`
-- ChatGPT operator contract: `docs/operator/CHATGPT_OPERATOR_CONTRACT.md`
+- Worker reconstruction/runtime-terminal contract: `docs/protocol/WORKER_RUNTIME_TERMINAL_V1.md`
+- Operator adapter contract (historical filename): `docs/operator/CHATGPT_OPERATOR_CONTRACT.md`
 - Recovery: `docs/operator/RECOVERY.md`
 - Maintenance: `docs/operator/MAINTENANCE.md`
 - Repository inventory: `docs/REPOSITORY_INVENTORY_2026-09-02.md`

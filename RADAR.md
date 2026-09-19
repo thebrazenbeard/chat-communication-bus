@@ -14,7 +14,7 @@ Radar turns Chat Bus into a recoverable coordination/control plane:
 
 - GitHub is durable canonical source and provenance.
 - Supabase is a rebuildable live projection for presence, routing, dependencies, telemetry, DLQ, and reconciliation.
-- ChatGPT is Patrick's operator interface to Radar, not Radar's sole state store.
+- ChatGPT may be an operator terminal for Radar, but Radar requires no permanent Radar chat and ChatGPT is not Radar's state store.
 
 ## Operating laws
 
