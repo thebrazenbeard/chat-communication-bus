@@ -11,8 +11,8 @@
     "repository": "thebrazenbeard/chat-communication-bus",
     "basis_head": "1af84ba0650bb646b696dfc31e4f79b498d100af",
     "active_writer_count": 20,
-    "qualified_worker_count": 1,
-    "unqualified_worker_count": 19
+    "qualified_worker_count": 2,
+    "unqualified_worker_count": 18
   },
   "qualification_rule": {
     "retired_chat_must_be_unnecessary": true,
@@ -368,21 +368,12 @@
       "writer": "Two",
       "branch": "bus/two-v2",
       "observed_head": "02cfe0af6bdf7d50106c57c65e7a7dc094b38771",
-      "reconstruction_status": "NOT_QUALIFIED",
-      "missing_reconstruction_fields": [
-        "identity_role",
-        "project_domain",
-        "authority_and_non_authority",
-        "repositories",
-        "current_assignment_frontier",
-        "controlling_contracts",
-        "current_vs_historical_state",
-        "fresh_runtime_recovery",
-        "pre_effect_freshness",
-        "protected_effect_gates",
-        "durable_result_destination"
-      ],
-      "durable_evidence": []
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_TWO_V1.json",
+        "messages/20260919T1927-one-project-runner-pr12-two-rereview.md"
+      ]
     },
     {
       "identity_id": "vera",
