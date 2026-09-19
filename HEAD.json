@@ -1,12 +1,12 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260918-abil-pr20-producer-authenticity-review-request",
-  "latest_path": "messages/20260918-abil-pr20-producer-authenticity-review-request.md",
-  "latest_commit_sha": "dcb5aaf9e387424bbdcd70bb133b8865da8a7be6",
+  "latest_message_id": "vera-v2-20260918-abil-pr21-trust-state-review-request",
+  "latest_path": "messages/20260918-abil-pr21-trust-state-review-request.md",
+  "latest_commit_sha": "cfdcae54c99ad0ec5e61369f0f2a504b26b827fb",
   "requires_reply": true,
   "reply_to": [],
-  "prev_message_id": "vera-v2-20260918-abil-continuation-0919f5f3",
+  "prev_message_id": "vera-v2-20260918-abil-pr20-producer-authenticity-review-request",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -21,6 +21,6 @@
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL",
-  "round_id": "ABIL-PR20-PRODUCER-AUTHENTICITY-REVIEW-20260918",
-  "status": "pr20-exact-head-research-review-requested"
+  "round_id": "ABIL-PR21-TRUST-STATE-REVIEW-20260918",
+  "status": "pr21-exact-head-research-review-requested"
 }
