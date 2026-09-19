@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "artifact_id": "EXODUS_INTERFACE_TOPOLOGY_V1",
+  "status": "PATRICK_DIRECTED_SOURCE_CANDIDATE_NOT_CUT_OVER",
+  "decision_date": "2026-09-19",
+  "architectural_rule": "CHAT_OR_RUNTIME_IS_INTERFACE_TERMINAL_NOT_DURABLE_IDENTITY_MEMORY_AUTHORITY_OR_CANONICAL_STATE",
+  "persistent_chat_interfaces": [
+    {
+      "project": "Vera Unbound",
+      "name": "Vera",
+      "role": "PRIMARY_PATRICK_FACING_VERA_INTERFACE"
+    },
+    {
+      "project": "Vera Unbound",
+      "name": "Vera Control Plane Coordinator",
+      "role": "CONTROL_PLANE_RUNTIME_PROVIDER_GOVERNANCE_COORDINATOR_INTERFACE"
+    },
+    {
+      "project": "Build Team Two",
+      "name": "BT2 Coordinator",
+      "role": "ENGINEERING_PORTFOLIO_COORDINATOR_INTERFACE"
+    }
+  ],
+  "persistent_chat_interface_count": 3,
+  "worker_model": {
+    "permanent_worker_chat_required": false,
+    "execution_contexts": [
+      "temporary_chat",
+      "work_task",
+      "api_runtime",
+      "cli_session",
+      "model_invocation",
+      "subagent",
+      "other_ephemeral_runtime"
+    ],
+    "durable_reconstruction_required": true,
+    "chat_url_operational_dependency_forbidden": true
+  },
+  "durable_state": {
+    "canonical_system": "GitHub",
+    "work_bearing_communication_hub": "thebrazenbeard/chat-communication-bus",
+    "current_bus_topology": {
+      "owner_last_change_commit": "f90d52e66d655e9c3cfac63cb529914ac51d3a88",
+      "path": "architecture/contracts/RADAR_TOPOLOGY_V1.json",
+      "git_blob": "69e505031d4e53dcb853578dac23817649af1918"
+    },
+    "vera_writer_route": "bus/vera-v2"
+  },
+  "slack": {
+    "status": "FUTURE_FRONTIER_NOT_ACTIVE",
+    "intended_role": "PATRICK_FACING_LIVE_INTERFACE_TRANSPORT_ONLY",
+    "canonical_state": false,
+    "alternate_worker_bus": false,
+    "worker_to_worker_slack_only_forbidden": true,
+    "durable_authority_receipt_required": true,
+    "deployment_or_reconnection_authorized_by_this_contract": false
+  },
+  "protected_effects_not_authorized": [
+    "merge",
+    "canonical_promotion",
+    "production_deployment",
+    "provider_mutation",
+    "credential_or_permission_change",
+    "slack_reconnection_or_configuration",
+    "visibility_change",
+    "paid_infrastructure"
+  ],
+  "reconstruction_test": {
+    "retired_chat_must_be_unnecessary": true,
+    "required_questions": [
+      "identity_role",
+      "project_domain",
+      "authority_and_non_authority",
+      "repositories",
+      "bus_route",
+      "current_assignment_frontier",
+      "controlling_contracts",
+      "current_vs_historical_state",
+      "fresh_runtime_recovery",
+      "pre_effect_freshness",
+      "protected_effect_gates",
+      "durable_result_destination"
+    ]
+  }
+}
