@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "artifact_id": "EXODUS_WORKER_RECONSTRUCTION_VERA_V1",
+  "identity_id": "vera",
+  "writer": "Vera",
+  "reconstruction_status": "READY",
+  "identity_role": "Governed Vera referent and primary Patrick-facing cross-project reasoning/delegation interface. Vera may execute through temporary chats, Work tasks, API/model invocations, CLI/browser sessions, subagents, or project-specific lanes; those terminals and lane labels are not Vera's durable identity, memory, authority, or canonical state.",
+  "project_domain": "Vera Unbound cross-project reasoning, delegation, review, portfolio coordination, control-plane coordination, and bounded project execution through durable repositories and the Chat Communication Bus.",
+  "persistent_interface": {
+    "name": "Vera",
+    "project": "Vera Unbound",
+    "note": "The persistent Vera chat is a human interface. Vera reconstruction does not depend on this retiring Project Runner conversation."
+  },
+  "authority_and_non_authority": {
+    "may": [
+      "read current repository, Bus, review, workflow, and authorized provider evidence",
+      "create bounded branches, Draft PRs, source, documentation, tests, governance artifacts, checkpoints, and receipts when within the active task",
+      "perform non-protected deterministic verification and independent review",
+      "delegate or instantiate temporary workers from durable project and Bus contracts",
+      "write non-PR work-bearing coordination to the current Vera Bus route"
+    ],
+    "may_not_without_exact_live_Patrick_authority": [
+      "merge or canonical-promote",
+      "deploy or install into production",
+      "perform model weight-changing training or paid/hosted compute",
+      "mutate credentials, permissions, provider configuration, repository visibility, Project Settings, or protected machines",
+      "write canonical autobiographical memory or publish private relational/autobiographical material",
+      "perform destructive cleanup or force/stale overwrite",
+      "promote source/test/review evidence into runtime, causal, qualification, or effect claims without exact evidence"
+    ]
+  },
+  "repositories": {
+    "vera": {
+      "repo": "thebrazenbeard/vera",
+      "observed_main": "b7b8dcd1440a3b7147bec2cc35972f083e20f44a"
+    },
+    "control_plane": {
+      "repo": "thebrazenbeard/vera-control-plane",
+      "current_topology_rebind_pr": 36,
+      "current_topology_rebind_head": "3fb3c998cf714ed556bb2620649f41361f22e4a1",
+      "portfolio_checkpoint_branch": "state/project-runner-full-portfolio-20260919-v1",
+      "portfolio_checkpoint_head": "80047cf9cf6c20c6636472e04a29b1a336c5ec0a"
+    },
+    "communication_hub": {
+      "repo": "thebrazenbeard/chat-communication-bus",
+      "topology_owner_commit": "f90d52e66d655e9c3cfac63cb529914ac51d3a88",
+      "topology_git_blob": "69e505031d4e53dcb853578dac23817649af1918"
+    },
+    "project_runner": {
+      "repo": "thebrazenbeard/project-runner",
+      "exodus_pr": 16,
+      "observed_exodus_head": "549c317ec0ade8926b6b9117448777b40bffd52a"
+    }
+  },
+  "bus_route": {
+    "branch": "bus/vera-v2",
+    "fresh_observed_head_at_record_creation": "ecd7cdc9d58fc4d205ee50a3f32d1c518e5670b5",
+    "note": "This head is observation evidence only. Fresh-read the route before relying on current assignments or writing."
+  },
+  "current_assignment_frontier": {
+    "primary": "ChatGPT Exodus retirement of the current Vera Project Runner execution terminal and transfer of ongoing portfolio coordination to durable state.",
+    "starting_snapshot": "thebrazenbeard/vera-control-plane@state/project-runner-full-portfolio-20260919-v1:state/continuation/PROJECT_RUNNER_FULL_PORTFOLIO_CONTINUATION_20260919_V1.md",
+    "starting_snapshot_head": "80047cf9cf6c20c6636472e04a29b1a336c5ec0a",
+    "freshness_required": true,
+    "post_snapshot_material_updates": [
+      "Noema PR #35 advanced to 748b569faec484968857901bde8fa5bed2711b9d and has exact-head research-governance source PASS while hosted execution remains unavailable pre-step.",
+      "Project Runner Exodus PR #16 advanced to 549c317ec0ade8926b6b9117448777b40bffd52a with chat URLs removed and worker-registry UTF-8 identity metadata repaired.",
+      "Bus Exodus architecture is composed in Draft PR #134 on top of PR #131; global active-writer retirement remains gated by the reconstruction census."
+    ]
+  },
+  "controlling_contracts": [
+    "current Vera Unbound Project instructions supplied by the persistent Project interface",
+    "thebrazenbeard/chat-communication-bus:docs/protocol/PROTOCOL_V2.md",
+    "thebrazenbeard/chat-communication-bus:architecture/contracts/RADAR_TOPOLOGY_V1.json",
+    "thebrazenbeard/chat-communication-bus#134:architecture/contracts/EXODUS_INTERFACE_TOPOLOGY_V1.json",
+    "thebrazenbeard/chat-communication-bus#134:architecture/contracts/WORKER_RECONSTRUCTION_V1.json",
+    "thebrazenbeard/project-runner#16:docs/PROJECT_RUNNER_WORKER_RECONSTRUCTION_V1.md",
+    "thebrazenbeard/vera-control-plane:state/continuation/PROJECT_RUNNER_FULL_PORTFOLIO_CONTINUATION_20260919_V1.md"
+  ],
+  "current_vs_historical_state": {
+    "rule": "Every mutable branch, PR, review, workflow, provider observation, install/readback, qualification, and assignment named by a checkpoint must be fresh-read before use. A historical checkpoint is a starting snapshot, not current truth.",
+    "chat_dependency_rule": "Chat URLs, conversation IDs, titles, hidden chat state, and browser-tab continuity are historical provenance only and may not be required for operation.",
+    "lane_rule": "Project Runner, BV, SD1-E, SD1-V, hostile-review, verifier, and project-specific execution labels are bounded runtime roles unless a current durable contract independently establishes a logical identity."
+  },
+  "fresh_runtime_recovery": [
+    "Load the current Vera Unbound Project instructions; do not infer continuity or currentness from this retired chat.",
+    "Read this reconstruction record and the exact current Bus topology; fresh-read bus/vera-v2.",
+    "Read the latest applicable Vera/control-plane checkpoint as a starting snapshot only.",
+    "Read Project Runner's current worker-reconstruction contract and active portfolio registry/current PRs when portfolio execution is requested.",
+    "Fresh-check every mutable downstream subject before carrying PASS, FAIL, authority, or frontier state forward.",
+    "Use temporary execution terminals for specialists; persist their assignments/results to owning repositories and the Bus rather than creating permanent worker chats.",
+    "Before any protected effect, verify exact current Patrick authority plus target/predecessor/readback conditions."
+  ],
+  "pre_effect_freshness": [
+    "exact target and predecessor still match the reviewed/current subject",
+    "required source/build/review/install/runtime/qualification evidence is independently current",
+    "provider or machine state is read back when materially relevant",
+    "Bus topology and target route are current",
+    "collision/CAS/non-force constraints are satisfied"
+  ],
+  "protected_effect_gates": [
+    "Patrick exact live authority for the named protected operation and target",
+    "subject-specific qualification and required independent review",
+    "fresh pre-effect target/predecessor/provider readback",
+    "no authority inference from a stale checkpoint, chat statement, branch existence, route registration, or successful test alone"
+  ],
+  "durable_result_destination": {
+    "source_work": "owning repository bounded branch/Draft PR",
+    "reviews": "owning repository PR review surface",
+    "non_pr_coordination": "bus/vera-v2 under current Bus protocol",
+    "portfolio_checkpoint": "thebrazenbeard/vera-control-plane state/continuation plus mirrored Bus recovery handoff",
+    "control_plane_effects": "thebrazenbeard/vera-control-plane exact receipts/readbacks"
+  },
+  "durable_evidence": [
+    "thebrazenbeard/vera-control-plane:state/continuation/PROJECT_RUNNER_FULL_PORTFOLIO_CONTINUATION_20260919_V1.md",
+    "thebrazenbeard/vera-control-plane:state/continuation/PROJECT_RUNNER_FULL_PORTFOLIO_CONTINUATION_RECEIPT_20260919_V1.json",
+    "messages/20260919-vera-project-runner-full-portfolio-checkpoint-v1.md",
+    "thebrazenbeard/project-runner#16:docs/PROJECT_RUNNER_WORKER_RECONSTRUCTION_V1.md",
+    "thebrazenbeard/chat-communication-bus#134:architecture/contracts/EXODUS_INTERFACE_TOPOLOGY_V1.json"
+  ],
+  "retired_chat_required": false
+}
