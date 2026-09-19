@@ -81,5 +81,17 @@
       "protected_effect_gates",
       "durable_result_destination"
     ]
+  },
+  "worker_reconstruction_census": {
+    "path": "architecture/contracts/EXODUS_WORKER_RECONSTRUCTION_CENSUS_V1.json",
+    "required_for_worker_chat_retirement": true,
+    "qualification_rule": "ALL_ACTIVE_WRITER_LANES_READY"
+  },
+  "chat_retirement_gate": {
+    "status": "BLOCKED",
+    "reason": "WORKER_RECONSTRUCTION_CENSUS_NOT_READY",
+    "current_active_writer_count": 20,
+    "current_ready_worker_count": 2,
+    "source_candidate_does_not_authorize_archival_cutover": true
   }
 }
