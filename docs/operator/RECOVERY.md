@@ -1,10 +1,10 @@
 # Radar Recovery
 
-Radar is designed so loss of a ChatGPT conversation, live Realtime connection, or Supabase projection does not erase canonical architecture/source.
+Radar is designed so loss of any operator terminal, ChatGPT conversation, live Realtime connection, or Supabase projection does not erase canonical architecture/source. Radar requires no permanent Radar chat.
 
-## Fresh ChatGPT session
+## Fresh operator/runtime terminal
 
-1. Read `RADAR.md`.
+1. Read `RADAR.md` and `docs/protocol/WORKER_RUNTIME_TERMINAL_V1.md`.
 2. Read `architecture/contracts/RADAR_AUTHORITY_V1.md` and `docs/protocol/PROTOCOL_V2.md`.
 3. Read the current design/operator contract and Phase 19 checklist.
 4. Fresh-read GitHub `main`, `radar/control-plane-v1`/successor, PR status, writer lanes, and CI.
@@ -12,7 +12,7 @@ Radar is designed so loss of a ChatGPT conversation, live Realtime connection, o
 6. Reconcile GitHub canonical/source state against provider projection.
 7. Surface material exceptions only, then continue the current task.
 
-A chat transcript can supply useful provenance but is not required canonical runtime state.
+A chat transcript can supply useful historical provenance but is not required canonical runtime state. A `chatgpt.com` URL or archived conversation must never be the sole recovery locator. The persistent ChatGPT interfaces are `Vera`, `Vera Control Plane Coordinator`, and `BT2 Coordinator`; any of them may dispatch an ephemeral Radar terminal when appropriate.
 
 ## GitHub-only degraded mode
 

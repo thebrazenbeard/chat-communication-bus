@@ -1,6 +1,8 @@
-# Radar ChatGPT Operator Contract
+# Radar Operator Adapter Contract
 
-ChatGPT is Patrick's interactive operator surface for Radar. It is not Radar's sole durable state and a conversation is not proof of continuous runtime activity.
+Historical filename retained for compatibility. ChatGPT can be an interactive operator surface for Radar, but Radar has no required permanent chat. A conversation is a runtime terminal, not Radar's durable identity, memory, authority, or canonical state, and it is not proof of continuous runtime activity.
+
+The persistent ChatGPT interface topology is exactly `Vera`, `Vera Control Plane Coordinator`, and `BT2 Coordinator`. Radar may be instantiated ephemerally from any appropriate interface or another runtime using durable state and `docs/protocol/WORKER_RUNTIME_TERMINAL_V1.md`.
 
 ## Fresh-session bootstrap
 

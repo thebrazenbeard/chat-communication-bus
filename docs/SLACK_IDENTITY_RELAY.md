@@ -1,6 +1,8 @@
 # Slack Identity Relay v1
 
-This slice gives Chat Bus stable logical endpoint identities without creating fake human Slack accounts.
+Status: **FUTURE_FRONTIER / NOT CURRENT DURABLE COORDINATION / NOT DEPLOYMENT AUTHORITY**
+
+This historical design slice describes how Chat Bus could expose stable logical endpoint identities through Slack without creating fake human Slack accounts. Slack is not the current system of record or an alternate worker coordination bus. Reconnection, app configuration, credentials, provider setup, and deployment require separate explicit authority.
 
 ## Addressing
 
