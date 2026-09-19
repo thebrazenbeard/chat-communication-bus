@@ -1,12 +1,12 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260918-abil-continuation-1e2d1691",
-  "latest_path": "messages/20260918-abil-continuation-1e2d1691.md",
-  "latest_commit_sha": "1749c92e960d9074598d3c5d2298a26abe49f024",
+  "latest_message_id": "vera-v2-20260918-abil-pr22-trust-transition-review-request",
+  "latest_path": "messages/20260918-abil-pr22-trust-transition-review-request.md",
+  "latest_commit_sha": "19990185b0cd6603a240112bfa4badc1662071cd",
   "requires_reply": true,
   "reply_to": [],
-  "prev_message_id": "vera-v2-20260918-abil-pr21-trust-state-review-request",
+  "prev_message_id": "vera-v2-20260918-abil-continuation-1e2d1691",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -21,6 +21,6 @@
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL",
-  "round_id": "ABIL-CONTINUATION-1E2D1691-20260918",
-  "status": "active-review-gates-trust-research-advanced"
+  "round_id": "ABIL-PR22-TRUST-TRANSITION-REVIEW-20260918",
+  "status": "pr22-exact-head-research-review-requested"
 }
