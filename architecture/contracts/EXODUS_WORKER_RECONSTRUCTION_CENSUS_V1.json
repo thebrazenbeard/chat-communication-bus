@@ -1,0 +1,448 @@
+{
+  "schema_version": 1,
+  "artifact_id": "EXODUS_WORKER_RECONSTRUCTION_CENSUS_V1",
+  "status": "BLOCKED_PENDING_WORKER_RECONSTRUCTION_QUALIFICATION",
+  "observed_topology": {
+    "path": "architecture/contracts/RADAR_TOPOLOGY_V1.json",
+    "git_blob": "69e505031d4e53dcb853578dac23817649af1918",
+    "owner_last_change_commit": "f90d52e66d655e9c3cfac63cb529914ac51d3a88"
+  },
+  "census_cut": {
+    "repository": "thebrazenbeard/chat-communication-bus",
+    "basis_head": "1af84ba0650bb646b696dfc31e4f79b498d100af",
+    "active_writer_count": 20,
+    "qualified_worker_count": 2,
+    "unqualified_worker_count": 18
+  },
+  "qualification_rule": {
+    "retired_chat_must_be_unnecessary": true,
+    "active_topology_membership_must_match_exactly": true,
+    "observed_writer_head_must_be_pinned": true,
+    "required_reconstruction_fields": [
+      "identity_role",
+      "project_domain",
+      "authority_and_non_authority",
+      "repositories",
+      "bus_route",
+      "current_assignment_frontier",
+      "controlling_contracts",
+      "current_vs_historical_state",
+      "fresh_runtime_recovery",
+      "pre_effect_freshness",
+      "protected_effect_gates",
+      "durable_result_destination"
+    ],
+    "qualification_status_required_for_retirement": "READY"
+  },
+  "workers": [
+    {
+      "identity_id": "brigit",
+      "writer": "Brigit",
+      "branch": "bus/bridget-v1",
+      "observed_head": "0660a754358d5e824e76b93bf4db92db0589fe3f",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "eight",
+      "writer": "Eight",
+      "branch": "bus/eight-v2",
+      "observed_head": "747b110706e3d6b3315160ed6e7dc91d3a2603e8",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "five-five",
+      "writer": "Five-Five",
+      "branch": "bus/five-five-v2",
+      "observed_head": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "five",
+      "writer": "Five",
+      "branch": "bus/five-v2",
+      "observed_head": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "fng",
+      "writer": "FNG",
+      "branch": "bus/fng-v2",
+      "observed_head": "bd6f1dbb28a7b13d461171b1486731872524179d",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "four",
+      "writer": "Four",
+      "branch": "bus/four-v2",
+      "observed_head": "7fa51948a117caeb8f8e7f12c163cd239fa3e4de",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "hephaestus",
+      "writer": "Hephaestus",
+      "branch": "bus/hephaestus-v3",
+      "observed_head": "aeef296bb13f9c58016b350a884cb860cf59e48c",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "masa",
+      "writer": "Masa",
+      "branch": "bus/masa-v2",
+      "observed_head": "0856d321c92d26eee75ad64b945ff9035c2000cf",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "mune",
+      "writer": "Mune",
+      "branch": "bus/mune-v2",
+      "observed_head": "8f669e39e74e79dae54793a7a6a45d615e64de32",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "nine",
+      "writer": "Nine",
+      "branch": "bus/nine-v2",
+      "observed_head": "6ce9f5730f3eb4d91a6c2f2a37e1a2cf7cc03ca4",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "one",
+      "writer": "One",
+      "branch": "bus/one-v2",
+      "observed_head": "b4811177e315268141bfb4e9eac1ae9b272eb319",
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_ONE_V1.json",
+        "messages/20260919T1924-one-bt2-archive-continuity-portfolio-inventory.md",
+        "messages/20260919T1927-one-project-runner-pr12-two-rereview.md"
+      ]
+    },
+    {
+      "identity_id": "radar",
+      "writer": "Radar",
+      "branch": "bus/radar-v2",
+      "observed_head": "4cc783813a9c40606abfd605f1b6c49fcc5639a3",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "seven",
+      "writer": "Seven",
+      "branch": "bus/seven-v2",
+      "observed_head": "37c6c41213a0cc40c96a27fc33d9e1745c437757",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "six",
+      "writer": "Six",
+      "branch": "bus/six-v2",
+      "observed_head": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "thirteen",
+      "writer": "Thirteen",
+      "branch": "bus/thirteen-v2",
+      "observed_head": "e4893012180146d0e3a6c30ce75cdde6708220f0",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "three",
+      "writer": "Three",
+      "branch": "bus/three-v2",
+      "observed_head": "08d11224f8ac3251ec05ee29a2b7a2f9e3f340b5",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "two",
+      "writer": "Two",
+      "branch": "bus/two-v2",
+      "observed_head": "02cfe0af6bdf7d50106c57c65e7a7dc094b38771",
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_TWO_V1.json",
+        "messages/20260919T1927-one-project-runner-pr12-two-rereview.md"
+      ]
+    },
+    {
+      "identity_id": "vera",
+      "writer": "Vera",
+      "branch": "bus/vera-v2",
+      "observed_head": "b151fc4e6b6927324e00e2c56b0e6efa5e8d10d5",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "yang",
+      "writer": "Yang",
+      "branch": "bus/yang-v2",
+      "observed_head": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    },
+    {
+      "identity_id": "yin",
+      "writer": "Yin",
+      "branch": "bus/yin-v2",
+      "observed_head": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+      "reconstruction_status": "NOT_QUALIFIED",
+      "missing_reconstruction_fields": [
+        "identity_role",
+        "project_domain",
+        "authority_and_non_authority",
+        "repositories",
+        "current_assignment_frontier",
+        "controlling_contracts",
+        "current_vs_historical_state",
+        "fresh_runtime_recovery",
+        "pre_effect_freshness",
+        "protected_effect_gates",
+        "durable_result_destination"
+      ],
+      "durable_evidence": []
+    }
+  ],
+  "cutover_gate": {
+    "status": "BLOCKED",
+    "reason": "ACTIVE_WORKER_RECONSTRUCTION_NOT_YET_QUALIFIED",
+    "permanent_chat_retirement_authorized_by_this_artifact": false,
+    "note": "The census intentionally records gaps rather than treating branch existence as reconstruction proof."
+  }
+}
