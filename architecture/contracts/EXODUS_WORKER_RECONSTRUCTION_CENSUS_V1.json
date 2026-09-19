@@ -11,8 +11,8 @@
     "repository": "thebrazenbeard/chat-communication-bus",
     "basis_head": "1af84ba0650bb646b696dfc31e4f79b498d100af",
     "active_writer_count": 20,
-    "qualified_worker_count": 0,
-    "unqualified_worker_count": 20
+    "qualified_worker_count": 1,
+    "unqualified_worker_count": 19
   },
   "qualification_rule": {
     "retired_chat_must_be_unnecessary": true,
@@ -250,21 +250,10 @@
       "writer": "One",
       "branch": "bus/one-v2",
       "observed_head": "b4811177e315268141bfb4e9eac1ae9b272eb319",
-      "reconstruction_status": "NOT_QUALIFIED",
-      "missing_reconstruction_fields": [
-        "identity_role",
-        "project_domain",
-        "authority_and_non_authority",
-        "repositories",
-        "current_assignment_frontier",
-        "controlling_contracts",
-        "current_vs_historical_state",
-        "fresh_runtime_recovery",
-        "pre_effect_freshness",
-        "protected_effect_gates",
-        "durable_result_destination"
-      ],
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
       "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_ONE_V1.json",
         "messages/20260919T1924-one-bt2-archive-continuity-portfolio-inventory.md",
         "messages/20260919T1927-one-project-runner-pr12-two-rereview.md"
       ]
