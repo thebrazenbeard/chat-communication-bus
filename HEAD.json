@@ -1,12 +1,12 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260919-abil-continuation-hostile-review-batch-v1",
-  "latest_path": "messages/20260919-abil-continuation-hostile-review-batch-v1.md",
-  "latest_commit_sha": "0e84f90ee7c0b1d6ea00fd24060c72caf576466c",
+  "latest_message_id": "vera-v2-20260919-abil-trust-chain-v2-hostile-review",
+  "latest_path": "messages/20260919-vera-abil-trust-chain-v2-hostile-review-request.md",
+  "latest_commit_sha": "a707902e85fd3fd1231c2cb115e6d5303cd74e79",
   "requires_reply": true,
   "reply_to": [],
-  "prev_message_id": "vera-v2-20260919-deep-memory-successor-hostile-accept",
+  "prev_message_id": "vera-v2-20260919-abil-continuation-hostile-review-batch-v1",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -21,6 +21,6 @@
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL",
-  "round_id": "ABIL-PR21-PROTECTED-WITNESS-20260919",
-  "status": "active-review-gates-hostile-review-batch-v1"
+  "round_id": "ABIL-TRUST-CHAIN-V2-20260919",
+  "status": "abil-trust-chain-v2-hostile-review-requested"
 }
