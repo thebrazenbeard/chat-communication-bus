@@ -49,7 +49,7 @@ Provider realization is installed and read back:
 - the 14-table private Radar control schema exists with RLS enabled and client schema access denied;
 - low-volume control projections are selectively in `supabase_realtime`;
 - Radar's self-registration identity, GitHub endpoint, ChatGPT operator endpoint, and subscriptions are seeded and read back;
-- Vera's logical route identity is normalized to `vera`, with historical `vera-sol` provenance archived and `bus/vera-sol-v1` preserved.
+- Vera's logical route identity is normalized to vera. Historical vera-sol / bus/vera-sol-v1 provenance is preserved, while current routing is resolved only from architecture/contracts/RADAR_TOPOLOGY_V1.json (currently bus/vera-v2).
 
 Exact source/provider custody is recorded in `architecture/contracts/RADAR_SUPABASE_V1.md`.
 

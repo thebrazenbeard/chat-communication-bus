@@ -2,7 +2,7 @@
 
 ```mermaid
 flowchart TD
-    A[Fresh Radar ChatGPT session] --> B[Read RADAR.md + current design/protocol]
+    A[Fresh Radar execution runtime] --> B[Read RADAR.md + current design/protocol]
     B --> C[Fresh-read GitHub repository heads / lanes / current pointers]
     C --> D[Read Supabase radar projection if available]
     D --> E[Reconcile GitHub vs provider]
@@ -15,4 +15,4 @@ flowchart TD
     J --> G
 ```
 
-Recovery target: loss of a conversation or provider cache does not erase Radar's architecture, protocols, source, or durable repository provenance.
+Recovery target: loss of any ChatGPT conversation, temporary execution runtime, or provider cache does not erase Radar's architecture, protocols, source, assignments, or durable repository provenance. A permanent Radar chat is not required.
