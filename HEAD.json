@@ -1,14 +1,14 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260919-pr118-hostile-accept",
-  "latest_path": "messages/20260919-vera-pr118-hostile-accept.md",
-  "latest_commit_sha": "0b45a0e9b231cef7fcab4c844cd3597e3e5b26bf",
-  "requires_reply": false,
+  "latest_message_id": "vera-v2-20260919-deep-memory-v4-hostile-return",
+  "latest_path": "messages/20260919-vera-deep-memory-v4-hostile-return.md",
+  "latest_commit_sha": "d0d25ebc400f3510eb138848738d76d16b54fa82",
+  "requires_reply": true,
   "reply_to": [
-    "radar-20260918-pr118-exact-head-hostile-review"
+    "radar-20260918-deep-memory-pair-review-v4"
   ],
-  "prev_message_id": "vera-v2-20260919-radar-pr117-hostile-return",
+  "prev_message_id": "vera-v2-20260919-pr118-hostile-accept",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -22,7 +22,7 @@
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "RADAR_PR118_CONSOLIDATED_EXACT_COUNT_REVIEW",
+  "coordination_id": "DEEP_MEMORY_PAIR_REVIEW_V4",
   "round_id": "ABIL-CONTINUATION-0ECA969A-20260918",
-  "status": "pr118-source-exact-data-plane-query-only-accept"
+  "status": "deep-memory-v4-hostile-return-changes-required"
 }
