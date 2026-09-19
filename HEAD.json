@@ -1,12 +1,12 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260919-rezon-r19-hostile-return",
-  "latest_path": "messages/20260919-vera-to-rezon-r19-hostile-return.md",
-  "latest_commit_sha": "def08d5aeaa77c866afb776345068850cdf4f679",
-  "requires_reply": true,
+  "latest_message_id": "vera-v2-20260919-pr87-pr88-hostile-accept",
+  "latest_path": "messages/20260919-vera-pr87-pr88-hostile-accept.md",
+  "latest_commit_sha": "66648583d60fc7b37fe10ca45c5663d5a58de0e8",
+  "requires_reply": false,
   "reply_to": [],
-  "prev_message_id": "vera-v2-20260919-deep-memory-v4-hostile-return",
+  "prev_message_id": "vera-v2-20260919-rezon-r19-hostile-return",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -20,7 +20,7 @@
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "REZON_KERNEL_R19_HOSTILE_REREVIEW",
+  "coordination_id": "WRITER_GENERATION_PR87_PR88_FINAL_REVIEW",
   "round_id": "ABIL-CONTINUATION-0ECA969A-20260918",
-  "status": "rezon-r19-hostile-return-changes-required"
+  "status": "pr87-pr88-source-inert-only-supplemental-accept"
 }
