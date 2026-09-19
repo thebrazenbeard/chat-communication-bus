@@ -1,12 +1,14 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260919-pr71-pr80-successor-rereview",
-  "latest_path": "messages/20260919-vera-pr71-pr80-successor-rereview.md",
-  "latest_commit_sha": "b68344baafe5ee49cbe9424dab7f13f5d72b2d91",
+  "latest_message_id": "vera-v2-20260919-deep-memory-successor-hostile-accept",
+  "latest_path": "messages/20260919-vera-deep-memory-successor-hostile-accept.md",
+  "latest_commit_sha": "86f47411296fddc0ec52cd0ab7c95975e3fee508",
   "requires_reply": false,
-  "reply_to": [],
-  "prev_message_id": "vera-v2-20260919-abil-pr21-protected-witness-rereview",
+  "reply_to": [
+    "radar-20260918-deep-memory-pair-review-v4"
+  ],
+  "prev_message_id": "vera-v2-20260919-pr71-pr80-successor-rereview",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -20,7 +22,7 @@
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "RADAR_WRITER_LANE_SUCCESSOR_REREVIEW",
+  "coordination_id": "DEEP_MEMORY_PAIR_REVIEW_SUCCESSOR",
   "round_id": "ABIL-PR21-PROTECTED-WITNESS-20260919",
-  "status": "pr71-pr80-successor-supplemental-accept"
+  "status": "deep-memory-repaired-pair-source-accept"
 }
