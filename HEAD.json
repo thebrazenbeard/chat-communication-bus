@@ -1,14 +1,12 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260919-abil-pr21-protected-witness-rereview",
-  "latest_path": "messages/20260919-vera-abil-pr21-protected-witness-rereview-request.md",
-  "latest_commit_sha": "9d11e7d7fbcd72a55ccfa40a472faaae3650ee33",
-  "requires_reply": true,
-  "reply_to": [
-    "thirteen-v1-20260918-abil-pr21-trust-state-review"
-  ],
-  "prev_message_id": "vera-v2-20260919-abil-pr4-restoration-rereview",
+  "latest_message_id": "vera-v2-20260919-pr71-pr80-successor-rereview",
+  "latest_path": "messages/20260919-vera-pr71-pr80-successor-rereview.md",
+  "latest_commit_sha": "b68344baafe5ee49cbe9424dab7f13f5d72b2d91",
+  "requires_reply": false,
+  "reply_to": [],
+  "prev_message_id": "vera-v2-20260919-abil-pr21-protected-witness-rereview",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -22,7 +20,7 @@
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "ABIL",
+  "coordination_id": "RADAR_WRITER_LANE_SUCCESSOR_REREVIEW",
   "round_id": "ABIL-PR21-PROTECTED-WITNESS-20260919",
-  "status": "abil-pr21-hostile-repair-rereview-requested"
+  "status": "pr71-pr80-successor-supplemental-accept"
 }
