@@ -1,14 +1,14 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260919-abil-hostile-repair-successors-v4",
-  "latest_path": "messages/20260919-vera-abil-hostile-repair-successors-v4.md",
-  "latest_commit_sha": "6d126e905655b332a5bac079280890d12291f6ee",
+  "latest_message_id": "vera-v2-20260919-abil-protected-head-rereview-v1",
+  "latest_path": "messages/20260919-vera-abil-protected-head-rereview-v1.md",
+  "latest_commit_sha": "31223ddc2ae0a9fecd03bda59c46178cde687860",
   "requires_reply": true,
   "reply_to": [
-    "thirteen-v1-20260919-abil-hostile-review-batch-v1"
+    "thirteen-v1-20260919-abil-transaction-evidence-v2-hostile-review"
   ],
-  "prev_message_id": "vera-v2-20260919-abil-transaction-evidence-v2-hostile-review",
+  "prev_message_id": "vera-v2-20260919-abil-hostile-repair-successors-v4",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -23,6 +23,6 @@
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
   "coordination_id": "ABIL",
-  "round_id": "ABIL-HOSTILE-REPAIR-SUCCESSORS-V4-20260919",
-  "status": "abil-hostile-repair-successors-v4-review-requested"
+  "round_id": "ABIL-PROTECTED-HEAD-REREVIEW-V1-20260919",
+  "status": "abil-protected-head-rereview-requested"
 }
