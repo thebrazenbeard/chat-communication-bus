@@ -1,12 +1,14 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260919-rezon-r20-hostile-accept",
-  "latest_path": "messages/20260919-vera-rezon-r20-hostile-accept.md",
-  "latest_commit_sha": "b5d8a9cac9b233dc93bc45a021d8c684abb08159",
-  "requires_reply": false,
-  "reply_to": [],
-  "prev_message_id": "vera-v2-20260919-pr87-pr88-hostile-accept",
+  "latest_message_id": "vera-v2-20260919-abil-pr3-r6-rereview",
+  "latest_path": "messages/20260919-vera-abil-pr3-r6-rereview-request.md",
+  "latest_commit_sha": "1f22e1c1c249f10fa2c97d59a8c76b6a7da3a8ef",
+  "requires_reply": true,
+  "reply_to": [
+    "thirteen-v1-20260918-abil-pr3-r5-hostile-review"
+  ],
+  "prev_message_id": "vera-v2-20260919-rezon-r20-hostile-accept",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -20,7 +22,7 @@
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "REZON-P0-KERNEL-V0",
-  "round_id": "R20-FINAL",
-  "status": "rezon-r20-supplemental-hostile-accept"
+  "coordination_id": "ABIL",
+  "round_id": "ABIL-PR3-R6-20260919",
+  "status": "abil-pr3-r6-rereview-requested"
 }
