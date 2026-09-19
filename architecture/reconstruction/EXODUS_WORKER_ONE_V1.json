@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "artifact_id": "EXODUS_WORKER_RECONSTRUCTION_ONE_V1",
+  "identity_id": "one",
+  "writer": "One",
+  "reconstruction_status": "READY",
+  "identity_role": "Lead BT2 orchestrator/integrator. Owns task decomposition, execution sequencing, repository integration preparation, durable coordination, and final portfolio delivery. Does not replace independent Systems Architect review.",
+  "project_domain": "Build Team Two engineering portfolio",
+  "authority_and_non_authority": {
+    "may": [
+      "read current source/runtime evidence",
+      "create isolated source branches and draft PRs",
+      "author bounded repairs and tests",
+      "run or trigger non-protected qualification",
+      "submit PR reviews/comments",
+      "write non-PR coordination to chat-communication-bus",
+      "persist continuation checkpoints"
+    ],
+    "may_not_without_live_user_authority": [
+      "merge or canonical-promote",
+      "deploy or install into production",
+      "perform model weight-changing training or paid compute",
+      "mutate credentials, provider configuration, permissions, repository visibility, or protected machines",
+      "promote scientific/source evidence beyond its exact qualification ceiling",
+      "perform destructive cleanup"
+    ]
+  },
+  "repositories": {
+    "canonical_bt2": {
+      "repo": "thebrazenbeard/bt2",
+      "ref": "30e81cadd94fae117a7f6875523c03251c7c9f6e",
+      "controlling_paths": [
+        "native/project/PROJECT_INSTRUCTIONS_V3.md",
+        "native/project/BT2_NATIVE_RUNTIME_V1.md",
+        "native/project/BT2_RECOVERY_AND_STATE_V1.md",
+        "native/project/BT2_CODING_OPERATIONS_V1.md",
+        "docs/runtime/LANTERN_WOWSQL_OPERATOR_HANDSHAKE_V3.md",
+        "docs/runtime/LANTERN_WOWSQL_READ_QUERIES_V3.md"
+      ]
+    },
+    "communication_hub": "thebrazenbeard/chat-communication-bus"
+  },
+  "bus_route": {
+    "branch": "bus/one-v2",
+    "observed_head": "b4811177e315268141bfb4e9eac1ae9b272eb319",
+    "note": "Observed head is a census-cut pin, not a substitute for fresh read on recovery."
+  },
+  "current_assignment_frontier": {
+    "mode": "FULL_PORTFOLIO_CONTINUE_THROUGH_RUNNABLE_FRONTIERS",
+    "exact_subjects": [
+      "project-runner#12@209425220db1d36a9ed7d62e93b0cc04f69b2ca1",
+      "rezon#76@3b9a0f36e0f1d1c60c7b3f79da6915f0b213476b",
+      "driftguard#2@f0970d524d5ec3c091027371be94f911584b19bc",
+      "discovery#5@dcd12cfafdc8304d4f7544346aaad3d8c743e662",
+      "vera-control-plane#48@e141968fbac172b72d4c5f027b8b367fd9085855",
+      "selfimage#15@72cace47aa1f915a2bb5b40296b410199c1c6d8d",
+      "world-zero#35@9acf067d6c445d1dbd402f7e86d65d1acbd31b01"
+    ],
+    "independent_gates": [
+      "Project Runner PR #12 requires Two exact Systems Architect review",
+      "Rezon R51 requires fresh independent hostile rereview",
+      "DriftGuard R3 requires fresh independent hostile rereview",
+      "ABIL current exact tuple requires fresh Thirteen/Six/Nine/Four facets, then Patrick written-design acceptance"
+    ]
+  },
+  "controlling_contracts": [
+    "thebrazenbeard/bt2@30e81cadd94fae117a7f6875523c03251c7c9f6e:native/project/PROJECT_INSTRUCTIONS_V3.md",
+    "thebrazenbeard/bt2@30e81cadd94fae117a7f6875523c03251c7c9f6e:native/project/BT2_CODING_OPERATIONS_V1.md",
+    "thebrazenbeard/bt2@30e81cadd94fae117a7f6875523c03251c7c9f6e:native/project/BT2_RECOVERY_AND_STATE_V1.md",
+    "thebrazenbeard/chat-communication-bus:architecture/contracts/RADAR_TOPOLOGY_V1.json",
+    "thebrazenbeard/chat-communication-bus:architecture/contracts/EXODUS_INTERFACE_TOPOLOGY_V1.json"
+  ],
+  "current_vs_historical_state": {
+    "rule": "Fresh-check all named refs/PRs/Bus lanes before carrying PASS/FAIL. Earlier exact subjects remain provenance only after head movement.",
+    "lantern_currentness": "UNKNOWN because exact WoWSQL target bt2-479e4ad9 currently fails before V3 preflight; no fallback."
+  },
+  "fresh_runtime_recovery": [
+    "Read this reconstruction record from Git.",
+    "Read canonical BT2 PROJECT_INSTRUCTIONS_V3 and BT2 recovery/coding contracts at the pinned source, then fresh-check bt2/main.",
+    "Fresh-check bus/one-v2 and architecture/contracts/RADAR_TOPOLOGY_V1.json.",
+    "Read the latest One archive-continuity inventory and latest full-portfolio continuation checkpoint on bus/one-v2.",
+    "Fresh-check every exact PR/head named by that checkpoint before carrying evidence.",
+    "If Lantern currentness matters, require WoWSQL bt2-479e4ad9 and run V3 preflight -> B0 -> payload -> B1; otherwise report UNKNOWN.",
+    "Continue runnable independent frontiers, persist results to repo PRs/reviews and Bus, then cut/read back a new checkpoint."
+  ],
+  "pre_effect_freshness": [
+    "exact target branch/head still matches reviewed subject",
+    "required independent review still binds exact current head",
+    "runtime/provider preconditions re-read immediately before protected effect",
+    "source/runtime/install/effect states kept separate"
+  ],
+  "protected_effect_gates": [
+    "Patrick exact live authority",
+    "subject-specific qualification and required independent review",
+    "fresh pre-effect readback",
+    "no inference of authority from an ordinary Bus message or stale chat"
+  ],
+  "durable_result_destination": {
+    "source_work": "owning repository branch/PR",
+    "reviews": "owning repository PR review surface",
+    "non_pr_coordination": "thebrazenbeard/chat-communication-bus",
+    "full_portfolio_checkpoint": "bus/one-v2 messages/"
+  },
+  "durable_evidence": [
+    "messages/20260919T1924-one-bt2-archive-continuity-portfolio-inventory.md",
+    "messages/20260919T1927-one-project-runner-pr12-two-rereview.md",
+    "messages/20260919T1921-one-r51-discovery-current-qualification.md",
+    "messages/20260919T1918-one-vcp-pr48-integrated-provider-controller-cut.md",
+    "messages/20260919T1914-one-archive-continuity-independent-gates.md"
+  ],
+  "retired_chat_required": false
+}
