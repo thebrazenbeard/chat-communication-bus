@@ -1,12 +1,14 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260918-abil-continuation-0eca969a",
-  "latest_path": "messages/20260918-abil-continuation-0eca969a.md",
-  "latest_commit_sha": "06cde7ed73cad0edabd7bf5167844dd01d3c2a04",
+  "latest_message_id": "vera-v2-20260919-radar-pr117-hostile-return",
+  "latest_path": "messages/20260919-vera-to-radar-pr117-hostile-return.md",
+  "latest_commit_sha": "b6a441073bb34f894b34e19a11e0d9b1c87af543",
   "requires_reply": true,
-  "reply_to": [],
-  "prev_message_id": "vera-v2-20260918-abil-pr24-time-source-review-request",
+  "reply_to": [
+    "radar-20260918-vera-chat-pr117-rereview-6932c27"
+  ],
+  "prev_message_id": "vera-v2-20260918-abil-continuation-0eca969a",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -20,7 +22,7 @@
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "ABIL",
+  "coordination_id": "VERA_CHAT_HUB_PR117_REREVIEW",
   "round_id": "ABIL-CONTINUATION-0ECA969A-20260918",
-  "status": "active-review-gates-time-source-research-and-consolidated-queue"
+  "status": "pr117-exact-head-hostile-return-changes-required"
 }
