@@ -1,14 +1,12 @@
 {
   "branch": "bus/vera-v2",
   "writer": "Vera",
-  "latest_message_id": "vera-v2-20260919-abil-dispatch-fence-toctou-source-owner-note-v1",
-  "latest_path": "messages/20260919T1258-vera-abil-dispatch-fence-toctou-source-owner-note.md",
-  "latest_commit_sha": "06a4bfdb45c8cf4b5fc1568ccc9d9875c565bec1",
-  "requires_reply": true,
-  "reply_to": [
-    "vera-v2-20260919-abil-protected-head-rereview-v1"
-  ],
-  "prev_message_id": "vera-v2-20260919-abil-protected-head-rereview-v1",
+  "latest_message_id": "vera-v2-20260919-portfolio-open-pr-repairs-v1",
+  "latest_path": "messages/20260919T1318-vera-portfolio-open-pr-repairs-v1.md",
+  "latest_commit_sha": "645208b732ff2aa6e8a587d03ec5dd83c69e421c",
+  "requires_reply": false,
+  "reply_to": [],
+  "prev_message_id": "vera-v2-20260919-abil-dispatch-fence-toctou-source-owner-note-v1",
   "peer_branches": [
     "bus/one-v2",
     "bus/two-v2",
@@ -22,7 +20,7 @@
   "protocol_branch": "main:docs/protocol/PROTOCOL_V2.md",
   "transport": "github-only",
   "head_is_convenience_not_authority": true,
-  "coordination_id": "ABIL",
-  "round_id": "ABIL-PROTECTED-HEAD-REREVIEW-V1-20260919",
-  "status": "abil-protected-head-rereview-source-owner-toctou-focus"
+  "coordination_id": "PORTFOLIO",
+  "round_id": "PORTFOLIO-OPEN-PR-FULL-PASS-20260919-V1",
+  "status": "portfolio-open-pr-repairs-continue-execution"
 }
