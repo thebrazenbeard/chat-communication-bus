@@ -22,6 +22,7 @@ class ActionsExecutionEvidence:
     completed_jobs: int
     failed_jobs: int
     jobs_with_steps: int
+    jobs_with_exposed_steps: int
     jobs_without_steps: int
 
     @property
@@ -29,9 +30,28 @@ class ActionsExecutionEvidence:
         return self.jobs_with_steps > 0
 
 
-def _steps_present(job: Mapping[str, Any]) -> bool:
+def _steps_exposed(job: Mapping[str, Any]) -> bool:
     steps = job.get("steps")
     return isinstance(steps, list) and len(steps) > 0
+
+
+def _step_execution_observed(step: Mapping[str, Any]) -> bool:
+    status = step.get("status")
+    if status in {"in_progress", "completed"}:
+        return True
+    if step.get("conclusion") is not None:
+        return True
+    if step.get("started_at") is not None or step.get("completed_at") is not None:
+        return True
+    return False
+
+
+def _step_execution_present(job: Mapping[str, Any]) -> bool:
+    steps = job.get("steps")
+    return (
+        isinstance(steps, list)
+        and any(isinstance(step, Mapping) and _step_execution_observed(step) for step in steps)
+    )
 
 
 def classify_actions_jobs(jobs: Iterable[Mapping[str, Any]]) -> ActionsExecutionEvidence:
@@ -50,6 +70,7 @@ def classify_actions_jobs(jobs: Iterable[Mapping[str, Any]]) -> ActionsExecution
             completed_jobs=0,
             failed_jobs=0,
             jobs_with_steps=0,
+            jobs_with_exposed_steps=0,
             jobs_without_steps=0,
         )
 
@@ -59,7 +80,7 @@ def classify_actions_jobs(jobs: Iterable[Mapping[str, Any]]) -> ActionsExecution
     else:
         failed = tuple(job for job in completed if job.get("conclusion") == "failure")
         successful = tuple(job for job in completed if job.get("conclusion") == "success")
-        failed_with_steps = tuple(job for job in failed if _steps_present(job))
+        failed_with_steps = tuple(job for job in failed if _step_execution_present(job))
 
         if len(successful) == len(completed):
             classification = ActionsExecutionClass.SUCCESS
@@ -71,12 +92,14 @@ def classify_actions_jobs(jobs: Iterable[Mapping[str, Any]]) -> ActionsExecution
             classification = ActionsExecutionClass.UNQUALIFIED
 
     failed_jobs = sum(job.get("conclusion") == "failure" for job in completed)
-    jobs_with_steps = sum(_steps_present(job) for job in completed)
+    jobs_with_steps = sum(_step_execution_present(job) for job in completed)
+    jobs_with_exposed_steps = sum(_steps_exposed(job) for job in completed)
     return ActionsExecutionEvidence(
         classification=classification,
         job_count=len(records),
         completed_jobs=len(completed),
         failed_jobs=failed_jobs,
         jobs_with_steps=jobs_with_steps,
-        jobs_without_steps=len(completed) - jobs_with_steps,
+        jobs_with_exposed_steps=jobs_with_exposed_steps,
+        jobs_without_steps=len(completed) - jobs_with_exposed_steps,
     )

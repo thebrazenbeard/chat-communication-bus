@@ -11,8 +11,8 @@ GitHub Actions can fail before a hosted runner executes any workflow step. Radar
 ## Classes
 
 - `SUCCESS`: every completed job succeeded.
-- `WORKFLOW_EXECUTION_FAILURE`: at least one failed job exposed one or more executed steps. This proves execution began, not why it failed.
-- `INFRASTRUCTURE_NO_RUN`: at least one job failed, and no failed job exposed any executed steps.
+- `WORKFLOW_EXECUTION_FAILURE`: at least one failed job exposes step-level evidence that execution actually began (for example an in-progress/completed status, a conclusion, or execution timestamps). This proves execution began, not why it failed.
+- `INFRASTRUCTURE_NO_RUN`: at least one job failed, and no failed job exposes evidence that a workflow step actually began. Merely listing queued/not-started step metadata is insufficient.
 - `INCOMPLETE`: at least one job is not complete.
 - `UNQUALIFIED`: no usable completed success/failure evidence exists.
 
@@ -22,7 +22,7 @@ GitHub Actions can fail before a hosted runner executes any workflow step. Radar
 
 A red GitHub check is not by itself a source failure.
 
-A job recorded as `completed/failure` with `steps: null` or `steps: []` remains infrastructure-unqualified. A failed job with steps establishes only that workflow execution began. Source/test failure still requires step- or log-specific evidence showing that repository code or tests actually failed.
+A job recorded as `completed/failure` with `steps: null` or `steps: []` remains infrastructure-unqualified. A non-empty step list also remains insufficient when every step is only queued/not-started. A failed job with observed step execution establishes only that workflow execution began. Source/test failure still requires step- or log-specific evidence showing that repository code or tests actually failed.
 
 Mixed attempts remain conservative: a successful job may establish that some execution happened, but a separate zero-step failed job does not become a source failure merely because another matrix leg ran.
 
