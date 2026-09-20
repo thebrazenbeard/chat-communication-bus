@@ -44,7 +44,12 @@
       "path": "architecture/contracts/RADAR_TOPOLOGY_V1.json",
       "git_blob": "69e505031d4e53dcb853578dac23817649af1918"
     },
-    "vera_writer_route": "bus/vera-v2"
+    "vera_writer_route": "bus/vera-v2",
+    "interface_routing_contract": {
+      "path": "architecture/contracts/PERSISTENT_INTERFACE_ROUTING_V1.json",
+      "required_for_interface_reconstruction": true,
+      "interface_is_not_worker_identity": true
+    }
   },
   "slack": {
     "status": "FUTURE_FRONTIER_NOT_ACTIVE",
