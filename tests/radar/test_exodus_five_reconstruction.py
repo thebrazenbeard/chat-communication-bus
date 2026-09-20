@@ -54,4 +54,4 @@ def test_five_ready_census_entry_matches_reconstruction_route_head():
     assert census["census_cut"]["unqualified_worker_count"] == (
         census["census_cut"]["active_writer_count"] - len(ready)
     )
-    assert census["cutover_gate"]["status"] == "BLOCKED"
+    assert census["cutover_gate"]["status"] == "READY_FOR_RETIREMENT_SOURCE_CANDIDATE"
