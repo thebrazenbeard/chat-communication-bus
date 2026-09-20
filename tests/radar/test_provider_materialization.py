@@ -39,6 +39,7 @@ def envelope() -> PortableExecutionEnvelope:
         state_refs=(
             StateReference(
                 repository="owner/repo-a",
+                repository_id=101,
                 ref="main",
                 commit_sha="1" * 40,
                 path="a.md",
@@ -46,6 +47,7 @@ def envelope() -> PortableExecutionEnvelope:
             ),
             StateReference(
                 repository="owner/repo-b",
+                repository_id=102,
                 ref="state/current",
                 commit_sha="2" * 40,
                 path="b.json",
@@ -69,11 +71,11 @@ def manifest(*caps: Capability) -> ProviderManifest:
 def install_github_readback(
     monkeypatch: pytest.MonkeyPatch,
     *,
-    extra: dict[tuple[str, str, str], str] | None = None,
+    extra: dict[tuple[str, int, str, str], str] | None = None,
 ) -> GitHubCommitPathResolver:
     objects = {
-        ("owner/repo-a", "1" * 40, "a.md"): git_blob(STATE_A),
-        ("owner/repo-b", "2" * 40, "b.json"): git_blob(STATE_B),
+        ("owner/repo-a", 101, "1" * 40, "a.md"): git_blob(STATE_A),
+        ("owner/repo-b", 102, "2" * 40, "b.json"): git_blob(STATE_B),
     }
     if extra:
         objects.update(extra)
@@ -81,24 +83,30 @@ def install_github_readback(
     def fake_get(url: str, *, token: str | None, timeout: float):
         parsed = urlparse(url)
         parts = [unquote(part) for part in parsed.path.split("/") if part]
-        if len(parts) < 5 or parts[0] != "repos":
+        if len(parts) < 3 or parts[0] != "repos":
             raise ValueError("unexpected GitHub API path")
         repository = f"{parts[1]}/{parts[2]}"
-        if parts[3:5] == ["git", "commits"]:
+        repo_rows = [
+            (repo, repo_id, commit, path, blob)
+            for (repo, repo_id, commit, path), blob in objects.items()
+            if repo == repository
+        ]
+        if len(parts) == 3:
+            if not repo_rows:
+                raise ValueError("GitHub provenance readback failed with HTTP 404")
+            return {"full_name": repository, "id": repo_rows[0][1]}
+        if len(parts) >= 6 and parts[3:5] == ["git", "commits"]:
             commit_sha = parts[5]
-            if any(
-                repo == repository and commit == commit_sha
-                for repo, commit, _ in objects
-            ):
+            if any(commit == commit_sha for _, _, commit, _, _ in repo_rows):
                 return {"sha": commit_sha}
             raise ValueError("GitHub provenance readback failed with HTTP 404")
-        if parts[3] == "contents":
+        if len(parts) >= 5 and parts[3] == "contents":
             path = "/".join(parts[4:])
             commit_sha = parse_qs(parsed.query).get("ref", [""])[0]
-            blob = objects.get((repository, commit_sha, path))
-            if blob is None:
-                raise ValueError("GitHub provenance readback failed with HTTP 404")
-            return {"type": "file", "path": path, "sha": blob}
+            for _, _, commit, candidate_path, blob in repo_rows:
+                if commit == commit_sha and candidate_path == path:
+                    return {"type": "file", "path": path, "sha": blob}
+            raise ValueError("GitHub provenance readback failed with HTTP 404")
         raise ValueError("unexpected GitHub API path")
 
     monkeypatch.setattr(provenance, "_github_get_json", fake_get)
@@ -298,7 +306,7 @@ def test_unrelated_commit_path_cannot_borrow_correct_blob_bytes(monkeypatch):
     resolver = install_github_readback(
         monkeypatch,
         extra={
-            ("owner/repo-a", unrelated_commit, unrelated_path): git_blob(STATE_B)
+            ("owner/repo-a", 101, unrelated_commit, unrelated_path): git_blob(STATE_B)
         },
     )
     with pytest.raises(ValueError, match="commit/path blob mismatch"):
