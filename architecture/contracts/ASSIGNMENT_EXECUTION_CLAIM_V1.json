@@ -63,20 +63,35 @@
     "binds_current_assignment_event": true,
     "claim_lease_must_not_exceed_node_lease": true,
     "same_operation_id_is_idempotent": true,
-    "active_unexpired_other_holder_fails_closed": true
+    "active_unexpired_other_holder_fails_closed": true,
+    "idempotency_namespace": [
+      "assignment_id",
+      "ACQUIRE",
+      "operation_id"
+    ]
   },
   "renew": {
     "requires_current_node": true,
     "requires_current_fence_token": true,
     "requires_same_bound_assignment_event": true,
     "claim_lease_must_not_exceed_node_lease": true,
-    "same_operation_id_is_idempotent": true
+    "same_operation_id_is_idempotent": true,
+    "idempotency_namespace": [
+      "assignment_id",
+      "RENEW",
+      "operation_id"
+    ]
   },
   "release_or_finalize": {
     "requires_current_node": true,
     "requires_current_fence_token": true,
     "same_operation_id_is_idempotent": true,
-    "lost_response_retry_must_not_create_new_generation": true
+    "lost_response_retry_must_not_create_new_generation": true,
+    "idempotency_namespace": [
+      "assignment_id",
+      "RELEASE_OR_FINALIZE",
+      "operation_id"
+    ]
   },
   "assignment_successor_binding": {
     "runtime_authored_successor_requires_node_id": true,
@@ -115,5 +130,22 @@
     "control_plane_advance_invalidates_stale_execution_ownership",
     "claim_acquisition_cannot_bypass_dependency_readiness",
     "claim_mutation_not_executable_by_anon_or_authenticated"
-  ]
+  ],
+  "idempotency": {
+    "namespace_fields": [
+      "assignment_id",
+      "operation_kind",
+      "operation_id"
+    ],
+    "operation_kinds": [
+      "ACQUIRE",
+      "RENEW",
+      "RELEASE_OR_FINALIZE"
+    ],
+    "uniqueness_required": true,
+    "same_namespace_key_returns_recorded_result": true,
+    "operation_id_reuse_across_assignments_is_independent": true,
+    "operation_id_reuse_across_operation_kinds_is_independent": true,
+    "collision_outside_exact_namespace_key_forbidden": true
+  }
 }
