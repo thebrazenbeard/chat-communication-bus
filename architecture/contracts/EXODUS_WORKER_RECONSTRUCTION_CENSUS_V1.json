@@ -11,8 +11,8 @@
     "repository": "thebrazenbeard/chat-communication-bus",
     "basis_head": "1af84ba0650bb646b696dfc31e4f79b498d100af",
     "active_writer_count": 20,
-    "qualified_worker_count": 3,
-    "unqualified_worker_count": 17
+    "qualified_worker_count": 4,
+    "unqualified_worker_count": 16
   },
   "qualification_rule": {
     "retired_chat_must_be_unnecessary": true,
@@ -349,21 +349,14 @@
       "writer": "Three",
       "branch": "bus/three-v2",
       "observed_head": "08d11224f8ac3251ec05ee29a2b7a2f9e3f340b5",
-      "reconstruction_status": "NOT_QUALIFIED",
-      "missing_reconstruction_fields": [
-        "identity_role",
-        "project_domain",
-        "authority_and_non_authority",
-        "repositories",
-        "current_assignment_frontier",
-        "controlling_contracts",
-        "current_vs_historical_state",
-        "fresh_runtime_recovery",
-        "pre_effect_freshness",
-        "protected_effect_gates",
-        "durable_result_destination"
-      ],
-      "durable_evidence": []
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_THREE_V1.json",
+        "thebrazenbeard/bt2#33@798c9bd786ad9e459d0e7db0e39851c98d8feda2:docs/handoffs/CHATGPT_EXODUS_THREE_2026-09-20.md",
+        "bus/bt2-v1@49f062bb43ba9d147295f6e4439ba1a74d909f16:checkpoints/bt2/20260920T0608-0400-three-chat-exodus-recovery.md",
+        "thebrazenbeard/bt2#31"
+      ]
     },
     {
       "identity_id": "two",
