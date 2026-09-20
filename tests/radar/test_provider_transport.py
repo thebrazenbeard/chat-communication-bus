@@ -10,6 +10,7 @@ from radar.provider_routing import RouteSelectionState
 from radar.provider_transport import (
     RetryPosture,
     TransportObservation,
+    TransportReceipt,
     TransportState,
     build_transport_intent,
     record_transport_observation,
@@ -256,3 +257,33 @@ def test_transport_receipt_does_not_claim_provider_consumption_or_behavior():
     )
     assert not hasattr(receipt, "provider_consumed")
     assert not hasattr(receipt, "model_obeyed")
+
+
+@pytest.mark.parametrize(
+    ("state", "status", "match"),
+    [
+        (
+            TransportState.CONFIRMED_HTTP_RESPONSE,
+            500,
+            "receipt requires 2xx",
+        ),
+        (
+            TransportState.REJECTED_HTTP_RESPONSE,
+            200,
+            "receipt requires 3xx-5xx",
+        ),
+    ],
+)
+def test_direct_receipt_construction_cannot_launder_http_state(
+    state, status, match
+):
+    i = intent()
+    with pytest.raises(ValueError, match=match):
+        TransportReceipt(
+            attempt_id=i.attempt_id,
+            intent_digest=i.digest,
+            state=state,
+            retry_posture=RetryPosture.NO_AUTOMATIC_RETRY,
+            http_status=status,
+            response_sha256=digest("response"),
+        )
