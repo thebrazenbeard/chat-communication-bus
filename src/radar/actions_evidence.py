@@ -9,7 +9,7 @@ from typing import Iterable, Mapping, Any
 
 class ActionsExecutionClass(StrEnum):
     SUCCESS = "SUCCESS"
-    SOURCE_OR_RUNTIME_FAILURE = "SOURCE_OR_RUNTIME_FAILURE"
+    WORKFLOW_EXECUTION_FAILURE = "WORKFLOW_EXECUTION_FAILURE"
     INFRASTRUCTURE_NO_RUN = "INFRASTRUCTURE_NO_RUN"
     INCOMPLETE = "INCOMPLETE"
     UNQUALIFIED = "UNQUALIFIED"
@@ -23,10 +23,6 @@ class ActionsExecutionEvidence:
     failed_jobs: int
     jobs_with_steps: int
     jobs_without_steps: int
-
-    @property
-    def source_failure_established(self) -> bool:
-        return self.classification is ActionsExecutionClass.SOURCE_OR_RUNTIME_FAILURE
 
     @property
     def execution_established(self) -> bool:
@@ -43,7 +39,7 @@ def classify_actions_jobs(jobs: Iterable[Mapping[str, Any]]) -> ActionsExecution
 
     A completed failed job with no exposed steps did not establish source execution.
     When every completed failed job lacks steps, classify the attempt as
-    ``INFRASTRUCTURE_NO_RUN`` rather than a source/runtime failure.
+    ``INFRASTRUCTURE_NO_RUN`` rather than a workflow-execution failure.
     """
 
     records = tuple(jobs)
@@ -68,7 +64,7 @@ def classify_actions_jobs(jobs: Iterable[Mapping[str, Any]]) -> ActionsExecution
         if len(successful) == len(completed):
             classification = ActionsExecutionClass.SUCCESS
         elif failed_with_steps:
-            classification = ActionsExecutionClass.SOURCE_OR_RUNTIME_FAILURE
+            classification = ActionsExecutionClass.WORKFLOW_EXECUTION_FAILURE
         elif failed:
             classification = ActionsExecutionClass.INFRASTRUCTURE_NO_RUN
         else:
