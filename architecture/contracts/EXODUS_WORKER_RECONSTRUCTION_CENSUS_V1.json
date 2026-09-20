@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_id": "EXODUS_WORKER_RECONSTRUCTION_CENSUS_V1",
-  "status": "BLOCKED_PENDING_WORKER_RECONSTRUCTION_QUALIFICATION",
+  "status": "BLOCKED_PENDING_FIVE_ACTIVE_WORKER_RECONSTRUCTION_RECORDS",
   "observed_topology": {
     "path": "architecture/contracts/RADAR_TOPOLOGY_V1.json",
     "git_blob": "69e505031d4e53dcb853578dac23817649af1918",
@@ -9,10 +9,10 @@
   },
   "census_cut": {
     "repository": "thebrazenbeard/chat-communication-bus",
-    "basis_head": "1af84ba0650bb646b696dfc31e4f79b498d100af",
+    "basis_head": "6555d16eaf663648f02161412e4db71c8a7559ae",
     "active_writer_count": 20,
-    "qualified_worker_count": 3,
-    "unqualified_worker_count": 17
+    "qualified_worker_count": 15,
+    "unqualified_worker_count": 5
   },
   "qualification_rule": {
     "retired_chat_must_be_unnecessary": true,
@@ -39,7 +39,7 @@
       "identity_id": "brigit",
       "writer": "Brigit",
       "branch": "bus/bridget-v1",
-      "observed_head": "0660a754358d5e824e76b93bf4db92db0589fe3f",
+      "observed_head": "2dae673301b39ced44ae59d47f1abca2a2d5cac7",
       "reconstruction_status": "NOT_QUALIFIED",
       "missing_reconstruction_fields": [
         "identity_role",
@@ -61,21 +61,11 @@
       "writer": "Eight",
       "branch": "bus/eight-v2",
       "observed_head": "747b110706e3d6b3315160ed6e7dc91d3a2603e8",
-      "reconstruction_status": "NOT_QUALIFIED",
-      "missing_reconstruction_fields": [
-        "identity_role",
-        "project_domain",
-        "authority_and_non_authority",
-        "repositories",
-        "current_assignment_frontier",
-        "controlling_contracts",
-        "current_vs_historical_state",
-        "fresh_runtime_recovery",
-        "pre_effect_freshness",
-        "protected_effect_gates",
-        "durable_result_destination"
-      ],
-      "durable_evidence": []
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_EIGHT_V1.json"
+      ]
     },
     {
       "identity_id": "five-five",
@@ -103,27 +93,17 @@
       "writer": "Five",
       "branch": "bus/five-v2",
       "observed_head": "b332ca4969b11ac0af3436a33f3c42908356fb88",
-      "reconstruction_status": "NOT_QUALIFIED",
-      "missing_reconstruction_fields": [
-        "identity_role",
-        "project_domain",
-        "authority_and_non_authority",
-        "repositories",
-        "current_assignment_frontier",
-        "controlling_contracts",
-        "current_vs_historical_state",
-        "fresh_runtime_recovery",
-        "pre_effect_freshness",
-        "protected_effect_gates",
-        "durable_result_destination"
-      ],
-      "durable_evidence": []
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_FIVE_V1.json"
+      ]
     },
     {
       "identity_id": "fng",
       "writer": "FNG",
       "branch": "bus/fng-v2",
-      "observed_head": "bd6f1dbb28a7b13d461171b1486731872524179d",
+      "observed_head": "22a5c69cd49568672f51946a271940f1502fb329",
       "reconstruction_status": "NOT_QUALIFIED",
       "missing_reconstruction_fields": [
         "identity_role",
@@ -145,105 +125,55 @@
       "writer": "Four",
       "branch": "bus/four-v2",
       "observed_head": "7fa51948a117caeb8f8e7f12c163cd239fa3e4de",
-      "reconstruction_status": "NOT_QUALIFIED",
-      "missing_reconstruction_fields": [
-        "identity_role",
-        "project_domain",
-        "authority_and_non_authority",
-        "repositories",
-        "current_assignment_frontier",
-        "controlling_contracts",
-        "current_vs_historical_state",
-        "fresh_runtime_recovery",
-        "pre_effect_freshness",
-        "protected_effect_gates",
-        "durable_result_destination"
-      ],
-      "durable_evidence": []
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_FOUR_V1.json"
+      ]
     },
     {
       "identity_id": "hephaestus",
       "writer": "Hephaestus",
       "branch": "bus/hephaestus-v3",
       "observed_head": "aeef296bb13f9c58016b350a884cb860cf59e48c",
-      "reconstruction_status": "NOT_QUALIFIED",
-      "missing_reconstruction_fields": [
-        "identity_role",
-        "project_domain",
-        "authority_and_non_authority",
-        "repositories",
-        "current_assignment_frontier",
-        "controlling_contracts",
-        "current_vs_historical_state",
-        "fresh_runtime_recovery",
-        "pre_effect_freshness",
-        "protected_effect_gates",
-        "durable_result_destination"
-      ],
-      "durable_evidence": []
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_HEPHAESTUS_V1.json"
+      ]
     },
     {
       "identity_id": "masa",
       "writer": "Masa",
       "branch": "bus/masa-v2",
       "observed_head": "0856d321c92d26eee75ad64b945ff9035c2000cf",
-      "reconstruction_status": "NOT_QUALIFIED",
-      "missing_reconstruction_fields": [
-        "identity_role",
-        "project_domain",
-        "authority_and_non_authority",
-        "repositories",
-        "current_assignment_frontier",
-        "controlling_contracts",
-        "current_vs_historical_state",
-        "fresh_runtime_recovery",
-        "pre_effect_freshness",
-        "protected_effect_gates",
-        "durable_result_destination"
-      ],
-      "durable_evidence": []
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_MASA_V1.json"
+      ]
     },
     {
       "identity_id": "mune",
       "writer": "Mune",
       "branch": "bus/mune-v2",
       "observed_head": "8f669e39e74e79dae54793a7a6a45d615e64de32",
-      "reconstruction_status": "NOT_QUALIFIED",
-      "missing_reconstruction_fields": [
-        "identity_role",
-        "project_domain",
-        "authority_and_non_authority",
-        "repositories",
-        "current_assignment_frontier",
-        "controlling_contracts",
-        "current_vs_historical_state",
-        "fresh_runtime_recovery",
-        "pre_effect_freshness",
-        "protected_effect_gates",
-        "durable_result_destination"
-      ],
-      "durable_evidence": []
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_MUNE_V1.json"
+      ]
     },
     {
       "identity_id": "nine",
       "writer": "Nine",
       "branch": "bus/nine-v2",
       "observed_head": "6ce9f5730f3eb4d91a6c2f2a37e1a2cf7cc03ca4",
-      "reconstruction_status": "NOT_QUALIFIED",
-      "missing_reconstruction_fields": [
-        "identity_role",
-        "project_domain",
-        "authority_and_non_authority",
-        "repositories",
-        "current_assignment_frontier",
-        "controlling_contracts",
-        "current_vs_historical_state",
-        "fresh_runtime_recovery",
-        "pre_effect_freshness",
-        "protected_effect_gates",
-        "durable_result_destination"
-      ],
-      "durable_evidence": []
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_NINE_V1.json"
+      ]
     },
     {
       "identity_id": "one",
@@ -265,105 +195,55 @@
       "writer": "Radar",
       "branch": "bus/radar-v2",
       "observed_head": "4cc783813a9c40606abfd605f1b6c49fcc5639a3",
-      "reconstruction_status": "NOT_QUALIFIED",
-      "missing_reconstruction_fields": [
-        "identity_role",
-        "project_domain",
-        "authority_and_non_authority",
-        "repositories",
-        "current_assignment_frontier",
-        "controlling_contracts",
-        "current_vs_historical_state",
-        "fresh_runtime_recovery",
-        "pre_effect_freshness",
-        "protected_effect_gates",
-        "durable_result_destination"
-      ],
-      "durable_evidence": []
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_RADAR_V1.json"
+      ]
     },
     {
       "identity_id": "seven",
       "writer": "Seven",
       "branch": "bus/seven-v2",
       "observed_head": "37c6c41213a0cc40c96a27fc33d9e1745c437757",
-      "reconstruction_status": "NOT_QUALIFIED",
-      "missing_reconstruction_fields": [
-        "identity_role",
-        "project_domain",
-        "authority_and_non_authority",
-        "repositories",
-        "current_assignment_frontier",
-        "controlling_contracts",
-        "current_vs_historical_state",
-        "fresh_runtime_recovery",
-        "pre_effect_freshness",
-        "protected_effect_gates",
-        "durable_result_destination"
-      ],
-      "durable_evidence": []
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_SEVEN_V1.json"
+      ]
     },
     {
       "identity_id": "six",
       "writer": "Six",
       "branch": "bus/six-v2",
       "observed_head": "b332ca4969b11ac0af3436a33f3c42908356fb88",
-      "reconstruction_status": "NOT_QUALIFIED",
-      "missing_reconstruction_fields": [
-        "identity_role",
-        "project_domain",
-        "authority_and_non_authority",
-        "repositories",
-        "current_assignment_frontier",
-        "controlling_contracts",
-        "current_vs_historical_state",
-        "fresh_runtime_recovery",
-        "pre_effect_freshness",
-        "protected_effect_gates",
-        "durable_result_destination"
-      ],
-      "durable_evidence": []
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_SIX_V1.json"
+      ]
     },
     {
       "identity_id": "thirteen",
       "writer": "Thirteen",
       "branch": "bus/thirteen-v2",
       "observed_head": "e4893012180146d0e3a6c30ce75cdde6708220f0",
-      "reconstruction_status": "NOT_QUALIFIED",
-      "missing_reconstruction_fields": [
-        "identity_role",
-        "project_domain",
-        "authority_and_non_authority",
-        "repositories",
-        "current_assignment_frontier",
-        "controlling_contracts",
-        "current_vs_historical_state",
-        "fresh_runtime_recovery",
-        "pre_effect_freshness",
-        "protected_effect_gates",
-        "durable_result_destination"
-      ],
-      "durable_evidence": []
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_THIRTEEN_V1.json"
+      ]
     },
     {
       "identity_id": "three",
       "writer": "Three",
       "branch": "bus/three-v2",
       "observed_head": "08d11224f8ac3251ec05ee29a2b7a2f9e3f340b5",
-      "reconstruction_status": "NOT_QUALIFIED",
-      "missing_reconstruction_fields": [
-        "identity_role",
-        "project_domain",
-        "authority_and_non_authority",
-        "repositories",
-        "current_assignment_frontier",
-        "controlling_contracts",
-        "current_vs_historical_state",
-        "fresh_runtime_recovery",
-        "pre_effect_freshness",
-        "protected_effect_gates",
-        "durable_result_destination"
-      ],
-      "durable_evidence": []
+      "reconstruction_status": "READY",
+      "missing_reconstruction_fields": [],
+      "durable_evidence": [
+        "architecture/reconstruction/EXODUS_WORKER_THREE_V1.json"
+      ]
     },
     {
       "identity_id": "two",
@@ -381,7 +261,7 @@
       "identity_id": "vera",
       "writer": "Vera",
       "branch": "bus/vera-v2",
-      "observed_head": "b151fc4e6b6927324e00e2c56b0e6efa5e8d10d5",
+      "observed_head": "351268b7633f7c9fe5d74604d2e2d12536ef4c3b",
       "reconstruction_status": "READY",
       "missing_reconstruction_fields": [],
       "durable_evidence": [
@@ -393,7 +273,7 @@
       "identity_id": "yang",
       "writer": "Yang",
       "branch": "bus/yang-v2",
-      "observed_head": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+      "observed_head": "c0a8131b1d4c5d20292b61cc6fc5e310ce3e9569",
       "reconstruction_status": "NOT_QUALIFIED",
       "missing_reconstruction_fields": [
         "identity_role",
@@ -414,7 +294,7 @@
       "identity_id": "yin",
       "writer": "Yin",
       "branch": "bus/yin-v2",
-      "observed_head": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+      "observed_head": "8b0783ea5124ae5cb6e7e30a4d87f644e50c69cd",
       "reconstruction_status": "NOT_QUALIFIED",
       "missing_reconstruction_fields": [
         "identity_role",
@@ -434,8 +314,8 @@
   ],
   "cutover_gate": {
     "status": "BLOCKED",
-    "reason": "ACTIVE_WORKER_RECONSTRUCTION_NOT_YET_QUALIFIED",
+    "reason": "ACTIVE_WORKER_RECONSTRUCTION_GAPS_REMAIN: brigit, five-five, fng, yang, yin",
     "permanent_chat_retirement_authorized_by_this_artifact": false,
-    "note": "The census intentionally records gaps rather than treating branch existence as reconstruction proof."
+    "note": "This source cut qualifies 15/20 active writer identities from durable evidence. Five remain intentionally unqualified; do not reconstruct them from chat memory or lane existence."
   }
 }
