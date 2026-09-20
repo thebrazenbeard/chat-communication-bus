@@ -42,26 +42,31 @@
   },
   "bus_route": {
     "branch": "bus/one-v2",
-    "observed_head": "b4811177e315268141bfb4e9eac1ae9b272eb319",
-    "note": "Observed head is a census-cut pin, not a substitute for fresh read on recovery."
+    "observed_head": "26549804cdbd2aa1750f25a32ccaf8cf3c83ef83",
+    "note": "Observed head is the final One Exodus handoff cut. Fresh-read bus/one-v2 before relying on current assignments or writing."
   },
   "current_assignment_frontier": {
-    "mode": "FULL_PORTFOLIO_CONTINUE_THROUGH_RUNNABLE_FRONTIERS",
+    "mode": "EXODUS_FINAL_RECOVERY_HANDOFF_AND_FULL_PORTFOLIO",
+    "recovery_checkpoint": "checkpoints/one/ONE_EXODUS_FINAL_20260919T2115-0400.md",
+    "coordinator_handoff": "checkpoints/bt2-coordinator/BT2_COORDINATOR_ONE_EXODUS_HANDOFF_20260919T2117-0400.md",
     "exact_subjects": [
-      "project-runner#12@209425220db1d36a9ed7d62e93b0cc04f69b2ca1",
-      "rezon#76@3b9a0f36e0f1d1c60c7b3f79da6915f0b213476b",
-      "driftguard#2@f0970d524d5ec3c091027371be94f911584b19bc",
-      "discovery#5@dcd12cfafdc8304d4f7544346aaad3d8c743e662",
+      "project-runner#20@a3dc0e0ff42c08327f421e1102d674c3d6a2e951",
+      "project-runner#21@e53dd3907af6686cbbe0937ba726803fe3640d23",
+      "rezon#79@8289914ec500a1392b10fe1a3774dee166e73b40",
+      "driftguard#3@e815c75ffccf469d9d1c09d58c0050798c8e4f53",
+      "discovery#7@548222c74af9905959433b3d549c2f54abbae662",
       "vera-control-plane#48@e141968fbac172b72d4c5f027b8b367fd9085855",
-      "selfimage#15@72cace47aa1f915a2bb5b40296b410199c1c6d8d",
-      "world-zero#35@9acf067d6c445d1dbd402f7e86d65d1acbd31b01"
+      "selfimage#16@e577ca05b5a02ef7fd0add5aa1b1090298f15570",
+      "world-zero#35@9be13e8e34772a90a812815b074bf21bb89e972a",
+      "vera_model_training#35@039ba0b9c04ec512b7ec40aafd230db5f6e93641"
     ],
     "independent_gates": [
-      "Project Runner PR #12 requires Two exact Systems Architect review",
+      "Project Runner still requires exact independent Systems Architect review on its current integrated Exodus/M6 subject",
       "Rezon R51 requires fresh independent hostile rereview",
-      "DriftGuard R3 requires fresh independent hostile rereview",
-      "ABIL current exact tuple requires fresh Thirteen/Six/Nine/Four facets, then Patrick written-design acceptance"
-    ]
+      "DriftGuard R4 requires fresh independent hostile rereview",
+      "ABIL requires fresh exact Thirteen/Six/Nine/Four facets before One reconciliation and Patrick design acceptance"
+    ],
+    "lantern_currentness": "UNKNOWN because exact WoWSQL target bt2-479e4ad9 still fails before V3 preflight; no fallback."
   },
   "controlling_contracts": [
     "thebrazenbeard/bt2@30e81cadd94fae117a7f6875523c03251c7c9f6e:native/project/PROJECT_INSTRUCTIONS_V3.md",
@@ -106,7 +111,10 @@
     "messages/20260919T1927-one-project-runner-pr12-two-rereview.md",
     "messages/20260919T1921-one-r51-discovery-current-qualification.md",
     "messages/20260919T1918-one-vcp-pr48-integrated-provider-controller-cut.md",
-    "messages/20260919T1914-one-archive-continuity-independent-gates.md"
+    "messages/20260919T1914-one-archive-continuity-independent-gates.md",
+    "checkpoints/one/ONE_EXODUS_FINAL_20260919T2115-0400.md",
+    "checkpoints/bt2-coordinator/BT2_COORDINATOR_ONE_EXODUS_HANDOFF_20260919T2117-0400.md",
+    "messages/20260919T2100-one-driftguard-r4-exodus-handoff-hostile-rereview.md"
   ],
   "retired_chat_required": false
 }
