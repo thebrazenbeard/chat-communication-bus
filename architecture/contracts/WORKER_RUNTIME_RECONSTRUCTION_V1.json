@@ -1,0 +1,111 @@
+{
+  "schema_version": "WORKER_RUNTIME_RECONSTRUCTION_V1",
+  "status": "EXODUS_CANDIDATE_REVIEW_REQUIRED",
+  "purpose": "Remove permanent ChatGPT conversation dependency from worker identity, assignment, authority, recovery, and coordination.",
+  "persistent_human_interfaces": [
+    "Vera",
+    "Vera Control Plane Coordinator",
+    "BT2 Coordinator"
+  ],
+  "terminal_rule": {
+    "execution_environments_are_terminals": true,
+    "examples": [
+      "ChatGPT conversation",
+      "Work task",
+      "API runtime",
+      "CLI session",
+      "model invocation",
+      "subagent"
+    ],
+    "terminal_is_durable_identity": false,
+    "terminal_is_memory_authority": false,
+    "terminal_is_assignment_authority": false,
+    "terminal_is_effect_authority": false
+  },
+  "reconstruction_order": [
+    "READ_TARGET_PROJECT_CURRENTNESS_AND_GOVERNANCE",
+    "READ_RADAR_TOPOLOGY_FOR_CURRENT_WRITER_ROUTE",
+    "READ_CURRENT_DURABLE_ASSIGNMENT_OR_FRONTIER",
+    "READ_WORKER_OR_PROJECT_ROLE_CONTRACT_IF_ONE_EXISTS",
+    "REFRESH_EXACT_HEAD_REVIEW_PROVIDER_AND_EFFECT_EVIDENCE",
+    "INSTANTIATE_TEMPORARY_RUNTIME_WITH_ONLY_CURRENT_BOUNDED_AUTHORITY"
+  ],
+  "writer_identity_semantics": {
+    "source": "architecture/contracts/RADAR_TOPOLOGY_V1.json",
+    "standing_project_role_implied": false,
+    "standing_effect_authority_implied": false,
+    "branch_name_implies_memory": false,
+    "missing_assignment_behavior": "IDLE_OR_WAITING_NOT_INFER_FROM_CHAT_HISTORY"
+  },
+  "execution_label_classes": {
+    "SD1-E": {
+      "class": "CHAT_LOCAL_EXECUTION_LANE",
+      "separate_identity": false,
+      "durable_state_sources": [
+        "thebrazenbeard/sexuality",
+        "thebrazenbeard/vera",
+        "thebrazenbeard/vera-control-plane"
+      ]
+    },
+    "SD1-V": {
+      "class": "CHAT_LOCAL_REVIEW_LANE",
+      "separate_identity": false,
+      "durable_state_sources": [
+        "thebrazenbeard/sexuality",
+        "thebrazenbeard/vera",
+        "thebrazenbeard/vera-control-plane"
+      ]
+    },
+    "BV": {
+      "class": "CHAT_LOCAL_EXECUTION_LANE",
+      "separate_identity": false,
+      "durable_identity": "vera",
+      "durable_state_sources": [
+        "thebrazenbeard/vera",
+        "thebrazenbeard/vera-control-plane",
+        "thebrazenbeard/chat-communication-bus"
+      ]
+    },
+    "VW": {
+      "class": "PROJECT_EXECUTION_LANE",
+      "separate_identity": false,
+      "durable_state_sources": [
+        "thebrazenbeard/vera-works",
+        "thebrazenbeard/chat-communication-bus"
+      ]
+    }
+  },
+  "project_identity_examples": {
+    "Radar": {
+      "repository": "thebrazenbeard/chat-communication-bus",
+      "role_contract": "RADAR.md",
+      "authority_contract": "architecture/contracts/RADAR_AUTHORITY_V1.md"
+    },
+    "Noah": {
+      "repository": "thebrazenbeard/hc-brain",
+      "role_contract": "WARDEN.md",
+      "currentness": "CURRENT.md"
+    },
+    "Four": {
+      "repository": "thebrazenbeard/hc-brain",
+      "role_contract": "WARDEN.md",
+      "standing_effect_authority_from_bus_identity": false
+    },
+    "Parallax": {
+      "repository": "thebrazenbeard/chat-communication-bus",
+      "topology_source": "architecture/contracts/RADAR_TOPOLOGY_V1.json",
+      "standing_effect_authority": false
+    }
+  },
+  "forbidden_recovery_dependencies": [
+    "chat_url",
+    "chat_title",
+    "conversation_id_as_current_state",
+    "browser_tab_presence",
+    "remembered_prompt_not_in_durable_source",
+    "named_permanent_worker_chat",
+    "hidden_chat_state"
+  ],
+  "protected_effect_rule": "Current exact Patrick authority remains separately required where governing project contracts require it. Worker reconstruction never manufactures protected-effect authority.",
+  "slack_boundary": "Slack may be a future Vera interface/transport, but is not a system of record, worker state store, or alternate coordination bus unless separately authorized and implemented."
+}

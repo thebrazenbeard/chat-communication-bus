@@ -27,7 +27,8 @@ def test_stale_vera_lane_is_explicitly_superseded_by_topology():
     text = (ROOT / "docs" / "protocol" / "VERA_PROJECT_IDENTITY_AND_ATTUNEMENT_V1.md").read_text(encoding="utf-8")
     assert "ROUTE SUPERSEDED BY CURRENT TOPOLOGY" in text
     assert "`bus/vera-v2`" in text
-    assert "Historical `bus/vera-sol-v1` remains provenance only" in text
+    historical = (ROOT / "architecture" / "contracts" / "RADAR_WRITER_LANE_V2_CUTOVER.json").read_text(encoding="utf-8")
+    assert "bus/vera-sol-v1" in historical
 
 
 def test_slack_relay_design_is_not_current_coordination_authority():
