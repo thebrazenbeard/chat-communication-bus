@@ -43,6 +43,7 @@
     "resolver": "GITHUB_COMMIT_PATH_READBACK_V1",
     "immutable_subject": [
       "repository",
+      "repository_id",
       "commit_sha",
       "path",
       "git_blob"
@@ -50,6 +51,7 @@
     "movable_ref_is_provenance_only": true,
     "materialization_requires_exact_resolver": true,
     "resolver_claim": "GITHUB_API_COMMIT_PATH_BLOB_READBACK_V1",
-    "byte_claim": "EXACT_GIT_BLOB_BYTES"
+    "byte_claim": "EXACT_GIT_BLOB_BYTES",
+    "repository_identity": "GITHUB_IMMUTABLE_REPOSITORY_ID"
   }
 }
