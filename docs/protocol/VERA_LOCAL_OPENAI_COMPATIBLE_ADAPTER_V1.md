@@ -52,5 +52,7 @@ The builder creates:
 - deterministic Chat Completions JSON payload;
 - payload SHA-256.
 
+The request payload is stored as canonical immutable JSON plus SHA-256; access returns a fresh decoded object, so post-validation dict mutation cannot silently change the submitted bytes. The request object also revalidates loopback URL, model identity, message roles, streaming mode, canonical serialization, and digest at construction.
+
 It performs no HTTP request and grants no provider execution, cost, credential,
 tool, merge, deploy, or runtime-cutover authority.
