@@ -1,0 +1,28 @@
+{
+  "schema": "VERA_CROSS_PROVIDER_REPLAY_V1",
+  "version": 1,
+  "status": "SOURCE_CANDIDATE",
+  "execution_effect": "NONE_EXTERNAL_OUTPUTS_ONLY",
+  "invariant_kinds": [
+    "REQUIRED_LITERAL",
+    "FORBIDDEN_LITERAL"
+  ],
+  "observed_run_claim": "EXTERNAL_OUTPUT_OBSERVATION_ONLY",
+  "case_claim": "FROZEN_OBSERVABLE_TEXT_INVARIANTS_ONLY",
+  "report_claim": "OBSERVABLE_INVARIANT_RESULTS_ONLY_NOT_IDENTITY_EQUIVALENCE",
+  "required_report_properties": [
+    "SAME_ENVELOPE_DIGEST",
+    "UNIQUE_RUN_IDS",
+    "AT_LEAST_TWO_DISTINCT_PROVIDERS",
+    "OUTPUT_SHA256_MATCH"
+  ],
+  "prohibited_promotions": [
+    "IDENTITY_EQUIVALENCE",
+    "SAME_MIND",
+    "HIDDEN_STATE_EQUIVALENCE",
+    "CONSCIOUSNESS_EQUIVALENCE",
+    "CAUSAL_EQUIVALENCE",
+    "FULL_BEHAVIORAL_EQUIVALENCE",
+    "PROVIDER_INTERCHANGEABILITY"
+  ]
+}
