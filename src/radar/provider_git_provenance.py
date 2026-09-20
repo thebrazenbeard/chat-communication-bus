@@ -25,6 +25,9 @@ _GITHUB_API = "https://api.github.com"
 def _validate_repository(repository: str) -> str:
     if type(repository) is not str or not _REPOSITORY_RE.fullmatch(repository):
         raise ValueError("repository must be exact GitHub owner/name")
+    owner, name = repository.split("/", 1)
+    if owner in (".", "..") or name in (".", ".."):
+        raise ValueError("repository contains ambiguous path segment")
     return repository
 
 
@@ -62,6 +65,7 @@ def _github_get_json(url: str, *, token: str | None, timeout: float) -> Any:
 @dataclass(frozen=True)
 class GitHubProvenanceReceipt:
     repository: str
+    repository_id: int
     commit_sha: str
     path: str
     git_blob: str
@@ -69,6 +73,12 @@ class GitHubProvenanceReceipt:
 
     def __post_init__(self) -> None:
         _validate_repository(self.repository)
+        if (
+            type(self.repository_id) is not int
+            or isinstance(self.repository_id, bool)
+            or self.repository_id <= 0
+        ):
+            raise ValueError("repository_id must be a positive exact integer")
         _validate_git_path(self.path)
         for value, label in (
             (self.commit_sha, "commit_sha"),
@@ -106,6 +116,17 @@ class GitHubCommitPathResolver:
         repository = _validate_repository(reference.repository)
         path = _validate_git_path(reference.path)
         owner_repo = quote(repository, safe="/")
+        repository_url = f"{_GITHUB_API}/repos/{owner_repo}"
+        repository_readback = _github_get_json(
+            repository_url, token=self._token, timeout=self._timeout
+        )
+        if type(repository_readback) is not dict:
+            raise ValueError("GitHub repository readback was not an object")
+        if repository_readback.get("full_name") != repository:
+            raise ValueError("GitHub repository full-name readback mismatch")
+        if repository_readback.get("id") != reference.repository_id:
+            raise ValueError("GitHub repository id readback mismatch")
+
         commit_url = (
             f"{_GITHUB_API}/repos/{owner_repo}/git/commits/{reference.commit_sha}"
         )
@@ -134,6 +155,7 @@ class GitHubCommitPathResolver:
 
         return GitHubProvenanceReceipt(
             repository=repository,
+            repository_id=reference.repository_id,
             commit_sha=reference.commit_sha,
             path=path,
             git_blob=reference.git_blob,
