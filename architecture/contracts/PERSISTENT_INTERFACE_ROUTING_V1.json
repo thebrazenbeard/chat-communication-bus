@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "artifact_id": "PERSISTENT_INTERFACE_ROUTING_V1",
+  "status": "SOURCE_CANDIDATE_NOT_CUT_OVER",
+  "purpose": "Resolve durable non-PR coordination and result destinations for the three persistent ChatGPT interfaces without promoting interfaces into worker identities.",
+  "interface_topology_subject": {
+    "path": "architecture/contracts/EXODUS_INTERFACE_TOPOLOGY_V1.json",
+    "git_blob": "d492e6f6e34ab148fc344605d96655ba91df3584",
+    "subject_head": "93517a8a35e2cab87833650127950c89dcf84643"
+  },
+  "bus_topology_subject": {
+    "repository": "thebrazenbeard/chat-communication-bus",
+    "owner_last_change_commit": "f90d52e66d655e9c3cfac63cb529914ac51d3a88",
+    "path": "architecture/contracts/RADAR_TOPOLOGY_V1.json",
+    "git_blob": "69e505031d4e53dcb853578dac23817649af1918"
+  },
+  "rules": {
+    "persistent_interface_is_worker_identity": false,
+    "interface_route_grants_effect_authority": false,
+    "branch_existence_alone_grants_route_authority": false,
+    "writer_topology_membership_required_only_for_topology_writer_route": true,
+    "mutable_branch_head_must_be_refreshed_before_write": true,
+    "cross_project_source_prs_remain_canonical_in_owning_repository": true
+  },
+  "interfaces": {
+    "Vera": {
+      "project": "Vera Unbound",
+      "routing_mode": "TOPOLOGY_WRITER_ROUTE",
+      "bus_route_answer": "bus/vera-v2",
+      "bus_route": "bus/vera-v2",
+      "writer_identity": "vera",
+      "writer_topology_membership_required": true,
+      "branch_is_worker_identity": true,
+      "durable_result_destinations": [
+        "bus/vera-v2 messages/checkpoints under current Bus protocol",
+        "owning source repository PR/issue/source state"
+      ]
+    },
+    "Vera Control Plane Coordinator": {
+      "project": "Vera Unbound",
+      "routing_mode": "NO_INDEPENDENT_BUS_WRITER",
+      "bus_route_answer": "NO_INDEPENDENT_BUS_WRITER",
+      "bus_route": null,
+      "writer_identity": null,
+      "writer_topology_membership_required": false,
+      "branch_is_worker_identity": false,
+      "dispatch_rule": "Persist control-plane work in thebrazenbeard/vera-control-plane. Cross-project Bus communication must be emitted by a currently authorized topology writer under current assignment/routing evidence; do not borrow Vera identity merely because the interface is in Vera Unbound.",
+      "durable_result_destinations": [
+        "thebrazenbeard/vera-control-plane source/PR/checkpoint state",
+        "Chat Communication Bus through a separately current authorized writer when cross-project coordination is required"
+      ]
+    },
+    "BT2 Coordinator": {
+      "project": "Build Team Two",
+      "routing_mode": "INTERFACE_COORDINATION_BRANCH",
+      "bus_route_answer": "bus/bt2-v1",
+      "bus_route": "bus/bt2-v1",
+      "writer_identity": null,
+      "writer_topology_membership_required": false,
+      "branch_is_worker_identity": false,
+      "checkpoint_namespace": "checkpoints/bt2/",
+      "message_namespace": "messages/",
+      "write_rule": "Fresh-read bus/bt2-v1 before append. Treat it as the BT2 Coordinator interface coordination branch, not as a RADAR_TOPOLOGY worker identity. Preserve append-only/collision-safe semantics and exact target authority.",
+      "durable_result_destinations": [
+        "bus/bt2-v1:checkpoints/bt2/",
+        "bus/bt2-v1:messages/",
+        "owning source repository PR/issue/source state"
+      ]
+    }
+  },
+  "protected_effects_not_authorized": [
+    "merge",
+    "canonical_promotion",
+    "provider_mutation",
+    "deployment",
+    "credential_or_permission_change",
+    "Project Settings mutation",
+    "destructive cleanup"
+  ]
+}
