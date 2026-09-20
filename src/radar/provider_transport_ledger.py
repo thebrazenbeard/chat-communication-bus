@@ -184,7 +184,7 @@ class TransportLedger:
                 """
                 SELECT a.attempt_id
                   FROM transport_attempts AS a
-                  JOIN transport_observations AS o
+             LEFT JOIN transport_observations AS o
                     ON o.sequence = (
                         SELECT MAX(o2.sequence)
                           FROM transport_observations AS o2
@@ -195,7 +195,10 @@ class TransportLedger:
                    AND a.adapter_version = ?
                    AND a.request_url = ?
                    AND a.request_sha256 = ?
-                   AND o.state = ?
+                   AND (
+                        o.sequence IS NULL
+                        OR o.state = ?
+                   )
                  LIMIT 1
                 """,
                 (
@@ -209,7 +212,7 @@ class TransportLedger:
             ).fetchone()
             if unresolved is not None:
                 raise ValueError(
-                    "unresolved UNKNOWN_DELIVERY blocks new attempt registration"
+                    "unresolved transport attempt blocks new attempt registration"
                 )
 
             connection.execute(
