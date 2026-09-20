@@ -51,7 +51,7 @@ If another unexpired valid holder exists, acquisition fails closed.
 
 A takeover after expiry/invalidation allocates a strictly newer fence token. Token gaps are acceptable; token reuse is not.
 
-A retry with the same `operation_id` returns the already-recorded result rather than allocating another generation.
+A retry is idempotent only within the exact namespace `(assignment_id, operation_kind, operation_id)`. Reusing the same `operation_id` for a different assignment or a different operation kind is a distinct operation and must not alias a prior result. A retry with the same full namespace key returns the already-recorded result rather than allocating another generation.
 
 ## Renew
 
@@ -85,7 +85,7 @@ Durable assignment authority and Patrick's protected-effect gates remain separat
 
 ## Security boundary
 
-Future mutating claim functions are service-role-only. `public`, `anon`, and `authenticated` must not receive execute permission.
+Future mutating claim functions are service-role-only. `public`, `anon`, and `authenticated` must not receive execute permission. The implementation must persist or enforce idempotency with a collision-proof uniqueness key over `assignment_id`, `operation_kind`, and `operation_id` (or an equivalent exact namespace with the same semantics).
 
 This ADR does not authorize application of any future migration.
 
