@@ -48,6 +48,21 @@ def test_fencing_design_requires_idempotency_and_stale_rejection():
     assert d["assignment_successor_binding"]["superseded_assignment_event_rejected"] is True
 
 
+
+def test_fencing_design_idempotency_namespace_is_collision_proof():
+    d = load()
+    idem = d["idempotency"]
+    assert idem["namespace_fields"] == ["assignment_id", "operation_kind", "operation_id"]
+    assert set(idem["operation_kinds"]) == {"ACQUIRE", "RENEW", "RELEASE_OR_FINALIZE"}
+    assert idem["uniqueness_required"] is True
+    assert idem["same_namespace_key_returns_recorded_result"] is True
+    assert idem["operation_id_reuse_across_assignments_is_independent"] is True
+    assert idem["operation_id_reuse_across_operation_kinds_is_independent"] is True
+    assert idem["collision_outside_exact_namespace_key_forbidden"] is True
+    assert d["acquire"]["idempotency_namespace"] == ["assignment_id", "ACQUIRE", "operation_id"]
+    assert d["renew"]["idempotency_namespace"] == ["assignment_id", "RENEW", "operation_id"]
+    assert d["release_or_finalize"]["idempotency_namespace"] == ["assignment_id", "RELEASE_OR_FINALIZE", "operation_id"]
+
 def test_fencing_design_preserves_protected_effect_separation():
     d = load()
     authority = d["authority_separation"]
