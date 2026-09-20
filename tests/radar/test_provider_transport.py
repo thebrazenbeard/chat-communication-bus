@@ -138,14 +138,15 @@ def test_confirmed_response_requires_2xx_and_response_digest():
         )
 
 
-def test_rejected_response_cannot_carry_2xx():
+@pytest.mark.parametrize("status", [101, 204])
+def test_rejected_response_requires_terminal_non_2xx_status(status):
     i = intent()
-    with pytest.raises(ValueError, match="cannot carry 2xx"):
+    with pytest.raises(ValueError, match="requires 3xx-5xx"):
         TransportObservation(
             attempt_id=i.attempt_id,
             intent_digest=i.digest,
             state=TransportState.REJECTED_HTTP_RESPONSE,
-            http_status=204,
+            http_status=status,
             response_sha256=digest("response"),
         )
 
