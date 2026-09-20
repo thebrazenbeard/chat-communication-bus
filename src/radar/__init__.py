@@ -4,6 +4,13 @@ Provides routing, envelope classification, node status tracking, and telemetry
 for the chat communication bus control plane.
 """
 
+# Actions execution evidence
+from .actions_evidence import (
+    ActionsExecutionClass,
+    ActionsExecutionEvidence,
+    classify_actions_jobs,
+)
+
 # Envelope handling
 from .envelope import EnvelopeClassification, EnvelopeResult, RadarEnvelope
 
@@ -19,6 +26,10 @@ from .heartbeat import HeartbeatRuntime
 from .telemetry import HEARTBEAT_INTERVAL_MS, TelemetrySnapshot, TelemetryStore
 
 __all__ = [
+    # Actions execution evidence
+    "ActionsExecutionClass",
+    "ActionsExecutionEvidence",
+    "classify_actions_jobs",
     # Envelope handling
     "EnvelopeClassification",
     "EnvelopeResult",
