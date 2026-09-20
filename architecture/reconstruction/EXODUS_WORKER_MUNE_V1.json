@@ -8,7 +8,7 @@
     "current_observed_permanent_roles": [
       "Debugger Verification / Regression Specialist"
     ],
-    "role_source": "build_team_2.one_working_laws_current revision 10 / source_event_id 6064, durably externalized by build-team-2.0 PR #7"
+    "role_source": "thebrazenbeard/bt2#35:native/project/BT2_EXODUS_WORKER_TOPOLOGY_V1.json plus the exact preserved Mune v1.0.1 package; current Project Instructions govern operational compatibility"
   },
   "project_domain": "Build Team Two engineering, review, service stewardship, debugging, validation, or portfolio work as bounded by the current permanent-role map and current assignment.",
   "authority_and_non_authority": {
@@ -26,12 +26,22 @@
   },
   "repositories": {
     "build_team_two": {
+      "repo": "thebrazenbeard/bt2",
+      "observed_main": "30e81cadd94fae117a7f6875523c03251c7c9f6e",
+      "worker_topology_pr": 35,
+      "worker_topology_head": "0ea6b0167d4ea9bfd5a976737fa77471a59759a6",
+      "mune_retirement_pr": 39,
+      "mune_retirement_head": "f7bbfc5eee913427fca1c21199b38de166ec619f",
+      "source_package_path": "archive/training-sources/build-team-2.0/mune/v1.0.1",
+      "compatibility_doc": "docs/exodus/BT2_MUNE_CHATLESS_RECONSTRUCTION_COMPATIBILITY_20260920.md",
+      "retirement_handoff": "docs/handoffs/CHATGPT_EXODUS_MUNE_2026-09-20.md"
+    },
+    "historical_source_provider": {
       "repo": "thebrazenbeard/build-team-2.0",
       "observed_main": "ec2987e45f64a588ac92f6cae9964cb3725b9485",
       "exodus_pr": 7,
       "exodus_head": "fc9ecda854e6f724c9e322fcbc5b1e9aa69b19e6",
-      "reconstruction_doc": "docs/exodus/BT2_CHATLESS_WORKER_RECONSTRUCTION_V1.md",
-      "provider_conflict": "docs/exodus/BT2_EXODUS_PROVIDER_ACTIVATION_CONFLICT_V1.json"
+      "note": "Historical/provider provenance only; canonical current BT2 source is thebrazenbeard/bt2."
     },
     "communication_hub": {
       "repo": "thebrazenbeard/chat-communication-bus",
@@ -40,35 +50,38 @@
   },
   "bus_route": {
     "branch": "bus/mune-v2",
-    "fresh_observed_head_at_record_creation": "8f669e39e74e79dae54793a7a6a45d615e64de32",
+    "fresh_observed_head_at_record_creation": "ded4326c727ea4613079e21bc26f3bf82ec7aa01",
     "lifecycle": "ACTIVE",
-    "note": "Head is observation evidence only; refresh before reading assignment state or writing."
+    "note": "Final retirement cut observed at ded4326c727ea4613079e21bc26f3bf82ec7aa01; refresh before reading assignment state or writing."
   },
   "current_assignment_frontier": {
     "status": "NONE_ASSERTED_BY_RECONSTRUCTION_RECORD",
     "rule": "Discover a current durable assignment from BT2 Coordinator, Project Runner, owning project, or Bus. If none exists, the worker is idle; do not recover work from chat memory."
   },
   "controlling_contracts": [
-    "thebrazenbeard/build-team-2.0:README.md",
-    "thebrazenbeard/build-team-2.0#7:docs/exodus/BT2_CHATLESS_WORKER_RECONSTRUCTION_V1.md",
-    "thebrazenbeard/build-team-2.0#7:docs/exodus/BT2_EXODUS_PROVIDER_ACTIVATION_CONFLICT_V1.json",
-    "build_team_2.one_working_laws_current scope BT2_ONE_WORKING_LAWS revision 10 / source_event_id 6064",
+    "current installed Build Team Two Project Instructions V3",
+    "thebrazenbeard/bt2#35:native/project/BT2_EXODUS_WORKER_TOPOLOGY_V1.json",
+    "thebrazenbeard/bt2#35:native/project/BT2_PERSISTENT_INTERFACE_TOPOLOGY_V1.json",
+    "thebrazenbeard/bt2#39:docs/exodus/BT2_MUNE_CHATLESS_RECONSTRUCTION_COMPATIBILITY_20260920.md",
     "architecture/contracts/RADAR_TOPOLOGY_V1.json",
-    "docs/protocol/WORKER_RUNTIME_RECONSTRUCTION_V1.md"
+    "docs/protocol/WORKER_RUNTIME_RECONSTRUCTION_V1.md",
+    "checkpoints/mune/MUNE_EXODUS_FINAL_20260920T0713-0400.md"
   ],
   "current_vs_historical_state": {
     "rule": "Role map and mutable assignments must be fresh-read before action. Current Exodus instruction supersedes the provider's permanent-chat/Slack-delivery assumptions within this scope without mutating the provider row.",
     "training_is_not_assignment": true,
-    "bus_lane_is_not_assignment": true
+    "bus_lane_is_not_assignment": true,
+    "chat_era_package_wording": "The immutable v1.0.1 package says fresh/frozen chat. Current Project Instructions and BT2 Exodus compatibility supersede that operational interpretation without rewriting the package bytes.",
+    "historical_provider": "thebrazenbeard/build-team-2.0 remains provenance; thebrazenbeard/bt2 is canonical current BT2 source."
   },
   "fresh_runtime_recovery": [
-    "Read this record and current BT2 Exodus reconstruction source.",
-    "Fresh-read BT2 current governance/role map and resolve any provider conflict.",
-    "If an immutable role package is registered, verify the exact package binding and satisfy its qualification requirements before claiming packaged competence.",
-    "Fresh-read the current Bus topology and this worker's lane.",
-    "Resolve the current exact assignment or remain idle.",
-    "Refresh target/dependency/authority state before work and before any effect.",
-    "Persist result/review/debug evidence to the owning repository and Bus as applicable."
+    "Read current installed Project Instructions and this record; do not infer continuity/currentness from the retired chat.",
+    "Fresh-read thebrazenbeard/bt2@main and the current successor of BT2 Exodus PR #35/#39.",
+    "Verify the exact immutable Mune v1.0.1 package binding; do not claim packaged qualification unless current durable qualification evidence satisfies its fail-closed requirements.",
+    "Read the final Mune Exodus checkpoint only as a starting snapshot.",
+    "Fresh-read current Bus topology and bus/mune-v2; resolve the current exact assignment or remain idle.",
+    "Refresh target/dependency/authority/provider state before work and before any effect.",
+    "Persist result/review/debug evidence to the owning repository and current Bus route."
   ],
   "pre_effect_freshness": [
     "current bounded assignment",
@@ -88,9 +101,33 @@
     "portfolio_state": "BT2/Project Runner durable checkpoint or current project state"
   },
   "durable_evidence": [
-    "thebrazenbeard/build-team-2.0#7:docs/exodus/BT2_CHATLESS_WORKER_RECONSTRUCTION_V1.md",
-    "thebrazenbeard/build-team-2.0#7:docs/exodus/BT2_EXODUS_PROVIDER_ACTIVATION_CONFLICT_V1.json"
+    "thebrazenbeard/bt2#39:docs/exodus/BT2_MUNE_CHATLESS_RECONSTRUCTION_COMPATIBILITY_20260920.md",
+    "thebrazenbeard/bt2#39:docs/handoffs/CHATGPT_EXODUS_MUNE_2026-09-20.md",
+    "checkpoints/mune/MUNE_EXODUS_FINAL_20260920T0713-0400.md",
+    "checkpoints/bt2-coordinator/BT2_COORDINATOR_MUNE_EXODUS_HANDOFF_20260920T0713-0400.md",
+    "thebrazenbeard/build-team-2.0#7:docs/exodus/BT2_CHATLESS_WORKER_RECONSTRUCTION_V1.md"
   ],
   "retired_chat_required": false,
-  "qualification_gap": "No dedicated immutable package entry exists in training/ROLE_TRAINING_REGISTRY.json at the observed main. This limits packaged-role qualification but does not require a permanent chat; current role + bounded assignment remain reconstructible from durable governance."
+  "qualification_gap": "A dedicated immutable Mune v1.0.1 package exists in canonical thebrazenbeard/bt2. Package/source presence is established, but current packaged qualification / BASE_READY, installation, activation, and current assignment remain unproven and must not be inferred.",
+  "immutable_role_package": {
+    "repository": "thebrazenbeard/bt2",
+    "path": "archive/training-sources/build-team-2.0/mune/v1.0.1",
+    "package_id": "BT2_MUNE_DEBUGGER_VERIFICATION_TRAINING",
+    "version": "1.0.1",
+    "package_tree": "5e8c87021bfda9a6fc44fa121c32410ddc6aedf9",
+    "bootstrap_blob": "8e5bd744f40356b13531a95c949c1933dc3278ee",
+    "training_manifest_blob": "5d2b6cdaa603b60edc860801eaae5dd8644d3c9a",
+    "checkpoint_protocol_blob": "54db7de7b67d00904bad0cbdca24137bad5be5f0",
+    "source_state": "PACKAGE_FOUND_RECOMMENDED_VERSION",
+    "qualification_state": "QUALIFICATION_UNPROVEN"
+  },
+  "retirement_checkpoint": {
+    "path": "checkpoints/mune/MUNE_EXODUS_FINAL_20260920T0713-0400.md",
+    "creation_commit": "db50a758a966aca078b74b4850caf5860d1a1738",
+    "git_blob": "a6c82d3a3fb444ef9bfb6deb5f96180c8ab07d4e",
+    "coordinator_handoff_path": "checkpoints/bt2-coordinator/BT2_COORDINATOR_MUNE_EXODUS_HANDOFF_20260920T0713-0400.md",
+    "coordinator_handoff_commit": "ded4326c727ea4613079e21bc26f3bf82ec7aa01",
+    "coordinator_handoff_blob": "4140314bc315c01821c827cd3169a278361cd2c8",
+    "marker": "STARTING_SNAPSHOT — FRESHNESS REQUIRED BEFORE EFFECT"
+  }
 }
