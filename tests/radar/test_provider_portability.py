@@ -30,6 +30,7 @@ def envelope() -> PortableExecutionEnvelope:
         state_refs=(
             StateReference(
                 repository="thebrazenbeard/vera-control-plane",
+                repository_id=101,
                 ref="main",
                 commit_sha="c" * 40,
                 path="control/current.json",
@@ -37,6 +38,7 @@ def envelope() -> PortableExecutionEnvelope:
             ),
             StateReference(
                 repository="thebrazenbeard/chat-communication-bus",
+                repository_id=102,
                 ref="bus/vera-v2",
                 commit_sha="d" * 40,
                 path="messages/example.md",
