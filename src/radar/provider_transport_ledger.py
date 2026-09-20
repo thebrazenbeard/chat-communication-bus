@@ -11,6 +11,7 @@ from dataclasses import dataclass
 import sqlite3
 
 from .provider_transport import (
+    RetryPosture,
     TransportIntent,
     TransportObservation,
     TransportReceipt,
@@ -271,10 +272,7 @@ class TransportLedger:
             attempt_id=str(row[1]),
             intent_digest=str(row[2]),
             state=TransportState(str(row[3])),
-            retry_posture=__import__(
-                "radar.provider_transport",
-                fromlist=["RetryPosture"],
-            ).RetryPosture(str(row[4])),
+            retry_posture=RetryPosture(str(row[4])),
             http_status=None if row[5] is None else int(row[5]),
             response_sha256=None if row[6] is None else str(row[6]),
             receipt_claim=str(row[7]),
