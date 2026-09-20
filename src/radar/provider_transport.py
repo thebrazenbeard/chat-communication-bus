@@ -184,9 +184,9 @@ class TransportObservation:
                     "CONFIRMED_HTTP_RESPONSE requires 2xx status"
                 )
         elif self.state is TransportState.REJECTED_HTTP_RESPONSE:
-            if 200 <= self.http_status <= 299:
+            if not 300 <= self.http_status <= 599:
                 raise ValueError(
-                    "REJECTED_HTTP_RESPONSE cannot carry 2xx status"
+                    "REJECTED_HTTP_RESPONSE requires 3xx-5xx status"
                 )
 
 
