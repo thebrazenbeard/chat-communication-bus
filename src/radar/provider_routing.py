@@ -28,6 +28,16 @@ def _nonempty(value: str, label: str) -> str:
     return value
 
 
+def _require_sha256(value: str, label: str) -> str:
+    if (
+        type(value) is not str
+        or len(value) != 64
+        or any(ch not in "0123456789abcdef" for ch in value)
+    ):
+        raise ValueError(f"{label} must be a lowercase SHA-256 digest")
+    return value
+
+
 def _digest(payload: object) -> str:
     encoded = json.dumps(
         payload,
@@ -73,6 +83,7 @@ class ProviderRoutePolicy:
     policy_id: str
     ordered_routes: tuple[ProviderRouteKey, ...]
     allow_degraded: bool = False
+    policy_claim: str = "ROUTE_PREFERENCE_INPUT_ONLY_NOT_AUTHORITY"
 
     def __post_init__(self) -> None:
         _nonempty(self.policy_id, "policy_id")
@@ -86,6 +97,8 @@ class ProviderRoutePolicy:
             raise ValueError("ordered_routes must be unique")
         if type(self.allow_degraded) is not bool:
             raise ValueError("allow_degraded must be exact bool")
+        if self.policy_claim != "ROUTE_PREFERENCE_INPUT_ONLY_NOT_AUTHORITY":
+            raise ValueError("unsupported route policy claim")
 
     def payload(self) -> dict[str, object]:
         return {
@@ -93,6 +106,7 @@ class ProviderRoutePolicy:
             "policy_id": self.policy_id,
             "ordered_routes": [item.payload() for item in self.ordered_routes],
             "allow_degraded": self.allow_degraded,
+            "policy_claim": self.policy_claim,
         }
 
     @property
@@ -117,6 +131,8 @@ class ProviderRouteDecision:
     decision_claim: str = "ROUTE_SELECTION_ONLY_NO_EFFECT_AUTHORITY"
 
     def __post_init__(self) -> None:
+        _require_sha256(self.policy_digest, "policy_digest")
+        _require_sha256(self.envelope_digest, "envelope_digest")
         if self.decision_claim != "ROUTE_SELECTION_ONLY_NO_EFFECT_AUTHORITY":
             raise ValueError("unsupported route decision claim")
         if self.state is RouteSelectionState.NO_ROUTE:
@@ -129,10 +145,20 @@ class ProviderRouteDecision:
         else:
             if type(self.route) is not ProviderRouteKey:
                 raise ValueError("selected route requires exact ProviderRouteKey")
-            if type(self.manifest_digest) is not str:
-                raise ValueError("selected route requires manifest digest")
+            _require_sha256(self.manifest_digest, "manifest_digest")
             if type(self.qualification) is not ProviderQualification:
                 raise ValueError("selected route requires qualification")
+            if self.qualification.envelope_digest != self.envelope_digest:
+                raise ValueError("route decision envelope/qualification mismatch")
+            if self.qualification.manifest_digest != self.manifest_digest:
+                raise ValueError("route decision manifest/qualification mismatch")
+            expected = (
+                QualificationState.ELIGIBLE
+                if self.state is RouteSelectionState.SELECTED_ELIGIBLE
+                else QualificationState.DEGRADED
+            )
+            if self.qualification.state is not expected:
+                raise ValueError("route decision qualification state mismatch")
 
 
 def select_provider_route(
