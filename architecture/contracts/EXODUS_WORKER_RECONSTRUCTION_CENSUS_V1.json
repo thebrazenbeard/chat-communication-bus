@@ -72,11 +72,13 @@
       "identity_id": "five",
       "writer": "Five",
       "branch": "bus/five-v2",
-      "observed_head": "b332ca4969b11ac0af3436a33f3c42908356fb88",
+      "observed_head": "2cb636f85f508332950b8cf33ba8535f6cc91916",
       "reconstruction_status": "READY",
       "missing_reconstruction_fields": [],
       "durable_evidence": [
-        "architecture/reconstruction/EXODUS_WORKER_FIVE_V1.json"
+        "architecture/reconstruction/EXODUS_WORKER_FIVE_V1.json",
+        "bus/five-v2:checkpoints/five/FIVE_EXODUS_FINAL_20260920T0605-0400.md",
+        "thebrazenbeard/bt2@30e81cadd94fae117a7f6875523c03251c7c9f6e:archive/training-sources/build-team-2.0/five/v1.0.0/ROLE_CHARTER.md"
       ]
     },
     {
@@ -212,7 +214,10 @@
       "reconstruction_status": "READY",
       "missing_reconstruction_fields": [],
       "durable_evidence": [
-        "architecture/reconstruction/EXODUS_WORKER_THREE_V1.json"
+        "architecture/reconstruction/EXODUS_WORKER_THREE_V1.json",
+        "thebrazenbeard/bt2#33@798c9bd786ad9e459d0e7db0e39851c98d8feda2:docs/handoffs/CHATGPT_EXODUS_THREE_2026-09-20.md",
+        "bus/bt2-v1@49f062bb43ba9d147295f6e4439ba1a74d909f16:checkpoints/bt2/20260920T0608-0400-three-chat-exodus-recovery.md",
+        "thebrazenbeard/bt2#31"
       ]
     },
     {
