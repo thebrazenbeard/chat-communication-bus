@@ -43,7 +43,7 @@ state-object identity in order to satisfy a provider. A movable branch/tag name 
 - logical identity;
 - SHA-256 of the complete instruction/control payload supplied to the adapter;
 - SHA-256 of the user/task input;
-- Git state claims that must be independently read back as exact repository + commit + path -> blob before materialization;
+- Git state claims that must be independently read back as exact repository name + immutable repository ID + commit + path -> blob before materialization;
 - required provider capabilities;
 - preferred capabilities;
 - prohibited effects;
@@ -57,7 +57,7 @@ fields were serialized in a different order.
 A `StateReference` is a claim until it survives independent GitHub readback.
 `GitHubCommitPathResolver` verifies, through GitHub's read-only API:
 
-- the named `owner/repository` exists and exposes the exact commit object;
+- the named `owner/repository` exists, its immutable GitHub repository ID matches the envelope, and it exposes the exact commit object;
 - the exact 40-hex commit SHA resolves as that commit;
 - the exact path exists at that commit and is a file;
 - GitHub reports the exact blob SHA named by the envelope.
@@ -77,7 +77,7 @@ bytes supplied to the provider adapter:
 - substitute/caller-defined provenance resolvers are rejected.
 
 This establishes a bounded source claim:
-`GITHUB_API_COMMIT_PATH_BLOB_READBACK + EXACT_BYTE_MATCH`.
+`GITHUB_REPOSITORY_ID + COMMIT_PATH_BLOB_READBACK + EXACT_BYTE_MATCH`.
 
 It does not make GitHub infallible, prove remote provider behavior, or establish
 behavioral equivalence between runtimes.
