@@ -11,7 +11,7 @@ about provider consumption, model behavior, or successful task completion.
 ## Transport intent
 
 A TransportIntent binds:
-- unique attempt id;
+- attempt id, scoped by the exact intent digest (global uniqueness requires a later durable attempt ledger);
 - exact adapter execution-plan digest;
 - exact envelope, manifest, and route-policy digests;
 - provider / model / adapter identity;
