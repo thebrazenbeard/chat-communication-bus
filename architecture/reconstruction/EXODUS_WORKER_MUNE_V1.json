@@ -8,73 +8,92 @@
     "current_observed_permanent_roles": [
       "Debugger Verification / Regression Specialist"
     ],
-    "role_source": "build_team_2.one_working_laws_current revision 10 / source_event_id 6064, durably externalized by build-team-2.0 PR #7"
+    "role_source": "Canonical BT2-preserved BT2_MUNE_DEBUGGER_VERIFICATION_TRAINING v1.0.1, constrained by current Project Instructions and assignment."
   },
-  "project_domain": "Build Team Two engineering, review, service stewardship, debugging, validation, or portfolio work as bounded by the current permanent-role map and current assignment.",
+  "project_domain": "Build Team Two engineering, independent debugging, regression/hostile verification, currentness/provenance review, and bounded project validation as constrained by current governance and assignment.",
   "authority_and_non_authority": {
     "may": [
-      "perform the current bounded role and assignment using evidence/currentness rules",
-      "produce source/review/debug/validation artifacts within current assignment scope",
-      "challenge or escalate according to the current role"
+      "perform the current bounded role and assignment using exact-subject and currentness discipline",
+      "produce source/review/debug/validation evidence within current assignment scope",
+      "challenge, reproduce, regress, and escalate according to current governance"
     ],
     "may_not_without_current_authority": [
-      "infer external write authority from role, tools, route, training, or prior success",
-      "merge/deploy/install/change credentials or permissions/perform protected provider or machine effects absent the current controlling authority",
-      "recover current assignment or authority from a retired chat"
+      "infer external write authority from role, tools, route, training source, qualification evidence, or prior success",
+      "merge/deploy/install/change credentials or permissions/perform protected provider or machine effects absent current controlling authority",
+      "recover current assignment, authority, or currentness from a retired chat"
     ],
-    "lease_rule": "External service mutation remains subject to the current Owner/Warden lease model or an exact current user authorization; the reconstruction record itself grants no lease."
+    "lease_rule": "External service mutation remains subject to current Owner/Warden/assignment lease rules or exact current user authorization; this reconstruction record grants no lease."
   },
   "repositories": {
     "build_team_two": {
-      "repo": "thebrazenbeard/build-team-2.0",
-      "observed_main": "ec2987e45f64a588ac92f6cae9964cb3725b9485",
-      "exodus_pr": 7,
-      "exodus_head": "fc9ecda854e6f724c9e322fcbc5b1e9aa69b19e6",
-      "reconstruction_doc": "docs/exodus/BT2_CHATLESS_WORKER_RECONSTRUCTION_V1.md",
-      "provider_conflict": "docs/exodus/BT2_EXODUS_PROVIDER_ACTIVATION_CONFLICT_V1.json"
+      "repo": "thebrazenbeard/bt2",
+      "observed_main": "30e81cadd94fae117a7f6875523c03251c7c9f6e",
+      "exodus_reconciliation_pr": 35,
+      "exodus_reconciliation_head": "0ea6b0167d4ea9bfd5a976737fa77471a59759a6",
+      "mune_retirement_pr": 39,
+      "mune_retirement_head": "f7bbfc5eee913427fca1c21199b38de166ec619f",
+      "source_path": "archive/training-sources/build-team-2.0/mune/v1.0.1",
+      "package_tree": "5e8c87021bfda9a6fc44fa121c32410ddc6aedf9",
+      "bootstrap_blob": "8e5bd744f40356b13531a95c949c1933dc3278ee",
+      "manifest_blob": "5d2b6cdaa603b60edc860801eaae5dd8644d3c9a",
+      "checkpoint_protocol_blob": "54db7de7b67d00904bad0cbdca24137bad5be5f0",
+      "chatless_compatibility": "docs/exodus/BT2_MUNE_CHATLESS_RECONSTRUCTION_COMPATIBILITY_20260920.md",
+      "retirement_handoff": "docs/handoffs/CHATGPT_EXODUS_MUNE_2026-09-20.md"
     },
     "communication_hub": {
       "repo": "thebrazenbeard/chat-communication-bus",
-      "topology_git_blob": "69e505031d4e53dcb853578dac23817649af1918"
+      "topology_git_blob": "69e505031d4e53dcb853578dac23817649af1918",
+      "primary_exodus_pr": 140,
+      "primary_exodus_head": "2461df3a1a8393d4c7ded227afb17ecc7abfacb3"
+    },
+    "historical_source_lineage": {
+      "repo": "thebrazenbeard/build-team-2.0",
+      "note": "Historical provenance only. Current reconstruction uses the canonical bt2-preserved package and current Project Instructions; old provider/permanent-chat assumptions are not current recovery requirements."
     }
   },
   "bus_route": {
     "branch": "bus/mune-v2",
-    "fresh_observed_head_at_record_creation": "8f669e39e74e79dae54793a7a6a45d615e64de32",
+    "fresh_observed_retirement_head": "ded4326c727ea4613079e21bc26f3bf82ec7aa01",
     "lifecycle": "ACTIVE",
-    "note": "Head is observation evidence only; refresh before reading assignment state or writing."
+    "note": "The head is observation evidence only. Refresh current topology and lane before assignment reads or writes."
   },
   "current_assignment_frontier": {
     "status": "NONE_ASSERTED_BY_RECONSTRUCTION_RECORD",
-    "rule": "Discover a current durable assignment from BT2 Coordinator, Project Runner, owning project, or Bus. If none exists, the worker is idle; do not recover work from chat memory."
+    "rule": "Discover a current durable assignment from BT2 Coordinator, Project Runner, owning project, or Bus. If none exists, Mune is idle; never recover work from retired-chat memory."
   },
   "controlling_contracts": [
-    "thebrazenbeard/build-team-2.0:README.md",
-    "thebrazenbeard/build-team-2.0#7:docs/exodus/BT2_CHATLESS_WORKER_RECONSTRUCTION_V1.md",
-    "thebrazenbeard/build-team-2.0#7:docs/exodus/BT2_EXODUS_PROVIDER_ACTIVATION_CONFLICT_V1.json",
-    "build_team_2.one_working_laws_current scope BT2_ONE_WORKING_LAWS revision 10 / source_event_id 6064",
-    "architecture/contracts/RADAR_TOPOLOGY_V1.json",
-    "docs/protocol/WORKER_RUNTIME_RECONSTRUCTION_V1.md"
+    "thebrazenbeard/bt2:native/project/PROJECT_INSTRUCTIONS_V3.md",
+    "thebrazenbeard/bt2#35:native/project/BT2_EXODUS_WORKER_TOPOLOGY_V1.json",
+    "thebrazenbeard/bt2#39:docs/exodus/BT2_MUNE_CHATLESS_RECONSTRUCTION_COMPATIBILITY_20260920.md",
+    "thebrazenbeard/chat-communication-bus:architecture/contracts/RADAR_TOPOLOGY_V1.json",
+    "docs/protocol/WORKER_RUNTIME_RECONSTRUCTION_V1.md",
+    "checkpoints/mune/MUNE_EXODUS_FINAL_20260920T0713-0400.md"
   ],
   "current_vs_historical_state": {
-    "rule": "Role map and mutable assignments must be fresh-read before action. Current Exodus instruction supersedes the provider's permanent-chat/Slack-delivery assumptions within this scope without mutating the provider row.",
-    "training_is_not_assignment": true,
-    "bus_lane_is_not_assignment": true
+    "rule": "Current Project Instructions, current canonical BT2 source, current Bus topology, current assignment, and exact target evidence must be fresh-read before action. Historical package/checkpoint/review evidence never self-promotes to current assignment or authority.",
+    "immutable_package_is_not_current_assignment": true,
+    "qualification_is_not_installation": true,
+    "bus_lane_is_not_assignment": true,
+    "retired_chat_is_not_state": true,
+    "chat_era_transport_wording_compatibility": "Historical fresh/frozen-chat wording in the immutable v1.0.1 package is interpreted as ephemeral runtime plus durable exact-source qualification evidence, not as a permanent conversation requirement."
   },
   "fresh_runtime_recovery": [
-    "Read this record and current BT2 Exodus reconstruction source.",
-    "Fresh-read BT2 current governance/role map and resolve any provider conflict.",
-    "If an immutable role package is registered, verify the exact package binding and satisfy its qualification requirements before claiming packaged competence.",
-    "Fresh-read the current Bus topology and this worker's lane.",
-    "Resolve the current exact assignment or remain idle.",
-    "Refresh target/dependency/authority state before work and before any effect.",
-    "Persist result/review/debug evidence to the owning repository and Bus as applicable."
+    "Read current Project Instructions and current canonical bt2 source.",
+    "Read this record plus the canonical BT2 Mune v1.0.1 package and its chatless compatibility addendum.",
+    "Verify package/current-governance compatibility and any durable qualification evidence before claiming packaged BASE_READY competence.",
+    "Fresh-read current Bus topology and Mune lane.",
+    "Read the commit-qualified final Mune Exodus checkpoint as a starting snapshot.",
+    "Resolve a current exact durable assignment or remain idle.",
+    "Refresh exact target/dependency/provider/authority state before work and before any effect.",
+    "Persist review/debug/source evidence to the owning repository and non-PR coordination to the current Bus route.",
+    "Allow the runtime terminal to terminate after durable output is recorded."
   ],
   "pre_effect_freshness": [
     "current bounded assignment",
-    "current authority/lease when an external service effect is involved",
+    "current authority/lease for external effects",
     "exact target/predecessor/currentness",
-    "review-separation and collision state"
+    "review separation and runtime-instance fencing/collision state",
+    "provider state when material"
   ],
   "protected_effect_gates": [
     "current exact authority for the named effect and target",
@@ -84,13 +103,22 @@
   "durable_result_destination": {
     "source_work": "owning repository branch/Draft PR",
     "review_or_validation": "owning repository PR/review/evidence artifact",
-    "coordination": "bus/mune-v2",
-    "portfolio_state": "BT2/Project Runner durable checkpoint or current project state"
+    "coordination": "current topology-resolved Mune Bus route",
+    "portfolio_state": "BT2 Coordinator / Project Runner durable checkpoint or current project state"
   },
   "durable_evidence": [
-    "thebrazenbeard/build-team-2.0#7:docs/exodus/BT2_CHATLESS_WORKER_RECONSTRUCTION_V1.md",
-    "thebrazenbeard/build-team-2.0#7:docs/exodus/BT2_EXODUS_PROVIDER_ACTIVATION_CONFLICT_V1.json"
+    "thebrazenbeard/chat-communication-bus@db50a758a966aca078b74b4850caf5860d1a1738:checkpoints/mune/MUNE_EXODUS_FINAL_20260920T0713-0400.md",
+    "thebrazenbeard/chat-communication-bus@ded4326c727ea4613079e21bc26f3bf82ec7aa01:checkpoints/bt2-coordinator/BT2_COORDINATOR_MUNE_EXODUS_HANDOFF_20260920T0713-0400.md",
+    "thebrazenbeard/bt2#39:docs/exodus/BT2_MUNE_CHATLESS_RECONSTRUCTION_COMPATIBILITY_20260920.md",
+    "thebrazenbeard/bt2#39:docs/handoffs/CHATGPT_EXODUS_MUNE_2026-09-20.md",
+    "thebrazenbeard/chat-communication-bus@8f669e39e74e79dae54793a7a6a45d615e64de32:messages/20260918T1415-mune-rezon-r4-collision-repair-rereview-pass.md"
   ],
+  "lantern_currentness_at_retirement": {
+    "target": "bt2-479e4ad9",
+    "state": "UNKNOWN",
+    "reason": "WoWSQL connector failed internally before the required V3 projection preflight returned.",
+    "fallback_used": false
+  },
   "retired_chat_required": false,
-  "qualification_gap": "No dedicated immutable package entry exists in training/ROLE_TRAINING_REGISTRY.json at the observed main. This limits packaged-role qualification but does not require a permanent chat; current role + bounded assignment remain reconstructible from durable governance."
+  "qualification_gap": "The canonical immutable Mune v1.0.1 source package exists and is bound exactly, but current packaged qualification/BASE_READY, training completion, installation, activation, and runtime registration are not established by source presence or this Exodus. A future runtime must satisfy current durable qualification requirements before making those claims."
 }
