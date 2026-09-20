@@ -31,12 +31,14 @@ def envelope() -> PortableExecutionEnvelope:
             StateReference(
                 repository="thebrazenbeard/vera-control-plane",
                 ref="main",
+                commit_sha="c" * 40,
                 path="control/current.json",
                 git_blob=BLOB_A,
             ),
             StateReference(
                 repository="thebrazenbeard/chat-communication-bus",
                 ref="bus/vera-v2",
+                commit_sha="d" * 40,
                 path="messages/example.md",
                 git_blob=BLOB_B,
             ),
