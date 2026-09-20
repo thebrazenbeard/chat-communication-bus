@@ -62,6 +62,7 @@ def _require_sha256(value: str, label: str) -> str:
 class StateReference:
     repository: str
     ref: str
+    commit_sha: str
     path: str
     git_blob: str
 
@@ -69,17 +70,24 @@ class StateReference:
         _nonempty(self.repository, "repository")
         _nonempty(self.ref, "ref")
         _nonempty(self.path, "path")
-        if (
-            type(self.git_blob) is not str
-            or len(self.git_blob) != 40
-            or any(ch not in "0123456789abcdef" for ch in self.git_blob)
+        for value, label in (
+            (self.commit_sha, "commit_sha"),
+            (self.git_blob, "git_blob"),
         ):
-            raise ValueError("git_blob must be a lowercase Git SHA-1 object id")
+            if (
+                type(value) is not str
+                or len(value) != 40
+                or any(ch not in "0123456789abcdef" for ch in value)
+            ):
+                raise ValueError(
+                    f"{label} must be a lowercase Git SHA-1 object id"
+                )
 
     def payload(self) -> dict[str, str]:
         return {
             "repository": self.repository,
             "ref": self.ref,
+            "commit_sha": self.commit_sha,
             "path": self.path,
             "git_blob": self.git_blob,
         }
