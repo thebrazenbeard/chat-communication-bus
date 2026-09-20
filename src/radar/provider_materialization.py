@@ -10,6 +10,10 @@ from dataclasses import dataclass
 from hashlib import sha1, sha256
 from typing import Mapping
 
+from .provider_git_provenance import (
+    GitHubCommitPathResolver,
+    GitHubProvenanceReceipt,
+)
 from .provider_portability import (
     PortableExecutionEnvelope,
     ProviderManifest,
@@ -44,6 +48,7 @@ class MaterializedExecutionRequest:
     instruction_text: str
     input_bytes: bytes
     state_objects: tuple[MaterializedStateObject, ...]
+    provenance_receipts: tuple[GitHubProvenanceReceipt, ...]
     qualification: QualificationState
 
 
@@ -54,6 +59,7 @@ def materialize_execution_request(
     instruction_text: str,
     input_bytes: bytes,
     state_blobs: Mapping[str, bytes],
+    provenance_resolver: GitHubCommitPathResolver,
 ) -> MaterializedExecutionRequest:
     if type(envelope) is not PortableExecutionEnvelope:
         raise ValueError("envelope must be exact PortableExecutionEnvelope")
@@ -65,6 +71,10 @@ def materialize_execution_request(
         raise ValueError("input_bytes must be exact bytes")
     if not isinstance(state_blobs, Mapping):
         raise ValueError("state_blobs must be a mapping of blob id to bytes")
+    if type(provenance_resolver) is not GitHubCommitPathResolver:
+        raise ValueError(
+            "provenance_resolver must be exact GitHubCommitPathResolver"
+        )
 
     qualification = qualify_provider(envelope, manifest)
     if qualification.state is QualificationState.INELIGIBLE:
@@ -88,7 +98,10 @@ def materialize_execution_request(
         raise ValueError(f"unexpected state blob material: {sorted(extra)}")
 
     objects: list[MaterializedStateObject] = []
+    provenance_receipts: list[GitHubProvenanceReceipt] = []
     for ref in sorted(envelope.state_refs):
+        provenance = provenance_resolver.resolve(ref)
+        provenance_receipts.append(provenance)
         data = state_blobs[ref.git_blob]
         if type(data) is not bytes:
             raise ValueError(f"state blob {ref.git_blob} material must be exact bytes")
@@ -116,6 +129,7 @@ def materialize_execution_request(
         instruction_text=instruction_text,
         input_bytes=input_bytes,
         state_objects=tuple(objects),
+        provenance_receipts=tuple(provenance_receipts),
         qualification=qualification.state,
     )
 
