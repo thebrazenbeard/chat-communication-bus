@@ -43,17 +43,17 @@ Historical predecessor branch:
 
 Exodus source branch:
 - `exodus/yang-dechatification-20260919`
-- head at PR creation: `64b3a67595c9c575332f9e78697d7b7847994ddd`
+- current reconciled head: `3896ed0d79974c0477b21df90437cd7f1e695312`
 - Draft PR: `thebrazenbeard/empathy#4`
-- title: `Exodus: dechatify Yang empathy worker and preserve qualification history`
+- title: `Exodus: preserve Yang falsification and qualification history`
 - merge authority: not granted by Exodus.
 
-New durable value proposed in PR #4:
-- `docs/YANG_WORKER_CONTRACT_V1.md`
+Unique durable value proposed in PR #4:
 - `research/YANG_FALSIFICATION_QUALIFICATION_HISTORY_20260825_20260902.md`
 - refreshed `README.md`
-- refreshed `docs/ARCHITECTURE_STATUS.md`
 - refreshed `research/README.md`
+
+PR #4 intentionally does not own the shared worker contract or the full Yin-005 envelope after concurrent Exodus reconciliation.
 
 ### Chat Communication Bus
 
@@ -172,12 +172,14 @@ Removed:
 
 ### WORKER_RECONSTRUCTION_GAP
 
-Gap found: current `bus/yang-v2` had routing identity but no project-specific worker contract or current recovery checkpoint.
+Gap found: current `bus/yang-v2` had routing identity but no complete chat-independent project worker reconstruction/checkpoint at the start of this audit.
 
-Repair:
-- worker contract added in empathy Draft PR #4;
-- this recovery checkpoint created on an isolated Bus source branch;
-- current Yang v2 lane receives an Exodus handoff pointing to both.
+Reconciled repair:
+- empathy Draft PR #3 owns the shared Yin/Yang worker reconstruction contract and project-level Exodus checkpoint;
+- empathy Draft PR #2 owns the full Yin-005 pre-action envelope candidate;
+- empathy Draft PR #4 owns the detailed Yang falsification/qualification history;
+- this Bus recovery checkpoint binds the current routing/recovery view;
+- current Yang v2 lane carries the Exodus handoff and successor correction.
 
 ### PRIVATE_OR_OUT_OF_SCOPE
 
@@ -187,6 +189,23 @@ Not exported:
 - private conversational intimacy unrelated to technical empathy research.
 
 Only abstract research constraints and private-repository-appropriate project state were preserved.
+
+## Concurrent Exodus reconciliation
+
+Concurrent source work appeared after the first Yang checkpoint draft. It is preserved as separate candidate ownership rather than silently overwritten:
+
+- empathy Draft PR #2 — `Preserve Yin-005 pre-action fidelity/appraisal candidate` — observed head `8ca13724fa3521dd57b3806722b759d1fd78fb33`;
+- empathy Draft PR #3 — `Exodus: dechatify Yin/Yang empathy workers` — observed head `a7581e3073d5c4118fbdcf3e91e56159b213baae`;
+- empathy Draft PR #4 — `Exodus: preserve Yang falsification and qualification history` — reconciled head `3896ed0d79974c0477b21df90437cd7f1e695312`.
+
+Ownership after reconciliation:
+- PR #2: detailed `PREACTION_FIDELITY_APPRAISAL_ENVELOPE_V1` candidate;
+- PR #3: shared Yin/Yang worker reconstruction contract and project-level Exodus checkpoint;
+- PR #4: detailed Yang falsification/qualification corpus.
+
+All are Draft/source candidates. None is merged or runtime authority merely by presence.
+
+The initial PR #4-local Yang-only worker contract was removed after PR #3 was discovered, avoiding duplicate durable worker definitions.
 
 ## Historical scientific end state
 
@@ -228,22 +247,29 @@ No ChatGPT conversation is required.
 
 ## Current hold / next frontier
 
-At this checkpoint, Yang has no durable active review assignment discovered after the completed 005 cycle.
+At this checkpoint, no **current** Yang assignment is established.
+
+Concurrent Exodus evidence recorded in empathy Draft PR #3 found later legacy coordination:
+- seq 4165 — 2026-08-30 — Vera assigned Yin and Yang bounded authored-wants evidence work;
+- seq 4168 — Yin returned `EMPATHY-YIN-20260830-AUTHORED-WANTS_HANDOFF_READY`;
+- no later Yang handoff was found on that legacy thread.
+
+Those rows are historical starting evidence, not current workflow authority. Do not resurrect seq 4165 merely because it is later than the 005 cycle. Historical Yang 4158 does not automatically review or approve Yin 4168.
 
 Therefore:
 - current worker state: `IDLE / DISPATCH_ON_DEMAND`;
 - do not manufacture an assignment;
 - do not redo 005;
-- do not infer that historical prerequisite completion itself assigns a successor.
+- do not self-assign a review of Yin 4168.
 
-Next useful project frontier is the exact-current empathy implementation/qualification contract, but it should be started only when Vera or BT2 coordination actually dispatches that work.
+If current reconciliation shows Yin 4168 is material and unsuperseded, Vera may dispatch one bounded Yang adversarial review of that exact evidence. Otherwise the next broader frontier is the exact-current empathy implementation/qualification contract.
 
 ## Future persistent interface owner
 
-Primary next coordinator for this worker:
-- `BT2 Coordinator`
+Primary semantic/worker coordinator for empathy:
+- `Vera`
 
-Vera may consume or request empathy work, and Vera Control Plane Coordinator owns promotion/install/qualification control-plane effects, but routine specialist worker dispatch/review orchestration belongs under BT2 coordination.
+`BT2 Coordinator` may orchestrate delegated implementation/review execution across repositories. `Vera Control Plane Coordinator` owns later release/install/current-route/qualification control-plane effects. None of those interfaces requires a permanent Yang chat.
 
 ## Protected effects deliberately not performed
 
@@ -261,9 +287,11 @@ Vera may consume or request empathy work, and Vera Control Plane Coordinator own
 ## Retirement condition
 
 This chat is no longer required if:
-- empathy Draft PR #4 remains durably accessible;
+- empathy Draft PR #2 remains available as the Yin-005 candidate record until accepted/superseded;
+- empathy Draft PR #3 remains available as the shared worker reconstruction/checkpoint candidate until accepted/superseded;
+- empathy Draft PR #4 remains available as the Yang historical falsification/qualification corpus until accepted/superseded;
 - this Bus checkpoint branch/PR remains durably accessible;
-- the Yang v2 Exodus handoff points to both;
+- the Yang v2 Exodus handoff/correction points to the reconciled set;
 - future runtimes obey freshness before effect.
 
 Destroying easy access to the retired conversation must not materially reduce the ability to reconstruct or challenge Yang's useful work.
