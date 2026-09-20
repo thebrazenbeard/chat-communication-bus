@@ -34,7 +34,7 @@ Provider/runtime local:
 
 A provider adapter may translate portable inputs into provider-native requests. It
 must not silently rewrite proposition scope, authority, prohibited effects, or
-state-object identity in order to satisfy a provider.
+state-object identity in order to satisfy a provider. A movable branch/tag name is provenance only; the portable subject binds the exact commit and blob.
 
 ## Portable execution envelope
 
@@ -43,7 +43,7 @@ state-object identity in order to satisfy a provider.
 - logical identity;
 - SHA-256 of the complete instruction/control payload supplied to the adapter;
 - SHA-256 of the user/task input;
-- exact Git-backed state references;
+- exact Git-backed state references, including both commit SHA and object blob;
 - required provider capabilities;
 - preferred capabilities;
 - prohibited effects;
