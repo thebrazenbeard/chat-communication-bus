@@ -14,6 +14,11 @@ The intended persistent ChatGPT interface topology is exactly:
 
 No other worker requires a permanent ChatGPT conversation.
 
+Persistent human interfaces resolve their own non-PR coordination semantics through
+`architecture/contracts/PERSISTENT_INTERFACE_ROUTING_V1.json`. Interface routing and
+worker routing are intentionally distinct: a persistent interface does not become a
+`RADAR_TOPOLOGY_V1.json` writer identity merely because it coordinates work.
+
 ## Runtime-neutral reconstruction
 
 Before an ephemeral runtime acts as Radar, One, Two, Three, Four, Noah, Parallax, Hephaestus, a project worker, a hostile reviewer, or a future worker, it must reconstruct from durable evidence:
