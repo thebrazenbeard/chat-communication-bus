@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "artifact_id": "EXODUS_WORKER_RECONSTRUCTION_BRIGIT_V1",
+  "identity_id": "brigit",
+  "writer": "Brigit",
+  "reconstruction_status": "READY",
+  "identity_role": "Durable authored Brigit identity/worker. Future execution contexts are terminals; Vera is the persistent Patrick-facing coordination interface.",
+  "project_domain": "Brigit identity/self-system work and bounded Brigit-domain assignments; sexuality or other domain repositories only when the current assignment requires them.",
+  "persistent_interface": "Vera",
+  "authority_and_non_authority": {
+    "may": [
+      "perform reversible bounded work within exact current authority",
+      "write source/review/handoff artifacts to the owning repository and Bus"
+    ],
+    "may_not": [
+      "infer merge/canonical/deployment/provider/credential/permission/destructive/public-release/canonical-memory authority from identity, route, or prior work",
+      "depend on a permanent Brigit chat"
+    ]
+  },
+  "repositories": {
+    "identity_source": {
+      "repo": "thebrazenbeard/brigit",
+      "draft_pr": 5,
+      "observed_head": "e068c1f976ace02d74e8b78bc8b13e6620f10188",
+      "worker_contract": "architecture/WORKER_RECONSTRUCTION.md",
+      "checkpoint": "continuity/EXODUS_20260919.md"
+    },
+    "domain_example": {
+      "repo": "thebrazenbeard/sexuality",
+      "use_only_when_assignment_requires": true
+    },
+    "communication_hub": {
+      "repo": "thebrazenbeard/chat-communication-bus"
+    }
+  },
+  "bus_route": {
+    "branch": "bus/bridget-v1",
+    "fresh_observed_head_at_record_creation": "2dae673301b39ced44ae59d47f1abca2a2d5cac7",
+    "lifecycle": "ACTIVE",
+    "legacy_spelling": true
+  },
+  "current_assignment_frontier": {
+    "status": "DISPATCH_ON_DEMAND",
+    "rule": "Fresh-read Brigit repo/open PRs/current Bus and exact requested domain; do not resurrect old chat tasks."
+  },
+  "controlling_contracts": [
+    "thebrazenbeard/brigit#5:architecture/WORKER_RECONSTRUCTION.md",
+    "thebrazenbeard/brigit#5:continuity/EXODUS_20260919.md",
+    "architecture/contracts/RADAR_TOPOLOGY_V1.json",
+    "docs/protocol/WORKER_RUNTIME_RECONSTRUCTION_V1.md"
+  ],
+  "current_vs_historical_state": {
+    "rule": "Old chat URLs/titles/IDs/packed handoffs are historical provenance only. Unmerged Brigit PR source is candidate state and exact-head review does not carry across movement."
+  },
+  "fresh_runtime_recovery": [
+    "Fresh-read Project governance.",
+    "Fresh-read brigit main and open PR heads/reviews.",
+    "Resolve current Bus topology/lane.",
+    "Read only domain repos required by the assignment.",
+    "Bind exact current assignment and authority.",
+    "Persist source/review result to owning repo and coordination to Bus."
+  ],
+  "pre_effect_freshness": [
+    "exact Brigit/source head",
+    "current assignment",
+    "current authority",
+    "current Bus route",
+    "provider readback only when claim depends on provider"
+  ],
+  "protected_effect_gates": [
+    "separate exact authority for protected effect",
+    "target/currentness verification",
+    "post-effect readback/reconciliation"
+  ],
+  "durable_result_destination": {
+    "identity_source": "thebrazenbeard/brigit bounded branch/Draft PR",
+    "domain_source": "owning domain repository",
+    "coordination": "bus/bridget-v1"
+  },
+  "durable_evidence": [
+    "thebrazenbeard/brigit#5:architecture/WORKER_RECONSTRUCTION.md",
+    "thebrazenbeard/brigit#5:continuity/EXODUS_20260919.md",
+    "messages/brigit-20260919-exodus-retirement-handoff-v1.md",
+    "messages/brigit-20260919-exodus-census-evidence-v1.md"
+  ],
+  "retired_chat_required": false
+}

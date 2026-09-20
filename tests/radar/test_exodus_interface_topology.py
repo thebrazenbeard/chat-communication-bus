@@ -42,3 +42,12 @@ def test_slack_is_future_transport_not_active_state_plane():
     assert slack["alternate_worker_bus"] is False
     assert slack["worker_to_worker_slack_only_forbidden"] is True
     assert slack["deployment_or_reconnection_authorized_by_this_contract"] is False
+
+
+def test_chat_retirement_gate_is_ready_at_source_layer_only():
+    data = load()
+    gate = data["chat_retirement_gate"]
+    assert gate["status"] == "READY_FOR_RETIREMENT_SOURCE_CANDIDATE"
+    assert gate["current_active_writer_count"] == 20
+    assert gate["current_ready_worker_count"] == 20
+    assert gate["source_candidate_does_not_authorize_archival_cutover"] is True

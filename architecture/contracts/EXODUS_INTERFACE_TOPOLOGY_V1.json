@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_id": "EXODUS_INTERFACE_TOPOLOGY_V1",
-  "status": "PATRICK_DIRECTED_SOURCE_CANDIDATE_NOT_CUT_OVER",
+  "status": "PATRICK_DIRECTED_SOURCE_CANDIDATE_ALL_ACTIVE_WORKERS_RECONSTRUCTIBLE",
   "decision_date": "2026-09-19",
   "architectural_rule": "CHAT_OR_RUNTIME_IS_INTERFACE_TERMINAL_NOT_DURABLE_IDENTITY_MEMORY_AUTHORITY_OR_CANONICAL_STATE",
   "persistent_chat_interfaces": [
@@ -88,10 +88,11 @@
     "qualification_rule": "ALL_ACTIVE_WRITER_LANES_READY"
   },
   "chat_retirement_gate": {
-    "status": "BLOCKED",
-    "reason": "WORKER_RECONSTRUCTION_CENSUS_NOT_READY",
+    "status": "READY_FOR_RETIREMENT_SOURCE_CANDIDATE",
+    "reason": "ALL_ACTIVE_WRITER_RECONSTRUCTION_RECORDS_READY",
     "current_active_writer_count": 20,
-    "current_ready_worker_count": 3,
-    "source_candidate_does_not_authorize_archival_cutover": true
+    "current_ready_worker_count": 20,
+    "source_candidate_does_not_authorize_archival_cutover": true,
+    "authority_note": "Patrick's separate exact Exodus retirement instruction supplies the current retirement direction; this source artifact grants no merge/provider/Slack/protected effect."
   }
 }

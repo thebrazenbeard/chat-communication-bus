@@ -36,7 +36,7 @@ def test_every_census_worker_pins_exact_observed_head_and_status():
         assert isinstance(worker["missing_reconstruction_fields"], list)
 
 
-def test_chat_retirement_remains_blocked_until_all_active_workers_ready():
+def test_chat_retirement_gate_tracks_all_active_worker_readiness():
     exodus = load(EXODUS)
     census = load(CENSUS)
     ready = [
@@ -47,8 +47,10 @@ def test_chat_retirement_remains_blocked_until_all_active_workers_ready():
     assert census["census_cut"]["unqualified_worker_count"] == (
         census["census_cut"]["active_writer_count"] - len(ready)
     )
-    assert census["cutover_gate"]["status"] == "BLOCKED"
-    assert exodus["chat_retirement_gate"]["status"] == "BLOCKED"
+    assert len(ready) == census["census_cut"]["active_writer_count"]
+    assert census["cutover_gate"]["status"] == "READY_FOR_RETIREMENT_SOURCE_CANDIDATE"
+    assert exodus["chat_retirement_gate"]["status"] == "READY_FOR_RETIREMENT_SOURCE_CANDIDATE"
+    assert exodus["chat_retirement_gate"]["current_ready_worker_count"] == len(ready)
     assert (
         exodus["worker_reconstruction_census"]["required_for_worker_chat_retirement"]
         is True
@@ -62,14 +64,8 @@ def test_branch_existence_is_not_reconstruction_proof():
         worker for worker in census["workers"]
         if worker["reconstruction_status"] == "READY"
     ]
-    unqualified = [
-        worker for worker in census["workers"]
-        if worker["reconstruction_status"] == "NOT_QUALIFIED"
-    ]
-    assert ready
-    assert unqualified
+    assert len(ready) == 20
     assert all(not worker["missing_reconstruction_fields"] for worker in ready)
-    assert all(worker["missing_reconstruction_fields"] for worker in unqualified)
+    assert all(worker.get("durable_evidence") for worker in ready)
     assert census["census_cut"]["qualified_worker_count"] == len(ready)
-    assert census["census_cut"]["unqualified_worker_count"] == len(unqualified)
-    assert census["cutover_gate"]["status"] == "BLOCKED"
+    assert census["census_cut"]["unqualified_worker_count"] == 0
