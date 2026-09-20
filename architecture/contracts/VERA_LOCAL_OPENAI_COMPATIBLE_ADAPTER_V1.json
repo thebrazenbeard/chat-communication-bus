@@ -1,0 +1,35 @@
+{
+  "schema": "VERA_LOCAL_OPENAI_COMPATIBLE_ADAPTER_V1",
+  "version": 1,
+  "status": "SOURCE_CANDIDATE",
+  "endpoint": "/v1/chat/completions",
+  "transport_effect": "NONE_REQUEST_CONSTRUCTION_ONLY",
+  "allowed_hosts": [
+    "localhost",
+    "127.0.0.1",
+    "::1"
+  ],
+  "role_mapping": {
+    "governed_instruction": "system",
+    "portable_state_and_task": "user_reference_context"
+  },
+  "reference_context_claim": "REFERENCE_CONTEXT_NOT_SYSTEM_AUTHORITY",
+  "request_claim": "LOCAL_LOOPBACK_REQUEST_CONSTRUCTION_ONLY",
+  "fail_closed": [
+    "REMOTE_HOST",
+    "MISSING_EXPLICIT_PORT",
+    "USERINFO",
+    "BASE_PATH",
+    "QUERY_OR_FRAGMENT",
+    "PROVIDER_MISMATCH",
+    "ADAPTER_MISMATCH",
+    "NON_UTF8_TEXT"
+  ],
+  "non_promotions": [
+    "NOT_NETWORK_EXECUTION",
+    "NOT_PROVIDER_AUTHORITY",
+    "NOT_COST_AUTHORITY",
+    "NOT_STATE_TO_SYSTEM_AUTHORITY",
+    "NOT_BEHAVIORAL_EQUIVALENCE"
+  ]
+}
