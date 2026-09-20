@@ -4,7 +4,7 @@ Source repository: `thebrazenbeard/bt2`
 Source PR: #35
 Title: Exodus: reconcile 13-role BT2 reconstruction and three-interface topology
 Base: `main@30e81cadd94fae117a7f6875523c03251c7c9f6e`
-Head: `exodus/bt2-role-interface-reconciliation-v1-20260920@ea0fcea92d829ee4a79628f8e50f31783d65b4ea`
+Head: `exodus/bt2-role-interface-reconciliation-v1-20260920@0ea6b0167d4ea9bfd5a976737fa77471a59759a6`
 State at mirror creation: OPEN / DRAFT / UNMERGED
 
 Purpose:
@@ -31,3 +31,8 @@ Authority:
 This mirror carries no merge/deploy/provider/database/credential/permission/training/Slack/protected-effect authority.
 
 Mirror refresh: PR #35 now also carries `docs/exodus/BT2_EIGHT_CHATLESS_RECONSTRUCTION_COMPATIBILITY_20260920.md` from PR #34. PR #23 adversarial-collaboration posture remains an independent policy candidate and is intentionally not folded into topology/reconstruction semantics.
+
+Final retirement checkpoint:
+- `docs/handoffs/BT2_COORDINATOR_EXODUS_RETIREMENT_2026-09-20.md`
+- checkpoint commit `0ea6b0167d4ea9bfd5a976737fa77471a59759a6`
+- class `STARTING_SNAPSHOT — FRESHNESS REQUIRED BEFORE EFFECT`
