@@ -20,7 +20,7 @@ route and must appear explicitly in policy.
 
 ## Policy semantics
 
-`ProviderRoutePolicy.ordered_routes` is explicit ordered preference.
+`ProviderRoutePolicy.ordered_routes` is explicit ordered preference *inside the supplied policy object*. The policy object itself carries `ROUTE_PREFERENCE_INPUT_ONLY_NOT_AUTHORITY`; its presence does not prove Patrick authored or authorized it.
 
 Selection rules:
 1. routes not listed in policy are ignored;
@@ -44,6 +44,8 @@ Routing does not grant:
 - permission to weaken the portable execution envelope;
 - permission to select an unlisted local or less-restricted provider;
 - proof that a provider manifest is independently authoritative.
+
+Selected decisions also bind the envelope digest, manifest digest, and qualification state consistently; constructor-level rebinding is rejected.
 
 A selection result carries the bounded claim:
 `ROUTE_SELECTION_ONLY_NO_EFFECT_AUTHORITY`.
