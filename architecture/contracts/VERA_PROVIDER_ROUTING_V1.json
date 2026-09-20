@@ -1,0 +1,26 @@
+{
+  "schema": "VERA_PROVIDER_ROUTING_V1",
+  "version": 1,
+  "status": "SOURCE_CANDIDATE",
+  "route_identity": [
+    "provider_id",
+    "model_id",
+    "adapter_version"
+  ],
+  "selection_order": [
+    "IGNORE_UNLISTED",
+    "REJECT_MISSING_REQUIRED_CAPABILITIES",
+    "FIRST_ELIGIBLE_IN_EXPLICIT_ORDER",
+    "DEGRADED_ONLY_IF_NO_ELIGIBLE",
+    "DEGRADED_REQUIRES_EXPLICIT_PERMISSION"
+  ],
+  "decision_claim": "ROUTE_SELECTION_ONLY_NO_EFFECT_AUTHORITY",
+  "non_promotions": [
+    "NOT_EFFECT_AUTHORITY",
+    "NOT_COST_AUTHORITY",
+    "NOT_PROVIDER_EXECUTION_AUTHORITY",
+    "NOT_ENVELOPE_WEAKENING",
+    "NOT_UNLISTED_PROVIDER_PREFERENCE",
+    "NOT_MANIFEST_INDEPENDENT_AUTHORITY"
+  ]
+}
