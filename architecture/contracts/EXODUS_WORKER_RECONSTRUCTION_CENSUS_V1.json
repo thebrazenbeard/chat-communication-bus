@@ -249,13 +249,15 @@
       "identity_id": "one",
       "writer": "One",
       "branch": "bus/one-v2",
-      "observed_head": "b4811177e315268141bfb4e9eac1ae9b272eb319",
+      "observed_head": "26549804cdbd2aa1750f25a32ccaf8cf3c83ef83",
       "reconstruction_status": "READY",
       "missing_reconstruction_fields": [],
       "durable_evidence": [
         "architecture/reconstruction/EXODUS_WORKER_ONE_V1.json",
         "messages/20260919T1924-one-bt2-archive-continuity-portfolio-inventory.md",
-        "messages/20260919T1927-one-project-runner-pr12-two-rereview.md"
+        "messages/20260919T1927-one-project-runner-pr12-two-rereview.md",
+        "checkpoints/one/ONE_EXODUS_FINAL_20260919T2115-0400.md",
+        "checkpoints/bt2-coordinator/BT2_COORDINATOR_ONE_EXODUS_HANDOFF_20260919T2117-0400.md"
       ]
     },
     {
