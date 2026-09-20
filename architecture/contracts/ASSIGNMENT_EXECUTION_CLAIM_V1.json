@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "artifact_id": "ASSIGNMENT_EXECUTION_CLAIM_V1",
+  "status": "DESIGN_ONLY_NOT_INSTALLED",
+  "issue": "thebrazenbeard/chat-communication-bus#142",
+  "source_subject": {
+    "integration_pr": 140,
+    "integration_head": "2461df3a1a8393d4c7ded227afb17ecc7abfacb3"
+  },
+  "purpose": "Fence concurrent ephemeral runtime instances that reconstruct the same durable worker assignment without collapsing durable identity into runtime identity or creating authority.",
+  "identity_model": {
+    "durable_worker_identity_field": "assignee_identity_id",
+    "runtime_instance_field": "node_id",
+    "durable_identity_is_not_runtime_identity": true,
+    "execution_claim_is_not_authority": true
+  },
+  "current_claim": {
+    "one_current_claim_per_assignment": true,
+    "fields": [
+      "assignment_id",
+      "assignee_identity_id",
+      "node_id",
+      "fence_token",
+      "bound_assignment_event_id",
+      "lease_expires_at",
+      "last_operation_id",
+      "updated_at"
+    ]
+  },
+  "audit": {
+    "append_only_generation_history_required": true,
+    "generation_fields": [
+      "assignment_id",
+      "assignee_identity_id",
+      "node_id",
+      "fence_token",
+      "bound_assignment_event_id",
+      "operation_id",
+      "claim_event",
+      "lease_expires_at",
+      "created_at"
+    ],
+    "claim_events": [
+      "ACQUIRED",
+      "RENEWED",
+      "RELEASED",
+      "INVALIDATED"
+    ]
+  },
+  "fence": {
+    "type": "monotonically comparable bigint",
+    "renewal_reuses_token": true,
+    "takeover_requires_strictly_newer_token": true,
+    "old_token_after_takeover_rejected": true
+  },
+  "acquire": {
+    "atomic_per_assignment": true,
+    "requires_assignment_exists": true,
+    "requires_assignment_assignee_matches_node_identity": true,
+    "requires_node_live": true,
+    "requires_node_lease_unexpired": true,
+    "requires_dependency_readiness": true,
+    "binds_current_assignment_event": true,
+    "claim_lease_must_not_exceed_node_lease": true,
+    "same_operation_id_is_idempotent": true,
+    "active_unexpired_other_holder_fails_closed": true
+  },
+  "renew": {
+    "requires_current_node": true,
+    "requires_current_fence_token": true,
+    "requires_same_bound_assignment_event": true,
+    "claim_lease_must_not_exceed_node_lease": true,
+    "same_operation_id_is_idempotent": true
+  },
+  "release_or_finalize": {
+    "requires_current_node": true,
+    "requires_current_fence_token": true,
+    "same_operation_id_is_idempotent": true,
+    "lost_response_retry_must_not_create_new_generation": true
+  },
+  "assignment_successor_binding": {
+    "runtime_authored_successor_requires_node_id": true,
+    "runtime_authored_successor_requires_fence_token": true,
+    "runtime_authored_successor_requires_bound_assignment_event_id": true,
+    "stale_node_or_token_rejected": true,
+    "superseded_assignment_event_rejected": true,
+    "valid_holder_may_roll_bound_event_forward_atomically": true,
+    "control_plane_advance_invalidates_old_execution_claim": true
+  },
+  "authority_separation": {
+    "claim_does_not_grant_merge": true,
+    "claim_does_not_grant_deploy": true,
+    "claim_does_not_grant_provider_mutation": true,
+    "claim_does_not_grant_credentials_or_permissions": true,
+    "protected_effect_authority_remains_separate": true
+  },
+  "security": {
+    "claim_mutation_functions_service_role_only": true,
+    "anon_execute_forbidden": true,
+    "authenticated_execute_forbidden": true,
+    "source_design_does_not_authorize_provider_application": true
+  },
+  "required_hostile_cases": [
+    "two_live_nodes_race_for_one_assignment",
+    "loser_continues_from_stale_local_state",
+    "winner_lease_expires_successor_takes_over",
+    "old_worker_attempts_completion_after_takeover",
+    "assignment_advances_while_claim_held",
+    "protected_effect_authority_remains_separate",
+    "lost_response_retry_does_not_duplicate_execution",
+    "claim_lease_cannot_exceed_node_lease",
+    "node_identity_mismatch_cannot_claim",
+    "old_fence_token_replay_after_takeover_rejected",
+    "same_operation_id_is_idempotent",
+    "control_plane_advance_invalidates_stale_execution_ownership",
+    "claim_acquisition_cannot_bypass_dependency_readiness",
+    "claim_mutation_not_executable_by_anon_or_authenticated"
+  ]
+}
