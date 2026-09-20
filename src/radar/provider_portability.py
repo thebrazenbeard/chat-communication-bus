@@ -61,6 +61,7 @@ def _require_sha256(value: str, label: str) -> str:
 @dataclass(frozen=True, order=True)
 class StateReference:
     repository: str
+    repository_id: int
     ref: str
     commit_sha: str
     path: str
@@ -68,6 +69,12 @@ class StateReference:
 
     def __post_init__(self) -> None:
         _nonempty(self.repository, "repository")
+        if (
+            type(self.repository_id) is not int
+            or isinstance(self.repository_id, bool)
+            or self.repository_id <= 0
+        ):
+            raise ValueError("repository_id must be a positive exact integer")
         _nonempty(self.ref, "ref")
         _nonempty(self.path, "path")
         for value, label in (
@@ -86,6 +93,7 @@ class StateReference:
     def payload(self) -> dict[str, str]:
         return {
             "repository": self.repository,
+            "repository_id": self.repository_id,
             "ref": self.ref,
             "commit_sha": self.commit_sha,
             "path": self.path,
