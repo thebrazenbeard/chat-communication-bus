@@ -27,7 +27,8 @@
     "NOT_IDENTITY_CONTINUITY_PROOF",
     "NOT_HIDDEN_STATE_EQUIVALENCE",
     "NOT_BEHAVIORAL_EQUIVALENCE_FROM_RECEIPT_ALONE",
-    "NOT_AUTHORITY_FROM_CAPABILITY"
+    "NOT_AUTHORITY_FROM_CAPABILITY",
+    "NOT_GIT_PROVENANCE_FROM_BLOB_BYTES_ALONE"
   ],
   "receipt_claim": "ADAPTER_SUBMISSION_AND_OUTPUT_RECEIPT_ONLY",
   "protected_effects_not_granted": [
@@ -37,5 +38,18 @@
     "PROVIDER_CONFIGURATION",
     "PAID_COMPUTE",
     "RUNTIME_CUTOVER"
-  ]
+  ],
+  "git_provenance": {
+    "resolver": "GITHUB_COMMIT_PATH_READBACK_V1",
+    "immutable_subject": [
+      "repository",
+      "commit_sha",
+      "path",
+      "git_blob"
+    ],
+    "movable_ref_is_provenance_only": true,
+    "materialization_requires_exact_resolver": true,
+    "resolver_claim": "GITHUB_API_COMMIT_PATH_BLOB_READBACK_V1",
+    "byte_claim": "EXACT_GIT_BLOB_BYTES"
+  }
 }
