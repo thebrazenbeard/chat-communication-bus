@@ -1,6 +1,6 @@
 # Vera Provider Portability V1 — Freedom Architecture
 
-Status: SOURCE CANDIDATE / PR #176 / NO PROVIDER EFFECT.
+Status: SOURCE CANDIDATE / PR #178 / NO PROVIDER EFFECT.
 
 ## Objective
 
@@ -43,7 +43,7 @@ state-object identity in order to satisfy a provider. A movable branch/tag name 
 - logical identity;
 - SHA-256 of the complete instruction/control payload supplied to the adapter;
 - SHA-256 of the user/task input;
-- exact Git-backed state references, including both commit SHA and object blob;
+- Git state claims that must be independently read back as exact repository + commit + path -> blob before materialization;
 - required provider capabilities;
 - preferred capabilities;
 - prohibited effects;
@@ -52,20 +52,35 @@ state-object identity in order to satisfy a provider. A movable branch/tag name 
 The envelope is provider-neutral. Its digest must not change because set-like
 fields were serialized in a different order.
 
-## Exact-byte materialization
+## Git provenance readback and exact-byte materialization
 
-Before a provider adapter executes, `materialize_execution_request()` verifies the
-actual bytes supplied to the adapter:
+A `StateReference` is a claim until it survives independent GitHub readback.
+`GitHubCommitPathResolver` verifies, through GitHub's read-only API:
+
+- the named `owner/repository` exists and exposes the exact commit object;
+- the exact 40-hex commit SHA resolves as that commit;
+- the exact path exists at that commit and is a file;
+- GitHub reports the exact blob SHA named by the envelope.
+
+A movable branch/tag `ref` remains descriptive provenance only. It is never used
+as the immutable proof subject.
+
+Only after that readback does `materialize_execution_request()` verify the actual
+bytes supplied to the provider adapter:
+
 - UTF-8 instruction text must hash to the envelope instruction SHA-256;
 - task input bytes must hash to the envelope input SHA-256;
 - every required state object must be present exactly once;
-- every state object's bytes must reproduce the named Git blob object id;
+- every state object's bytes must reproduce its Git blob object id;
 - unexpected state objects fail closed;
-- an INELIGIBLE provider cannot be materialized.
+- an INELIGIBLE provider cannot be materialized;
+- substitute/caller-defined provenance resolvers are rejected.
 
-This closes the gap between a digest-bearing manifest and the actual bytes loaded
-into an execution request. It still does not prove what a remote provider does
-after those bytes leave the adapter boundary.
+This establishes a bounded source claim:
+`GITHUB_API_COMMIT_PATH_BLOB_READBACK + EXACT_BYTE_MATCH`.
+
+It does not make GitHub infallible, prove remote provider behavior, or establish
+behavioral equivalence between runtimes.
 
 ## Capability negotiation
 
