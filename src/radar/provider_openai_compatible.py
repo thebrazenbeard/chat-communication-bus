@@ -68,29 +68,90 @@ class LocalOpenAICompatibleProfile:
         return self.base_url.rstrip("/") + _CHAT_COMPLETIONS_PATH
 
 
+def _validate_loopback_request_url(url: str) -> None:
+    if type(url) is not str or not url.strip():
+        raise ValueError("request_url must be a non-empty exact string")
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https"):
+        raise ValueError("request_url must use http or https")
+    if parsed.hostname not in _LOOPBACK_HOSTS:
+        raise ValueError("request_url must target loopback only")
+    if parsed.username is not None or parsed.password is not None:
+        raise ValueError("request_url must not contain userinfo")
+    if parsed.query or parsed.fragment:
+        raise ValueError("request_url must not contain query or fragment")
+    if parsed.path != _CHAT_COMPLETIONS_PATH:
+        raise ValueError("request_url must target exact chat completions path")
+    try:
+        port = parsed.port
+    except ValueError:
+        raise ValueError("request_url contains invalid port") from None
+    if port is None or not 1 <= port <= 65535:
+        raise ValueError("request_url must include valid explicit port")
+
+
 @dataclass(frozen=True)
 class LocalOpenAICompatibleRequest:
     provider_id: str
     model_id: str
     adapter_version: str
     request_url: str
-    payload: dict[str, object]
+    payload_json: str
     payload_sha256: str
     request_claim: str = "LOCAL_LOOPBACK_REQUEST_CONSTRUCTION_ONLY"
 
     def __post_init__(self) -> None:
         if self.request_claim != "LOCAL_LOOPBACK_REQUEST_CONSTRUCTION_ONLY":
             raise ValueError("unsupported local request claim")
+        for value, label in (
+            (self.provider_id, "provider_id"),
+            (self.model_id, "model_id"),
+            (self.adapter_version, "adapter_version"),
+        ):
+            if type(value) is not str or not value.strip():
+                raise ValueError(f"{label} must be a non-empty exact string")
+        _validate_loopback_request_url(self.request_url)
+        if type(self.payload_json) is not str or not self.payload_json:
+            raise ValueError("payload_json must be non-empty exact string")
+        try:
+            payload = json.loads(self.payload_json)
+        except json.JSONDecodeError:
+            raise ValueError("payload_json must be valid JSON") from None
+        if type(payload) is not dict:
+            raise ValueError("payload_json must encode an object")
+        if payload.get("model") != self.model_id:
+            raise ValueError("payload model mismatch")
+        if payload.get("stream") is not False:
+            raise ValueError("payload must be non-streaming")
+        messages = payload.get("messages")
+        if type(messages) is not list or len(messages) != 2:
+            raise ValueError("payload must contain exactly two messages")
+        if (
+            type(messages[0]) is not dict
+            or messages[0].get("role") != "system"
+            or type(messages[0].get("content")) is not str
+        ):
+            raise ValueError("payload system message invalid")
+        if (
+            type(messages[1]) is not dict
+            or messages[1].get("role") != "user"
+            or type(messages[1].get("content")) is not str
+        ):
+            raise ValueError("payload user message invalid")
+        if _canonical_json(payload) != self.payload_json:
+            raise ValueError("payload_json must use canonical serialization")
         if (
             type(self.payload_sha256) is not str
             or len(self.payload_sha256) != 64
             or any(ch not in "0123456789abcdef" for ch in self.payload_sha256)
         ):
             raise ValueError("payload_sha256 must be lowercase SHA-256")
-        if sha256(_canonical_json(self.payload).encode("utf-8")).hexdigest() != (
-            self.payload_sha256
-        ):
+        if sha256(self.payload_json.encode("utf-8")).hexdigest() != self.payload_sha256:
             raise ValueError("payload digest mismatch")
+
+    @property
+    def payload(self) -> dict[str, object]:
+        return json.loads(self.payload_json)
 
 
 def _decode_utf8(data: bytes, label: str) -> str:
@@ -176,13 +237,14 @@ def build_local_openai_compatible_request(
         "stream": False,
     }
 
-    payload_sha256 = sha256(_canonical_json(payload).encode("utf-8")).hexdigest()
+    payload_json = _canonical_json(payload)
+    payload_sha256 = sha256(payload_json.encode("utf-8")).hexdigest()
     return LocalOpenAICompatibleRequest(
         provider_id=plan.provider_id,
         model_id=plan.model_id,
         adapter_version=plan.adapter_version,
         request_url=profile.request_url,
-        payload=payload,
+        payload_json=payload_json,
         payload_sha256=payload_sha256,
     )
 
