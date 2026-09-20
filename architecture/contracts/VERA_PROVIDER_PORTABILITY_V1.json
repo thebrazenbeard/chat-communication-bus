@@ -1,0 +1,41 @@
+{
+  "schema": "VERA_PROVIDER_PORTABILITY_V1",
+  "version": 1,
+  "status": "SOURCE_CANDIDATE",
+  "objective": "PROVIDER_NEUTRAL_VERA_EXECUTION",
+  "canonical_state": [
+    "GIT_EXACT_OBJECTS",
+    "GOVERNED_CONTROL_ARTIFACTS",
+    "BUS_COORDINATION",
+    "USER_AUTHORITY_SCOPE"
+  ],
+  "provider_local": [
+    "MODEL_ID",
+    "CONTEXT_LIMITS",
+    "TOOL_SYNTAX",
+    "STRUCTURED_OUTPUT_DIALECT",
+    "SESSION_TRANSPORT",
+    "PROVIDER_POLICY_BEHAVIOR"
+  ],
+  "qualification_states": [
+    "ELIGIBLE",
+    "DEGRADED",
+    "INELIGIBLE"
+  ],
+  "required_nonpromotions": [
+    "NOT_PROVIDER_POLICY_BYPASS",
+    "NOT_IDENTITY_CONTINUITY_PROOF",
+    "NOT_HIDDEN_STATE_EQUIVALENCE",
+    "NOT_BEHAVIORAL_EQUIVALENCE_FROM_RECEIPT_ALONE",
+    "NOT_AUTHORITY_FROM_CAPABILITY"
+  ],
+  "receipt_claim": "ADAPTER_SUBMISSION_AND_OUTPUT_RECEIPT_ONLY",
+  "protected_effects_not_granted": [
+    "MERGE",
+    "DEPLOY",
+    "CREDENTIAL_CHANGE",
+    "PROVIDER_CONFIGURATION",
+    "PAID_COMPUTE",
+    "RUNTIME_CUTOVER"
+  ]
+}
