@@ -1,3 +1,4 @@
+from dataclasses import replace
 from hashlib import sha256
 
 import pytest
@@ -303,4 +304,50 @@ def test_allow_degraded_must_be_actual_bool():
             policy_id="bad",
             ordered_routes=(route,),
             allow_degraded=1,
+        )
+
+
+def test_policy_object_does_not_claim_user_or_effect_authority():
+    route = ProviderRouteKey("provider", "model", "v1")
+    policy = ProviderRoutePolicy(
+        policy_id="bounded-policy",
+        ordered_routes=(route,),
+    )
+    assert policy.policy_claim == "ROUTE_PREFERENCE_INPUT_ONLY_NOT_AUTHORITY"
+    with pytest.raises(ValueError, match="unsupported route policy claim"):
+        ProviderRoutePolicy(
+            policy_id="forged-authority",
+            ordered_routes=(route,),
+            policy_claim="PATRICK_AUTHORIZED",
+        )
+
+
+def test_selected_decision_rejects_qualification_state_or_digest_rebinding():
+    e = envelope()
+    m = manifest(
+        "provider",
+        "model",
+        "v1",
+        Capability.SYSTEM_INSTRUCTIONS,
+        Capability.MULTI_TURN_CONTEXT,
+        Capability.TOOL_CALLS,
+    )
+    policy = ProviderRoutePolicy(
+        policy_id="self-consistency",
+        ordered_routes=(key(m),),
+    )
+    decision = select_provider_route(
+        envelope=e,
+        manifests=(m,),
+        policy=policy,
+    )
+    with pytest.raises(ValueError, match="qualification state mismatch"):
+        replace(
+            decision,
+            state=RouteSelectionState.SELECTED_DEGRADED,
+        )
+    with pytest.raises(ValueError, match="manifest/qualification mismatch"):
+        replace(
+            decision,
+            manifest_digest="f" * 64,
         )
