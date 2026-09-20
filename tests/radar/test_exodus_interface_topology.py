@@ -93,6 +93,7 @@ def test_bt2_coordinator_has_explicit_interface_coordination_route():
     route = load_routing()["interfaces"]["BT2 Coordinator"]
     assert route["routing_mode"] == "INTERFACE_COORDINATION_BRANCH"
     assert route["bus_route"] == "bus/bt2-v1"
+    assert route["binding_basis"]["class"] == "DURABLE_INTERFACE_BRANCH_PRACTICE"
     assert route["checkpoint_namespace"] == "checkpoints/bt2/"
     assert route["message_namespace"] == "messages/"
 
@@ -102,6 +103,8 @@ def test_control_plane_coordinator_explicitly_has_no_independent_writer():
     assert route["routing_mode"] == "NO_INDEPENDENT_BUS_WRITER"
     assert route["bus_route"] is None
     assert route["bus_route_answer"] == "NO_INDEPENDENT_BUS_WRITER"
+    assert route["binding_basis"]["class"] == "SOURCE_CANDIDATE_POLICY_CHOICE"
+    assert "does not claim historical branch absence proves a universal negative" in route["binding_basis"]["claim_ceiling"]
     assert "vera-control-plane" in route["durable_result_destinations"][0]
 
 
