@@ -1,4 +1,6 @@
+from dataclasses import replace
 from hashlib import sha1, sha256
+import json
 from urllib.parse import parse_qs, unquote, urlparse
 
 import pytest
@@ -8,6 +10,7 @@ from radar.provider_execution_binding import prepare_adapter_execution
 from radar.provider_git_provenance import GitHubCommitPathResolver
 from radar.provider_openai_compatible import (
     LocalOpenAICompatibleProfile,
+    LocalOpenAICompatibleRequest,
     build_local_openai_compatible_request,
 )
 from radar.provider_portability import (
@@ -239,3 +242,39 @@ def test_request_digest_is_deterministic(monkeypatch):
     assert a.payload_sha256 == b.payload_sha256
     assert a.payload == b.payload
     assert a.request_claim == "LOCAL_LOOPBACK_REQUEST_CONSTRUCTION_ONLY"
+
+
+def test_request_payload_is_immutable_by_value_and_revalidated(monkeypatch):
+    p = prepared(monkeypatch)
+    profile = LocalOpenAICompatibleProfile(
+        provider_id="ollama",
+        adapter_version="openai-compatible-chat-v1",
+        base_url="http://127.0.0.1:11434",
+    )
+    request = build_local_openai_compatible_request(prepared=p, profile=profile)
+
+    detached = request.payload
+    detached["model"] = "mutated"
+    assert request.payload["model"] == "local-model"
+
+    with pytest.raises(ValueError, match="loopback"):
+        replace(
+            request,
+            request_url="https://example.com:443/v1/chat/completions",
+        )
+
+    forged = request.payload
+    forged["model"] = "other-model"
+    forged_json = json.dumps(
+        forged,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+        allow_nan=False,
+    )
+    with pytest.raises(ValueError, match="payload model mismatch"):
+        replace(
+            request,
+            payload_json=forged_json,
+            payload_sha256=sha256(forged_json.encode("utf-8")).hexdigest(),
+        )
