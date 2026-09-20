@@ -34,7 +34,11 @@
       "durable_result_destinations": [
         "bus/vera-v2 messages/checkpoints under current Bus protocol",
         "owning source repository PR/issue/source state"
-      ]
+      ],
+      "binding_basis": {
+        "class": "EXISTING_CANONICAL_WORKER_TOPOLOGY_BINDING",
+        "evidence": "RADAR_TOPOLOGY_V1 vera entry is ACTIVE at bus/vera-v2"
+      }
     },
     "Vera Control Plane Coordinator": {
       "project": "Vera Unbound",
@@ -48,7 +52,12 @@
       "durable_result_destinations": [
         "thebrazenbeard/vera-control-plane source/PR/checkpoint state",
         "Chat Communication Bus through a separately current authorized writer when cross-project coordination is required"
-      ]
+      ],
+      "binding_basis": {
+        "class": "SOURCE_CANDIDATE_POLICY_CHOICE",
+        "evidence": "No independent Vera Control Plane Coordinator writer identity exists in the bound RADAR_TOPOLOGY_V1 subject and no separate VCP coordinator route was located during source audit.",
+        "claim_ceiling": "This contract proposes explicit no-independent-writer semantics; it does not claim historical branch absence proves a universal negative."
+      }
     },
     "BT2 Coordinator": {
       "project": "Build Team Two",
@@ -65,7 +74,11 @@
         "bus/bt2-v1:checkpoints/bt2/",
         "bus/bt2-v1:messages/",
         "owning source repository PR/issue/source state"
-      ]
+      ],
+      "binding_basis": {
+        "class": "DURABLE_INTERFACE_BRANCH_PRACTICE",
+        "evidence": "bus/bt2-v1 contains BT2 Coordinator-authored work-bearing messages and checkpoints/bt2 durable recovery state; the branch remains distinct from RADAR_TOPOLOGY_V1 worker identities."
+      }
     }
   },
   "protected_effects_not_authorized": [
