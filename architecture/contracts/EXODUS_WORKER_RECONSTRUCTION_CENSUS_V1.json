@@ -127,11 +127,14 @@
       "identity_id": "mune",
       "writer": "Mune",
       "branch": "bus/mune-v2",
-      "observed_head": "8f669e39e74e79dae54793a7a6a45d615e64de32",
+      "observed_head": "ded4326c727ea4613079e21bc26f3bf82ec7aa01",
       "reconstruction_status": "READY",
       "missing_reconstruction_fields": [],
       "durable_evidence": [
-        "architecture/reconstruction/EXODUS_WORKER_MUNE_V1.json"
+        "architecture/reconstruction/EXODUS_WORKER_MUNE_V1.json",
+        "checkpoints/mune/MUNE_EXODUS_FINAL_20260920T0713-0400.md",
+        "checkpoints/bt2-coordinator/BT2_COORDINATOR_MUNE_EXODUS_HANDOFF_20260920T0713-0400.md",
+        "thebrazenbeard/bt2#39:docs/handoffs/CHATGPT_EXODUS_MUNE_2026-09-20.md"
       ]
     },
     {
