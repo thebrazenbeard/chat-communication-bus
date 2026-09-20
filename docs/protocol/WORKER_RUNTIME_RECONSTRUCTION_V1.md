@@ -46,9 +46,11 @@ A reviewer is normally assignment-scoped. A hostile-review runtime may be instan
 
 ## Communication
 
-Non-PR work coordination uses the current Bus route from the canonical topology. Source PRs remain canonical in their source repositories and are referenced through the Bus when appropriate.
+Worker identities use the current Bus route from the canonical topology. Persistent human interfaces resolve interface-specific coordination semantics through `PERSISTENT_INTERFACE_ROUTING_V1.json`; an interface coordination branch is not thereby promoted into the worker topology.
 
-Never hard-code a historical writer branch as current routing authority. Historical lanes remain provenance.
+Source PRs remain canonical in their source repositories and are referenced through the Bus when appropriate.
+
+Never hard-code a historical worker branch as current routing authority. Historical lanes remain provenance. Interface-route bindings must themselves be current, explicit, and separately governed.
 
 ## Recovery failure
 
