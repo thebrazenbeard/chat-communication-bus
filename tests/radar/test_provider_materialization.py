@@ -337,3 +337,50 @@ def test_unverified_or_substitute_resolver_is_rejected():
             state_blobs=blobs(e),
             provenance_resolver=FakeResolver(),
         )
+
+
+def test_wrong_repository_instance_id_is_rejected(monkeypatch):
+    e = envelope()
+    fake = replace(e.state_refs[0], repository_id=999)
+    attacked = replace(e, state_refs=(fake, e.state_refs[1]))
+    m = manifest(Capability.SYSTEM_INSTRUCTIONS)
+    resolver = install_github_readback(monkeypatch)
+    with pytest.raises(ValueError, match="repository id readback mismatch"):
+        materialize_execution_request(
+            envelope=attacked,
+            manifest=m,
+            instruction_text=INSTRUCTION_TEXT,
+            input_bytes=INPUT_BYTES,
+            state_blobs=blobs(e),
+            provenance_resolver=resolver,
+        )
+
+
+def test_ambiguous_repository_or_git_path_is_rejected_before_readback(monkeypatch):
+    e = envelope()
+    m = manifest(Capability.SYSTEM_INSTRUCTIONS)
+    resolver = install_github_readback(monkeypatch)
+
+    bad_repo = replace(e.state_refs[0], repository="owner/..")
+    attacked_repo = replace(e, state_refs=(bad_repo, e.state_refs[1]))
+    with pytest.raises(ValueError, match="ambiguous path segment"):
+        materialize_execution_request(
+            envelope=attacked_repo,
+            manifest=m,
+            instruction_text=INSTRUCTION_TEXT,
+            input_bytes=INPUT_BYTES,
+            state_blobs=blobs(e),
+            provenance_resolver=resolver,
+        )
+
+    bad_path = replace(e.state_refs[0], path="../a.md")
+    attacked_path = replace(e, state_refs=(bad_path, e.state_refs[1]))
+    with pytest.raises(ValueError, match="ambiguous Git path segment"):
+        materialize_execution_request(
+            envelope=attacked_path,
+            manifest=m,
+            instruction_text=INSTRUCTION_TEXT,
+            input_bytes=INPUT_BYTES,
+            state_blobs=blobs(e),
+            provenance_resolver=resolver,
+        )
