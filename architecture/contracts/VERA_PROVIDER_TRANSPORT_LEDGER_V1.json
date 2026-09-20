@@ -1,0 +1,43 @@
+{
+  "schema": "VERA_PROVIDER_TRANSPORT_LEDGER_V1",
+  "version": 1,
+  "status": "SOURCE_CANDIDATE",
+  "storage": "SQLITE",
+  "effects": "NONE_NETWORK_FREE",
+  "attempt_registration": {
+    "identity": "ATTEMPT_ID_PLUS_INTENT_DIGEST",
+    "exact_reregister": "IDEMPOTENT",
+    "divergent_attempt_id_reuse": "REJECT",
+    "transaction": "BEGIN_IMMEDIATE",
+    "readback_required": true
+  },
+  "single_flight_subject": [
+    "provider_id",
+    "model_id",
+    "adapter_version",
+    "request_url",
+    "request_sha256"
+  ],
+  "unresolved_states": [
+    "NO_OBSERVATION",
+    "UNKNOWN_DELIVERY"
+  ],
+  "observation_semantics": {
+    "storage": "APPEND_ONLY",
+    "identical_repeat": "IDEMPOTENT",
+    "final_state_rewrite": "REJECT",
+    "unknown_resolution": [
+      "NOT_SENT",
+      "CONFIRMED_HTTP_RESPONSE",
+      "REJECTED_HTTP_RESPONSE"
+    ]
+  },
+  "trust_ceiling": [
+    "DURABLE_COORDINATION_NOT_TAMPER_PROOF",
+    "LOCAL_ADMIN_CAN_REWRITE_SQLITE",
+    "NOT_SEND_AUTHORITY",
+    "NOT_RETRY_AUTHORITY",
+    "NOT_PROVIDER_CONSUMPTION_PROOF",
+    "NOT_MODEL_BEHAVIOR_PROOF"
+  ]
+}
