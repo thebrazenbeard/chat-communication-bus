@@ -52,6 +52,21 @@ state-object identity in order to satisfy a provider. A movable branch/tag name 
 The envelope is provider-neutral. Its digest must not change because set-like
 fields were serialized in a different order.
 
+## Exact-byte materialization
+
+Before a provider adapter executes, `materialize_execution_request()` verifies the
+actual bytes supplied to the adapter:
+- UTF-8 instruction text must hash to the envelope instruction SHA-256;
+- task input bytes must hash to the envelope input SHA-256;
+- every required state object must be present exactly once;
+- every state object's bytes must reproduce the named Git blob object id;
+- unexpected state objects fail closed;
+- an INELIGIBLE provider cannot be materialized.
+
+This closes the gap between a digest-bearing manifest and the actual bytes loaded
+into an execution request. It still does not prove what a remote provider does
+after those bytes leave the adapter boundary.
+
 ## Capability negotiation
 
 `ProviderManifest` declares only adapter-observable capabilities for an exact:
