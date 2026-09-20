@@ -242,6 +242,16 @@ class TransportReceipt:
             if self.response_sha256 is None:
                 raise ValueError("HTTP response receipt requires response digest")
             _require_sha256(self.response_sha256, "response_sha256")
+            if self.state is TransportState.CONFIRMED_HTTP_RESPONSE:
+                if not 200 <= self.http_status <= 299:
+                    raise ValueError(
+                        "CONFIRMED_HTTP_RESPONSE receipt requires 2xx status"
+                    )
+            elif self.state is TransportState.REJECTED_HTTP_RESPONSE:
+                if not 300 <= self.http_status <= 599:
+                    raise ValueError(
+                        "REJECTED_HTTP_RESPONSE receipt requires 3xx-5xx status"
+                    )
 
 
 def record_transport_observation(
