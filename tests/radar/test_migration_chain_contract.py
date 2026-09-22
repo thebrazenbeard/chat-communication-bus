@@ -16,6 +16,7 @@ EXPECTED_RADAR_MIGRATIONS = [
     "20260906154101_radar_projection_journal_v1.sql",
     "20260906165117_radar_projection_journal_api_v1.sql",
     "20260908010500_radar_projection_atomic_file_v1.sql",
+    "20260922171230_radar_oidc_replay_guard_rls_v1.sql",
 ]
 
 
