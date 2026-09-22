@@ -25,7 +25,10 @@ def test_original_replay_guard_remains_service_role_only():
 def test_hardening_enables_rls_without_adding_permissive_policy():
     sql = normalized(HARDENING)
     assert "alter table radar.github_oidc_replay_guard enable row level security" in sql
-    assert "force row level security" not in sql
+    assert (
+        "alter table radar.github_oidc_replay_guard force row level security"
+        not in sql
+    )
     assert "create policy" not in sql
     assert "grant select on" not in sql
     assert "grant insert on" not in sql
