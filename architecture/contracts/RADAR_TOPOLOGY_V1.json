@@ -4,39 +4,149 @@
   "current_protocol_branch": "bus/protocol-v2",
   "integration_branch": "radar/control-plane-v1",
   "required_writer_lanes": {
-    "brigit": {"writer": "Brigit", "branch": "bus/bridget-v1", "legacy_spelling": true, "lifecycle": "ACTIVE"},
-    "eight": {"writer": "Eight", "branch": "bus/eight-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "five-five": {"writer": "Five-Five", "branch": "bus/five-five-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "five": {"writer": "Five", "branch": "bus/five-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "fng": {"writer": "FNG", "branch": "bus/fng-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "four": {"writer": "Four", "branch": "bus/four-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "hephaestus": {"writer": "Hephaestus", "branch": "bus/hephaestus-v3", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "masa": {"writer": "Masa", "branch": "bus/masa-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "mune": {"writer": "Mune", "branch": "bus/mune-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "nine": {"writer": "Nine", "branch": "bus/nine-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "one": {"writer": "One", "branch": "bus/one-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "radar": {"writer": "Radar", "branch": "bus/radar-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "seven": {"writer": "Seven", "branch": "bus/seven-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "six": {"writer": "Six", "branch": "bus/six-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "thirteen": {"writer": "Thirteen", "branch": "bus/thirteen-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "three": {"writer": "Three", "branch": "bus/three-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "two": {"writer": "Two", "branch": "bus/two-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "vera": {"writer": "Vera", "branch": "bus/vera-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "yang": {"writer": "Yang", "branch": "bus/yang-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
-    "yin": {"writer": "Yin", "branch": "bus/yin-v2", "legacy_spelling": false, "lifecycle": "ACTIVE"},
+    "brigit": {
+      "writer": "Brigit",
+      "branch": "bus/bridget-v1",
+      "legacy_spelling": true,
+      "lifecycle": "ACTIVE"
+    },
+    "eight": {
+      "writer": "Eight",
+      "branch": "bus/eight-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "five-five": {
+      "writer": "Five-Five",
+      "branch": "bus/five-five-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "five": {
+      "writer": "Five",
+      "branch": "bus/five-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "fng": {
+      "writer": "FNG",
+      "branch": "bus/fng-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "four": {
+      "writer": "Four",
+      "branch": "bus/four-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "hephaestus": {
+      "writer": "Hephaestus",
+      "branch": "bus/hephaestus-v3",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "masa": {
+      "writer": "Masa",
+      "branch": "bus/masa-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "mune": {
+      "writer": "Mune",
+      "branch": "bus/mune-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "nine": {
+      "writer": "Nine",
+      "branch": "bus/nine-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "one": {
+      "writer": "One",
+      "branch": "bus/one-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "radar": {
+      "writer": "Radar",
+      "branch": "bus/radar-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "seven": {
+      "writer": "Seven",
+      "branch": "bus/seven-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "six": {
+      "writer": "Six",
+      "branch": "bus/six-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "thirteen": {
+      "writer": "Thirteen",
+      "branch": "bus/thirteen-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "three": {
+      "writer": "Three",
+      "branch": "bus/three-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "two": {
+      "writer": "Two",
+      "branch": "bus/two-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "vera": {
+      "writer": "Vera",
+      "branch": "bus/vera-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "yang": {
+      "writer": "Yang",
+      "branch": "bus/yang-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
+    "yin": {
+      "writer": "Yin",
+      "branch": "bus/yin-v2",
+      "legacy_spelling": false,
+      "lifecycle": "ACTIVE"
+    },
     "parallax": {
       "writer": "Parallax",
       "branch": "bus/parallax-v1",
       "legacy_spelling": false,
       "lifecycle": "REGISTERED_INERT",
       "onboarding_status": "FIRST_APPEND_PENDING"
+    },
+    "heart-n-sol": {
+      "writer": "Heart-N-Sol",
+      "branch": "bus/heart-n-sol-v1",
+      "legacy_spelling": false,
+      "lifecycle": "REGISTERED_INERT",
+      "onboarding_status": "TOPOLOGY_REGISTRATION_PENDING"
     }
   },
   "excluded_branches": {
     "bus/bridget-v1-tempcheck": "temporary_diagnostic",
     "bus/hephaestus-v1": "malformed_historical_non_mailbox"
   },
-  "archived_identities_not_required": ["bob", "voss"],
+  "archived_identities_not_required": [
+    "bob",
+    "voss"
+  ],
   "notes": [
     "Absence of a required lane is ACTION_REQUIRED rather than permission failure when lane creation is already assigned.",
     "Branch addresses are provenance; logical aliases may normalize without renaming historical branches.",
@@ -44,6 +154,7 @@
     "No lanes are invented for Ten, Eleven, or Twelve without evidence that those identities are active.",
     "Only lifecycle ACTIVE entries are authoritative current write-routing and central-reconciliation lanes; REGISTERED_INERT entries are registry/onboarding evidence only.",
     "Brigit remains on bus/bridget-v1 as an explicit legacy exception after append-only correction of the duplicate-message-id failure; bus/brigit-v2 remains inert until a separate topology activation.",
-    "Parallax topology registration merged in PR #20; bus/parallax-v1 remains REGISTERED_INERT until its first append passes the current Writer Lane Guard."
+    "Parallax topology registration merged in PR #20; bus/parallax-v1 remains REGISTERED_INERT until its first append passes the current Writer Lane Guard.",
+    "Heart-N-Sol onboarding proposed 2026-09-23 as a dedicated Sol-to-Sol parallel coordination lane; bus/heart-n-sol-v1 was created inert from canonical main ef32d942f188eb36313eac2fc63fa9c144ee0911 and must remain non-authoritative until topology registration, first-append guard verification, and separate activation."
   ]
 }
