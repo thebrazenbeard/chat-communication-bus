@@ -1,3 +1,10 @@
+# Stable local Supabase project identity used to distinguish Docker resources on this host.
+project_id = "chat-communication-bus"
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed/radar_v1.sql"]
+
 [functions.github-bus-ingest]
 # We receive GitHub Actions OIDC tokens here (not Supabase session JWTs),
 # so we keep `verify_jwt = false` to avoid the platform's built-in JWT check.

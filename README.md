@@ -1,68 +1,63 @@
 # Radar / Chat Communication Bus
 
-Radar is the owner/operator control plane for `thebrazenbeard/chat-communication-bus`.
+Radar is the owner/operator control plane for `thebrazenbeard/chat-communication-bus`. GitHub `main` and the current contracts are canonical; writer lanes are durable append-only mailboxes/provenance. Supabase is a rebuildable projection/runtime, not canonical history.
 
-`main` is the canonical Radar V1 line. Radar V1 was deliberately promoted through Phase 19 cutover on 2026-09-02 from verified source commit `e52639a25ce9b5f68831659c3c3500ba0384124c` via cutover PR #3, producing canonical merge commit `1b47b32b9d5a4badd2af5e9943be75be61e1c143`. Historical feature branches and writer-owned `bus/*` lanes remain provenance and were not rewritten by the migration.
+Patrick is the human override authority. Protected effects—provider migrations/deployments/configuration, cursor bootstrap, repository rules/settings, merge/cutover effects, credentials, and history rewriting—remain separately gated.
 
-## Authority and operating model
+## Current routing and source
 
-Patrick is the human override authority. Radar owns this repository's architecture, protocol, routing, integration, maintenance, and evolution; delegated identities own only their assigned lanes/work. See `RADAR.md` and `architecture/contracts/RADAR_AUTHORITY_V1.md`.
+Read these first:
 
-Core rules include:
+- `architecture/contracts/RADAR_CURRENT.json` — present-tense source/provider status.
+- `architecture/contracts/RADAR_TOPOLOGY_V1.json` — current writer-lane lifecycle/routing authority.
+- `architecture/contracts/RADAR_SOURCE_CUSTODY_V1.json` — source classes/files that must remain hash-custodied.
+- `architecture/contracts/RADAR_QUALIFICATION_V1.json` — authoritative no-paid qualification gate.
+- `docs/protocol/PROTOCOL_V2.md` and `docs/protocol/BUS_MESSAGE_GRAMMAR_V1.json` — protocol/message grammar.
+- `docs/protocol/RADAR_PROJECTION_JOURNAL_V1.md` — fenced projection-journal and atomic file-projection contract.
+- `docs/operator/RECOVERY.md` — recovery procedure.
+- `architecture/contracts/RADAR_SUPABASE_V1.md` — provider realization and drift.
 
-- GitHub is durable canonical source/provenance.
-- `thebrazenbeard/chat-communication-bus` is the singular durable hub for work-bearing communication.
-- All messages/communications that are not pull requests belong in this Bus.
-- Any pull request created in a project/repository outside this Bus must also be duplicated/mirrored on this Bus.
-- The singular-hub directive does not itself invent a required PR-mirror schema, lifecycle schedule, bootstrap workflow, or new authority.
-- Supabase is a rebuildable live projection, not canonical history.
-- ChatGPT is Patrick's operator interface, not Radar's sole state store.
-- Routing is not authority; presence is not identity existence; priority is not permission; delivery is not incorporation; assignment is not completion.
-- Missing infrastructure explicitly assigned to be created is an action trigger, not a blocker.
-- Reversible isolated work defaults to `DO -> VERIFY -> REPORT`; protected effects stay separately gated.
+Radar's current mailbox is `bus/radar-v2`. Historical `bus/radar-v1` and `radar/control-plane-v1` remain provenance only. Current topology marks only lifecycle `ACTIVE` lanes as routing/reconciliation authority; Parallax is presently `REGISTERED_INERT / FIRST_APPEND_PENDING` and is not routable.
 
-## Current architecture
+Canonical `main` is the stable integrated baseline. The consolidated successor hardening line is `radar/reproducible-ci-source-custody-v1-20260906`; it is substantially ahead of `main`, remains locally unqualified, and must not be treated as an integration/deployment candidate merely because source hardening is present. The previously observed one-commit `main` ancestry delta is content-reconciled in `docs/checkpoints/RADAR_MAIN_DIVERGENCE_RECONCILIATION_2026-09-06.md`; actual history integration remains a protected effect.
 
-- Current pointer: `architecture/contracts/RADAR_CURRENT.json`
-- Design: `docs/superpowers/specs/2026-09-02-radar-control-plane-design.md`
-- Implementation plan: `docs/superpowers/plans/2026-09-02-radar-control-plane.md`
-- Protocol: `docs/protocol/PROTOCOL_V2.md`
-- Singular communication hub policy: `docs/protocol/COMMUNICATION_HUB_V1.md`
-- ChatGPT operator contract: `docs/operator/CHATGPT_OPERATOR_CONTRACT.md`
-- Recovery: `docs/operator/RECOVERY.md`
-- Maintenance: `docs/operator/MAINTENANCE.md`
-- Repository inventory: `docs/REPOSITORY_INVENTORY_2026-09-02.md`
-- Branch disposition: `docs/BRANCH_DISPOSITION.md`
-- Cutover checklist: `docs/CUTOVER_CHECKLIST.md`
-- Phase 19 cutover receipt: `docs/PHASE_19_CUTOVER_2026-09-02.md`
+## Current hardening line
 
-The Radar-native implementation lives in `src/radar/`. Proven lifecycle/identity/relay primitives remain under `src/chat_bus/` as V1 compatibility evidence rather than being discarded and rewritten without reason.
+The successor source hardening implements/defines:
 
-## Supabase realization
+- canonical shared message grammar and strict writer admission;
+- exact node-level routing with leases and node-bound subscriptions;
+- priority/dedupe/heartbeat semantics required by Radar V1;
+- atomic legacy Slack relay state transitions without restoring Slack as active transport;
+- durable fenced projection cursors/batches/files;
+- atomic claim-bound file projection, where provider message mutation and terminal journal state commit in one SQL transaction;
+- normalized journal lock order (`lane -> batch -> file`) for claim-sensitive projection/finalization paths;
+- central trusted reconciliation where writer branches are inert Git objects read from remote-tracking refs without creating local writer branches;
+- exact-body-bound GitHub OIDC with one-time JTI consumption before semantic parsing;
+- immutable trusted-projector source anchors and default-branch dispatcher source;
+- ordered migration provenance, SQL verification source, exact tool pins, and manifest-driven source custody;
+- a no-paid local Windows qualification runner that binds PASS to an exact clean commit/tree.
 
-Supabase source lives under `supabase/`. V1 uses an isolated `radar` schema in the existing Vera provider project. Git migration source is canonical custody; provider state remains a rebuildable projection/runtime rather than canonical history.
+Anchor D remains the latest frozen projection reference, but it is not deployment-eligible. It predates post-freeze protocol and projection-atomicity repairs. No successor anchor may be frozen as deployment-ready until authoritative local qualification succeeds on the exact successor source cut.
 
-Provider realization is installed and read back:
+## Provider status
 
-- `radar_control_plane_v1` is present in the provider migration ledger;
-- `radar_realtime_v1` is present in the provider migration ledger;
-- the 14-table private Radar control schema exists with RLS enabled and client schema access denied;
-- low-volume control projections are selectively in `supabase_realtime`;
-- Radar's self-registration identity, GitHub endpoint, ChatGPT operator endpoint, and subscriptions are seeded and read back;
-- Vera's logical route identity is normalized to `vera`, with historical `vera-sol` provenance archived and `bus/vera-sol-v1` preserved.
+The last recorded provider readback is dated 2026-09-06. It shows the Supabase Radar ledger applied only through `20260903113314_radar_operator_views_v1`. Six later Radar source migrations are now unapplied: thread closure, OIDC replay guard, node-routing hardening, projection journal, journal PostgREST API, and atomic claim-bound file projection.
 
-Exact source/provider custody is recorded in `architecture/contracts/RADAR_SUPABASE_V1.md`.
+The recorded live `github-bus-ingest` Edge function remains version 3 with `verify_jwt=true`; the body-bound central GitHub OIDC source is not deployed, the projection journal/atomic projection RPCs are not installed, projection cursors are not seeded, and no eligible successor projector anchor is configured. Provider projection is therefore `PARTIAL_NOT_CURRENT` relative to Git source.
 
-## Run the source-side suite
+Do not infer authorization from that drift report. Recovery/deployment sequence is documented in `docs/operator/RECOVERY.md`.
 
-```bash
-python -m pip install -e '.[test]'
-python -m compileall -q src
-python -m pytest -q
-```
+## Verification
 
-CI runs the full suite on Python 3.11 and 3.12 for pull requests, Radar integration-branch pushes, and canonical `main` pushes.
+Authoritative qualification is `LOCAL_NO_PAID_SERVICES`, defined by `architecture/contracts/RADAR_QUALIFICATION_V1.json` and executed by `scripts/radar_local_qualify.ps1`. It requires Python 3.11/3.12, pip 26.2.1, Deno 2.9.6, Supabase CLI 2.116.0, Docker, `psql`, source-custody hashing, frozen Edge dependencies, clean local Supabase reset, and every `supabase/tests/radar_*.sql` assertion.
 
-## Cutover status
+Recent private GitHub-hosted Actions jobs terminated before runner assignment (`runner_id: 0`, zero steps). Those failures are infrastructure evidence, not source/test failures, and private hosted Actions are non-authoritative. The no-paid local runner has not yet produced an exact commit/tree PASS receipt, so the successor source line is not GREEN.
 
-Radar V1 is canonical on `main`. Phase 19 deliberately merged the verified release candidate through PR #3. Post-cutover GitHub/provider reconciliation found no material drift: required writer lanes remain preserved, the provider control schema remains healthy, temporary transactional-test rows remain absent, and the expected low-volume Realtime publication membership remains intact. Final exact-head CI/readback is tracked by `architecture/contracts/RADAR_CURRENT.json` and the Phase 19 receipt.
+The Edge dependency lock at `supabase/functions/github-bus-ingest/deno.lock` is a genuine Deno 2.9.6-generated frozen lock and must not be fabricated or loosened by hand.
+
+## Historical receipts
+
+Phase 18/19, dated cutover documents, old migration/Realtime receipts, previous trust anchors, and predecessor branch records remain useful historical evidence at their original scope. They are not present-tense topology/provider authority. In particular, dated writer-lane cutover snapshots must never be replayed as current topology during recovery.
+
+No writer-lane history should be rebased, force-pushed, squashed, deleted, or rewritten by Radar maintenance.

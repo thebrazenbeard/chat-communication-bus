@@ -9,7 +9,7 @@ begin;
 do $$
 declare
   -- Primary test ids
-  assignment_id text := '__radar_assignment_test__';
+  assignment_id_value text := '__radar_assignment_test__';
   root_message text := '__radar_assignment_root__';
   ack_message text := '__radar_assignment_ack__';
   fork_message text := '__radar_assignment_fork__';
@@ -51,8 +51,8 @@ begin
   on conflict (message_id) do nothing;
 
   -- Assert that no assignment was created by the ordinary message
-  if exists (select 1 from radar.assignments where assignment_id = assignment_id) then
-    raise exception 'ORDINARY_MESSAGE_CREATED_ASSIGNMENT: assignment_id=%', assignment_id;
+  if exists (select 1 from radar.assignments where assignment_id = assignment_id_value) then
+    raise exception 'ORDINARY_MESSAGE_CREATED_ASSIGNMENT: assignment_id=%', assignment_id_value;
   end if;
 
   -- Insert explicit assignment "root" message (requires_ack => true)
@@ -66,7 +66,7 @@ begin
     'assignment-test:root',
     jsonb_build_object(
       'subject', 'explicit assignment root',
-      'assignment_id', assignment_id,
+      'assignment_id', assignment_id_value,
       'assignment_workflow_id', 'assignment-test-workflow',
       'assignment_assignee', 'assignment-test-worker',
       'assignment_event', 'ASSIGNED',
@@ -80,20 +80,20 @@ begin
   -- Verify assignment projected correctly
   if not exists (
     select 1 from radar.assignments
-    where assignment_id = assignment_id
+    where assignment_id = assignment_id_value
       and workflow_id = 'assignment-test-workflow'
       and current_state = 'ASSIGNED'
       and assignee_identity_id = 'assignment-test-worker'
       and source_message_id = root_message
       and protected_authority = false
   ) then
-    raise exception 'ASSIGNMENT_ROOT_NOT_PROJECTED: assignment_id=%', assignment_id;
+    raise exception 'ASSIGNMENT_ROOT_NOT_PROJECTED: assignment_id=%', assignment_id_value;
   end if;
 
   -- Capture root event id
   select event_id into root_event
   from radar.assignment_events
-  where assignment_id = assignment_id and operation_id = root_message
+  where assignment_id = assignment_id_value and operation_id = root_message
   limit 1;
 
   if root_event is null then
@@ -111,7 +111,7 @@ begin
     'assignment-test:ack',
     jsonb_build_object(
       'subject', 'assignment acknowledged',
-      'assignment_id', assignment_id,
+      'assignment_id', assignment_id_value,
       'assignment_workflow_id', 'assignment-test-workflow',
       'assignment_assignee', 'assignment-test-worker',
       'assignment_event', 'ACKNOWLEDGED',
@@ -124,7 +124,7 @@ begin
 
   select event_id into ack_event
   from radar.assignment_events
-  where assignment_id = assignment_id and operation_id = ack_message
+  where assignment_id = assignment_id_value and operation_id = ack_message
   limit 1;
 
   if ack_event is null then
@@ -147,11 +147,11 @@ begin
   -- Verify assignment current state advanced
   if not exists (
     select 1 from radar.assignments
-    where assignment_id = assignment_id
+    where assignment_id = assignment_id_value
       and current_state = 'ACKNOWLEDGED'
       and current_event_id = ack_event
   ) then
-    raise exception 'ASSIGNMENT_CURRENT_STATE_NOT_ADVANCED: assignment_id=%', assignment_id;
+    raise exception 'ASSIGNMENT_CURRENT_STATE_NOT_ADVANCED: assignment_id=%', assignment_id_value;
   end if;
 
   ---------------------------------------------------------------------------
@@ -167,7 +167,7 @@ begin
     array['github://assignment-test/fork'], repeat('3', 64),
     'assignment-test:fork',
     jsonb_build_object(
-      'assignment_id', assignment_id,
+      'assignment_id', assignment_id_value,
       'assignment_workflow_id', 'assignment-test-workflow',
       'assignment_assignee', 'assignment-test-worker',
       'assignment_event', 'RUNNING',
@@ -180,7 +180,7 @@ begin
 
   if exists (
     select 1 from radar.assignment_events
-    where assignment_id = assignment_id and operation_id = fork_message
+    where assignment_id = assignment_id_value and operation_id = fork_message
   ) then
     raise exception 'STALE_FORK_ADVANCED_ASSIGNMENT: fork_message=%', fork_message;
   end if;
@@ -257,7 +257,7 @@ begin
   -- Record counts before reconciliation to check idempotence
   select count(*) into event_count_before
   from radar.assignment_events
-  where assignment_id = assignment_id;
+  where assignment_id = assignment_id_value;
 
   select count(*) into reconciliation_count_before
   from radar.reconciliation_events
@@ -269,9 +269,9 @@ begin
 
   -- Ensure reconciliation is idempotent (no duplicate events or observations were created)
   if event_count_before <> (
-    select count(*) from radar.assignment_events where assignment_id = assignment_id
+    select count(*) from radar.assignment_events where assignment_id = assignment_id_value
   ) then
-    raise exception 'ASSIGNMENT_EVENTS_NOT_IDEMPOTENT: assignment_id=%', assignment_id;
+    raise exception 'ASSIGNMENT_EVENTS_NOT_IDEMPOTENT: assignment_id=%', assignment_id_value;
   end if;
 
   if reconciliation_count_before <> (

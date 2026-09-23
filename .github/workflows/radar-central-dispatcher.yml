@@ -1,0 +1,17 @@
+name: Radar Central Dispatcher
+
+on:
+  workflow_run:
+    workflows: ["Writer Lane Guard"]
+    types: [completed]
+    branches: ["bus/**"]
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  reconcile:
+    uses: thebrazenbeard/chat-communication-bus/.github/workflows/radar-trusted-projector.yml@dfd3c639d058dcafaa1167e53ad4bdc152d52cf6

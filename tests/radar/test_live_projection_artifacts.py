@@ -32,21 +32,23 @@ def test_collision_followup_preserves_both_messages_without_rewriting_git_histor
     assert "delete from radar.messages" not in lowered
 
 
-def test_edge_function_uses_custom_github_oidc_before_service_role_effects():
+def test_edge_function_uses_body_bound_github_oidc_before_service_role_effects():
     entry = (ROOT / "supabase" / "functions" / "github-bus-ingest" / "index.ts").read_text()
     source = (ROOT / "supabase" / "functions" / "github-bus-ingest" / "handler.ts").read_text()
     assert 'import "./handler.ts"' in entry
     assert "token.actions.githubusercontent.com" in source
-    assert "chat-communication-bus-supabase" in source
+    assert "chat-communication-bus-supabase:" in source
+    assert "x-radar-body-sha256" in source
     assert "thebrazenbeard/chat-communication-bus" in source
     assert "RSASSA-PKCS1-v1_5" in source
-    assert "radar_project_bus_message_v1" in source
+    assert "radar_projection_project_file_v1" in source
+    assert "radar_project_bus_message_v1" not in source
     assert "SUPABASE_SERVICE_ROLE_KEY" in source
     assert "body_sha256" in source
     assert "content_base64" in source
 
 
-def test_edge_oidc_jti_replay_guard_is_durable_atomic_and_precedes_projection():
+def test_edge_oidc_jti_replay_guard_is_durable_atomic_and_precedes_semantic_projection():
     migration = ROOT / "supabase" / "migrations" / "20260905230823_radar_oidc_replay_guard_v1.sql"
     assert migration.exists()
     sql = migration.read_text().lower()
@@ -67,17 +69,17 @@ def test_edge_oidc_jti_replay_guard_is_durable_atomic_and_precedes_projection():
     assert "radar_consume_github_oidc_jti_v1" in source
     assert "OIDC_JTI_REPLAYED" in source
     assert "await consumeGithubOidcJti(supabase, claims);" in source
-    assert source.index("await consumeGithubOidcJti(supabase, claims);") < source.index(
-        "const results = await mapWithConcurrency"
-    )
+    assert source.index("await consumeGithubOidcJti(supabase, claims);") < source.index("JSON.parse(text)")
+    assert source.index("JSON.parse(text)") < source.index("handleOperation(supabase, raw)")
 
 
-def test_edge_function_accepts_legacy_frontmatter_and_wrapped_scalars_with_evidence_time_fallback():
+def test_edge_function_preserves_frontmatter_wrapped_scalars_and_strict_current_timestamps():
     source = (ROOT / "supabase" / "functions" / "github-bus-ingest" / "handler.ts").read_text()
     lowered = source.lower()
     assert "splitYamlFrontmatter" in source
     assert "unwrapScalar" in source
-    assert "source_commit_invalid_header" in source
+    assert "INVALID_CREATED_AT" in source
+    assert "source_commit_invalid_header" not in source
     assert "fabulous nitpicking gremlin" in lowered
 
 
@@ -89,33 +91,40 @@ def test_edge_function_derives_exact_endthread_sender_closure_without_storing_bo
     assert "body: body" not in source
 
 
-def test_writer_lane_workflow_is_secretless_and_oidc_scoped():
-    caller = (ROOT / ".github" / "workflows" / "radar-bus-projection.yml").read_text()
+def test_central_workflow_is_secretless_self_pinned_and_provider_capable():
+    dispatcher = (ROOT / ".github" / "workflows" / "radar-central-dispatcher.yml").read_text()
     trusted = (ROOT / ".github" / "workflows" / "radar-trusted-projector.yml").read_text()
-    caller_lowered = caller.lower()
+    dispatcher_lowered = dispatcher.lower()
     trusted_lowered = trusted.lower()
 
-    assert "id-token: write" in caller_lowered
-    assert "contents: read" in caller_lowered
-    assert "secrets." not in caller_lowered
-    assert "radar-trusted-projector.yml@" in caller
-    assert "runs-on:" not in caller
+    assert "id-token: write" in dispatcher_lowered
+    assert "contents: read" in dispatcher_lowered
+    assert "secrets." not in dispatcher_lowered
+    assert "radar-trusted-projector.yml@" in dispatcher
+    assert "runs-on:" not in dispatcher
 
     assert "id-token: write" in trusted_lowered
     assert "contents: read" in trusted_lowered
     assert "secrets." not in trusted_lowered
-    assert "python -m pip install -e control" in trusted
-    assert "scripts/radar_emit_bus_projection.py" in trusted
-    assert "radar/live-message-projection-v1" not in trusted
-    assert "github.ref" in trusted
-    assert "github.sha" in trusted
-    assert "github.event.before" in trusted
-    assert "--base" in trusted
-    assert "--cutover" in trusted
-    assert "--bootstrap-main" in trusted
+    assert "ACTIONS_ID_TOKEN_REQUEST_URL" in trusted
+    assert "ACTIONS_ID_TOKEN_REQUEST_TOKEN" in trusted
+    assert "job_workflow_ref" in trusted
+    assert "job_workflow_sha" in trusted
+    assert "path: control" in trusted
+    assert "ref: ${{ steps.self_pin.outputs.sha }}" in trusted
+    assert "persist-credentials: false" in trusted
+    assert "fetch-depth: 0" in trusted
+    assert "scripts/radar_trusted_project.py" in trusted
+    assert "RADAR_RECONCILE_MODE: project" in trusted
+    assert "path: lane" not in trusted
+    assert "scripts/radar_emit_bus_projection.py" not in trusted
+    assert "python -m pip install" not in trusted
+    assert "github.ref" not in trusted
+    assert "github.sha" not in trusted
+    assert "github.event.before" not in trusted
 
 
-def test_projection_script_bootstraps_local_src_for_legacy_lane_workflow(tmp_path):
+def test_legacy_projection_script_still_has_importable_help_for_historical_lane_runs(tmp_path):
     script = ROOT / "scripts" / "radar_emit_bus_projection.py"
     result = subprocess.run(
         [sys.executable, "-S", str(script), "--help"],

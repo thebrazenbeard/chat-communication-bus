@@ -86,7 +86,7 @@ end
 $$;
 
 -- Expired, heartbeat-less, and lease-less routable statuses all fail closed.
-perform radar.mark_stale_nodes_offline(interval '5 minutes');
+select radar.mark_stale_nodes_offline(interval '5 minutes');
 
 do $$
 begin
@@ -129,7 +129,7 @@ end
 $$;
 
 -- Heartbeat renewal restores a bounded live lease without changing identity.
-perform radar.touch_node('22222222-2222-4222-8222-222222222222', 'ONLINE');
+select radar.touch_node('22222222-2222-4222-8222-222222222222', 'ONLINE');
 
 do $$
 begin

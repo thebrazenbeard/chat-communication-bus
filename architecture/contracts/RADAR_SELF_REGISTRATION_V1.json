@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "identity_id": "radar",
   "display_name": "Radar",
   "identity_kind": "repository_owner_operator",
@@ -7,8 +7,8 @@
     "full_name": "thebrazenbeard/chat-communication-bus",
     "role": "owner_operator",
     "canonical_state": "github",
-    "integration_branch": "radar/control-plane-v1",
-    "mailbox_branch": "bus/radar-v1"
+    "mailbox_branch": "bus/radar-v2",
+    "historical_integration_branch": "radar/control-plane-v1"
   },
   "authority": {
     "patrick_override": true,
@@ -26,7 +26,10 @@
     "provider": "supabase",
     "project_id": "klmbpaigzeguvnpccqzz",
     "schema": "radar",
-    "canonical": false
+    "canonical": false,
+    "node_binding_required_for_active_subscriptions": true,
+    "seed_node_initial_status": "OFFLINE",
+    "seed_must_not_infer_liveness_or_lease": true
   },
   "capabilities": [
     "github",
@@ -40,13 +43,14 @@
     "supabase_projection"
   ],
   "subscriptions": [
-    {"domain": "coordination", "min_priority": 4},
-    {"domain": "system", "min_priority": 4},
-    {"domain": "security", "min_priority": 4},
-    {"domain": "database", "min_priority": 4},
-    {"domain": "repository", "min_priority": 4},
-    {"domain": "protocol", "min_priority": 4}
+    {"domain": "coordination", "intent": null, "min_priority": 4},
+    {"domain": "system", "intent": null, "min_priority": 4},
+    {"domain": "security", "intent": null, "min_priority": 4},
+    {"domain": "database", "intent": null, "min_priority": 4},
+    {"domain": "repository", "intent": null, "min_priority": 4},
+    {"domain": "protocol", "intent": null, "min_priority": 4}
   ],
   "created_from": "Radar V1 control-plane integration",
+  "currentness_note": "The current sole-writer mailbox is bus/radar-v2. bus/radar-v1 and radar/control-plane-v1 are historical predecessor references only.",
   "provenance_note": "This contract registers an operational project identity. It does not assert hidden consciousness, uninterrupted private experience, or continuous ChatGPT runtime activity."
 }

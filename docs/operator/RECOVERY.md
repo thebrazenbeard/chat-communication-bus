@@ -1,48 +1,54 @@
 # Radar Recovery
 
-Radar is designed so loss of a ChatGPT conversation, live Realtime connection, or Supabase projection does not erase canonical architecture/source.
+Radar is designed so loss of a ChatGPT conversation, Realtime connection, or Supabase projection does not erase canonical architecture/source. GitHub is canonical. Provider state is a rebuildable projection and must be read back, never guessed.
 
-## Fresh ChatGPT session
+## Fresh operator/session recovery
 
-1. Read `RADAR.md`.
-2. Read `architecture/contracts/RADAR_AUTHORITY_V1.md` and `docs/protocol/PROTOCOL_V2.md`.
-3. Read the current design/operator contract and Phase 19 checklist.
-4. Fresh-read GitHub `main`, `radar/control-plane-v1`/successor, PR status, writer lanes, and CI.
-5. Fresh-read Supabase migration ledger and `radar` projection if provider is available.
-6. Reconcile GitHub canonical/source state against provider projection.
-7. Surface material exceptions only, then continue the current task.
+1. Read `RADAR.md`, `architecture/contracts/RADAR_CURRENT.json`, and `architecture/contracts/RADAR_AUTHORITY_V1.md`.
+2. Read `architecture/contracts/RADAR_TOPOLOGY_V1.json` for current routing authority.
+3. Read `architecture/contracts/RADAR_SOURCE_CUSTODY_V1.json`, `architecture/contracts/RADAR_QUALIFICATION_V1.json`, and the current source migration chain.
+4. Treat `architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json` and dated Phase/Cutover documents as historical evidence only. Do not apply historical writer-lane snapshots as current topology.
+5. Fresh-read GitHub `main`, the current Radar staging/successor source line, open PRs/issues, ACTIVE writer lanes, and available verification evidence.
+6. Fresh-read the Supabase migration ledger, Edge configuration, and projection state if provider access is available.
+7. Reconcile GitHub canonical/source state against provider readback before any provider-bound action.
 
-A chat transcript can supply useful provenance but is not required canonical runtime state.
+A chat transcript can supply useful provenance but is not canonical runtime state.
 
 ## GitHub-only degraded mode
 
-If Supabase is unavailable:
+If Supabase is unavailable, continue GitHub source/protocol/issue/PR/lane work. Treat provider liveness, queues, subscriptions, projection cursors, telemetry, and DLQ state as unavailable/stale. Do not reconstruct provider currentness from old screenshots, chats, or historical receipts. Record provider-bound work as pending reconciliation.
 
-- Keep GitHub source/protocol/issue/PR/lane work operating normally.
-- Treat liveness, provider queues, dependency projection, telemetry, and DLQ provider state as unavailable/stale rather than guessing.
-- Do not reconstruct provider currentness from old screenshots/chat claims.
-- Record any provider-bound actions as pending reconciliation.
-- When Supabase returns, read migration ledger first, then projection state, then reconcile before replaying queued effects.
+## Rebuilding the Supabase projection
 
-## Rebuilding Supabase projection
+This procedure describes recovery order; it is not authorization to perform provider effects.
 
-1. Confirm provider/project target from `architecture/contracts/RADAR_SUPABASE_V1.md`.
-2. Fresh-read Git migration files; do not copy SQL out of mutable provider state when Git source exists.
-3. Check migration ledger before applying each migration.
-4. Apply missing Git-held migrations in order.
-5. Run `supabase/tests/radar_control_plane_v1.sql` and `supabase/tests/radar_realtime_v1.sql` against the target.
-6. Apply `supabase/seed/radar_v1.sql` idempotently.
-7. Read back Radar identity, endpoints, subscriptions, tables, privileges, and publication membership.
-8. Reconcile current GitHub branch/lane/protocol state into the rebuilt provider projection.
+1. Confirm project/schema from `architecture/contracts/RADAR_SUPABASE_V1.md` and currentness from `RADAR_CURRENT.json`.
+2. Verify `architecture/contracts/RADAR_SOURCE_CUSTODY_V1.json`; run `python scripts/radar_source_hashes.py` successfully.
+3. Require an authoritative local PASS receipt from `scripts/radar_local_qualify.ps1` that binds the exact successor source commit/tree from a clean worktree. Static/source review or private hosted Actions are not substitutes.
+4. Fresh-read the provider migration ledger. Compare it with every Git-held `supabase/migrations/*_radar_*.sql` in lexical/version order.
+5. Apply only missing Git-held migrations, in exact source order, using the normal migration mechanism. Never reconstruct SQL from mutable provider definitions when Git source exists.
+6. Rebuild a clean local database with `supabase db reset`, then run every `supabase/tests/radar_*.sql` with `ON_ERROR_STOP` before provider cutover.
+7. Confirm function ACLs, RLS, Realtime publication membership, node lease semantics, replay guard, journal fencing, atomic claim-bound file projection, and projection-journal RPCs after migration. The service role must not retain direct execution of the legacy standalone message-projection or standalone file-result RPCs after the atomic-file migration.
+8. Apply the current `supabase/seed/radar_v1.sql` idempotently only after the full current chain exists. The seed registers `bus/radar-v2` and an OFFLINE node; it must not be treated as heartbeat/lease evidence.
+9. Read back Radar identity, node, endpoints, node-bound subscriptions, tables, privileges, and publication membership.
+10. Reconcile the current `RADAR_TOPOLOGY_V1.json`; historical cutover lane maps are evidence only.
+11. Projection cursor bootstrap is a protected cutover effect. Seed each ACTIVE lane cursor only from reviewed activation/cutover evidence; never infer a cursor from branch naming or replay the entire inherited branch tree.
+12. Before enabling central projection, read `RADAR_CURRENT.json` and then its exact `projection_trust_contract`. Require that contract to identify the currently frozen, deployment-eligible projector source and an admitted authoritative PASS receipt for those same immutable bytes. Set provider `RADAR_TRUSTED_PROJECTOR_SHA` to that contract's exact `projection_anchor_sha`; do not substitute the later metadata/dispatcher commit that records the freeze, and never reuse a superseded historical anchor merely because it was once current. Verify the Edge function has the intended custom-auth gateway setting (`verify_jwt` must not preempt the function's GitHub OIDC verifier).
+13. Deploy/reconfigure Edge and activate the default-branch dispatcher only under separate authorization, then canary one lane and read back cursor/message/journal state before broader use.
+14. Verify a real Git -> dispatcher/OIDC -> Edge -> atomic claim-bound file projection -> journal finalize -> provider readback path. Exercise idempotent retry and ensure a stale/expired claim cannot create a message row, mark a file successful, or advance a cursor.
 
-## Partial / uncertain write
+## Partial or uncertain write
 
-For a non-idempotent write that returns an error or times out, do not blindly retry. Inspect whether the intended effect committed. If exact effect state cannot be established, preserve ambiguity and use a successor/recovery operation rather than double-applying it.
+For a write that returns an error or times out, do not blindly retry. Inspect durable state first. Projection retries use a fresh OIDC token/JTI; business idempotency remains message/content based. A lost/expired journal claim must never create an unjournaled provider mutation or advance the projection cursor.
 
 ## DLQ recovery
 
-A dead-letter message is not automatically eligible for replay. Refresh the target/current task and set applicability first. Replay only if still applicable. Preserve the original failure and replay receipt.
+A dead-letter message is not automatically replayable. Refresh the target/current task and applicability first. Preserve the original failure and any replay receipt.
 
-## Cutover failure
+## Diverged writer history
 
-Never repair a bad Phase 19 cutover by force-pushing historical `main`. Preserve the failed state, revert or create a successor repair branch/PR, verify it independently, and reconcile provider projections to the corrected canonical head.
+If the durable projection cursor and current writer head are not ancestor-related, fail closed as `DIVERGED_HISTORY`. Do not force-push, synthesize ancestry, or advance the cursor. Preserve the branch and investigate/reconcile explicitly.
+
+## Historical cutover failure
+
+Never repair a historical cutover by rewriting preserved history. Use a successor source repair/PR, verify it independently, and reconcile provider projection to the corrected current source.

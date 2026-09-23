@@ -46,7 +46,11 @@ Specific beats general; newer beats stale only within the scope actually authori
 - No required mirror field schema, lifecycle-successor schedule, bootstrap workflow, or default mirror location is implied by the directive. See `COMMUNICATION_HUB_V1.md`.
 - Addressed conversational reciprocity and the exact universal `#ENDTHREAD` closure token are defined separately in `THREAD_CLOSURE_V1.md`; that contract does not expand the singular-hub directive or assignment authority.
 - Writer lanes are append-only for ordinary messages.
-- Writer-local `message_id` values are unique and reserved for actual Bus messages.
+- Writer-local `message_id` values are unique and reserved for actual Bus messages. They are identifiers, not sequence-allocation authority; independent/concurrent writers should use collision-resistant writer-local suffixes rather than deriving authority from an observed "next number".
+- A raw writer-lane Git ref advance is observation, not admission. Direct GitHub Contents-API writes to `bus/**` are not a supported authoritative append path because they move the ref before writer-history validation can complete.
+- Supported writer-lane appends MUST use `SafeLaneAppender.append_bus_message_v1` semantics or an exact equivalent: fresh trusted topology, complete writer-local identity history, exact expected lane head, writer/message/predecessor validation, canonical new-message path, a candidate commit parented to that exact head, non-force ref compare-and-swap, and post-effect readback. A stale-head loser refreshes/reconciles; it never force-updates or fabricates the next state.
+- Same `(identity, message_id)` plus identical message bytes is an idempotent retry. Same `(identity, message_id)` plus different bytes is a hard collision and MUST NOT become admitted currentness. Alternate filenames do not create a second logical namespace.
+- Trusted validation/projection MUST independently validate the exact unseen writer range before reporting or projecting it as authoritative currentness. A post-push Writer Lane Guard failure leaves the raw Git artifact as evidence only; it does not promote the invalid transition.
 - Recovery checkpoints use the separate `checkpoints/<identity>/` namespace and `checkpoint_id`; see `RECOVERY_CHECKPOINT_NAMESPACE_V1.md`.
 - Corrections use successor messages.
 - Timestamps are provenance, not currentness authority.

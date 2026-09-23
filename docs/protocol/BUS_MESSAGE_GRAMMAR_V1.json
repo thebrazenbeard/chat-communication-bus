@@ -13,6 +13,12 @@
     "indented_and_list_continuations": "provenance_only"
   },
   "required_headers": ["message_id", "writer"],
+  "recipient_header": {
+    "canonical": "intended_recipient",
+    "legacy_alias": "intended_recipients",
+    "alias_semantics": "plural alias normalizes to canonical intended_recipient",
+    "simultaneous_keys": "reject with CONFLICTING_INTENDED_RECIPIENT_HEADERS"
+  },
   "booleans": {
     "true": ["true", "yes", "1"],
     "false": ["false", "no", "0"],

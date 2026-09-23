@@ -4,7 +4,7 @@
 --  - Expanded privilege checks (SELECT/INSERT/UPDATE/DELETE/TRUNCATE/REFERENCES)
 --  - Ensure no EXECUTE privilege on schema functions for client roles
 --  - Ensure no sequence privileges exposed to client roles
---  - Use PERFORM for side-effect-only function calls
+--  - Use SELECT for top-level side-effect-only function calls
 --  - Clearer comments and diagnostic exception names
 
 begin;
@@ -65,20 +65,17 @@ $$;
 do $$
 declare
   fn record;
-  sig text;
 begin
   for fn in
-    select p.oid, n.nspname as schema_name, p.proname,
-           pg_get_function_identity_arguments(p.oid) as args
+    select p.oid, p.oid::regprocedure::text as sig
     from pg_proc p
     join pg_namespace n on p.pronamespace = n.oid
     where n.nspname = 'radar'
   loop
-    sig := format('radar.%s(%s)', fn.proname, fn.args);
-    -- has_function_privilege accepts a function signature; test anon/authenticated
-    if has_function_privilege('anon', sig, 'EXECUTE')
-       or has_function_privilege('authenticated', sig, 'EXECUTE') then
-      raise exception 'RADAR_FUNCTION_EXECUTE_EXPOSED:%', sig;
+    -- Use the OID overload so named identity arguments are never reparsed as type names.
+    if has_function_privilege('anon', fn.oid, 'EXECUTE')
+       or has_function_privilege('authenticated', fn.oid, 'EXECUTE') then
+      raise exception 'RADAR_FUNCTION_EXECUTE_EXPOSED:%', fn.sig;
     end if;
   end loop;
 end
@@ -112,8 +109,8 @@ values ('radar-test-a', 'Radar Test A', '{}'), ('radar-test-b', 'Radar Test B', 
 insert into radar.nodes(identity_id, runtime_kind, status, last_heartbeat)
 values ('radar-test-a', 'test', 'ONLINE', now() - interval '10 minutes');
 
--- Use PERFORM for side-effect only call
-perform radar.mark_stale_nodes_offline(interval '5 minutes');
+-- SELECT is valid top-level SQL; PERFORM is PL/pgSQL-only.
+select radar.mark_stale_nodes_offline(interval '5 minutes');
 
 -- Verify the node was marked offline and identity row remains
 do $$

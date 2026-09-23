@@ -51,6 +51,25 @@ def test_frontmatter_scalars_hashes_and_endthread_are_shared_evidence() -> None:
     assert parsed.body_length == len(b"Body\n#ENDTHREAD\n")
 
 
+def test_plural_recipient_header_is_bounded_legacy_alias() -> None:
+    parsed = parse_bus_document(
+        b"message_id: radar-0077\nwriter: Radar\nintended_recipients: Hephaestus\n\nBody\n"
+    )
+    assert parsed.intended_recipient == "Hephaestus"
+
+
+def test_singular_and_plural_recipient_headers_conflict() -> None:
+    content = (
+        b"message_id: radar-9999\n"
+        b"writer: Radar\n"
+        b"intended_recipient: Hephaestus\n"
+        b"intended_recipients: Vera\n\n"
+        b"Body\n"
+    )
+    with pytest.raises(MessageGrammarError, match="CONFLICTING_INTENDED_RECIPIENT_HEADERS"):
+        parse_bus_document(content)
+
+
 def test_shared_fixture_corpus_is_executable_conformance_oracle() -> None:
     fixture = json.loads(FIXTURES.read_text())
     assert fixture["contract"] == "BUS_MESSAGE_GRAMMAR_V1"

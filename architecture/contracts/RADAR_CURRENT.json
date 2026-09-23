@@ -1,69 +1,163 @@
 {
-  "schema_version": 1,
-  "status": "RADAR_V1_CANONICAL_VERIFIED",
+  "schema_version": 3,
+  "status": "RADAR_ANCHOR_E_FROZEN_PROVIDER_RECOVERY_PENDING",
   "repository": "thebrazenbeard/chat-communication-bus",
   "canonical_default_branch": "main",
-  "canonical_default_status": "RADAR_V1_CANONICAL",
-  "integration_branch": "radar/control-plane-v1",
-  "integration_pull_request": 2,
-  "cutover_pull_request": 3,
+  "canonical_state": "github",
+  "current_mailbox_branch": "bus/radar-v2",
   "current_protocol": "docs/protocol/PROTOCOL_V2.md",
   "authority_contract": "architecture/contracts/RADAR_AUTHORITY_V1.md",
   "operator_contract": "docs/operator/CHATGPT_OPERATOR_CONTRACT.md",
   "recovery_contract": "docs/operator/RECOVERY.md",
   "topology_contract": "architecture/contracts/RADAR_TOPOLOGY_V1.json",
   "provider_contract": "architecture/contracts/RADAR_SUPABASE_V1.md",
+  "source_custody_contract": "architecture/contracts/RADAR_SOURCE_CUSTODY_V1.json",
+  "qualification_contract": "architecture/contracts/RADAR_QUALIFICATION_V1.json",
+  "projection_trust_contract": "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V4.json",
+  "qualification": {
+    "authoritative_mode": "LOCAL_NO_PAID_SERVICES",
+    "status": "PASS_ADMITTED_FOR_ANCHOR_E_SOURCE",
+    "private_hosted_actions_authoritative": false,
+    "billing_or_plan_change_allowed_as_recovery": false,
+    "engine": "scripts/radar_qualify.py",
+    "windows_launcher": "scripts/radar_local_qualify.ps1",
+    "runner": "scripts/radar_local_qualify.ps1",
+    "runner_role": "NON_EVIDENTIARY_SUPPORTED_ENTRYPOINT",
+    "receipt_validator": "scripts/radar_validate_qualification_receipt.py",
+    "receipt_location": "EXTERNAL_TO_SOURCE_CHECKOUT",
+    "authorized_platform": "windows",
+    "launcher_identity_evidentiary": false,
+    "platform_identity_evidentiary": false,
+    "latest_qualification_receipt": {
+      "schema_version": 2,
+      "status": "PASS",
+      "source_commit": "dfd3c639d058dcafaa1167e53ad4bdc152d52cf6",
+      "source_tree": "8e51a28db92739d2ce103c72194330dc84a7c415",
+      "working_tree": "CLEAN",
+      "mode": "LOCAL_NO_PAID_SERVICES",
+      "run_id": 34397641413,
+      "job_id": 102621180712,
+      "runner": "LAPPY-vera-blender",
+      "stage_evidence_sha256": "255409e47204f073cdb4a6b460910364985c2ef6ebff746f61e21622666a445b",
+      "artifact_name": "radar-local-qualification-dfd3c639-34397641413",
+      "artifact_id": 10123172942,
+      "admission": "hephaestus-0062"
+    }
+  },
+  "historical_integration": {
+    "branch": "radar/control-plane-v1",
+    "integration_pull_request": 2,
+    "cutover_pull_request": 3,
+    "status": "HISTORICAL_PREDECESSOR"
+  },
+  "source_migration_chain": [
+    "20260902120716_radar_control_plane_v1.sql",
+    "20260902120826_radar_realtime_v1.sql",
+    "20260902203610_radar_visual_identity_v1.sql",
+    "20260902204759_radar_live_message_projection_v1.sql",
+    "20260902231445_radar_live_message_collision_v1.sql",
+    "20260903000603_radar_receipt_plane_v1.sql",
+    "20260903001906_radar_assignment_plane_v1.sql",
+    "20260903113314_radar_operator_views_v1.sql",
+    "20260903214334_radar_thread_closure_v1.sql",
+    "20260905230823_radar_oidc_replay_guard_v1.sql",
+    "20260906133630_radar_node_routing_hardening_v1.sql",
+    "20260906154101_radar_projection_journal_v1.sql",
+    "20260906165117_radar_projection_journal_api_v1.sql",
+    "20260908010500_radar_projection_atomic_file_v1.sql"
+  ],
   "provider": {
     "project_id": "klmbpaigzeguvnpccqzz",
     "schema": "radar",
-    "installed_migrations": ["radar_control_plane_v1", "radar_realtime_v1"],
-    "migration_source_hashes_exact": true,
-    "self_registration_seeded": true,
-    "realtime_contract": "PASS_2026-09-02",
-    "base_transactional_contract": "PASS_AND_ROLLBACK_VERIFIED_2026-09-02",
-    "vera_identity_reconciliation": "RESOLVED_WITH_PROVENANCE_PRESERVED",
-    "post_cutover_reconciliation": "PASS_2026-09-02",
-    "canonical": false
+    "canonical": false,
+    "readback_at": "2026-09-09",
+    "applied_source_state": "PARTIAL_NOT_CURRENT",
+    "applied_radar_migrations": [
+      "20260902120716_radar_control_plane_v1",
+      "20260902120826_radar_realtime_v1",
+      "20260902203610_radar_visual_identity_v1",
+      "20260902204759_radar_live_message_projection_v1",
+      "20260902231445_radar_live_message_collision_v1",
+      "20260903000603_radar_receipt_plane_v1",
+      "20260903001906_radar_assignment_plane_v1",
+      "20260903113314_radar_operator_views_v1"
+    ],
+    "unapplied_source_migrations": [
+      "20260903214334_radar_thread_closure_v1.sql",
+      "20260905230823_radar_oidc_replay_guard_v1.sql",
+      "20260906133630_radar_node_routing_hardening_v1.sql",
+      "20260906154101_radar_projection_journal_v1.sql",
+      "20260906165117_radar_projection_journal_api_v1.sql",
+      "20260908010500_radar_projection_atomic_file_v1.sql"
+    ],
+    "edge_function": {
+      "slug": "github-bus-ingest",
+      "live_version": 3,
+      "live_status": "ACTIVE",
+      "verify_jwt": true,
+      "live_digest": "0aaab7f376d1454efe76a757755918312eac35a8fde2f4c4ff7e63072a558fb7",
+      "body_bound_central_oidc_source_deployed": false
+    },
+    "projection_anchor_c_deployed": false,
+    "projection_anchor_d_deployed": false,
+    "projection_anchor_e_deployed": false,
+    "projection_journal_seeded": false,
+    "edge_body_bound_oidc_deployed": false
   },
-  "cutover": {
+  "projection_source": {
+    "validate_only_anchor_a": "8cebe395cc12d221ec5627e5492c0ccf15ee801d",
+    "historical_projection_anchor_b": "7076c73595d5a572e0f374c3a495b29982d92bed",
+    "historical_projection_anchor_b_tree": "142a24ea52df3539c00818f30bf3d93f0c5945b0",
+    "historical_projection_anchor_c": "f5ab21244a111b47708fa11e99d0e8ff7d8f5a45",
+    "historical_projection_anchor_c_tree": "a7dd785be8dfea883df052a73378d583e53058d1",
+    "historical_projection_anchor_d": "401733b2013802880320629a4d8ea06f8bf7b760",
+    "historical_projection_anchor_d_tree": "d3a9c44f0378409a626e29334b4d057ef20c7e8e",
+    "current_projection_anchor_e": "dfd3c639d058dcafaa1167e53ad4bdc152d52cf6",
+    "current_projection_anchor_e_tree": "8e51a28db92739d2ce103c72194330dc84a7c415",
+    "current_projection_anchor_e_deployment_eligible": true,
+    "post_anchor_d_source_repairs_pending_successor_anchor": false,
+    "successor_anchor_status": "FROZEN_QUALIFIED_SOURCE_ONLY",
+    "immutable_code_reads_current_main_as_inert_data": true,
+    "status": "ANCHOR_E_FROZEN_QUALIFIED_SOURCE_ONLY_NOT_DEPLOYED"
+  },
+  "parallax": {
+    "branch": "bus/parallax-v1",
+    "lifecycle": "REGISTERED_INERT",
+    "status": "FIRST_APPEND_PENDING",
+    "topology_pr_merged": true,
+    "first_append_guard_verified": false
+  },
+  "known_provider_drift": [
+    {
+      "code": "RADAR_SOURCE_MIGRATIONS_NOT_APPLIED",
+      "severity": "HIGH",
+      "detail": "Provider ledger stops at 20260903113314_radar_operator_views_v1 while six later Radar source migrations are unapplied, including replay guard, node-routing hardening, projection journal/API, and atomic claim-bound file projection."
+    },
+    {
+      "code": "GITHUB_BUS_INGEST_GATEWAY_JWT_MISMATCH",
+      "severity": "HIGH",
+      "detail": "Live github-bus-ingest v3 has verify_jwt=true; qualified custom GitHub OIDC admission is not live."
+    },
+    {
+      "code": "PROJECTION_JOURNAL_NOT_INSTALLED_OR_SEEDED",
+      "severity": "HIGH",
+      "detail": "Durable central reconciliation journal/API/atomic-file source exists but provider tables/RPCs, atomic claim-bound projection, and lane cursors are absent."
+    },
+    {
+      "code": "PROJECTION_ANCHOR_E_NOT_DEPLOYED",
+      "severity": "HIGH",
+      "detail": "Qualified immutable projection anchor E is frozen in source but not deployed; the default-branch dispatcher, provider RADAR_TRUSTED_PROJECTOR_SHA, body-bound Edge source, migrations, and projection cursors are not active as the recovered route."
+    }
+  ],
+  "historical_cutover": {
     "source_head": "e52639a25ce9b5f68831659c3c3500ba0384124c",
     "merge_commit": "1b47b32b9d5a4badd2af5e9943be75be61e1c143",
     "cutover_pr": 3,
     "history_rewritten": false,
     "historical_writer_lanes_preserved": true,
-    "receipt": "docs/PHASE_19_CUTOVER_2026-09-02.md"
+    "receipt": "docs/PHASE_19_CUTOVER_2026-09-02.md",
+    "currentness_role": "HISTORICAL_EVIDENCE_ONLY"
   },
-  "verification": {
-    "premerge_review": "RADAR_OPERATOR_SELF_REVIEW",
-    "independent_subagent_review_available": false,
-    "tdd_red_ci_run": 117,
-    "premerge_green_ci_run": 119,
-    "cutover_pr_green_ci_run": 121,
-    "finalization_gate_head": "5eaa63a1cab4d364d5237ce6952419f450677772",
-    "finalization_gate_ci_run": 125,
-    "finalization_gate_ci_result": "PASS",
-    "python_versions": ["3.11", "3.12"],
-    "pytest_count": 86,
-    "compileall": "PASS",
-    "migration_hash_custody": "EXACT_SHA256_MATCH",
-    "current_status_commit_ci": "MUST_BE_READ_BACK_EXTERNALLY_ON_CURRENT_MAIN_HEAD"
-  },
-  "known_provider_drift": [],
-  "resolved_provider_reconciliations": [
-    {
-      "code": "VERA_ROUTE_IDENTITY_NOT_NORMALIZED",
-      "canonical_identity": "vera",
-      "historical_route_identity": "vera-sol",
-      "historical_branch": "bus/vera-sol-v1",
-      "repair_source": "supabase/repairs/20260902_normalize_vera_identity.sql",
-      "result": "RESOLVED_WITH_PROVENANCE_PRESERVED"
-    }
-  ],
-  "phase_19_blockers": [],
-  "phase_20_blockers": [],
   "self_registration_contract": "architecture/contracts/RADAR_SELF_REGISTRATION_V1.json",
-  "phase_18_verification_receipt": "docs/PHASE_18_VERIFICATION_2026-09-02.md",
-  "phase_19_cutover_receipt": "docs/PHASE_19_CUTOVER_2026-09-02.md",
-  "phase_19_checklist": "docs/CUTOVER_CHECKLIST.md",
-  "phase_20_note": "Radar V1 canonical cutover and post-cutover reconciliation are verified. The status-file commit itself remains subject to ordinary exact-current-main CI readback rather than embedding its own unknowable commit SHA."
+  "currentness_note": "GitHub is canonical. The authoritative LOCAL_NO_PAID_SERVICES schema-V2 receipt for exact source commit dfd3c639d058dcafaa1167e53ad4bdc152d52cf6 / tree 8e51a28db92739d2ce103c72194330dc84a7c415 is admitted. Projection trust anchor E freezes those exact already-qualified immutable bytes; this later anchor-freeze metadata/dispatcher commit is not itself substituted for the qualified source cut. Provider recovery remains separate and protected: six Radar migrations are unapplied, live github-bus-ingest remains v3 with verify_jwt=true, the body-bound successor is not deployed, RADAR_TRUSTED_PROJECTOR_SHA is not configured to anchor E, projection cursors are not seeded, and the canonical dispatcher is not active. Any modification to the frozen anchor-E projector source requires a new authoritative qualification and a new successor anchor rather than mutating E."
 }

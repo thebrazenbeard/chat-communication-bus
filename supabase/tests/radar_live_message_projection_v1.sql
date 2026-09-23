@@ -8,6 +8,7 @@ do $$
   - Use a unique test_id per run to avoid collisions in parallel test runs.
   - Defensive cleanup that targets the test prefix instead of an exact id.
   - Early explicit check for the function's existence.
+  - Assert the collision-preservation return contract introduced by the collision migration.
   - Clearer exception messages including the test_id for easier debugging.
   - Final RAISE NOTICE on success.
 */
@@ -18,6 +19,7 @@ declare
   first_result text;
   second_result text;
   conflict_result text;
+  collision_id text;
   stored_hash text;
 begin
   -- Defensive cleanup: only remove old test artifacts that share the test prefix.
@@ -68,7 +70,8 @@ begin
     raise exception 'EXPECTED_IDEMPOTENT_GOT_% for test_id=%', second_result, test_id;
   end if;
 
-  -- Conflicting projection should return 'CONFLICT' and should not overwrite canonical content_hash
+  -- Different content for the declared id is preserved under a deterministic
+  -- content-qualified projection id; it must not overwrite the canonical row.
   conflict_result := radar.project_bus_message_v1(
     test_id,
     '2026-09-02T20:00:00Z'::timestamptz,
@@ -80,22 +83,35 @@ begin
     'chat-bus:test:c',
     jsonb_build_object('subject','conflicting test','body_sha256',repeat('d',64))
   );
-  if conflict_result <> 'CONFLICT' then
-    raise exception 'EXPECTED_CONFLICT_GOT_% for test_id=%', conflict_result, test_id;
+  if conflict_result not like 'CONFLICT_INSERTED:' || test_id || '~%' then
+    raise exception 'EXPECTED_CONFLICT_INSERTED_GOT_% for test_id=%', conflict_result, test_id;
   end if;
+  collision_id := substring(conflict_result from length('CONFLICT_INSERTED:') + 1);
 
-  -- Verify canonical message wasn't overwritten
+  -- Verify canonical message wasn't overwritten.
   select content_hash into stored_hash from radar.messages where message_id = test_id;
   if stored_hash <> repeat('a', 64) then
     raise exception 'CONFLICT_OVERWROTE_CANONICAL_PROJECTION for test_id=%', test_id;
   end if;
 
-  -- Verify a reconciliation event was created referencing the incoming hash
+  -- Verify the colliding message itself was durably preserved.
+  if not exists (
+    select 1 from radar.messages
+    where message_id = collision_id
+      and content_hash = repeat('c', 64)
+      and payload->>'declared_message_id' = test_id
+      and payload->>'projection_collision' = 'true'
+  ) then
+    raise exception 'CONTENT_QUALIFIED_COLLISION_ROW_MISSING for test_id=% result=%', test_id, conflict_result;
+  end if;
+
+  -- Verify a reconciliation event was created referencing the incoming hash.
   if not exists (
     select 1 from radar.reconciliation_events
     where code = 'MESSAGE_PROJECTION_CONFLICT'
       and detail->>'message_id' = test_id
       and detail->>'incoming_content_hash' = repeat('c', 64)
+      and detail->>'qualified_message_id' = collision_id
   ) then
     raise exception 'CONFLICT_RECONCILIATION_EVENT_MISSING for test_id=%', test_id;
   end if;
