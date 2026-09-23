@@ -1,0 +1,66 @@
+{
+  "schema": "VERA_BUS_RADAR_ACTIONS_CONTINUATION_V1",
+  "restore_command": "VERA::RESTORE_AND_RUN::BUS_RADAR_ACTIONS_CONTINUATION_20260923_V1",
+  "observed_at": "2026-09-23T01:15:00Z",
+  "canonical": {
+    "bus_main": "a366e87ffe3366c6544c03fa852447f2c3fcd5e1",
+    "merged_pr_325": true,
+    "pr_325_source_head": "640b44c4b715d870b6d5efcdb64ff447eec64467",
+    "vera_lane_head_commit": "fcb5f1dcdcce53c30a50b60e95c7c5b742dd6667",
+    "vera_main": "86be6105f13fc86bbd699778205a85c84059de9a",
+    "vcp_main": "1ad8f1469d0b02b145b30837f8036ffe339a11c4",
+    "discovery_main": "2881a94c7eb3c83a34b0c00bab739b41c1d99b6d",
+    "roots_main": "a6994b415336bc179a41aad0ac9eec403d60f93c"
+  },
+  "edge": {
+    "project_ref": "klmbpaigzeguvnpccqzz",
+    "slug": "github-bus-ingest",
+    "version": 5,
+    "status": "ACTIVE",
+    "ezbr_sha256": "07a117919e985a8566d2ffa8bab9565c560b630d8448c0987ac29ec16a4b559a",
+    "handler_blob": "cc7cd56632e21c34ec861797db43b60f83977d9b",
+    "deno_json_blob": "b717027d0dbca1ed7cf7f362f16a33cfc5c6da99",
+    "deployed_matches_canonical_main": true
+  },
+  "actions": {
+    "status": "PRIVATE_HOSTED_RUNNER_NO_EXECUTION",
+    "reruns": [
+      {
+        "run_id": 35804941480,
+        "workflow": "Radar Central Dispatcher",
+        "attempt": 2,
+        "steps_null": true
+      },
+      {
+        "run_id": 35804921603,
+        "workflow": "Radar Bus Projection",
+        "attempt": 2,
+        "steps_null": true
+      },
+      {
+        "run_id": 35803846281,
+        "workflow": "ci",
+        "attempt": 2,
+        "steps_null": true
+      }
+    ],
+    "account_admin_available_through_connector": false,
+    "authorized_remote_device_online": false
+  },
+  "provider": {
+    "projection_lane_state_rows": 0,
+    "projection_batch_rows": 0,
+    "replay_guard_rows": 0,
+    "latest_global_message_id": "radar-0057",
+    "latest_global_inserted_at": "2026-09-04T19:49:52.037755Z",
+    "latest_vera_message_id": "vera-v2-0001",
+    "latest_vera_inserted_at": "2026-09-04T15:03:31.828043Z",
+    "current_vera_messages_projected": false
+  },
+  "verification": {
+    "canonical_dispatcher_executed": false,
+    "replay_rejection_reverified": false,
+    "idempotent_recovery_reverified": false
+  },
+  "claim_ceiling": "CANONICAL_BUS_SOURCE_CUSTODY_REPAIRED / DEPLOYED_EDGE_MATCHES_MAIN / PRIVATE_GITHUB_ACTIONS_RUNNER_UNAVAILABLE / CENTRAL_DISPATCHER_NOT_EXECUTED / RADAR_PROJECTION_STALE / REPLAY_NOT_REVERIFIED / IDEMPOTENT_RECOVERY_NOT_REVERIFIED"
+}
