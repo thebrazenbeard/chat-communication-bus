@@ -1,3 +1,5 @@
+> **License:** Source-visible, not open source. Original material is proprietary. Commercial use, redistribution, hosted-service use, and commercial derivative products require written permission. See [LICENSE](LICENSE) and [COMMERCIAL_LICENSE.md](COMMERCIAL_LICENSE.md). Separately identified third-party components retain their own licenses.
+
 # Radar / Chat Communication Bus
 
 Radar is the owner/operator control plane for `thebrazenbeard/chat-communication-bus`. GitHub `main` and the current contracts are canonical; writer lanes are durable append-only mailboxes/provenance. Supabase is a rebuildable projection/runtime, not canonical history.
