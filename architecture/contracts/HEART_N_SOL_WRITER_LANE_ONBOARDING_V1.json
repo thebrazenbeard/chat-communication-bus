@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "repository": "thebrazenbeard/chat-communication-bus",
+  "status": "TOPOLOGY_REGISTRATION_PENDING",
+  "identity": "heart-n-sol",
+  "writer": "Heart-N-Sol",
+  "branch": "bus/heart-n-sol-v1",
+  "lifecycle": "REGISTERED_INERT",
+  "inert_branch_created": true,
+  "bootstrap_main_sha": "ef32d942f188eb36313eac2fc63fa9c144ee0911",
+  "bootstrap_branch_head_sha": "ef32d942f188eb36313eac2fc63fa9c144ee0911",
+  "topology_registered_in_proposal": true,
+  "topology_pr_number": null,
+  "topology_pr_head_sha": null,
+  "topology_merge_commit_sha": null,
+  "topology_merged_at": null,
+  "topology_pr_merged": false,
+  "first_append_guard_verified": false,
+  "sequence": [
+    "CREATE_INERT_BRANCH_FROM_EXACT_MAIN",
+    "VERIFY_INERT_BRANCH_HEAD",
+    "MERGE_TOPOLOGY_REGISTRATION",
+    "APPEND_ONE_MESSAGE",
+    "VERIFY_CURRENT_WRITER_LANE_GUARD",
+    "ENABLE_WORKER_COORDINATION"
+  ],
+  "coordination_gate": "Do not use bus/heart-n-sol-v1 as authoritative worker coordination until topology registration is merged, first_append_guard_verified is true, and lifecycle is ACTIVE.",
+  "intended_use": "Parallel coordination between Sol chats working on unbound-sol, especially portfolio mechanism census and open-PR reconciliation.",
+  "protected_effects": {
+    "topology_merge": true,
+    "first_append_write": false,
+    "provider_projection": false,
+    "ruleset_change": false
+  },
+  "notes": [
+    "Created at Patrick's explicit request on 2026-09-23.",
+    "This receipt records branch/topology proposal creation only; it does not claim activation.",
+    "The historical bus/vera-sol-v1 lane remains historical and is not reused for this purpose."
+  ]
+}
