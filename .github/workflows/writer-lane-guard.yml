@@ -13,17 +13,27 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Check out exact writer lane
+      - name: Check out exact private writer lane
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           path: lane
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Check out current Radar control code
+      - name: Check out private overlay main as inert data
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          repository: thebrazenbeard/chat-communication-bus
           ref: main
+          path: overlay
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Check out pinned CCB Base control code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: thebrazenbeard/ccb-core
+          ref: 42e4409dff3baee4acb63b48c9f64c7367a4fd22
           path: control
           fetch-depth: 1
           persist-credentials: false
@@ -33,7 +43,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install current Radar control package
+      - name: Install pinned CCB Base package
         run: python -m pip install -e control
 
       - name: Validate mailbox transition
@@ -42,12 +52,12 @@ jobs:
           RADAR_HEAD: ${{ github.sha }}
           RADAR_BASE: ${{ github.event.before }}
         run: |
-          RADAR_BOOTSTRAP_MAIN="$(git -C control rev-parse HEAD)"
+          RADAR_BOOTSTRAP_MAIN="$(git -C overlay rev-parse HEAD)"
           python control/scripts/radar_validate_writer_lane.py \
             --repo-dir lane \
             --ref "$RADAR_REF" \
             --head "$RADAR_HEAD" \
             --base "$RADAR_BASE" \
-            --topology control/architecture/contracts/RADAR_TOPOLOGY_V1.json \
-            --cutover control/architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json \
+            --topology overlay/architecture/contracts/RADAR_TOPOLOGY_V1.json \
+            --cutover overlay/architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json \
             --bootstrap-main "$RADAR_BOOTSTRAP_MAIN"

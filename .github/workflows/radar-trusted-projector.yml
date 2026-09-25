@@ -66,13 +66,13 @@ jobs:
               output.write(f"sha={job_workflow_sha}\n")
           PY
 
-      - name: Check out immutable trusted Radar code
+      - name: Check out pinned CCB Base control code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          repository: thebrazenbeard/chat-communication-bus
-          ref: ${{ steps.self_pin.outputs.sha }}
+          repository: thebrazenbeard/ccb-core
+          ref: 42e4409dff3baee4acb63b48c9f64c7367a4fd22
           path: control
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
 
       - name: Check out current canonical main as inert Git data
@@ -117,6 +117,7 @@ jobs:
         env:
           PYTHONPATH: control/src
           RADAR_RECONCILE_MODE: project
+          RADAR_PROJECTION_ENDPOINT: "https://klmbpaigzeguvnpccqzz.supabase.co/functions/v1/github-bus-ingest"
         run: |
           python control/scripts/radar_trusted_project.py \
             --repo-dir canonical \
