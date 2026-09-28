@@ -2,8 +2,8 @@
   "schema": "CHAT_COMMUNICATION_BUS_CCB_BASE_CONTROL_PIN_V1",
   "observed_date": "2026-09-28",
   "repository": "thebrazenbeard/ccb-core",
-  "commit": "81254afff7fa6a44ea1b32fcc5f114909061d12f",
-  "tree": "d62d409d89b6bcf662d3a7fcdb400df22792714d",
+  "commit": "273c93bc46683580024c1521fd2c523a8a6593bd",
+  "tree": "6594f71965e3e1a504f2265363b75b43f5fbd3de",
   "role": "REUSABLE_CONTROL_CODE_AUTHORITY",
   "consumers": [
     ".github/workflows/writer-lane-guard.yml",
@@ -17,5 +17,13 @@
     "source_pin_is_deployment_authority": false,
     "source_pin_is_provider_write_authority": false,
     "source_pin_is_private_topology_authority": false
+  },
+  "qualification": {
+    "source_repository": "thebrazenbeard/ccb-core",
+    "qualification_pr": 3,
+    "qualified_tree": "6594f71965e3e1a504f2265363b75b43f5fbd3de",
+    "ci": "PASS",
+    "dependency_review": "PASS",
+    "note": "Canonical ccb-core main after qualification checkpoint; merge tree equals green PR tree."
   }
 }
