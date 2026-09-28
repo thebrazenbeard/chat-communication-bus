@@ -1,0 +1,21 @@
+{
+  "schema": "CHAT_COMMUNICATION_BUS_CCB_BASE_CONTROL_PIN_V1",
+  "observed_date": "2026-09-28",
+  "repository": "thebrazenbeard/ccb-core",
+  "commit": "81254afff7fa6a44ea1b32fcc5f114909061d12f",
+  "tree": "d62d409d89b6bcf662d3a7fcdb400df22792714d",
+  "role": "REUSABLE_CONTROL_CODE_AUTHORITY",
+  "consumers": [
+    ".github/workflows/writer-lane-guard.yml",
+    ".github/workflows/radar-trusted-projector.yml"
+  ],
+  "private_overlay_inputs": [
+    "architecture/contracts/RADAR_TOPOLOGY_V1.json",
+    "architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json"
+  ],
+  "authority": {
+    "source_pin_is_deployment_authority": false,
+    "source_pin_is_provider_write_authority": false,
+    "source_pin_is_private_topology_authority": false
+  }
+}
