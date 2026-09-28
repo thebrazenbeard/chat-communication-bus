@@ -18,7 +18,7 @@ The operational source of truth is **CCB Base**, currently hosted at `thebrazenb
 
 Generic runtime fixes, routing/admission changes, reusable migrations, provider-neutral scripts, and regression tests belong in CCB Base first. Existing copies in this repository are legacy/history unless a private overlay specifically requires them.
 
-Current qualified CCB Base pin for branch control: `42e4409dff3baee4acb63b48c9f64c7367a4fd22`.
+Current qualified CCB Base pin for branch control: `81254afff7fa6a44ea1b32fcc5f114909061d12f`.
 
 ## Flow
 
