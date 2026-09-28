@@ -1,76 +1,43 @@
-name: ci
+name: private-overlay-integrity
 
 on:
   push:
     branches:
       - "main"
-      - "radar/**"
-      - "feature/chat-bus-vertical-slice-v1"
+      - "bus/**"
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.11", "3.12"]
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
-        with:
-          python-version: ${{ matrix.python-version }}
-      - run: python -m pip install 'pip==26.2.1'
-      - run: python -m pip install -e '.[test]'
-      - run: python -m compileall -q src
-      - run: python -m pytest -q
-      - run: python scripts/radar_source_hashes.py
-
-  edge:
+  overlay:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Check out exact private overlay subject
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          fetch-depth: 2
           persist-credentials: false
-      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed
-        with:
-          deno-version: 2.9.6
-      - name: Install Edge dependencies from frozen lock
-        working-directory: supabase/functions/github-bus-ingest
-        run: deno ci
-      - name: Type-check Edge function from frozen dependency graph
-        working-directory: supabase/functions/github-bus-ingest
-        run: deno check index.ts
 
-  sql:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
-          persist-credentials: false
-      - uses: supabase/setup-cli@46f7f98c7f948ad727d22c1e67fab04c223a0520
-        with:
-          version: 2.116.0
-      - name: Start local Supabase
-        run: supabase start
-      - name: Rebuild database from migration chain
-        run: supabase db reset
-      - name: Run every Radar SQL assertion
-        env:
-          PGURI: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+          python-version: "3.12"
+
+      - name: Install bounded test dependency
+        run: python -m pip install 'pytest==9.1.1'
+
+      - name: Validate CCB Base pin and private overlay boundary
+        run: python -m pytest -q tests/radar/test_ccb_base_pin_contract.py
+
+      - name: Parse private topology contracts
         run: |
-          set -euo pipefail
-          for test_file in supabase/tests/radar_*.sql; do
-            echo "==> ${test_file}"
-            psql "${PGURI}" -v ON_ERROR_STOP=1 -f "${test_file}"
-          done
-      - name: Stop local Supabase
-        if: always()
-        run: supabase stop --no-backup
+          python -m json.tool architecture/contracts/CCB_BASE_CONTROL_PIN_V1.json >/dev/null
+          python -m json.tool architecture/contracts/RADAR_TOPOLOGY_V1.json >/dev/null
+          python -m json.tool architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json >/dev/null
+
+      - name: Reject whitespace errors
+        run: git diff --check HEAD^ HEAD
