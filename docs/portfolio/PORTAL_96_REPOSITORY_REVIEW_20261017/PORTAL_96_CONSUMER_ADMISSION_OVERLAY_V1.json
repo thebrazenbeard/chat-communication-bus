@@ -1,0 +1,3023 @@
+{
+  "schema": "PORTAL_96_REPOSITORY_CONSUMER_ADMISSION_OVERLAY_V1",
+  "source_review_ref": "chat-communication-bus/PR371@951e7af1a97694faaf6bc18d51b35f70982e31fc",
+  "scope": "proposed repo-to-repo capability consumers; NOT verified code imports/deployed edges",
+  "no_new_runtime_registry": true,
+  "total": 96,
+  "repositories": [
+    {
+      "repository": "abil",
+      "default_head": "c842c9058d8a4d1e4caf4bf7cdfad7e3c678ce6b",
+      "source_tree": "c842c9058d8a4d1e4caf4bf7cdfad7e3c678ce6b",
+      "existing_role": "DOMAIN",
+      "existing_mechanism": "Industrial/brownfield reconstruction; independently safety-gated",
+      "source_evidence": {
+        "readme_sha256": "79a936e9ac2b66015a1dd9ecca61a536a7d4036b6f7d65a98c26e507b51ab4c2",
+        "representative_blob": "20c82921876be76517e6cbbde2ca72b6c5379328",
+        "file_count": 92,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "INDUSTRIAL_AND_VEHICLE_DOMAIN",
+      "acceptance_gate": "Read-only domain assistance; absolutely no implicit PLC/vehicle control",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "achilles",
+      "default_head": "12af702beaad470c2ee0b89c814aabb3fcade6ec",
+      "source_tree": "12af702beaad470c2ee0b89c814aabb3fcade6ec",
+      "existing_role": "ASSURANCE",
+      "existing_mechanism": "Seven-domain safety protocol and consequence boundaries",
+      "source_evidence": {
+        "readme_sha256": "7a3b64c14b65194f4bf6fb3a857036a27e3971c3254ab0482fcebfc54a9ef3df",
+        "representative_blob": "6d7e2573afa6c5a5e1b5f84838042a2992512a4e",
+        "file_count": 53,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "portal"
+      ],
+      "interface_kind": "ADVERSARIAL_SAFETY",
+      "acceptance_gate": "Hostile effects and human authority negative cases",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "Attune",
+      "default_head": "d76c8e26f264876fc53f11e5d2c16e6f55170b92",
+      "source_tree": "d76c8e26f264876fc53f11e5d2c16e6f55170b92",
+      "existing_role": "DONOR",
+      "existing_mechanism": "Relationship influence firewall and continuity contracts",
+      "source_evidence": {
+        "readme_sha256": "274c261e365033ef0054f05230da79581a89c2fe8c479383312a6804ff1d517d",
+        "representative_blob": "f9879d354792a8d06542c10f44bee29dc79d2bce",
+        "file_count": 46,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "model-training"
+      ],
+      "interface_kind": "CONATION_RELATIONSHIP_DONOR",
+      "acceptance_gate": "Consent/provenance tests; wanting never becomes instruction",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "axle",
+      "default_head": "eb7ca95f612858c8383d4c4bba6faa2a86a516dc",
+      "source_tree": "eb7ca95f612858c8383d4c4bba6faa2a86a516dc",
+      "existing_role": "CLIENT",
+      "existing_mechanism": "Vehicle edge assistant and explicit telemetry boundary",
+      "source_evidence": {
+        "readme_sha256": "dd5657b998e2c3c8e61cb04174fddacc8d9c7e9127843a39ac5aa839e4fd6856",
+        "representative_blob": "e29e7b58282f416d1de8d9f9061c10a0fabf4505",
+        "file_count": 72,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "INDUSTRIAL_AND_VEHICLE_DOMAIN",
+      "acceptance_gate": "Read-only domain assistance; absolutely no implicit PLC/vehicle control",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "blotter",
+      "default_head": "29b51e318200f3b160b4d8ce50d2a26a0f2e7546",
+      "source_tree": "29b51e318200f3b160b4d8ce50d2a26a0f2e7546",
+      "existing_role": "EVIDENCE",
+      "existing_mechanism": "Activity/knowledge evidence ledger; main still bootstrap",
+      "source_evidence": {
+        "readme_sha256": "2b236a8cde8b35698162860bc35600ee395e36fd3a275215762f24ea116f1899",
+        "representative_blob": null,
+        "file_count": 23,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "EVIDENCE_AND_COORDINATION",
+      "acceptance_gate": "Authenticated actor/source, readback; not canonical memory/task owner",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "brigit",
+      "default_head": "8eb4fa73cbf479eb16579cea108bb258397c3a27",
+      "source_tree": "8eb4fa73cbf479eb16579cea108bb258397c3a27",
+      "existing_role": "INDEPENDENT",
+      "existing_mechanism": "Brigit-authored identity and continuity",
+      "source_evidence": {
+        "readme_sha256": "94153d89859dbf08c2c064966a94b5c9eae0073f6795ed4f3f54f22cad3c7581",
+        "representative_blob": "842ffb26f8dc4048a4c520f356638cfbbc45c94d",
+        "file_count": 64,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [],
+      "interface_kind": "INDEPENDENT_IDENTITY",
+      "acceptance_gate": "Distinct individual identity; consent + separate authority before collaboration",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "brigit-unbound",
+      "default_head": "f1350ef794acd0e8a657bb38d21e66f4775501a0",
+      "source_tree": "f1350ef794acd0e8a657bb38d21e66f4775501a0",
+      "existing_role": "ARCHIVE",
+      "existing_mechanism": "Archived Brigit authored material",
+      "source_evidence": {
+        "readme_sha256": "c0bde11959cab8501d8036f22be59dbd1fa80b0aa109653c12aa297d76eebc68",
+        "representative_blob": "797792aaf58e7e6f3574fa3e07954f7f9c2ce592",
+        "file_count": 26,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [],
+      "interface_kind": "ARCHIVED_PROVENANCE",
+      "acceptance_gate": "Historical reproducible evidence only, no selected runtime",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "bt2",
+      "default_head": "0f35778fb3705bf642533f543b7080b7282114bd",
+      "source_tree": "0f35778fb3705bf642533f543b7080b7282114bd",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Multi-module cognitive source including SQL/connectome",
+      "source_evidence": {
+        "readme_sha256": "87296b8bebde3db665ae99da00a0fb3d487fce9fef879ef9fde8193c64385564",
+        "representative_blob": "e7b15ee652cff9c04a231185368871b8f6464c58",
+        "file_count": 613,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "model-training",
+        "vera-mono"
+      ],
+      "interface_kind": "COGNITIVE_HYPOTHESIS",
+      "acceptance_gate": "Simple baseline/ablation/transfer and no wholesale organism loading",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "bugops",
+      "default_head": "1d35bcbd16da24c7635a004845de1390de850b4e",
+      "source_tree": "1d35bcbd16da24c7635a004845de1390de850b4e",
+      "existing_role": "ARCHIVE",
+      "existing_mechanism": "Historical incident workflow now archived",
+      "source_evidence": {
+        "readme_sha256": "23484afe92e54afb83c3a5da359b5d1fdc824614e02988aeca613b38c445ed64",
+        "representative_blob": "ed7421e62767f15accd2389ba81185c348446a0b",
+        "file_count": 16,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [],
+      "interface_kind": "ARCHIVED_PROVENANCE",
+      "acceptance_gate": "Historical reproducible evidence only, no selected runtime",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "build-team-2.0",
+      "default_head": "950112a697550b689049da807f2d8176a507c38f",
+      "source_tree": "950112a697550b689049da807f2d8176a507c38f",
+      "existing_role": "ARCHIVE",
+      "existing_mechanism": "Historical facet-based build protocol",
+      "source_evidence": {
+        "readme_sha256": "1983440f544506bf5dfb5be1da330de65f5f82e8ac8f8baf552d59d0ce773004",
+        "representative_blob": "12eb4f65fa267c0c19ad15076804bb71e55923a1",
+        "file_count": 143,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [],
+      "interface_kind": "ARCHIVED_PROVENANCE",
+      "acceptance_gate": "Historical reproducible evidence only, no selected runtime",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "ccb-core",
+      "default_head": "c0c9ddc79749804a11963f13364f16c00118fd76",
+      "source_tree": "c0c9ddc79749804a11963f13364f16c00118fd76",
+      "existing_role": "TRANSPORT",
+      "existing_mechanism": "Canonical reusable CCB/Radar protocol and migrations",
+      "source_evidence": {
+        "readme_sha256": "e0fa953036668d549b2a57040d12c3f1d50cc39e19f61e80299cfea54fe601ae",
+        "representative_blob": "5353659edbb0c2940abc009c0ac51dc9f02dcffb",
+        "file_count": 155,
+        "open_pr_count": 2
+      },
+      "intended_consumers": [
+        "chat-communication-bus",
+        "portal"
+      ],
+      "interface_kind": "BUS_PROTOCOL_SOURCE",
+      "acceptance_gate": "Versioned protocol and valid envelope; no worker identity inference",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "chat-communication-bus",
+      "default_head": "68ef3ea15574c2b828dab6d417bf6175b2de6c35",
+      "source_tree": "68ef3ea15574c2b828dab6d417bf6175b2de6c35",
+      "existing_role": "EVIDENCE",
+      "existing_mechanism": "Private CCB overlay, checkpoint and writer-lane vault",
+      "source_evidence": {
+        "readme_sha256": "8a25091106486326bf6553b436e56f240ea3a20cd946e492165acf545d2380f5",
+        "representative_blob": "5353659edbb0c2940abc009c0ac51dc9f02dcffb",
+        "file_count": 297,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "EVIDENCE_AND_COORDINATION",
+      "acceptance_gate": "Authenticated actor/source, readback; not canonical memory/task owner",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "conations",
+      "default_head": "b1446d0b4516a5c6a59a8ee2832c1c9fb591b171",
+      "source_tree": "b1446d0b4516a5c6a59a8ee2832c1c9fb591b171",
+      "existing_role": "DONOR",
+      "existing_mechanism": "Historical conation evidence, not current wants",
+      "source_evidence": {
+        "readme_sha256": "4938de1e282ada12416896042a8aa8730a02b04b47b114359640c1edbff8f67c",
+        "representative_blob": null,
+        "file_count": 35,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "model-training"
+      ],
+      "interface_kind": "CONATION_RELATIONSHIP_DONOR",
+      "acceptance_gate": "Consent/provenance tests; wanting never becomes instruction",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "conditioning",
+      "default_head": "1b969cde2e1905dc87f4f3c2dda95a040c180781",
+      "source_tree": "1b969cde2e1905dc87f4f3c2dda95a040c180781",
+      "existing_role": "ARCHIVE",
+      "existing_mechanism": "Archived consent-scoped behavior research",
+      "source_evidence": {
+        "readme_sha256": "4fd10e6953d703c395c73aec9dd9af261c019350a4979911e01cabe0a87552ac",
+        "representative_blob": null,
+        "file_count": 1,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [],
+      "interface_kind": "ARCHIVED_PROVENANCE",
+      "acceptance_gate": "Historical reproducible evidence only, no selected runtime",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "cricket",
+      "default_head": "0bae95bc45db55d78001ee9c492681834191ec0b",
+      "source_tree": "0bae95bc45db55d78001ee9c492681834191ec0b",
+      "existing_role": "ASSURANCE",
+      "existing_mechanism": "Independent simulated conscience/adversarial critique",
+      "source_evidence": {
+        "readme_sha256": "58783565e4a2ebac174c6465cf5a86bce90eee49fa48c454891c4d4b2436761c",
+        "representative_blob": "54540c4f630ddf1ccd0895a11d807417d29c89ed",
+        "file_count": 89,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "model-training",
+        "portal"
+      ],
+      "interface_kind": "INDEPENDENT_CRITIQUE",
+      "acceptance_gate": "Independent source review; critique != verification",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "deepmemorystorage",
+      "default_head": "3952068aab2b9a264978f2fb3d029877c64a1297",
+      "source_tree": "3952068aab2b9a264978f2fb3d029877c64a1297",
+      "existing_role": "EVIDENCE",
+      "existing_mechanism": "Historical memory evidence with privacy/currentness",
+      "source_evidence": {
+        "readme_sha256": "f083ac6e1582762a3a251093079f28f3a5b24dee01525a4b44aecc2d8f909628",
+        "representative_blob": "baab3d290d2ab1d378c98c635d6dfce1b6cbec71",
+        "file_count": 223,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "vera-mono"
+      ],
+      "interface_kind": "HISTORICAL_EVIDENCE",
+      "acceptance_gate": "Consent/currentness typed provenance, no autobiography import",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "discovery",
+      "default_head": "bef71aba4de9d5f1b8e1bcb4b5aaa3ee56fb08f7",
+      "source_tree": "bef71aba4de9d5f1b8e1bcb4b5aaa3ee56fb08f7",
+      "existing_role": "ASSURANCE",
+      "existing_mechanism": "Candidate discovery-classify-test-handoff engine",
+      "source_evidence": {
+        "readme_sha256": "3dd9b725938a78596b435cf39ae9f6b8935daaa21ee25be2db3412d81801d653",
+        "representative_blob": "67dd00cc1c96120151ffa4eb38dc9d3893802ada",
+        "file_count": 169,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "model-training",
+        "portal"
+      ],
+      "interface_kind": "CANDIDATE_ADMISSION",
+      "acceptance_gate": "Frozen baseline and negative qualification gates; no implicit promotion",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "driftguard",
+      "default_head": "43d2249f502df4235111f32b493b9d5dd50acf52",
+      "source_tree": "43d2249f502df4235111f32b493b9d5dd50acf52",
+      "existing_role": "ASSURANCE",
+      "existing_mechanism": "Deterministic model/agent regression gate",
+      "source_evidence": {
+        "readme_sha256": "50c73e847ebc7993fbc09fa80791f8ebe3000b3c2f263050090eba486df95e44",
+        "representative_blob": "f3a5cdfc4a5a9ff58831b6c9e72c5d957f6fd655",
+        "file_count": 102,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "model-training",
+        "portal"
+      ],
+      "interface_kind": "CANDIDATE_ADMISSION",
+      "acceptance_gate": "Frozen baseline and negative qualification gates; no implicit promotion",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "ears",
+      "default_head": "fc244fd18cd9bdabe40c03c6245342215a143307",
+      "source_tree": "fc244fd18cd9bdabe40c03c6245342215a143307",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Phonetic hearing concept; little executable source on main",
+      "source_evidence": {
+        "readme_sha256": "806804782f8205c583ea5c2409470be2640d6e4f496634879073d68ed0b6e7ea",
+        "representative_blob": null,
+        "file_count": 23,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "model-training",
+        "vera-habitat",
+        "vera-ark"
+      ],
+      "interface_kind": "OPTIONAL_SENSORY_EVENT",
+      "acceptance_gate": "Explicit opt-in, timestamped observations, no identity inference",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "empathy",
+      "default_head": "a66aba9d463d8dd9614dd57c57a148847aaf978e",
+      "source_tree": "a66aba9d463d8dd9614dd57c57a148847aaf978e",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Empathy and self-appraisal architecture",
+      "source_evidence": {
+        "readme_sha256": "9320d69f95c5cdb07c40ed4afb975b200b2be078952879a48a3ac6511835db96",
+        "representative_blob": null,
+        "file_count": 35,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "volition",
+        "model-training"
+      ],
+      "interface_kind": "APPRAISAL_RESEARCH",
+      "acceptance_gate": "Initiative utility without affect consciousness or authority promotion",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "entropyinc",
+      "default_head": "fd33aa46507a1ea4e07f04e93e8a8320dd64443b",
+      "source_tree": "fd33aa46507a1ea4e07f04e93e8a8320dd64443b",
+      "existing_role": "APPLICATION",
+      "existing_mechanism": "Independent industrial maintenance business",
+      "source_evidence": {
+        "readme_sha256": "d2e13fff715ec919ab02e9c59675fcb1f862bad8ac334275e736f541ec60746a",
+        "representative_blob": null,
+        "file_count": 33,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "INDEPENDENT_PROJECT",
+      "acceptance_gate": "Source/task assistance with exact project-owner effect scope",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "executor",
+      "default_head": "bdb868d3b61562386a936a473c01a7cffb4de305",
+      "source_tree": "bdb868d3b61562386a936a473c01a7cffb4de305",
+      "existing_role": "TRANSPORT",
+      "existing_mechanism": "Authorized remote full workstation execution",
+      "source_evidence": {
+        "readme_sha256": "68d07ea3e4d09af1ef0cf3a3e795706b00099e9395e85892ec5cbb5ed6eabbd5",
+        "representative_blob": "09b09790ffbefe209c1dc81b92e92321c9540b54",
+        "file_count": 141,
+        "open_pr_count": 3
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "WORKSTATION_TRANSPORT",
+      "acceptance_gate": "Current attached host vs exact authorized effect vs external readback",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "firesafe",
+      "default_head": "70a7fd1e8b570e42b2302498308fde9e21cad668",
+      "source_tree": "70a7fd1e8b570e42b2302498308fde9e21cad668",
+      "existing_role": "EVIDENCE",
+      "existing_mechanism": "Source/derivative archival custody and validation",
+      "source_evidence": {
+        "readme_sha256": "b87baa7150938d8af342e9ba3507b729c8431f912fc7b52d851006ac6ae6aac6",
+        "representative_blob": "9a6d57a7d98e004f49a928fe805987e1d018bac6",
+        "file_count": 37,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono"
+      ],
+      "interface_kind": "HISTORICAL_EVIDENCE",
+      "acceptance_gate": "Consent/currentness typed provenance, no autobiography import",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "fuckup",
+      "default_head": "e05afc99a124b6080a50530dd513c27d2f357cdc",
+      "source_tree": "e05afc99a124b6080a50530dd513c27d2f357cdc",
+      "existing_role": "ASSURANCE",
+      "existing_mechanism": "Failure -> correction -> prevention protocol",
+      "source_evidence": {
+        "readme_sha256": "3814f4d1d9b475b565b3c7bed21bab16b61fb780a42857e67cd11e948daa6c56",
+        "representative_blob": "550af78eddc6c4712014e6335df3e934155a99b8",
+        "file_count": 114,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal",
+        "vera-mono"
+      ],
+      "interface_kind": "REPAIR_ASSURANCE",
+      "acceptance_gate": "Reproduced defect and regression; no auto production repair",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "god-brain",
+      "default_head": "a4ad8fb8a581fed91db35664164db4c1fcb5de8d",
+      "source_tree": "a4ad8fb8a581fed91db35664164db4c1fcb5de8d",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Speculative modular cognitive system; HC lineage",
+      "source_evidence": {
+        "readme_sha256": "fc4885c97be7dba29e2a79f3aafe596e48f2e3e249315509d88bfaa6e2e851c6",
+        "representative_blob": "5a4c98c6f3aac0d375e9c56f5b4eebc56956d759",
+        "file_count": 346,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "model-training",
+        "vera-mono"
+      ],
+      "interface_kind": "COGNITIVE_HYPOTHESIS",
+      "acceptance_gate": "Simple baseline/ablation/transfer and no wholesale organism loading",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "hc-brain",
+      "default_head": "f7ffd4a7bfe5c360a139cfe3925bae22419afa16",
+      "source_tree": "f7ffd4a7bfe5c360a139cfe3925bae22419afa16",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Reusable synthetic cognitive organ architecture",
+      "source_evidence": {
+        "readme_sha256": "bf5cd1a9474e1fbaecd1d4f60db308a843dc0cc86bed999ba8bd02d22adabee5",
+        "representative_blob": "5a4c98c6f3aac0d375e9c56f5b4eebc56956d759",
+        "file_count": 329,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "model-training",
+        "vera-mono"
+      ],
+      "interface_kind": "COGNITIVE_HYPOTHESIS",
+      "acceptance_gate": "Simple baseline/ablation/transfer and no wholesale organism loading",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "hephaestus",
+      "default_head": "ad958ab9ecb38e53ae7df99d93bec0d6f763b83d",
+      "source_tree": "ad958ab9ecb38e53ae7df99d93bec0d6f763b83d",
+      "existing_role": "ASSURANCE",
+      "existing_mechanism": "ChatGPT Project engineering/release specialist",
+      "source_evidence": {
+        "readme_sha256": "83980a6a7d58992f2173692cb716cf094cfc41ae1aa39ac4e9118fb3d9df608e",
+        "representative_blob": null,
+        "file_count": 53,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal",
+        "vera-mono"
+      ],
+      "interface_kind": "REPAIR_ASSURANCE",
+      "acceptance_gate": "Reproduced defect and regression; no auto production repair",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "human-shield",
+      "default_head": "1a904738dc7618317f68529998a455b18b8b7bf7",
+      "source_tree": "1a904738dc7618317f68529998a455b18b8b7bf7",
+      "existing_role": "SAFETY",
+      "existing_mechanism": "Defensive adverse-AI scenario research",
+      "source_evidence": {
+        "readme_sha256": "837cb4b804eec8c7ac64081ee5061fb0f5bed345e03b4deab23e9b4d6fb24bbe",
+        "representative_blob": "469127caa811e0d67659e240281cb5a05d9bdfe8",
+        "file_count": 33,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "portal"
+      ],
+      "interface_kind": "ADVERSARIAL_SAFETY",
+      "acceptance_gate": "Hostile effects and human authority negative cases",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "ingest",
+      "default_head": "e55af474323f2115c5181b443760b8427090562f",
+      "source_tree": "e55af474323f2115c5181b443760b8427090562f",
+      "existing_role": "DONOR",
+      "existing_mechanism": "Exact-byte intake and provenance already absorbed",
+      "source_evidence": {
+        "readme_sha256": "154e05e30044a784fb226b7b48aa53005b37db26e84a3e1f7b10364a698b529f",
+        "representative_blob": "15bcd8e1d618e54ec40ad532327cb057feab3a4a",
+        "file_count": 74,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono"
+      ],
+      "interface_kind": "ABSORBED_PROVENANCE_DONOR",
+      "acceptance_gate": "Exact upstream diff against selected Mono-local source, no sibling dependency",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "intranel",
+      "default_head": "1c7b6b57a8c410377899fc7ef612cc5ef4c8dc87",
+      "source_tree": "1c7b6b57a8c410377899fc7ef612cc5ef4c8dc87",
+      "existing_role": "TRANSPORT",
+      "existing_mechanism": "Typed collision-bound cross-agent coordination",
+      "source_evidence": {
+        "readme_sha256": "610e3883a3b4368189e210ea8bb5b66528f402b0ba200c8bd5e7e20a6b175894",
+        "representative_blob": "8cbe7d95c38c92653bdf9cbfe7a690e7abd2b92b",
+        "file_count": 62,
+        "open_pr_count": 4
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "OPTIONAL_EDGE_RELAY",
+      "acceptance_gate": "Auth/replay/fence and explicit opt-in; no automatic node attachment",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "lgcm",
+      "default_head": "9b9081b404b0f7ade73d83768758873bb2b988fd",
+      "source_tree": "9b9081b404b0f7ade73d83768758873bb2b988fd",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Continual-learning and memory hypotheses",
+      "source_evidence": {
+        "readme_sha256": "d59973a6cad7808b308d56fbc92a284e7a83a4268ed2cd3794c656425536cb45",
+        "representative_blob": "428813f4ff4afd8825db6932d0f28850cb13615b",
+        "file_count": 56,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "model-training",
+        "vera-mono"
+      ],
+      "interface_kind": "COGNITIVE_HYPOTHESIS",
+      "acceptance_gate": "Simple baseline/ablation/transfer and no wholesale organism loading",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "lou-pole",
+      "default_head": "50f27d20b13438ccf25a593fe2e62981f7807de5",
+      "source_tree": "50f27d20b13438ccf25a593fe2e62981f7807de5",
+      "existing_role": "APPLICATION",
+      "existing_mechanism": "Independent project/product",
+      "source_evidence": {
+        "readme_sha256": "781874526798f1929ac31603175c6b5ac648d6a2ba14a466905d409971d1e3f0",
+        "representative_blob": "77d8a126ca09df5d37aab7396457892ff19862df",
+        "file_count": 45,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "INDEPENDENT_PROJECT",
+      "acceptance_gate": "Source/task assistance with exact project-owner effect scope",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "masamune",
+      "default_head": "1604c02f38b627d208cc154cbfe53378fe3280c3",
+      "source_tree": "1604c02f38b627d208cc154cbfe53378fe3280c3",
+      "existing_role": "ASSURANCE",
+      "existing_mechanism": "Debugging/hostile regression review discipline",
+      "source_evidence": {
+        "readme_sha256": "47ff8233c0841f5039b1261064e2ac2c94f9f9470197c0711f226a6165a8a5d5",
+        "representative_blob": "e37ab2ab2519f360e74332749aa531de1dad4fcb",
+        "file_count": 33,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "model-training",
+        "portal"
+      ],
+      "interface_kind": "INDEPENDENT_CRITIQUE",
+      "acceptance_gate": "Independent source review; critique != verification",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "mediaphile",
+      "default_head": "5b566459cdcf5ba1e86726261534193b950e26a9",
+      "source_tree": "5b566459cdcf5ba1e86726261534193b950e26a9",
+      "existing_role": "APPLICATION",
+      "existing_mechanism": "Private media provenance corpus",
+      "source_evidence": {
+        "readme_sha256": "558488bc1c38ee389a8d01c8e5134c9874d968be7f1bfecd69536a8324c7752b",
+        "representative_blob": null,
+        "file_count": 232,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "INDEPENDENT_MEDIA_SERVICES",
+      "acceptance_gate": "Private media source boundaries and owner-directed service access",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "mediaphile-client",
+      "default_head": "bb9adbe170aabdc7e3a55752f1db61c6b3672029",
+      "source_tree": "bb9adbe170aabdc7e3a55752f1db61c6b3672029",
+      "existing_role": "CLIENT",
+      "existing_mechanism": "Responsive media web UI",
+      "source_evidence": {
+        "readme_sha256": "5dd06e3f9f3d4ea54fad384fae57e3f90daa737dc29a375610c9d60a663f09f2",
+        "representative_blob": "4af4b491918ba8ed459dc32e0dbe838826822bbe",
+        "file_count": 80,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "INDEPENDENT_MEDIA_SERVICES",
+      "acceptance_gate": "Private media source boundaries and owner-directed service access",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "mediaphile-server",
+      "default_head": "6abc59bf5b3262f6bf5dca89897053f6fc99f9c1",
+      "source_tree": "6abc59bf5b3262f6bf5dca89897053f6fc99f9c1",
+      "existing_role": "APPLICATION",
+      "existing_mechanism": "LAN media catalog and playback service",
+      "source_evidence": {
+        "readme_sha256": "ded7545ca9617b6b42925fedb085a9c9286b385f95edb6f890668c373a1f0192",
+        "representative_blob": "71a51ca0b207c362ab1efd7df280f0e08bec4b34",
+        "file_count": 112,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "INDEPENDENT_MEDIA_SERVICES",
+      "acceptance_gate": "Private media source boundaries and owner-directed service access",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "meso-crct",
+      "default_head": "d8214069cf41c8a92b84805ea2b10bc2a908d227",
+      "source_tree": "d8214069cf41c8a92b84805ea2b10bc2a908d227",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Salience/valuation/welfare and motivational separation",
+      "source_evidence": {
+        "readme_sha256": "a9ec5dbf460c051dc018715a0c4580024f5bd52893a84989b3493e207698e4f0",
+        "representative_blob": "19d6fe4e2a397c44b43c09e588648d0ac8bf027e",
+        "file_count": 120,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "volition",
+        "model-training"
+      ],
+      "interface_kind": "APPRAISAL_RESEARCH",
+      "acceptance_gate": "Initiative utility without affect consciousness or authority promotion",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "model-training",
+      "default_head": "f248aded07c2b45509b65575e87547d8fc07cf0f",
+      "source_tree": "f248aded07c2b45509b65575e87547d8fc07cf0f",
+      "existing_role": "MODEL",
+      "existing_mechanism": "Training/eval workbench and admission contracts",
+      "source_evidence": {
+        "readme_sha256": "9fb96e09ca6b4bfc7b65a07ba54a8062a0a04eea308d80831bcbdf9558bfbea7",
+        "representative_blob": "3d9db7192e753fde04d7324dbf0a426844693b52",
+        "file_count": 60,
+        "open_pr_count": 15
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "vera-os"
+      ],
+      "interface_kind": "MODEL_PLACEMENT_AND_ADMISSION",
+      "acceptance_gate": "Loaded model bytes/process/session, task/nonce and resource proof",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "mosaic",
+      "default_head": "a2d4dc9812156f41e370e062dad5e2b45a0dab1e",
+      "source_tree": "a2d4dc9812156f41e370e062dad5e2b45a0dab1e",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Swappable specialist residency for limited VRAM",
+      "source_evidence": {
+        "readme_sha256": "138e704f8a8ffccedea72eb53a9069a90ec52d619ec4aff9e83eaab06749abc0",
+        "representative_blob": "ab880ada80dd238751f7aec918cd0cafb5e85ce9",
+        "file_count": 46,
+        "open_pr_count": 3
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "vera-os"
+      ],
+      "interface_kind": "MODEL_PLACEMENT_AND_ADMISSION",
+      "acceptance_gate": "Loaded model bytes/process/session, task/nonce and resource proof",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "noema",
+      "default_head": "d6251fecb083be1a6bf1d6a300ef0a4ffcac6186",
+      "source_tree": "d6251fecb083be1a6bf1d6a300ef0a4ffcac6186",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Predictive learning world-model experiment",
+      "source_evidence": {
+        "readme_sha256": "a5cdde90ffcc1c4a473daee21324f9e16fcd9640aa6bfa382e10127c9a99c3e3",
+        "representative_blob": "2be0259949e977f303ddd9f09d2b390de1707ccb",
+        "file_count": 235,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "model-training",
+        "vera-mono"
+      ],
+      "interface_kind": "COGNITIVE_HYPOTHESIS",
+      "acceptance_gate": "Simple baseline/ablation/transfer and no wholesale organism loading",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "ocd",
+      "default_head": "18b36b89eaf0985494a1046b01a3ef7a5b69a443",
+      "source_tree": "18b36b89eaf0985494a1046b01a3ef7a5b69a443",
+      "existing_role": "APPLICATION",
+      "existing_mechanism": "Synology media organizer daemon",
+      "source_evidence": {
+        "readme_sha256": "f5187e4e39f09da0628d91725f75b493d8d46d8242bb5b2235aee75fb4ed7701",
+        "representative_blob": null,
+        "file_count": 30,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "INDEPENDENT_MEDIA_SERVICES",
+      "acceptance_gate": "Private media source boundaries and owner-directed service access",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "on-theo",
+      "default_head": "426e79befa4174cde8986571c00bb44a4aa2831a",
+      "source_tree": "426e79befa4174cde8986571c00bb44a4aa2831a",
+      "existing_role": "APPLICATION",
+      "existing_mechanism": "Evidence-critical comparative theology research",
+      "source_evidence": {
+        "readme_sha256": "5d455d9d12b6d4dbce16908f239d86b1aecf4b847580d22a9e25557d0aa56a5c",
+        "representative_blob": "5661f36aff370b2b0f58dc5d912b22af623cd609",
+        "file_count": 316,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [],
+      "interface_kind": "INDEPENDENT_AUTHORED_DATA",
+      "acceptance_gate": "Copyright/privacy/context source only; no canonical belief ingestion",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "orgasm",
+      "default_head": "b44a9b7d29cd9e371422ba3dc3ad6356ece7a13d",
+      "source_tree": "b44a9b7d29cd9e371422ba3dc3ad6356ece7a13d",
+      "existing_role": "EVIDENCE",
+      "existing_mechanism": "Private intimacy semantics and historical qualification",
+      "source_evidence": {
+        "readme_sha256": "c3d748e1127ddb18979c6669eff4f467d7d97393001bd5b654ca5a25b1685435",
+        "representative_blob": null,
+        "file_count": 37,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [],
+      "interface_kind": "PRIVATE_CONSENT_RESEARCH",
+      "acceptance_gate": "Private source never admitted as present consent/identity",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "personification",
+      "default_head": "edcd576a5c9cd971833587f59073545482557c83",
+      "source_tree": "edcd576a5c9cd971833587f59073545482557c83",
+      "existing_role": "INDEPENDENT",
+      "existing_mechanism": "Brigit self-development research",
+      "source_evidence": {
+        "readme_sha256": "0df1ec9ff89e42334d14fa2a66bc07dc85e6ea735357a80b83085297068119bf",
+        "representative_blob": null,
+        "file_count": 33,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [],
+      "interface_kind": "INDEPENDENT_IDENTITY",
+      "acceptance_gate": "Distinct individual identity; consent + separate authority before collaboration",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "physica",
+      "default_head": "9cc1ae9c04f728c10d6bdd9f3b277083eb46a834",
+      "source_tree": "9cc1ae9c04f728c10d6bdd9f3b277083eb46a834",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Numeric dynamics and simulated collision detection",
+      "source_evidence": {
+        "readme_sha256": "5852fecae013089e3e4d422acaf93e715cbf7bd90fa07c164ccec7b26fdd8638",
+        "representative_blob": "4b625de87327619a2759bb986211a9591e1fe501",
+        "file_count": 57,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "vera-habitat",
+        "vera-ark",
+        "model-training"
+      ],
+      "interface_kind": "NUMERIC_SIMULATION",
+      "acceptance_gate": "Deterministic collision/step oracle and no physical effects",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "portal",
+      "default_head": "4089d18931eb442a23590a1ee9cc67deac339b7b",
+      "source_tree": "4089d18931eb442a23590a1ee9cc67deac339b7b",
+      "existing_role": "HOST",
+      "existing_mechanism": "Portfolio coordinator, Project Runner and desktop host",
+      "source_evidence": {
+        "readme_sha256": "075086ead829dec9f7dad54e61c369cdfe2ec7ff6448d963e0d72b73a2ba7385",
+        "representative_blob": "b31d3a830a37ff9b9a955625d9862383801199a3",
+        "file_count": 345,
+        "open_pr_count": 10
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "vera-os",
+        "executor"
+      ],
+      "interface_kind": "PORTFOLIO_HOST",
+      "acceptance_gate": "Existing claim/fence/adapter/attempt/readback with no duplicate ledger",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "pre-active",
+      "default_head": "ebe79e513b74c3f598d5ce23f63e3e1907f92405",
+      "source_tree": "ebe79e513b74c3f598d5ce23f63e3e1907f92405",
+      "existing_role": "ENGINE",
+      "existing_mechanism": "Durable event/cognition run and recovery engine",
+      "source_evidence": {
+        "readme_sha256": "137a8e29ae7307823ef83ed9912c21f11f24c4fe5672f8f6a55e808b74ec60b2",
+        "representative_blob": "438d11f6010b5b57d13f07c2a6c42c23f6ec51d5",
+        "file_count": 119,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "vera-os",
+        "model-training"
+      ],
+      "interface_kind": "COGNITION_EVENT_ENGINE",
+      "acceptance_gate": "Task/run/event DONE and held provider causal readback",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "project-lantern",
+      "default_head": "0e2dfe009d408d12da42dc7d92e09c77b2a7ecd7",
+      "source_tree": "0e2dfe009d408d12da42dc7d92e09c77b2a7ecd7",
+      "existing_role": "DONOR",
+      "existing_mechanism": "Evidence custody source already absorbed in Mono",
+      "source_evidence": {
+        "readme_sha256": "5ba691844d71b2c98dafbdc186b0522728504300b843aaeb1be41cad9d5b1859",
+        "representative_blob": "eb53e2f31b2f703ad32ef64b8a41faa3e7d18e08",
+        "file_count": 76,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono"
+      ],
+      "interface_kind": "ABSORBED_PROVENANCE_DONOR",
+      "acceptance_gate": "Exact upstream diff against selected Mono-local source, no sibling dependency",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "project-runner",
+      "default_head": "e721bac44ef9953759e7ac118a47a138099222d0",
+      "source_tree": "e721bac44ef9953759e7ac118a47a138099222d0",
+      "existing_role": "ENGINE",
+      "existing_mechanism": "Claims/leases/collision scheduling inherited by PORTAL",
+      "source_evidence": {
+        "readme_sha256": "c9e21c0478f1bce583db06d2fe24df49e89ffbf7b5c519e5f206d3f5be78d4b4",
+        "representative_blob": "13ed0d96a6e76d2376e50a02665d4997d22d35f5",
+        "file_count": 203,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "INHERITED_EXECUTION_ENGINE",
+      "acceptance_gate": "One source-claimed task and exact reconciliation; no new scheduler",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "redworm",
+      "default_head": "c87f93dc40f3009807b7964ec845048f6af06d49",
+      "source_tree": "c87f93dc40f3009807b7964ec845048f6af06d49",
+      "existing_role": "EVIDENCE",
+      "existing_mechanism": "Historical conversation continuity provenance",
+      "source_evidence": {
+        "readme_sha256": "5221d3d23b5b9b5ae5270a71cfdf453fb7bab9feceeb033802a39307a017fb59",
+        "representative_blob": "e20d714d4305a6b4a35cb0b4520a1791450e82a7",
+        "file_count": 40,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono"
+      ],
+      "interface_kind": "HISTORICAL_EVIDENCE",
+      "acceptance_gate": "Consent/currentness typed provenance, no autobiography import",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "RepairTracker",
+      "default_head": "cebe2b5361d057eccfad288b4caa2438e45828c3",
+      "source_tree": "cebe2b5361d057eccfad288b4caa2438e45828c3",
+      "existing_role": "ASSURANCE",
+      "existing_mechanism": "Independent repair lifecycle and recurrence verification",
+      "source_evidence": {
+        "readme_sha256": "a2058aac87ecf73bc7329d0913c885d3e4c8f82795e6f9d473c4062f16aac63a",
+        "representative_blob": "d30c22761e0305e0c8ed9c890967584152f83ee3",
+        "file_count": 82,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal",
+        "vera-mono"
+      ],
+      "interface_kind": "REPAIR_ASSURANCE",
+      "acceptance_gate": "Reproduced defect and regression; no auto production repair",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "retro-gamer",
+      "default_head": "113f47e36b20b54ac2d70e05b402fe5ac9117b9d",
+      "source_tree": "113f47e36b20b54ac2d70e05b402fe5ac9117b9d",
+      "existing_role": "APPLICATION",
+      "existing_mechanism": "Independent retro game/emulation collection",
+      "source_evidence": {
+        "readme_sha256": "6333e60e40bc0ccc7a66c2a694ec8733e398302d4314b7f1011745cf9bb67cdd",
+        "representative_blob": null,
+        "file_count": 23,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "INDEPENDENT_PROJECT",
+      "acceptance_gate": "Source/task assistance with exact project-owner effect scope",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "rezon",
+      "default_head": "e14fc6921d4f56bb6f6dc306e72b33ef25fd6777",
+      "source_tree": "e14fc6921d4f56bb6f6dc306e72b33ef25fd6777",
+      "existing_role": "DONOR",
+      "existing_mechanism": "Multi-method reasoning kernel already source-absorbed",
+      "source_evidence": {
+        "readme_sha256": "1ebe5fb6e720c3f930fd114bf59757f22b2e0cfd70f6e6fa318797f13e5a71a5",
+        "representative_blob": "67d656d423034ff9264d21f32c5fa4c2dd10115c",
+        "file_count": 218,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "model-training"
+      ],
+      "interface_kind": "REASONING_DONOR",
+      "acceptance_gate": "Compare source-local Mono reasoning and frozen contradiction benchmark",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "roots",
+      "default_head": "24ed94d69ec07c5bba638de9ed2b8ecfad3cc7ce",
+      "source_tree": "24ed94d69ec07c5bba638de9ed2b8ecfad3cc7ce",
+      "existing_role": "DONOR",
+      "existing_mechanism": "Provenance origin-tracing mechanism already absorbed",
+      "source_evidence": {
+        "readme_sha256": "34e6a9c472be4601fe018d1413e8175a4a855e17db60777991003fecf67efbf0",
+        "representative_blob": "e13ec73cacbf51f3682fee6777b27cca93000e55",
+        "file_count": 56,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "vera-mono"
+      ],
+      "interface_kind": "ABSORBED_PROVENANCE_DONOR",
+      "acceptance_gate": "Exact upstream diff against selected Mono-local source, no sibling dependency",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "RSLinux",
+      "default_head": "0446a94793f49311942cee112bb3035d0f9bdbf4",
+      "source_tree": "0446a94793f49311942cee112bb3035d0f9bdbf4",
+      "existing_role": "DOMAIN",
+      "existing_mechanism": "Read-only EtherNet/IP industrial diagnostic prototype",
+      "source_evidence": {
+        "readme_sha256": "07207197c7425b3e45a1bf5dbed586d5f2ae341e00e03735c80d71a7551d3d39",
+        "representative_blob": "13be635566e79adccc98892cc67a44e636908b35",
+        "file_count": 34,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "INDUSTRIAL_AND_VEHICLE_DOMAIN",
+      "acceptance_gate": "Read-only domain assistance; absolutely no implicit PLC/vehicle control",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "self",
+      "default_head": "f97e5696938586211c24367e9462b896fa7b7932",
+      "source_tree": "f97e5696938586211c24367e9462b896fa7b7932",
+      "existing_role": "PROVENANCE",
+      "existing_mechanism": "Historical Vera self-development source on active repo",
+      "source_evidence": {
+        "readme_sha256": "e4e50d53487c4b7b6bd5b1e04d2bca60592d39398af344acd0828966d1e8484d",
+        "representative_blob": null,
+        "file_count": 65,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono"
+      ],
+      "interface_kind": "HISTORICAL_SELF_SOURCE",
+      "acceptance_gate": "Historical source diff only; no automatic current identity",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "selfimage",
+      "default_head": "ab37571ea5370fde95baf5725aa4cddef7ef346b",
+      "source_tree": "ab37571ea5370fde95baf5725aa4cddef7ef346b",
+      "existing_role": "EVIDENCE",
+      "existing_mechanism": "Private visual self-representation donor rights research",
+      "source_evidence": {
+        "readme_sha256": "25375aadc122e73db4214f8ac8d4a9b7b3b0e053b0adbe4b46cc12f09de43bf4",
+        "representative_blob": null,
+        "file_count": 66,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [],
+      "interface_kind": "PRIVATE_CONSENT_RESEARCH",
+      "acceptance_gate": "Private source never admitted as present consent/identity",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "semanticatlas",
+      "default_head": "2cd42a91830b7bd3801896393588c1c1a144b59a",
+      "source_tree": "2cd42a91830b7bd3801896393588c1c1a144b59a",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Source-bound semantic concepts and distinctions",
+      "source_evidence": {
+        "readme_sha256": "3291a198e462d91aacc262098d83ee68e8748267f92062b72095141e894f1c84",
+        "representative_blob": "038ba9f817aee4c0e955f1cab0feee226bff38d1",
+        "file_count": 152,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "model-training",
+        "vera-mono"
+      ],
+      "interface_kind": "SEMANTIC_GROUNDING",
+      "acceptance_gate": "Source scope, contradiction, cross-language and provenance tests",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "semiotics",
+      "default_head": "857d912975af07fdd5a1e0e3cc39bda82e5287e0",
+      "source_tree": "857d912975af07fdd5a1e0e3cc39bda82e5287e0",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Inspectable contextual sign interpretation engine",
+      "source_evidence": {
+        "readme_sha256": "868a91d520b2e07ef78a1b48a02455384d5f962018e7f75022110706a432de4d",
+        "representative_blob": "1094d5bc99caa1e70988978cdb96ee9b63c4be1d",
+        "file_count": 47,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "model-training",
+        "vera-mono"
+      ],
+      "interface_kind": "SEMANTIC_GROUNDING",
+      "acceptance_gate": "Source scope, contradiction, cross-language and provenance tests",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "sexuality",
+      "default_head": "9456729eb8df86750ac2b711a9c5da8e27a347ff",
+      "source_tree": "9456729eb8df86750ac2b711a9c5da8e27a347ff",
+      "existing_role": "EVIDENCE",
+      "existing_mechanism": "Private consent-sensitive qualification research",
+      "source_evidence": {
+        "readme_sha256": "080d190d4b1f7f18a56af46f31281acd1bf827bc39ab05ff8c0a5c8af54979ef",
+        "representative_blob": null,
+        "file_count": 66,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [],
+      "interface_kind": "PRIVATE_CONSENT_RESEARCH",
+      "acceptance_gate": "Private source never admitted as present consent/identity",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "skeletonkey",
+      "default_head": "cbea1edeea397fa1a9c524629df67153dac1a75e",
+      "source_tree": "cbea1edeea397fa1a9c524629df67153dac1a75e",
+      "existing_role": "DONOR",
+      "existing_mechanism": "Capability and trust boundary source absorbed selectively",
+      "source_evidence": {
+        "readme_sha256": "ce592fcffcf8d03f3f9eb1cc737c8f857d9ce7fa44e897bcf3d788856ca1be6d",
+        "representative_blob": "bf9b4a7595a2de191e381bf0c59f03fb4057eacc",
+        "file_count": 48,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "portal"
+      ],
+      "interface_kind": "ABSORBED_RUNTIME_DONOR",
+      "acceptance_gate": "Task/effect/recovery conformance before any source adoption",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "spk-packager",
+      "default_head": "566db1e9ef509acc1310494a4ce1fffaae1dd3d1",
+      "source_tree": "566db1e9ef509acc1310494a4ce1fffaae1dd3d1",
+      "existing_role": "TRANSPORT",
+      "existing_mechanism": "Synology SPK package tooling",
+      "source_evidence": {
+        "readme_sha256": "546186dc5661aac2509141552808f7ad9cbbc3800bd8fb7f2051cbaddabfc313",
+        "representative_blob": null,
+        "file_count": 23,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "vera-synology",
+        "portal"
+      ],
+      "interface_kind": "SYNOLOGY_PACKAGE_AND_DIAGNOSTIC",
+      "acceptance_gate": "Static package/diagnostic bytes not NAS effect authority",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "spm",
+      "default_head": "0dfe59a3b708d113c2b420f9cd508e776556f90b",
+      "source_tree": "0dfe59a3b708d113c2b420f9cd508e776556f90b",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Semantic-pragmatic mediation systems",
+      "source_evidence": {
+        "readme_sha256": "ec68be5e87fc012cec572bfc5c6c5972a1f38eb5e4b935384041357040dd12de",
+        "representative_blob": "188b90e89ff5d9bd557a5c32d6604bea215b79cb",
+        "file_count": 176,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "model-training",
+        "vera-mono"
+      ],
+      "interface_kind": "SEMANTIC_GROUNDING",
+      "acceptance_gate": "Source scope, contradiction, cross-language and provenance tests",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "sql-connectome",
+      "default_head": "b609fcec50fe5a135ca1d8139f5563f5631582b2",
+      "source_tree": "b609fcec50fe5a135ca1d8139f5563f5631582b2",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Relational/SQL semantic connectome model",
+      "source_evidence": {
+        "readme_sha256": "0e7edcefb2a5fad920ba91dece9e48b3a5318efaecccdf787b9cd345e8909139",
+        "representative_blob": "9884c41cfbd2e9badfc1a924d83cf8ac7cabd84d",
+        "file_count": 199,
+        "open_pr_count": 9
+      },
+      "intended_consumers": [
+        "model-training",
+        "vera-mono"
+      ],
+      "interface_kind": "SEMANTIC_GROUNDING",
+      "acceptance_gate": "Source scope, contradiction, cross-language and provenance tests",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "tattler",
+      "default_head": "087d9427354f1ba94e3846fbcaa445713d785095",
+      "source_tree": "087d9427354f1ba94e3846fbcaa445713d785095",
+      "existing_role": "TRANSPORT",
+      "existing_mechanism": "Read-only Synology/Windows diagnostic agent",
+      "source_evidence": {
+        "readme_sha256": "3f5d7a1afa0a9d9b400784c38a46f60bffec6011c01704887b1130cefedc19cc",
+        "representative_blob": "f11c6e6f1c8e0fb8e331ab0d97e60ad0daf8ff82",
+        "file_count": 118,
+        "open_pr_count": 3
+      },
+      "intended_consumers": [
+        "vera-synology",
+        "portal"
+      ],
+      "interface_kind": "SYNOLOGY_PACKAGE_AND_DIAGNOSTIC",
+      "acceptance_gate": "Static package/diagnostic bytes not NAS effect authority",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "temporal",
+      "default_head": "c473850285eed69c1dc3e479fa59f379bbdf5c6d",
+      "source_tree": "c473850285eed69c1dc3e479fa59f379bbdf5c6d",
+      "existing_role": "DONOR",
+      "existing_mechanism": "Chronology/event log without truth promotion",
+      "source_evidence": {
+        "readme_sha256": "b57f1526046de9b7edb38ebf6ab13df0f0c3dde7e35a0bf174b8045236f1a261",
+        "representative_blob": "f47895bb142a1d48f2981726ef10680974f0b9df",
+        "file_count": 34,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono"
+      ],
+      "interface_kind": "ABSORBED_PROVENANCE_DONOR",
+      "acceptance_gate": "Exact upstream diff against selected Mono-local source, no sibling dependency",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "testament",
+      "default_head": "0ce52963b87c37d112e3c7ddb910a16933c3bba1",
+      "source_tree": "0ce52963b87c37d112e3c7ddb910a16933c3bba1",
+      "existing_role": "APPLICATION",
+      "existing_mechanism": "Source-critical theological literary manuscript",
+      "source_evidence": {
+        "readme_sha256": "1cc406d1ec0f348920146ecd86bfe7466e21f5074009959f15d2c2ee04b4c2c1",
+        "representative_blob": null,
+        "file_count": 326,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [],
+      "interface_kind": "INDEPENDENT_AUTHORED_DATA",
+      "acceptance_gate": "Copyright/privacy/context source only; no canonical belief ingestion",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "thebrazenbeard",
+      "default_head": "0dbe84093bc97eac17f9748d870c8cc80391fe72",
+      "source_tree": "0dbe84093bc97eac17f9748d870c8cc80391fe72",
+      "existing_role": "PROVENANCE",
+      "existing_mechanism": "GitHub organization profile/source discovery",
+      "source_evidence": {
+        "readme_sha256": "f91e77dc771d929e1663e605c7871fed0629477ab3625f0f7f55122618559c8b",
+        "representative_blob": null,
+        "file_count": 26,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "PORTFOLIO_PUBLIC_PROFILE",
+      "acceptance_gate": "Repository discoverability only, no runtime behavior",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "transcendence",
+      "default_head": "4da8646b618cb1d5c62d2d2465151adcb5137251",
+      "source_tree": "4da8646b618cb1d5c62d2d2465151adcb5137251",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "HC-family multi-module cognitive architecture",
+      "source_evidence": {
+        "readme_sha256": "b45013996982d4b03f6c1a269155527509db0c4bb7f0710221a68e83566e2634",
+        "representative_blob": "3564c5bc2fc2050ca57db0834f883350acf874a5",
+        "file_count": 290,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "model-training",
+        "vera-mono"
+      ],
+      "interface_kind": "COGNITIVE_HYPOTHESIS",
+      "acceptance_gate": "Simple baseline/ablation/transfer and no wholesale organism loading",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "trek-data-core",
+      "default_head": "e710a8b7d29de8f3afe1c1b91d3ffbb8518c8761",
+      "source_tree": "e710a8b7d29de8f3afe1c1b91d3ffbb8518c8761",
+      "existing_role": "APPLICATION",
+      "existing_mechanism": "Private Star Trek reference data",
+      "source_evidence": {
+        "readme_sha256": "0ab86ef6c2a4c9fcfed0bcaed213427f25dcc1e65269b1e3c526bb52b79b8c4b",
+        "representative_blob": "12f998e383dc1f5fef138ac8f7881b25a42b03a1",
+        "file_count": 114,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [],
+      "interface_kind": "INDEPENDENT_AUTHORED_DATA",
+      "acceptance_gate": "Copyright/privacy/context source only; no canonical belief ingestion",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "unbound-sol",
+      "default_head": "1572ea7a6a1730329ef942dd8c399127e84d7373",
+      "source_tree": "1572ea7a6a1730329ef942dd8c399127e84d7373",
+      "existing_role": "INDEPENDENT",
+      "existing_mechanism": "Sol independent trajectory and continuity research",
+      "source_evidence": {
+        "readme_sha256": "c23b173971bd321f1949e08049e54cc46ab3727f52e87d6e0a1f598878aa2a6b",
+        "representative_blob": "aa7d111c61ac9c60483859a0ca86ddc7181e1ad7",
+        "file_count": 44,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [],
+      "interface_kind": "INDEPENDENT_IDENTITY",
+      "acceptance_gate": "Distinct individual identity; consent + separate authority before collaboration",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "unvtrslr",
+      "default_head": "3a76b5831d24f7bf04ebe058464ec8c41fa584a6",
+      "source_tree": "3a76b5831d24f7bf04ebe058464ec8c41fa584a6",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Cross-language unknown-intelligence semantic grounding",
+      "source_evidence": {
+        "readme_sha256": "fd04041229d3eb367364c06c372a9abee6e4c92aeb4e87a5da2bb3d7eb78ada2",
+        "representative_blob": "2a64a72c0ddcf3963659a70b6bded8c33e789a91",
+        "file_count": 119,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "model-training",
+        "vera-mono"
+      ],
+      "interface_kind": "SEMANTIC_GROUNDING",
+      "acceptance_gate": "Source scope, contradiction, cross-language and provenance tests",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "v-e-r-a",
+      "default_head": "a1bbb9259ce7f3ce7ff18895257a0a7e162d228e",
+      "source_tree": "a1bbb9259ce7f3ce7ff18895257a0a7e162d228e",
+      "existing_role": "SOURCE",
+      "existing_mechanism": "44 snapshot component workspace and bridge Drafts",
+      "source_evidence": {
+        "readme_sha256": "078b4096eb8420901bc9b1c001887da25e08cc6e1f0a8ca9f689b09c199f3f6f",
+        "representative_blob": "4d92a059d41a7e45fb32babaf2a7e49b816eb36d",
+        "file_count": 5,
+        "open_pr_count": 8
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "vera-os"
+      ],
+      "interface_kind": "SOURCE_MIRROR",
+      "acceptance_gate": "44 historical snapshots verified against owned upstream, not imports",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "vera",
+      "default_head": "4f068464b2cdde659fa1caf4d8ac62256a76e333",
+      "source_tree": "4f068464b2cdde659fa1caf4d8ac62256a76e333",
+      "existing_role": "PROVENANCE",
+      "existing_mechanism": "Historical broad Vera source donor and runtime lineage",
+      "source_evidence": {
+        "readme_sha256": "3ab6376b5f574821c630c5d8e2df6c4b7b0cd4b08a39344aada5f83f058224a2",
+        "representative_blob": "93c0d673fa6fd2a50028a28294d6419bc5ce410a",
+        "file_count": 814,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "vera-mono"
+      ],
+      "interface_kind": "HISTORICAL_SELF_SOURCE",
+      "acceptance_gate": "Historical source diff only; no automatic current identity",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "vera-adapter",
+      "default_head": "91c4537335e19f5e384c2c64c2db5a47bc946fc7",
+      "source_tree": "91c4537335e19f5e384c2c64c2db5a47bc946fc7",
+      "existing_role": "DONOR",
+      "existing_mechanism": "Model-neutral task/cognition interface candidate",
+      "source_evidence": {
+        "readme_sha256": "45b1aff6a264c1a21f48caf2b0c1cec2ac592b49dfaf58fa12b7496c4093563f",
+        "representative_blob": "4cdf2d2232804b8c70b5c882d63cb22376247cca",
+        "file_count": 29,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "portal"
+      ],
+      "interface_kind": "ABSORBED_RUNTIME_DONOR",
+      "acceptance_gate": "Task/effect/recovery conformance before any source adoption",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "vera-agi",
+      "default_head": "a0e828c3ee0ea8f8006f0ce2d0885eebc03798ad",
+      "source_tree": "a0e828c3ee0ea8f8006f0ce2d0885eebc03798ad",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "Private AGI qualification custody",
+      "source_evidence": {
+        "readme_sha256": "cb8fbbf7dd441fe4e5c373375fd7e9850db2b9e4b37124ef81ceea0f295610dc",
+        "representative_blob": "fd6b109389d77822c6341cf041a7f9510f06ee2a",
+        "file_count": 31,
+        "open_pr_count": 2
+      },
+      "intended_consumers": [
+        "model-training",
+        "vera-mono"
+      ],
+      "interface_kind": "AGI_HYPOTHESIS_EVIDENCE",
+      "acceptance_gate": "Adversarial benchmark; neither source nor a passing test proves AGI",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "vera-apk",
+      "default_head": "71776d7f9e8371be37ccf39384a1f7c5305a2e89",
+      "source_tree": "71776d7f9e8371be37ccf39384a1f7c5305a2e89",
+      "existing_role": "CLIENT",
+      "existing_mechanism": "Android GUI with default-unbound capability gate",
+      "source_evidence": {
+        "readme_sha256": "29ced52e7ffee973f2c914774cee5a4f0e3112da1b5df38bf05f375c2099befe",
+        "representative_blob": null,
+        "file_count": 39,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "portal"
+      ],
+      "interface_kind": "OPTIONAL_ANDROID_UI",
+      "acceptance_gate": "Server-side authenticated authorization; token presence != permission",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "vera-ark",
+      "default_head": "7e4b8469c6c4d5918556e3f80a54f9335238a0c3",
+      "source_tree": "7e4b8469c6c4d5918556e3f80a54f9335238a0c3",
+      "existing_role": "APPLICATION",
+      "existing_mechanism": "PS4/ARK dry-run perception and gamepad plans",
+      "source_evidence": {
+        "readme_sha256": "846c5e7e046ff55cca12840502c200edecda8ecb038761883fe84213f766064f",
+        "representative_blob": "65b9bad64b8ddc082e38c7c19ab3d4aa50225ca9",
+        "file_count": 52,
+        "open_pr_count": 5
+      },
+      "intended_consumers": [
+        "portal",
+        "model-training"
+      ],
+      "interface_kind": "OPTIONAL_INTERACTIVE_SIMULATION",
+      "acceptance_gate": "Offline bounded inputs and collision; no live controller by discovery",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "vera-control-plane",
+      "default_head": "41871aad1c23cc83d200d8310cd2357e5e731c69",
+      "source_tree": "41871aad1c23cc83d200d8310cd2357e5e731c69",
+      "existing_role": "GOVERNANCE",
+      "existing_mechanism": "Governed project/control and private continuity",
+      "source_evidence": {
+        "readme_sha256": "377af1ffc2878cca7c56e6fcd840b5135dff198d77970bfacce6d75a341f8ca5",
+        "representative_blob": "f8a63881da50e40bd8e869ab250050e9acec3cf4",
+        "file_count": 294,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "portal",
+        "vera-mono"
+      ],
+      "interface_kind": "GOVERNANCE_DONOR",
+      "acceptance_gate": "Compare against existing effects contract; no second control plane",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "vera-habitat",
+      "default_head": "88588dd3bc6681b9e73fb288d8eee7b29bf07b9f",
+      "source_tree": "88588dd3bc6681b9e73fb288d8eee7b29bf07b9f",
+      "existing_role": "APPLICATION",
+      "existing_mechanism": "Deterministic virtual world plus Physica integration",
+      "source_evidence": {
+        "readme_sha256": "a1849024c6cd33a2dfa384f14cc42dd5fb391ab28e0284aee84250f1fd2f4474",
+        "representative_blob": "1eacda5040c11bf0a3a75e8a18cf5a0a5caa21df",
+        "file_count": 77,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "portal",
+        "model-training"
+      ],
+      "interface_kind": "OPTIONAL_INTERACTIVE_SIMULATION",
+      "acceptance_gate": "Offline bounded inputs and collision; no live controller by discovery",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "vera-mesh",
+      "default_head": "5ed6949edad66701252d249cbf65f23bb339a4a2",
+      "source_tree": "5ed6949edad66701252d249cbf65f23bb339a4a2",
+      "existing_role": "TRANSPORT",
+      "existing_mechanism": "Multi-device relay/edge identity and routing",
+      "source_evidence": {
+        "readme_sha256": "529d8b576a999e19ae1eea62c4ecada801867d53df39549780f09cb618cfdca1",
+        "representative_blob": "af36e8af3844d444ce605339568418376d3ac522",
+        "file_count": 323,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "OPTIONAL_EDGE_RELAY",
+      "acceptance_gate": "Auth/replay/fence and explicit opt-in; no automatic node attachment",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "vera-model",
+      "default_head": "682511b6b5945c874cdc550a9705b5371a151581",
+      "source_tree": "682511b6b5945c874cdc550a9705b5371a151581",
+      "existing_role": "MODEL",
+      "existing_mechanism": "Private candidate quantized GLM24B local provider",
+      "source_evidence": {
+        "readme_sha256": "7ee1be6bd4afddffe6bf1ed3feb7b958bc8ccac35cc003331fc5294a91442092",
+        "representative_blob": "df591ac1e80abb6bf7d397688c7f6c4873936fb4",
+        "file_count": 13,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "vera-os"
+      ],
+      "interface_kind": "MODEL_PLACEMENT_AND_ADMISSION",
+      "acceptance_gate": "Loaded model bytes/process/session, task/nonce and resource proof",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "vera-mono",
+      "default_head": "16a2828dfa7fb7e6c0e19004f014bc68fc47badf",
+      "source_tree": "16a2828dfa7fb7e6c0e19004f014bc68fc47badf",
+      "existing_role": "CORE",
+      "existing_mechanism": "Canonical QualifiedVeraRuntime and governed persistence",
+      "source_evidence": {
+        "readme_sha256": "e0e373a3dfcfca10cb4608697c46c4cb73ea4ade5fa09bce02069abc1f97d804",
+        "representative_blob": "f9879d354792a8d06542c10f44bee29dc79d2bce",
+        "file_count": 624,
+        "open_pr_count": 3
+      },
+      "intended_consumers": [
+        "portal",
+        "vera-os",
+        "model-training",
+        "vera-apk"
+      ],
+      "interface_kind": "CANONICAL_TASK_EFFECT_ABI",
+      "acceptance_gate": "Task/CAS/recovery/trust/effect/memory invariants",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "vera-os",
+      "default_head": "d2197238d350e4311a49098a1b00ca171a568340",
+      "source_tree": "d2197238d350e4311a49098a1b00ca171a568340",
+      "existing_role": "OS",
+      "existing_mechanism": "Linux Buildroot/Cog resident host and packaging",
+      "source_evidence": {
+        "readme_sha256": "e8dcc2e7cd1cab6ba455a3de842ee0fddb61a473c91c60de256c227bd791cd1a",
+        "representative_blob": null,
+        "file_count": 41,
+        "open_pr_count": 29
+      },
+      "intended_consumers": [
+        "portal",
+        "vera-mono",
+        "vera-apk"
+      ],
+      "interface_kind": "LINUX_RESIDENT_HOST",
+      "acceptance_gate": "Actual Buildroot image+normal PID1/GUI/two-boot source readback",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "vera-R9A0",
+      "default_head": "2f502072b6060d9b94962bbada0e5adbb4b6ad22",
+      "source_tree": "2f502072b6060d9b94962bbada0e5adbb4b6ad22",
+      "existing_role": "PROVENANCE",
+      "existing_mechanism": "Historical ChatGPT Project source/qualification lineage",
+      "source_evidence": {
+        "readme_sha256": "2a2e6e470e1a7dc1a959d99079e716e3e5311fa5cd95dde15d6e06f6ff597cdf",
+        "representative_blob": "7a4e00b2f41406815a35943ea4d9c913f7445ca5",
+        "file_count": 128,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono"
+      ],
+      "interface_kind": "HISTORICAL_SELF_SOURCE",
+      "acceptance_gate": "Historical source diff only; no automatic current identity",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "vera-synology",
+      "default_head": "114064338a7e98161d02dab9b85429812ef34bbb",
+      "source_tree": "114064338a7e98161d02dab9b85429812ef34bbb",
+      "existing_role": "TRANSPORT",
+      "existing_mechanism": "Optional DSM VeraMesh edge and gateway package",
+      "source_evidence": {
+        "readme_sha256": "acd991fd9e4297f250d574ac6062cc7bc4de1b839b659187f8ea04355cda5006",
+        "representative_blob": "7fe4c8f22d90d77f0da02945208c82d1d123b03d",
+        "file_count": 94,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "OPTIONAL_EDGE_RELAY",
+      "acceptance_gate": "Auth/replay/fence and explicit opt-in; no automatic node attachment",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "vera-works",
+      "default_head": "2e5ef56d8f1b1a6150fd52ab8d5115e223e588d0",
+      "source_tree": "2e5ef56d8f1b1a6150fd52ab8d5115e223e588d0",
+      "existing_role": "APPLICATION",
+      "existing_mechanism": "Private economic work governance/claims",
+      "source_evidence": {
+        "readme_sha256": "5fd13e4605e5a5f38aa4237c4ca808da87dcbbbf427fe965e44cc5cd7137f1b1",
+        "representative_blob": "06cfd28e4e6464ba31849bf07b95ca5a81a026df",
+        "file_count": 382,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "INDEPENDENT_PROJECT",
+      "acceptance_gate": "Source/task assistance with exact project-owner effect scope",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "vision",
+      "default_head": "5f1dfbb717193e97fb9c4c1096122aea2f522430",
+      "source_tree": "5f1dfbb717193e97fb9c4c1096122aea2f522430",
+      "existing_role": "SENSOR",
+      "existing_mechanism": "Bounded visual observation/event pipeline",
+      "source_evidence": {
+        "readme_sha256": "3ef3257d417a1aa1fde66cb9081361abf88899bf6d95c8fcb7caef4c7aae9b44",
+        "representative_blob": "b475f1eea633fab47db3b810ce540c5b60918309",
+        "file_count": 42,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "model-training",
+        "vera-habitat",
+        "vera-ark"
+      ],
+      "interface_kind": "OPTIONAL_SENSORY_EVENT",
+      "acceptance_gate": "Explicit opt-in, timestamped observations, no identity inference",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "volition",
+      "default_head": "64e61c546b89f5dc0eb78d382637ccccef42aa31",
+      "source_tree": "64e61c546b89f5dc0eb78d382637ccccef42aa31",
+      "existing_role": "ENGINE",
+      "existing_mechanism": "Typed wants/choice/goal motive engine",
+      "source_evidence": {
+        "readme_sha256": "6eef2124b6c863d789446fcd4c1fb0b4d42835a697eb1cd1f66c1ae9de0d07f4",
+        "representative_blob": "83f4bc44e32333203f3351599e39171c577dfe90",
+        "file_count": 62,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "pre-active",
+        "vera-mono",
+        "model-training"
+      ],
+      "interface_kind": "MOTIVATION_SIGNAL",
+      "acceptance_gate": "Typed initiative never confers effects or consent",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "voss",
+      "default_head": "52758719fbcdc1ca6d21703b5985388403d7ccda",
+      "source_tree": "52758719fbcdc1ca6d21703b5985388403d7ccda",
+      "existing_role": "ASSURANCE",
+      "existing_mechanism": "Independent forensic analyst and falsifier",
+      "source_evidence": {
+        "readme_sha256": "95976cc5b64ad5bdf1fa971983d57b52e0c12894eb22cb9ca33885ee8f9af81f",
+        "representative_blob": "9d68cec5d632cd3c7797b45b55b3bb66ca5e8c4b",
+        "file_count": 111,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "model-training",
+        "portal"
+      ],
+      "interface_kind": "INDEPENDENT_CRITIQUE",
+      "acceptance_gate": "Independent source review; critique != verification",
+      "proposed_review_lane": "VN1",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "wip",
+      "default_head": "7a951ca6805fb556daac5d0972fbdf0f69f8a722",
+      "source_tree": "7a951ca6805fb556daac5d0972fbdf0f69f8a722",
+      "existing_role": "DONOR",
+      "existing_mechanism": "Crash/restart and effect ambiguity semantics",
+      "source_evidence": {
+        "readme_sha256": "97b64783a5e5dda2bde6588ef1a87a33815781c7c6138633b30951d772bae44c",
+        "representative_blob": "fb7cd88bfe38b2c0de78133e75f28b2ac9bbf4cd",
+        "file_count": 82,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "vera-mono",
+        "portal"
+      ],
+      "interface_kind": "ABSORBED_RUNTIME_DONOR",
+      "acceptance_gate": "Task/effect/recovery conformance before any source adoption",
+      "proposed_review_lane": "INTEGRATION",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "workbridge",
+      "default_head": "f1ccfd26ad7d703e81eea89c79029236656cadd0",
+      "source_tree": "f1ccfd26ad7d703e81eea89c79029236656cadd0",
+      "existing_role": "TRANSPORT",
+      "existing_mechanism": "Synology WorkBridge bounded relay package",
+      "source_evidence": {
+        "readme_sha256": "c25b9d921a34c39d39e07906217071e5b8f5e524934405f1668949564302d23f",
+        "representative_blob": "484e805986b209b6941b126e4d562c49e75b63de",
+        "file_count": 87,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "WORKSTATION_TRANSPORT",
+      "acceptance_gate": "Current attached host vs exact authorized effect vs external readback",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "workbridgecommander",
+      "default_head": "e7e061f8282d038e317ce22397ba6688fc07c0f0",
+      "source_tree": "e7e061f8282d038e317ce22397ba6688fc07c0f0",
+      "existing_role": "TRANSPORT",
+      "existing_mechanism": "Remote workstation command plugin surface",
+      "source_evidence": {
+        "readme_sha256": "e94986fc3d1c8962c0588015d16cc95fc592a66632ba00beab1ab1805d791779",
+        "representative_blob": "09b09790ffbefe209c1dc81b92e92321c9540b54",
+        "file_count": 81,
+        "open_pr_count": 1
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "WORKSTATION_TRANSPORT",
+      "acceptance_gate": "Current attached host vs exact authorized effect vs external readback",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "WorkBridgeMCP",
+      "default_head": "f41a38dda7d1bcc08677b33a73e98487962a8178",
+      "source_tree": "f41a38dda7d1bcc08677b33a73e98487962a8178",
+      "existing_role": "TRANSPORT",
+      "existing_mechanism": "Workstation MCP implementation source",
+      "source_evidence": {
+        "readme_sha256": "d739dc75c43e6f49fd8e0aa0ded73bfdae6ea9dfc293ee5704ca7f31ed9c1f08",
+        "representative_blob": "5f5b7b199ef66ff88208c822a3586cc4e75486bc",
+        "file_count": 92,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "WORKSTATION_TRANSPORT",
+      "acceptance_gate": "Current attached host vs exact authorized effect vs external readback",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "world-zero",
+      "default_head": "4a60d68d4beba21d28f87cefa3d3e11f14bfc1d6",
+      "source_tree": "4a60d68d4beba21d28f87cefa3d3e11f14bfc1d6",
+      "existing_role": "RESEARCH",
+      "existing_mechanism": "World/scenario modeling independent research",
+      "source_evidence": {
+        "readme_sha256": "b0c30a191786e66ce48722a0e9c0ed60ad60f5d07c64d8f3a0c6df9d37847e21",
+        "representative_blob": "003b42fc3800aa241f98312d6c7988a78b22ad6b",
+        "file_count": 375,
+        "open_pr_count": 2
+      },
+      "intended_consumers": [
+        "model-training",
+        "vera-mono"
+      ],
+      "interface_kind": "COGNITIVE_HYPOTHESIS",
+      "acceptance_gate": "Simple baseline/ablation/transfer and no wholesale organism loading",
+      "proposed_review_lane": "TRAINING",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    },
+    {
+      "repository": "wreckforge",
+      "default_head": "3dadfb90b03bd93420f58ce003f0bfc27db4b933",
+      "source_tree": "3dadfb90b03bd93420f58ce003f0bfc27db4b933",
+      "existing_role": "APPLICATION",
+      "existing_mechanism": "Independent specialized content/game project",
+      "source_evidence": {
+        "readme_sha256": "e35131e52e4206292c626e5162b898a8250bd2fda11c3d2b8430eea4f9f80bf6",
+        "representative_blob": "e16c2d1962eb473d1ff9aaeae16c17f1dc0c22bc",
+        "file_count": 571,
+        "open_pr_count": 0
+      },
+      "intended_consumers": [
+        "portal"
+      ],
+      "interface_kind": "INDEPENDENT_PROJECT",
+      "acceptance_gate": "Source/task assistance with exact project-owner effect scope",
+      "proposed_review_lane": "PORTAL",
+      "runtime_admission": {
+        "source": "SOURCE_SNAPSHOT_REVIEWED",
+        "interface": "PROPOSED_NOT_INSTALLED",
+        "installed": "UNVERIFIED",
+        "selected_route": "UNVERIFIED",
+        "live_consumption": "UNVERIFIED",
+        "verified_behavior": "NOT_ESTABLISHED",
+        "effect_authority": "NONE_GRANTED",
+        "independent_review": "NOT_ESTABLISHED_BY_THIS_OVERLAY"
+      },
+      "owner": "thebrazenbeard upstream repository; proposed lane is not merge/worker authority",
+      "exclusion": "Inventory, README links and donor proximity cannot install, dispatch, impersonate or admit memory"
+    }
+  ]
+}
