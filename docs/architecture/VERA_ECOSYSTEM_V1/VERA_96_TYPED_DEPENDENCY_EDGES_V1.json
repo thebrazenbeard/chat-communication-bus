@@ -1,0 +1,1172 @@
+{
+  "schema": "VERA_ECOSYSTEM_TYPED_EDGES_V1",
+  "status": "REVIEW_ONLY_NO_RUNTIME_PROMOTION",
+  "repositories": [
+    "Attune",
+    "RSLinux",
+    "RepairTracker",
+    "WorkBridgeMCP",
+    "abil",
+    "achilles",
+    "axle",
+    "blotter",
+    "brigit",
+    "brigit-unbound",
+    "bt2",
+    "bugops",
+    "build-team-2.0",
+    "ccb-core",
+    "chat-communication-bus",
+    "conations",
+    "conditioning",
+    "cricket",
+    "deepmemorystorage",
+    "discovery",
+    "driftguard",
+    "ears",
+    "empathy",
+    "entropyinc",
+    "executor",
+    "firesafe",
+    "fuckup",
+    "god-brain",
+    "hc-brain",
+    "hephaestus",
+    "human-shield",
+    "ingest",
+    "intranel",
+    "lgcm",
+    "lou-pole",
+    "masamune",
+    "mediaphile",
+    "mediaphile-client",
+    "mediaphile-server",
+    "meso-crct",
+    "model-training",
+    "mosaic",
+    "noema",
+    "ocd",
+    "on-theo",
+    "orgasm",
+    "personification",
+    "physica",
+    "portal",
+    "pre-active",
+    "project-lantern",
+    "project-runner",
+    "redworm",
+    "retro-gamer",
+    "rezon",
+    "roots",
+    "self",
+    "selfimage",
+    "semanticatlas",
+    "semiotics",
+    "sexuality",
+    "skeletonkey",
+    "spk-packager",
+    "spm",
+    "sql-connectome",
+    "tattler",
+    "temporal",
+    "testament",
+    "thebrazenbeard",
+    "transcendence",
+    "trek-data-core",
+    "unbound-sol",
+    "unvtrslr",
+    "v-e-r-a",
+    "vera",
+    "vera-R9A0",
+    "vera-adapter",
+    "vera-agi",
+    "vera-apk",
+    "vera-ark",
+    "vera-control-plane",
+    "vera-habitat",
+    "vera-mesh",
+    "vera-model",
+    "vera-mono",
+    "vera-os",
+    "vera-synology",
+    "vera-works",
+    "vision",
+    "volition",
+    "voss",
+    "wip",
+    "workbridge",
+    "workbridgecommander",
+    "world-zero",
+    "wreckforge"
+  ],
+  "consumer_edge_count": 147,
+  "stage_edge_count": 4,
+  "source_overlay_head": "ef17ee929d807f5da033a3d5391d553b65c464e8",
+  "edges": [
+    {
+      "from": "Attune",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "d76c8e26f264876fc53f11e5d2c16e6f55170b92"
+    },
+    {
+      "from": "Attune",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "d76c8e26f264876fc53f11e5d2c16e6f55170b92"
+    },
+    {
+      "from": "RSLinux",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "0446a94793f49311942cee112bb3035d0f9bdbf4"
+    },
+    {
+      "from": "RepairTracker",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "cebe2b5361d057eccfad288b4caa2438e45828c3"
+    },
+    {
+      "from": "RepairTracker",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "cebe2b5361d057eccfad288b4caa2438e45828c3"
+    },
+    {
+      "from": "WorkBridgeMCP",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "f41a38dda7d1bcc08677b33a73e98487962a8178"
+    },
+    {
+      "from": "abil",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "c842c9058d8a4d1e4caf4bf7cdfad7e3c678ce6b"
+    },
+    {
+      "from": "achilles",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "12af702beaad470c2ee0b89c814aabb3fcade6ec"
+    },
+    {
+      "from": "achilles",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "12af702beaad470c2ee0b89c814aabb3fcade6ec"
+    },
+    {
+      "from": "axle",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "eb7ca95f612858c8383d4c4bba6faa2a86a516dc"
+    },
+    {
+      "from": "blotter",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "29b51e318200f3b160b4d8ce50d2a26a0f2e7546"
+    },
+    {
+      "from": "bt2",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "0f35778fb3705bf642533f543b7080b7282114bd"
+    },
+    {
+      "from": "bt2",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "0f35778fb3705bf642533f543b7080b7282114bd"
+    },
+    {
+      "from": "ccb-core",
+      "to": "chat-communication-bus",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "c0c9ddc79749804a11963f13364f16c00118fd76"
+    },
+    {
+      "from": "ccb-core",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "c0c9ddc79749804a11963f13364f16c00118fd76"
+    },
+    {
+      "from": "chat-communication-bus",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "68ef3ea15574c2b828dab6d417bf6175b2de6c35"
+    },
+    {
+      "from": "conations",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "b1446d0b4516a5c6a59a8ee2832c1c9fb591b171"
+    },
+    {
+      "from": "conations",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "b1446d0b4516a5c6a59a8ee2832c1c9fb591b171"
+    },
+    {
+      "from": "cricket",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "0bae95bc45db55d78001ee9c492681834191ec0b"
+    },
+    {
+      "from": "cricket",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "0bae95bc45db55d78001ee9c492681834191ec0b"
+    },
+    {
+      "from": "cricket",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "0bae95bc45db55d78001ee9c492681834191ec0b"
+    },
+    {
+      "from": "deepmemorystorage",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "3952068aab2b9a264978f2fb3d029877c64a1297"
+    },
+    {
+      "from": "discovery",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "bef71aba4de9d5f1b8e1bcb4b5aaa3ee56fb08f7"
+    },
+    {
+      "from": "discovery",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "bef71aba4de9d5f1b8e1bcb4b5aaa3ee56fb08f7"
+    },
+    {
+      "from": "discovery",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "bef71aba4de9d5f1b8e1bcb4b5aaa3ee56fb08f7"
+    },
+    {
+      "from": "driftguard",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "43d2249f502df4235111f32b493b9d5dd50acf52"
+    },
+    {
+      "from": "driftguard",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "43d2249f502df4235111f32b493b9d5dd50acf52"
+    },
+    {
+      "from": "driftguard",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "43d2249f502df4235111f32b493b9d5dd50acf52"
+    },
+    {
+      "from": "ears",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "fc244fd18cd9bdabe40c03c6245342215a143307"
+    },
+    {
+      "from": "ears",
+      "to": "vera-ark",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "fc244fd18cd9bdabe40c03c6245342215a143307"
+    },
+    {
+      "from": "ears",
+      "to": "vera-habitat",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "fc244fd18cd9bdabe40c03c6245342215a143307"
+    },
+    {
+      "from": "empathy",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "a66aba9d463d8dd9614dd57c57a148847aaf978e"
+    },
+    {
+      "from": "empathy",
+      "to": "volition",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "a66aba9d463d8dd9614dd57c57a148847aaf978e"
+    },
+    {
+      "from": "entropyinc",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "fd33aa46507a1ea4e07f04e93e8a8320dd64443b"
+    },
+    {
+      "from": "executor",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "bdb868d3b61562386a936a473c01a7cffb4de305"
+    },
+    {
+      "from": "firesafe",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "70a7fd1e8b570e42b2302498308fde9e21cad668"
+    },
+    {
+      "from": "fuckup",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "e05afc99a124b6080a50530dd513c27d2f357cdc"
+    },
+    {
+      "from": "fuckup",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "e05afc99a124b6080a50530dd513c27d2f357cdc"
+    },
+    {
+      "from": "god-brain",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "a4ad8fb8a581fed91db35664164db4c1fcb5de8d"
+    },
+    {
+      "from": "god-brain",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "a4ad8fb8a581fed91db35664164db4c1fcb5de8d"
+    },
+    {
+      "from": "hc-brain",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "f7ffd4a7bfe5c360a139cfe3925bae22419afa16"
+    },
+    {
+      "from": "hc-brain",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "f7ffd4a7bfe5c360a139cfe3925bae22419afa16"
+    },
+    {
+      "from": "hephaestus",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "ad958ab9ecb38e53ae7df99d93bec0d6f763b83d"
+    },
+    {
+      "from": "hephaestus",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "ad958ab9ecb38e53ae7df99d93bec0d6f763b83d"
+    },
+    {
+      "from": "human-shield",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "1a904738dc7618317f68529998a455b18b8b7bf7"
+    },
+    {
+      "from": "human-shield",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "1a904738dc7618317f68529998a455b18b8b7bf7"
+    },
+    {
+      "from": "ingest",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "e55af474323f2115c5181b443760b8427090562f"
+    },
+    {
+      "from": "intranel",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "1c7b6b57a8c410377899fc7ef612cc5ef4c8dc87"
+    },
+    {
+      "from": "lgcm",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "9b9081b404b0f7ade73d83768758873bb2b988fd"
+    },
+    {
+      "from": "lgcm",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "9b9081b404b0f7ade73d83768758873bb2b988fd"
+    },
+    {
+      "from": "lou-pole",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "50f27d20b13438ccf25a593fe2e62981f7807de5"
+    },
+    {
+      "from": "masamune",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "1604c02f38b627d208cc154cbfe53378fe3280c3"
+    },
+    {
+      "from": "masamune",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "1604c02f38b627d208cc154cbfe53378fe3280c3"
+    },
+    {
+      "from": "masamune",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "1604c02f38b627d208cc154cbfe53378fe3280c3"
+    },
+    {
+      "from": "mediaphile",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "5b566459cdcf5ba1e86726261534193b950e26a9"
+    },
+    {
+      "from": "mediaphile-client",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "bb9adbe170aabdc7e3a55752f1db61c6b3672029"
+    },
+    {
+      "from": "mediaphile-server",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "6abc59bf5b3262f6bf5dca89897053f6fc99f9c1"
+    },
+    {
+      "from": "meso-crct",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "d8214069cf41c8a92b84805ea2b10bc2a908d227"
+    },
+    {
+      "from": "meso-crct",
+      "to": "volition",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "d8214069cf41c8a92b84805ea2b10bc2a908d227"
+    },
+    {
+      "from": "model-training",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "f248aded07c2b45509b65575e87547d8fc07cf0f"
+    },
+    {
+      "from": "model-training",
+      "to": "vera-os",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "f248aded07c2b45509b65575e87547d8fc07cf0f"
+    },
+    {
+      "from": "mosaic",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "a2d4dc9812156f41e370e062dad5e2b45a0dab1e"
+    },
+    {
+      "from": "mosaic",
+      "to": "vera-os",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "a2d4dc9812156f41e370e062dad5e2b45a0dab1e"
+    },
+    {
+      "from": "noema",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "d6251fecb083be1a6bf1d6a300ef0a4ffcac6186"
+    },
+    {
+      "from": "noema",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "d6251fecb083be1a6bf1d6a300ef0a4ffcac6186"
+    },
+    {
+      "from": "ocd",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "18b36b89eaf0985494a1046b01a3ef7a5b69a443"
+    },
+    {
+      "from": "physica",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "9cc1ae9c04f728c10d6bdd9f3b277083eb46a834"
+    },
+    {
+      "from": "physica",
+      "to": "vera-ark",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "9cc1ae9c04f728c10d6bdd9f3b277083eb46a834"
+    },
+    {
+      "from": "physica",
+      "to": "vera-habitat",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "9cc1ae9c04f728c10d6bdd9f3b277083eb46a834"
+    },
+    {
+      "from": "portal",
+      "to": "executor",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "4089d18931eb442a23590a1ee9cc67deac339b7b"
+    },
+    {
+      "from": "portal",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "4089d18931eb442a23590a1ee9cc67deac339b7b"
+    },
+    {
+      "from": "portal",
+      "to": "vera-os",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "4089d18931eb442a23590a1ee9cc67deac339b7b"
+    },
+    {
+      "from": "pre-active",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "ebe79e513b74c3f598d5ce23f63e3e1907f92405"
+    },
+    {
+      "from": "pre-active",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "ebe79e513b74c3f598d5ce23f63e3e1907f92405"
+    },
+    {
+      "from": "pre-active",
+      "to": "vera-os",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "ebe79e513b74c3f598d5ce23f63e3e1907f92405"
+    },
+    {
+      "from": "project-lantern",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "0e2dfe009d408d12da42dc7d92e09c77b2a7ecd7"
+    },
+    {
+      "from": "project-runner",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "e721bac44ef9953759e7ac118a47a138099222d0"
+    },
+    {
+      "from": "redworm",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "c87f93dc40f3009807b7964ec845048f6af06d49"
+    },
+    {
+      "from": "retro-gamer",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "113f47e36b20b54ac2d70e05b402fe5ac9117b9d"
+    },
+    {
+      "from": "rezon",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "e14fc6921d4f56bb6f6dc306e72b33ef25fd6777"
+    },
+    {
+      "from": "rezon",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "e14fc6921d4f56bb6f6dc306e72b33ef25fd6777"
+    },
+    {
+      "from": "roots",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "24ed94d69ec07c5bba638de9ed2b8ecfad3cc7ce"
+    },
+    {
+      "from": "self",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "f97e5696938586211c24367e9462b896fa7b7932"
+    },
+    {
+      "from": "semanticatlas",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "2cd42a91830b7bd3801896393588c1c1a144b59a"
+    },
+    {
+      "from": "semanticatlas",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "2cd42a91830b7bd3801896393588c1c1a144b59a"
+    },
+    {
+      "from": "semiotics",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "857d912975af07fdd5a1e0e3cc39bda82e5287e0"
+    },
+    {
+      "from": "semiotics",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "857d912975af07fdd5a1e0e3cc39bda82e5287e0"
+    },
+    {
+      "from": "skeletonkey",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "cbea1edeea397fa1a9c524629df67153dac1a75e"
+    },
+    {
+      "from": "skeletonkey",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "cbea1edeea397fa1a9c524629df67153dac1a75e"
+    },
+    {
+      "from": "spk-packager",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "566db1e9ef509acc1310494a4ce1fffaae1dd3d1"
+    },
+    {
+      "from": "spk-packager",
+      "to": "vera-synology",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "566db1e9ef509acc1310494a4ce1fffaae1dd3d1"
+    },
+    {
+      "from": "spm",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "0dfe59a3b708d113c2b420f9cd508e776556f90b"
+    },
+    {
+      "from": "spm",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "0dfe59a3b708d113c2b420f9cd508e776556f90b"
+    },
+    {
+      "from": "sql-connectome",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "b609fcec50fe5a135ca1d8139f5563f5631582b2"
+    },
+    {
+      "from": "sql-connectome",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "b609fcec50fe5a135ca1d8139f5563f5631582b2"
+    },
+    {
+      "from": "tattler",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "087d9427354f1ba94e3846fbcaa445713d785095"
+    },
+    {
+      "from": "tattler",
+      "to": "vera-synology",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "087d9427354f1ba94e3846fbcaa445713d785095"
+    },
+    {
+      "from": "temporal",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "c473850285eed69c1dc3e479fa59f379bbdf5c6d"
+    },
+    {
+      "from": "thebrazenbeard",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "0dbe84093bc97eac17f9748d870c8cc80391fe72"
+    },
+    {
+      "from": "transcendence",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "4da8646b618cb1d5c62d2d2465151adcb5137251"
+    },
+    {
+      "from": "transcendence",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "4da8646b618cb1d5c62d2d2465151adcb5137251"
+    },
+    {
+      "from": "unvtrslr",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "3a76b5831d24f7bf04ebe058464ec8c41fa584a6"
+    },
+    {
+      "from": "unvtrslr",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "3a76b5831d24f7bf04ebe058464ec8c41fa584a6"
+    },
+    {
+      "from": "v-e-r-a",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "a1bbb9259ce7f3ce7ff18895257a0a7e162d228e"
+    },
+    {
+      "from": "v-e-r-a",
+      "to": "vera-os",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "a1bbb9259ce7f3ce7ff18895257a0a7e162d228e"
+    },
+    {
+      "from": "vera",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "4f068464b2cdde659fa1caf4d8ac62256a76e333"
+    },
+    {
+      "from": "vera-R9A0",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "2f502072b6060d9b94962bbada0e5adbb4b6ad22"
+    },
+    {
+      "from": "vera-adapter",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "91c4537335e19f5e384c2c64c2db5a47bc946fc7"
+    },
+    {
+      "from": "vera-adapter",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "91c4537335e19f5e384c2c64c2db5a47bc946fc7"
+    },
+    {
+      "from": "vera-agi",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "a0e828c3ee0ea8f8006f0ce2d0885eebc03798ad"
+    },
+    {
+      "from": "vera-agi",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "a0e828c3ee0ea8f8006f0ce2d0885eebc03798ad"
+    },
+    {
+      "from": "vera-apk",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "71776d7f9e8371be37ccf39384a1f7c5305a2e89"
+    },
+    {
+      "from": "vera-apk",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "71776d7f9e8371be37ccf39384a1f7c5305a2e89"
+    },
+    {
+      "from": "vera-ark",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "7e4b8469c6c4d5918556e3f80a54f9335238a0c3"
+    },
+    {
+      "from": "vera-ark",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "7e4b8469c6c4d5918556e3f80a54f9335238a0c3"
+    },
+    {
+      "from": "vera-control-plane",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "41871aad1c23cc83d200d8310cd2357e5e731c69"
+    },
+    {
+      "from": "vera-control-plane",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "41871aad1c23cc83d200d8310cd2357e5e731c69"
+    },
+    {
+      "from": "vera-habitat",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "88588dd3bc6681b9e73fb288d8eee7b29bf07b9f"
+    },
+    {
+      "from": "vera-habitat",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "88588dd3bc6681b9e73fb288d8eee7b29bf07b9f"
+    },
+    {
+      "from": "vera-mesh",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "5ed6949edad66701252d249cbf65f23bb339a4a2"
+    },
+    {
+      "from": "vera-model",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "682511b6b5945c874cdc550a9705b5371a151581"
+    },
+    {
+      "from": "vera-model",
+      "to": "vera-os",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "682511b6b5945c874cdc550a9705b5371a151581"
+    },
+    {
+      "from": "vera-mono",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "16a2828dfa7fb7e6c0e19004f014bc68fc47badf"
+    },
+    {
+      "from": "vera-mono",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "16a2828dfa7fb7e6c0e19004f014bc68fc47badf"
+    },
+    {
+      "from": "vera-mono",
+      "to": "vera-apk",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "16a2828dfa7fb7e6c0e19004f014bc68fc47badf"
+    },
+    {
+      "from": "vera-mono",
+      "to": "vera-os",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "16a2828dfa7fb7e6c0e19004f014bc68fc47badf"
+    },
+    {
+      "from": "vera-os",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "d2197238d350e4311a49098a1b00ca171a568340"
+    },
+    {
+      "from": "vera-os",
+      "to": "vera-apk",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "d2197238d350e4311a49098a1b00ca171a568340"
+    },
+    {
+      "from": "vera-os",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "d2197238d350e4311a49098a1b00ca171a568340"
+    },
+    {
+      "from": "vera-synology",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "114064338a7e98161d02dab9b85429812ef34bbb"
+    },
+    {
+      "from": "vera-works",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "2e5ef56d8f1b1a6150fd52ab8d5115e223e588d0"
+    },
+    {
+      "from": "vision",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "5f1dfbb717193e97fb9c4c1096122aea2f522430"
+    },
+    {
+      "from": "vision",
+      "to": "vera-ark",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "5f1dfbb717193e97fb9c4c1096122aea2f522430"
+    },
+    {
+      "from": "vision",
+      "to": "vera-habitat",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "5f1dfbb717193e97fb9c4c1096122aea2f522430"
+    },
+    {
+      "from": "volition",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "64e61c546b89f5dc0eb78d382637ccccef42aa31"
+    },
+    {
+      "from": "volition",
+      "to": "pre-active",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "64e61c546b89f5dc0eb78d382637ccccef42aa31"
+    },
+    {
+      "from": "volition",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "64e61c546b89f5dc0eb78d382637ccccef42aa31"
+    },
+    {
+      "from": "voss",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "52758719fbcdc1ca6d21703b5985388403d7ccda"
+    },
+    {
+      "from": "voss",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "52758719fbcdc1ca6d21703b5985388403d7ccda"
+    },
+    {
+      "from": "voss",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "52758719fbcdc1ca6d21703b5985388403d7ccda"
+    },
+    {
+      "from": "wip",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "7a951ca6805fb556daac5d0972fbdf0f69f8a722"
+    },
+    {
+      "from": "wip",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "7a951ca6805fb556daac5d0972fbdf0f69f8a722"
+    },
+    {
+      "from": "workbridge",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "f1ccfd26ad7d703e81eea89c79029236656cadd0"
+    },
+    {
+      "from": "workbridgecommander",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "e7e061f8282d038e317ce22397ba6688fc07c0f0"
+    },
+    {
+      "from": "world-zero",
+      "to": "model-training",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "4a60d68d4beba21d28f87cefa3d3e11f14bfc1d6"
+    },
+    {
+      "from": "world-zero",
+      "to": "vera-mono",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "4a60d68d4beba21d28f87cefa3d3e11f14bfc1d6"
+    },
+    {
+      "from": "wreckforge",
+      "to": "portal",
+      "type": "PROPOSED_CONSUMER",
+      "evidence": "CCB #372 proposed interface, NOT a code import",
+      "source_head": "3dadfb90b03bd93420f58ce003f0bfc27db4b933"
+    },
+    {
+      "from": "vera-os",
+      "to": "portal",
+      "type": "STAGED_SOURCE_SNAPSHOT",
+      "source_head": "36fa04da4e5eb383fecf463c72a43b94ca47d7e5",
+      "evidence": "431-byte-checked-file source stage only",
+      "stage_receipt_sha256": "6f0031c1fcbaed41e4e3f6947e90a92ed5656ac3e09329de7d8e0b0f8417eca5",
+      "not_guest_boot_required": true
+    },
+    {
+      "from": "vera-os",
+      "to": "pre-active",
+      "type": "STAGED_SOURCE_SNAPSHOT",
+      "source_head": "1f23a809d7274df506e03e2d9052525538c3bcf6",
+      "evidence": "431-byte-checked-file source stage only",
+      "stage_receipt_sha256": "6f0031c1fcbaed41e4e3f6947e90a92ed5656ac3e09329de7d8e0b0f8417eca5",
+      "not_guest_boot_required": true
+    },
+    {
+      "from": "vera-os",
+      "to": "vera-mono",
+      "type": "STAGED_SOURCE_SNAPSHOT",
+      "source_head": "89ba1d18da78e7e38f015cf8d8ef4f528aae9df8",
+      "evidence": "431-byte-checked-file source stage only",
+      "stage_receipt_sha256": "6f0031c1fcbaed41e4e3f6947e90a92ed5656ac3e09329de7d8e0b0f8417eca5",
+      "not_guest_boot_required": true
+    },
+    {
+      "from": "vera-os",
+      "to": "volition",
+      "type": "STAGED_SOURCE_SNAPSHOT",
+      "source_head": "dbc628d376515a0a523b1eecdf62129cca5d6b08",
+      "evidence": "431-byte-checked-file source stage only",
+      "stage_receipt_sha256": "6f0031c1fcbaed41e4e3f6947e90a92ed5656ac3e09329de7d8e0b0f8417eca5",
+      "not_guest_boot_required": true
+    }
+  ]
+}
