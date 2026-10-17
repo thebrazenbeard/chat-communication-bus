@@ -13,6 +13,18 @@ to Bus #368. A PR comment alone is not live runtime evidence or deployment autho
 - Compare Mono #77, PORTAL A1 #55 and resident OS #38: which task/locator/
   source/CAS/recovery contracts are truly equal; which host identity and state
   roots intentionally differ? No shared live SQLite migration without approval.
+  **Specific actual source discrepancy:** OS38 `handle_text` defaults to
+  `conversation_id='veraos-local-console'`, while Desktop A1 requires an
+  explicit client locator. Decide whether that OS-only implicit local-console
+  scope is legitimate, and how external Cog clients are prevented from
+  accidentally collapsing into one conversation.
+  **Specific response difference:** no-provider OS38 returns `status=BLOCKED`
+  after `TASK_OPENED`, whereas Desktop A1 returns `state=HELD` and an
+  underlying `PENDING_NO_ADMITTED_PROVIDER` status. Define an explicit typed
+  portable projection without changing Mono's internal task events.
+  **Lifecycle question:** OS38 `ResidentHandles.close()` closes Pre-Active's
+  store, not visibly the canonical runtime task/state handles. Confirm
+  actual owned resource closure with executable target-compatible tests.
 - Provide API names, immutable selected source heads, test commands, actual
   status SOURCE/STAGED/BUILT/TARGET_RUNTIME/GUI, with no false promotion.
 - Existing #38 ext2 member audit source is not real image-byte proof; request
