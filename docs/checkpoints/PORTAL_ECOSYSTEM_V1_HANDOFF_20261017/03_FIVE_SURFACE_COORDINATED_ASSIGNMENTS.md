@@ -16,7 +16,7 @@ Your role is L1 with Integration and L4 with VN1, on Lappy.
 **FIRST ACT IS REQUIRED RESTORE, not a fresh orientation narrative.**
 Fetch the exact private CCB handoff Draft branch created for
 `docs/checkpoints/PORTAL_ECOSYSTEM_V1_HANDOFF_20261017/00_READ_FIRST.md`,
-read ALL four checkpoint documents, plus immutable ancestor PORTAL
+read ALL five checkpoint documents, plus immutable ancestor PORTAL
 checkpoint at CCB `543370fa7...`. Use the handoff's exact verified
 GitHub branch HEAD as the checkpoint pin, not any older model memory.
 Read current Vera Mono repo interface/bootstrap/manifest/effect contracts;

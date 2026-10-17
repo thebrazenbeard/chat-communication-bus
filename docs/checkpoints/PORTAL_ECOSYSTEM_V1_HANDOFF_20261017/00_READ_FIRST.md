@@ -10,7 +10,8 @@ versioned private files rather than relying on undocumented chat continuity.
 **READ ORDER IN NEW CHAT (DO NOT SKIP):**
 1. This `00_READ_FIRST.md` and `01_EXACT_SOURCE_AND_EVIDENCE.md`.
 2. `02_UNRESOLVED_DECISIONS_AND_GATES.md`.
-3. `03_FIVE_SURFACE_COORDINATED_ASSIGNMENTS.md`.
+3. `03_FIVE_SURFACE_COORDINATED_ASSIGNMENTS.md` and
+   `04_CRICKET_HOSTILE_REVIEW.md`.
 4. Full ancestor immutable PORTAL checkpoint:
    `chat-communication-bus@543370fa7a57f751842c6d72b4484814c5509063`
    `docs/checkpoints/PORTAL_FULL_CHAT_HANDOFF_20261017/00_READ_FIRST.md`
