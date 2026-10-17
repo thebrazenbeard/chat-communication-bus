@@ -1,6 +1,6 @@
 # PORTAL whole-portfolio convergence — exact GitHub source review, 2026-10-17
 
-**Disposition: REVIEW / source evidence only.** This document accompanies `PORTAL_96_REPOSITORY_ARCHITECTURE_REVIEW_V1.json`, which records *each of all 96 accessible repositories* with exact default-branch commit SHA, Git tree, README digest, observed test/source file counts, open PR count, role, PORTAL integration interface, and VeraOS integration ceiling. The full README/source-tree metadata was read from the owner's live GitHub account on Lappy; this review does not pretend to have executed all 96 programs or reviewed every source module/PR diff.
+**Disposition: REVIEW / source evidence only.** This document accompanies `PORTAL_96_REPOSITORY_ARCHITECTURE_REVIEW_V1.json`, which records *each of all 96 accessible repositories* with exact default-branch commit SHA, Git tree, README digest, observed test/source file counts, open PR count, role, PORTAL integration interface, and VeraOS integration ceiling. A representative source file was also fetched, inspected for declarations/imports and pinned by Git blob/byte SHA for each of the 76 repositories with source candidates in the sampled default-branch tree; the other 20 are explicitly marked. The full README/source-tree metadata was read from the owner's live GitHub account on Lappy; this review does not pretend to have executed all 96 programs or reviewed every source module/PR diff.
 
 ## Crucial corrections
 

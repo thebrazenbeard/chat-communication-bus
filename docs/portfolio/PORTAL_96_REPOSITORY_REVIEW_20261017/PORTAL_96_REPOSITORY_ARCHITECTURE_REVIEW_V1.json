@@ -6,7 +6,9 @@
     "active": 92,
     "archived": 4,
     "scope": "all repos visible to authenticated GitHub owner",
-    "all_readme_tree_pr_reads": true
+    "all_readme_tree_pr_reads": true,
+    "sampled_source_file_reads": 76,
+    "no_default_branch_source_candidates": 20
   },
   "references": {
     "vera_os_38_head": "85d6cd39fe32e1214b213a63bdac0b1f54e664ac",
@@ -67,7 +69,25 @@
       "veraos_binding": "No resident PLC authority",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "scripts/validate_repository.py",
+        "git_blob_sha": "20c82921876be76517e6cbbde2ca72b6c5379328",
+        "source_sha256": "b767a3feaa07f7e91cd75b71fe2f1946519b67b7cdb73cea8c3dca4f5c905905",
+        "bytes": 3222,
+        "declared_symbols_sample": [
+          "tracked_files",
+          "validate"
+        ],
+        "imports_sample": [
+          "__future__",
+          "json",
+          "pathlib",
+          "re"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "achilles",
@@ -85,7 +105,26 @@
       "veraos_binding": "No boot dependency or sovereign effect authority",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "security/portfolio_publication_guard.py",
+        "git_blob_sha": "6d7e2573afa6c5a5e1b5f84838042a2992512a4e",
+        "source_sha256": "5de56966db4970335735bfe97c403b678c4912dd70031398a35abb5668aee924",
+        "bytes": 4713,
+        "declared_symbols_sample": [
+          "SecurityFinding",
+          "_path",
+          "find_public_private_inventory_leaks",
+          "review_source_only_wave_policy"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "Attune",
@@ -103,7 +142,27 @@
       "veraos_binding": "Use only separately adopted consent/provenance mechanisms",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/attune_contracts.py",
+        "git_blob_sha": "f9879d354792a8d06542c10f44bee29dc79d2bce",
+        "source_sha256": "38d54236a506500e265c5a30491421ae98863338ee8151568a6ec6f75226528e",
+        "bytes": 5589,
+        "declared_symbols_sample": [
+          "MemoryEvidenceType",
+          "InfluenceDecision",
+          "MemoryEvidenceRecord",
+          "validate_influence_decision",
+          "validate_memory_reconciliation"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "enum"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "axle",
@@ -121,7 +180,27 @@
       "veraos_binding": "Optional remote client; no vehicle control granted",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/axle/policy.py",
+        "git_blob_sha": "e29e7b58282f416d1de8d9f9061c10a0fabf4505",
+        "source_sha256": "846b5bedc7f404290a3c22dfc1116321d326f0878a8888fd4b14622c53f5ead8",
+        "bytes": 1937,
+        "declared_symbols_sample": [
+          "MotionState",
+          "VoiceTrigger",
+          "InteractionPolicy",
+          "policy_for",
+          "voice_trigger_allowed"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "enum"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "blotter",
@@ -139,7 +218,11 @@
       "veraos_binding": "No canonical task or memory substitution",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "brigit",
@@ -157,7 +240,26 @@
       "veraos_binding": "Never merge identity or private relational state",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "scripts/validate_repository.py",
+        "git_blob_sha": "842ffb26f8dc4048a4c520f356638cfbbc45c94d",
+        "source_sha256": "a675016a234c295117e0dacb75d08a110e7a8497dfdf655b562f971c1cf02338",
+        "bytes": 3159,
+        "declared_symbols_sample": [
+          "git_blob_sha",
+          "validate"
+        ],
+        "imports_sample": [
+          "__future__",
+          "hashlib",
+          "json",
+          "pathlib",
+          "re"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "brigit-unbound",
@@ -175,7 +277,25 @@
       "veraos_binding": "Not a Vera runtime input by presence",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "scripts/validate_archive.py",
+        "git_blob_sha": "797792aaf58e7e6f3574fa3e07954f7f9c2ce592",
+        "source_sha256": "26279d38039c417ccd17dc005a9fe9bc5a789ae888d17b8d9650a8bd23d4acac",
+        "bytes": 2573,
+        "declared_symbols_sample": [
+          "validate"
+        ],
+        "imports_sample": [
+          "__future__",
+          "hashlib",
+          "json",
+          "pathlib",
+          "re"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "bt2",
@@ -193,7 +313,34 @@
       "veraos_binding": "Do not auto-install synthetic organs",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "database/loaders/lantern_cohosted_history_v1.py",
+        "git_blob_sha": "e7b15ee652cff9c04a231185368871b8f6464c58",
+        "source_sha256": "d2f38ddddcd775831db8d7ecca8707b7cac616a9e14ff4a3379a529cbdcbea92",
+        "bytes": 8393,
+        "declared_symbols_sample": [
+          "sql_literal",
+          "archive_payload",
+          "snapshot_metadata",
+          "register_snapshot_expr",
+          "import_statement",
+          "active_baseline_sql",
+          "active_non_effect_sql",
+          "verification_sql",
+          "emit",
+          "main"
+        ],
+        "imports_sample": [
+          "__future__",
+          "argparse",
+          "base64",
+          "json",
+          "pathlib"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "bugops",
@@ -211,7 +358,34 @@
       "veraos_binding": "No boot dependency",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "scripts/validate_incidents.py",
+        "git_blob_sha": "ed7421e62767f15accd2389ba81185c348446a0b",
+        "source_sha256": "62b42d7342d6e7d406740b3e36ce10a61e584e2f06764791f284384d560011ce",
+        "bytes": 9040,
+        "declared_symbols_sample": [
+          "_load_registry",
+          "_normalized_headings",
+          "_topic_present",
+          "validate_source",
+          "_github_json",
+          "validate_live",
+          "main"
+        ],
+        "imports_sample": [
+          "__future__",
+          "argparse",
+          "json",
+          "os",
+          "pathlib",
+          "re",
+          "urllib.error",
+          "urllib.request"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "build-team-2.0",
@@ -229,7 +403,27 @@
       "veraos_binding": "No resident worker fleet",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "continuity/five/checkpoint_tool.py",
+        "git_blob_sha": "12eb4f65fa267c0c19ad15076804bb71e55923a1",
+        "source_sha256": "031afed8b364f9b0cdaf5130be78787135436719ed854804856a4850c54dac1b",
+        "bytes": 4351,
+        "declared_symbols_sample": [
+          "canonical_text",
+          "digest_text",
+          "validate",
+          "main"
+        ],
+        "imports_sample": [
+          "__future__",
+          "argparse",
+          "pathlib",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "ccb-core",
@@ -247,7 +441,29 @@
       "veraos_binding": "Optional external bus adapter",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/chat_bus/ledger.py",
+        "git_blob_sha": "5353659edbb0c2940abc009c0ac51dc9f02dcffb",
+        "source_sha256": "b80863da2c0f8553040a109e8e0dd9492567e60353a17a7d9a9a747a79fdb1d2",
+        "bytes": 7380,
+        "declared_symbols_sample": [
+          "LedgerError",
+          "AssignmentSnapshot",
+          "Ledger"
+        ],
+        "imports_sample": [
+          "__future__",
+          "sqlite3",
+          "time",
+          "dataclasses",
+          "importlib.resources",
+          "pathlib",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "chat-communication-bus",
@@ -265,7 +481,29 @@
       "veraos_binding": "Not generic runtime library",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/chat_bus/ledger.py",
+        "git_blob_sha": "5353659edbb0c2940abc009c0ac51dc9f02dcffb",
+        "source_sha256": "b80863da2c0f8553040a109e8e0dd9492567e60353a17a7d9a9a747a79fdb1d2",
+        "bytes": 7380,
+        "declared_symbols_sample": [
+          "LedgerError",
+          "AssignmentSnapshot",
+          "Ledger"
+        ],
+        "imports_sample": [
+          "__future__",
+          "sqlite3",
+          "time",
+          "dataclasses",
+          "importlib.resources",
+          "pathlib",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "conations",
@@ -283,7 +521,11 @@
       "veraos_binding": "Adopt only vetted conation state semantics",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "conditioning",
@@ -301,7 +543,11 @@
       "veraos_binding": "Never current behavioral authority",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "cricket",
@@ -319,7 +565,27 @@
       "veraos_binding": "Optional offline evaluator after source isolation",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/cricket/behavior/model.py",
+        "git_blob_sha": "54540c4f630ddf1ccd0895a11d807417d29c89ed",
+        "source_sha256": "b568df936a65efd208503fd9f949ecba8d4e147c3248cb06a8ee568d828394e6",
+        "bytes": 3965,
+        "declared_symbols_sample": [
+          "BehavioralPattern",
+          "HypothesisState",
+          "BehavioralObservation",
+          "BehavioralHypothesis",
+          "BehavioralAssessment"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "enum"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "deepmemorystorage",
@@ -337,7 +603,46 @@
       "veraos_binding": "No memory admission by retrieval",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "tools/deep_memory_catalog.py",
+        "git_blob_sha": "baab3d290d2ab1d378c98c635d6dfce1b6cbec71",
+        "source_sha256": "79fdc80ad0827845ec5b16189b87564dd0e56e2d3a11e9d44099269fb974b464",
+        "bytes": 28505,
+        "declared_symbols_sample": [
+          "read_jsonl",
+          "read_json_object",
+          "matching",
+          "matching_json",
+          "latest_receipt",
+          "normalized_record",
+          "canonical_record_bytes",
+          "sha256_rows",
+          "union_subject_digest_sha256",
+          "receipt_chain_status",
+          "receipt_union_match_status",
+          "exact_historical_canonicity",
+          "row_source_ids",
+          "dedupe_ordered",
+          "load_union",
+          "build_manifest",
+          "write_outputs",
+          "main"
+        ],
+        "imports_sample": [
+          "__future__",
+          "argparse",
+          "hashlib",
+          "json",
+          "re",
+          "sys",
+          "collections",
+          "pathlib",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "discovery",
@@ -355,7 +660,35 @@
       "veraos_binding": "Never guest-wide runtime dependency",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "tools/effect_observer.py",
+        "git_blob_sha": "67dd00cc1c96120151ffa4eb38dc9d3893802ada",
+        "source_sha256": "9257ed428f9fa28472c6883e35d7178aa89c5434f646048c06cb90b3e0b1e652",
+        "bytes": 7936,
+        "declared_symbols_sample": [
+          "EffectEnvelopeContract",
+          "load_contract",
+          "_require_exact_fields",
+          "_nonempty_string",
+          "validate_envelope",
+          "_operation_key",
+          "observe_latest",
+          "_load_envelope",
+          "main"
+        ],
+        "imports_sample": [
+          "__future__",
+          "argparse",
+          "dataclasses",
+          "json",
+          "pathlib",
+          "re",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "driftguard",
@@ -373,7 +706,25 @@
       "veraos_binding": "CI/prebuild gate, not cognition",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/driftguard/core.py",
+        "git_blob_sha": "f3a5cdfc4a5a9ff58831b6c9e72c5d957f6fd655",
+        "source_sha256": "63d0fd226b1ea435a77bcd164dd0cbc519c52e2f8234fd682389bee9b99e9bd2",
+        "bytes": 20262,
+        "declared_symbols_sample": [
+          "DriftGuardError",
+          "StaleGenerationError",
+          "DriftGuardEngine"
+        ],
+        "imports_sample": [
+          "__future__",
+          "statistics",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "ears",
@@ -391,7 +742,11 @@
       "veraos_binding": "No automatic microphone/sensor binding",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "empathy",
@@ -409,7 +764,11 @@
       "veraos_binding": "No automatic affect authority",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "entropyinc",
@@ -427,7 +786,11 @@
       "veraos_binding": "Not a guest dependency",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "executor",
@@ -445,7 +808,17 @@
       "veraos_binding": "Optional workstation route, never onboard guest auto-attach",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/effect-ledger.ts",
+        "git_blob_sha": "09b09790ffbefe209c1dc81b92e92321c9540b54",
+        "source_sha256": "8692dce06cd33a719a51629ca1468b682b3d1192a9d678c031f75aafc488328d",
+        "bytes": 1621,
+        "declared_symbols_sample": [],
+        "imports_sample": [],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "firesafe",
@@ -463,7 +836,27 @@
       "veraos_binding": "No identity/memory promotion by archive",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "runtime/manifest_validation.py",
+        "git_blob_sha": "9a6d57a7d98e004f49a928fe805987e1d018bac6",
+        "source_sha256": "08ebf9992d539c6249cbc2d8fa635400c975feb51ce27daaf4ce7a1187b29a81",
+        "bytes": 3735,
+        "declared_symbols_sample": [
+          "ManifestValidationError",
+          "_required_text",
+          "_sha256",
+          "validate_repository_relative_path",
+          "validate_work_manifest"
+        ],
+        "imports_sample": [
+          "__future__",
+          "pathlib",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "fuckup",
@@ -481,7 +874,29 @@
       "veraos_binding": "Optional safe correction mechanism, not auto-unlearn",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/fuckup_protocol/effectiveness.py",
+        "git_blob_sha": "550af78eddc6c4712014e6335df3e934155a99b8",
+        "source_sha256": "ba2d8b826610b69b6a8c01a5dc888dd46dfe7e8784fca27f0b8c6ea6024e8939",
+        "bytes": 4796,
+        "declared_symbols_sample": [
+          "ObservationPhase",
+          "EffectivenessSubject",
+          "OutcomeObservation",
+          "EffectivenessState",
+          "EffectivenessSummary",
+          "_validate_subjects",
+          "summarize_effectiveness"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "enum"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "god-brain",
@@ -499,7 +914,37 @@
       "veraos_binding": "No autonomous whole-brain loading",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "runtime/cognitive_core/cognitive_loop.py",
+        "git_blob_sha": "5a4c98c6f3aac0d375e9c56f5b4eebc56956d759",
+        "source_sha256": "ef317164e333c23ae5ca0cc14f003bf2737622732b273e4cfadf0c225cb30fe8",
+        "bytes": 24273,
+        "declared_symbols_sample": [
+          "_bounded",
+          "ConcernState",
+          "AffectState",
+          "Concern",
+          "AttentionFrame",
+          "Coalition",
+          "MemoryCandidate",
+          "PlasticityCandidate",
+          "SelfModelCandidate",
+          "CapabilityState",
+          "SemanticArbitrationResult",
+          "CognitiveCycleResult",
+          "CognitiveRuntime"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "enum",
+          "typing",
+          "runtime.reference_kernel.hc_kernel"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "hc-brain",
@@ -517,7 +962,37 @@
       "veraos_binding": "No boot requirement",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "runtime/cognitive_core/cognitive_loop.py",
+        "git_blob_sha": "5a4c98c6f3aac0d375e9c56f5b4eebc56956d759",
+        "source_sha256": "ef317164e333c23ae5ca0cc14f003bf2737622732b273e4cfadf0c225cb30fe8",
+        "bytes": 24273,
+        "declared_symbols_sample": [
+          "_bounded",
+          "ConcernState",
+          "AffectState",
+          "Concern",
+          "AttentionFrame",
+          "Coalition",
+          "MemoryCandidate",
+          "PlasticityCandidate",
+          "SelfModelCandidate",
+          "CapabilityState",
+          "SemanticArbitrationResult",
+          "CognitiveCycleResult",
+          "CognitiveRuntime"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "enum",
+          "typing",
+          "runtime.reference_kernel.hc_kernel"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "hephaestus",
@@ -535,7 +1010,11 @@
       "veraos_binding": "No resident service",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "human-shield",
@@ -553,7 +1032,24 @@
       "veraos_binding": "No autonomous emergency authority",
       "in_os_snapshot": false,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "tools/validate_scenarios.py",
+        "git_blob_sha": "469127caa811e0d67659e240281cb5a05d9bdfe8",
+        "source_sha256": "98b0eb3afef6020a673464c9687be7afd6a1bd9888f5881754ada1571ee8c7de",
+        "bytes": 3149,
+        "declared_symbols_sample": [
+          "validate",
+          "main"
+        ],
+        "imports_sample": [
+          "json",
+          "sys",
+          "pathlib"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "ingest",
@@ -571,7 +1067,43 @@
       "veraos_binding": "Use monorepo-local provenance implementation",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/ingest/model.py",
+        "git_blob_sha": "15bcd8e1d618e54ec40ad532327cb057feab3a4a",
+        "source_sha256": "5d285d2d79f6a7259b6699c9fb7ba793cda76dca15e886e48609921fecaea852",
+        "bytes": 7066,
+        "declared_symbols_sample": [
+          "IngestStatus",
+          "EvidenceClass",
+          "SourceRef",
+          "Acquisition",
+          "StreamingAcquisition",
+          "Artifact",
+          "StageReceipt",
+          "Derivation",
+          "IngestRecord",
+          "IngestResult",
+          "TextSource",
+          "BytesSource",
+          "StreamSource",
+          "FileSource",
+          "UrlSource",
+          "GitHubFileSource",
+          "MessageSource",
+          "now_iso"
+        ],
+        "imports_sample": [
+          "__future__",
+          "collections.abc",
+          "dataclasses",
+          "datetime",
+          "enum",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "intranel",
@@ -589,7 +1121,29 @@
       "veraos_binding": "Not local resident boot requirement",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/intranel/admission.py",
+        "git_blob_sha": "8cbe7d95c38c92653bdf9cbfe7a690e7abd2b92b",
+        "source_sha256": "4be5a2835da2298a332557a807fc7c225e13953e993d88a2de3eb592a22cf3e2",
+        "bytes": 11624,
+        "declared_symbols_sample": [
+          "ReceiverEvidence",
+          "OperationRecord",
+          "CancellationEvidence",
+          "operation_digest",
+          "_binding_decision",
+          "_tristate",
+          "admit"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "re"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "lgcm",
@@ -607,7 +1161,28 @@
       "veraos_binding": "No live learning without acceptance",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/lgcm/model.py",
+        "git_blob_sha": "428813f4ff4afd8825db6932d0f28850cb13615b",
+        "source_sha256": "b42289a84ad7496994b2d53abf0b3b28a504df51d87c4d6c35141c309293047e",
+        "bytes": 11885,
+        "declared_symbols_sample": [
+          "LGCMConfig",
+          "BootstrapRecord",
+          "UpdateReceipt",
+          "ContextualWorldModel"
+        ],
+        "imports_sample": [
+          "__future__",
+          "collections",
+          "dataclasses",
+          "numpy",
+          "numpy.typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "lou-pole",
@@ -625,7 +1200,27 @@
       "veraos_binding": "No guest dependency",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/freerowcochkar/models.py",
+        "git_blob_sha": "77d8a126ca09df5d37aab7396457892ff19862df",
+        "source_sha256": "89f8eec85ade64577e1bbfb449ad0baffbf6a695f00d44895574ba0762e90ed3",
+        "bytes": 1387,
+        "declared_symbols_sample": [
+          "Severity",
+          "Evidence",
+          "Finding",
+          "AnalysisReport"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "enum",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "masamune",
@@ -643,7 +1238,19 @@
       "veraos_binding": "No runtime authority from reviewer",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "supabase/functions/masamune-webhook/orchestrator.ts",
+        "git_blob_sha": "e37ab2ab2519f360e74332749aa531de1dad4fcb",
+        "source_sha256": "c19c7917911d04f2c6b6832ca9c7481385c57651a9038a62c41a709da1c2012a",
+        "bytes": 2881,
+        "declared_symbols_sample": [],
+        "imports_sample": [
+          "type"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "mediaphile",
@@ -661,7 +1268,11 @@
       "veraos_binding": "No automatic media or private corpus import",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "mediaphile-client",
@@ -679,7 +1290,17 @@
       "veraos_binding": "No VeraOS UI substitution",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/api/client.test.ts",
+        "git_blob_sha": "4af4b491918ba8ed459dc32e0dbe838826822bbe",
+        "source_sha256": "84620f9d84394843869810c3b8178d7d3f8f9a55c0940f7776cb797ae23a3d6f",
+        "bytes": 1499,
+        "declared_symbols_sample": [],
+        "imports_sample": [],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "mediaphile-server",
@@ -697,7 +1318,19 @@
       "veraos_binding": "Not VeraOS boot service",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "cmd/mediaphile-server/main.go",
+        "git_blob_sha": "71a51ca0b207c362ab1efd7df280f0e08bec4b34",
+        "source_sha256": "353df9043477721e9df6e127f606a27b9961352fb96d71892bc6649892327956",
+        "bytes": 3251,
+        "declared_symbols_sample": [
+          "main"
+        ],
+        "imports_sample": [],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "meso-crct",
@@ -715,7 +1348,24 @@
       "veraos_binding": "No synthetic affect claims by source",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/meso_crct/appraisal.py",
+        "git_blob_sha": "19d6fe4e2a397c44b43c09e588648d0ac8bf027e",
+        "source_sha256": "26dfd30f9876802633d6706910126a1569267ee63f0fa46459627be0e506ae7c",
+        "bytes": 3878,
+        "declared_symbols_sample": [
+          "TargetAppraisalInput",
+          "AppraisedTarget",
+          "build_target_appraisal"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "model-training",
@@ -733,7 +1383,27 @@
       "veraos_binding": "Model execution HELD absent host signed evidence",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "audit_gate_v5.py",
+        "git_blob_sha": "3d9db7192e753fde04d7324dbf0a426844693b52",
+        "source_sha256": "81c6186a7105c186af332414d382408cbb4fe8c60df9a597e52455531ed22d45",
+        "bytes": 3455,
+        "declared_symbols_sample": [
+          "conservative_qualification",
+          "build_capsule",
+          "write_outputs"
+        ],
+        "imports_sample": [
+          "__future__",
+          "json",
+          "pathlib",
+          "typing",
+          "quality_gate"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "mosaic",
@@ -751,7 +1421,33 @@
       "veraos_binding": "No model sharding without measured performance",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "runtime/handoff.py",
+        "git_blob_sha": "ab880ada80dd238751f7aec918cd0cafb5e85ce9",
+        "source_sha256": "88e6880cfe4cfb5e46f89723c04c1f214abdebb5b1150acd92041939d78404dc",
+        "bytes": 8116,
+        "declared_symbols_sample": [
+          "HandoffProtocolError",
+          "StateEvent",
+          "ContinuityCase",
+          "_encode",
+          "_mosaic_state",
+          "_full_history",
+          "_ordinary_retrieval",
+          "_specialist_b_answer",
+          "run_case",
+          "run_benchmark"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "json",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "noema",
@@ -769,7 +1465,40 @@
       "veraos_binding": "No automatic cognition promotion",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/noema/accounting.py",
+        "git_blob_sha": "2be0259949e977f303ddd9f09d2b390de1707ccb",
+        "source_sha256": "615e10abd95fb0d85717161f105596f733c22bfd593ac491c6deea57c9e576ef",
+        "bytes": 8622,
+        "declared_symbols_sample": [
+          "ResourceMeasurement",
+          "ResourceLedger",
+          "SupportClass",
+          "SupportRecord",
+          "OperationMeasurement",
+          "process_peak_resident_memory_bytes",
+          "durable_state_bytes",
+          "measure_operation",
+          "FixedEnvelope",
+          "EnvelopeAdjudication",
+          "adjudicate_fixed_envelope"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "enum",
+          "ctypes",
+          "math",
+          "pickle",
+          "sys",
+          "time",
+          "tracemalloc",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "ocd",
@@ -787,7 +1516,11 @@
       "veraos_binding": "Not resident host necessity",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "on-theo",
@@ -805,7 +1538,41 @@
       "veraos_binding": "Research sources not canonical beliefs",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "tools/on_theo_registry/materializer.py",
+        "git_blob_sha": "5661f36aff370b2b0f58dc5d912b22af623cd609",
+        "source_sha256": "7de572aa31d3858cf4cba8f79a675e656fce14dd31b2a319b55204fa4054a310",
+        "bytes": 12793,
+        "declared_symbols_sample": [
+          "MaterializationError",
+          "MaterializationResult",
+          "_load_yaml",
+          "_yaml_bytes",
+          "_digest_bytes",
+          "_file_digest",
+          "_record_ids",
+          "_assert_safe_output",
+          "_prepare_output_dir",
+          "_write_documents",
+          "_materialize_documents",
+          "_run_in_output",
+          "materialize_rehearsal"
+        ],
+        "imports_sample": [
+          "__future__",
+          "copy",
+          "dataclasses",
+          "hashlib",
+          "pathlib",
+          "tempfile",
+          "typing",
+          "yaml",
+          "tools.on_theo_registry.validator"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "orgasm",
@@ -823,7 +1590,11 @@
       "veraos_binding": "No implicit current drive or permission",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "personification",
@@ -841,7 +1612,11 @@
       "veraos_binding": "Never Vera identity donor by default",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "physica",
@@ -859,7 +1634,26 @@
       "veraos_binding": "Simulation not physical safety authority",
       "in_os_snapshot": false,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/physica/ark_bridge.py",
+        "git_blob_sha": "4b625de87327619a2759bb986211a9591e1fe501",
+        "source_sha256": "1a6a641dd3aca71708f4630e29d43377e460b00985051c128b50bddb4646d989",
+        "bytes": 4508,
+        "declared_symbols_sample": [
+          "MotionCalibration",
+          "MotionCandidate",
+          "predict_ark_move"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "math",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "portal",
@@ -877,7 +1671,33 @@
       "veraos_binding": "Advisory connector only; do not duplicate Mono state",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "portal/desktop_runtime.py",
+        "git_blob_sha": "b31d3a830a37ff9b9a955625d9862383801199a3",
+        "source_sha256": "8e1995d08bc2dd85befdaaf19ce521b91504d4382ac07abfdf755f647f6badbc",
+        "bytes": 13536,
+        "declared_symbols_sample": [
+          "CognitionRequestEnvelope",
+          "CognitionResult",
+          "CognitionLedger",
+          "invoke_local_text",
+          "ResidentCognitionEngine"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "hashlib",
+          "json",
+          "pathlib",
+          "sqlite3",
+          "time",
+          "typing",
+          "urllib.request"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "pre-active",
@@ -895,7 +1715,36 @@
       "veraos_binding": "Optional host component; not task owner",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/pre_active/engine.py",
+        "git_blob_sha": "438d11f6010b5b57d13f07c2a6c42c23f6ec51d5",
+        "source_sha256": "7f4c56332a6bb25b6e983aeea96762c0ca6d3d7f24965d418802f92df40cc040",
+        "bytes": 45489,
+        "declared_symbols_sample": [
+          "ToolCall",
+          "ModelResponse",
+          "_model_retry_delay_seconds",
+          "ModelError",
+          "RetryableModelError",
+          "NonRetryableModelError",
+          "RunControlApplied",
+          "ModelAdapter",
+          "_decision_from_response",
+          "_response_from_decision",
+          "Engine"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "hashlib",
+          "json",
+          "math",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "project-lantern",
@@ -913,7 +1762,17 @@
       "veraos_binding": "Use monorepo-local portfolio_runtime",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/lantern/__main__.py",
+        "git_blob_sha": "eb53e2f31b2f703ad32ef64b8a41faa3e7d18e08",
+        "source_sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+        "bytes": 48,
+        "declared_symbols_sample": [],
+        "imports_sample": [],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "project-runner",
@@ -931,7 +1790,42 @@
       "veraos_binding": "Not a separate resident scheduler",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "runner/models.py",
+        "git_blob_sha": "13ed0d96a6e76d2376e50a02665d4997d22d35f5",
+        "source_sha256": "b8d68ecb55dd9e4f472d5a3dd29032d6a0468f123d39589b526eb03bacc61ebb",
+        "bytes": 17561,
+        "declared_symbols_sample": [
+          "WorkerLifecycle",
+          "RouteState",
+          "RouteEffectClass",
+          "ReplayPolicy",
+          "WorkerRouteContract",
+          "WorkerType",
+          "InvocationRoute",
+          "WorkerDefinition",
+          "ProjectAssignmentScope",
+          "ProjectReviewScope",
+          "ProjectExecutionTarget",
+          "ProjectSchedulingState",
+          "ProjectDefinition",
+          "EvidenceClass",
+          "ExactSubject",
+          "Observation",
+          "DependencyReaction",
+          "DependencySelector"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "enum",
+          "re",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "redworm",
@@ -949,7 +1843,33 @@
       "veraos_binding": "Never automatic autobiography",
       "in_os_snapshot": false,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "redworm/core.py",
+        "git_blob_sha": "e20d714d4305a6b4a35cb0b4520a1791450e82a7",
+        "source_sha256": "7ff7fdb63bf4bdaa29489dcddee204126827a77e4d0efe96f476610d21003ae2",
+        "bytes": 18186,
+        "declared_symbols_sample": [
+          "GuardrailError",
+          "IntegrityError",
+          "canonical",
+          "digest",
+          "text",
+          "choice",
+          "validate_event",
+          "Store"
+        ],
+        "imports_sample": [
+          "__future__",
+          "hashlib",
+          "json",
+          "re",
+          "sqlite3",
+          "datetime"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "RepairTracker",
@@ -967,7 +1887,37 @@
       "veraos_binding": "Outside guest",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/repairtracker/model.py",
+        "git_blob_sha": "d30c22761e0305e0c8ed9c890967584152f83ee3",
+        "source_sha256": "b42dc51038231e2c096a4b139320d598d0b27a3da408c20e602bee6bb5724b3e",
+        "bytes": 8302,
+        "declared_symbols_sample": [
+          "EvidenceClass",
+          "Severity",
+          "IncidentState",
+          "RepairAttemptState",
+          "EffectState",
+          "TransitionError",
+          "require_transition",
+          "canonical_json",
+          "canonical_digest",
+          "RepairEvent",
+          "EventLog"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "datetime",
+          "enum",
+          "hashlib",
+          "json",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "retro-gamer",
@@ -985,7 +1935,11 @@
       "veraos_binding": "Not an automatic model/ROM provider",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "rezon",
@@ -1003,7 +1957,29 @@
       "veraos_binding": "Use Mono local rezon with admission checks",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/rezon/admission.py",
+        "git_blob_sha": "67d656d423034ff9264d21f32c5fa4c2dd10115c",
+        "source_sha256": "c4cac1d843a9e2110dd8aeb1deec5b3961bd37ec1d9da4c69f6675041b631043",
+        "bytes": 18232,
+        "declared_symbols_sample": [
+          "AdmissionError",
+          "_require_exact_str_tuple",
+          "_validate_admission_contract",
+          "_atomic_episode_mutation",
+          "AdmissionReceipt",
+          "_prevalidate_episode_mutation",
+          "admit_execution_result"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "functools"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "roots",
@@ -1021,7 +1997,42 @@
       "veraos_binding": "Use Mono local roots provenance",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/roots/model.py",
+        "git_blob_sha": "e13ec73cacbf51f3682fee6777b27cca93000e55",
+        "source_sha256": "d52beda92b4130f18dfa2a6d4e52a50ee30d90bd66c35188846fcbe04320d03d",
+        "bytes": 7283,
+        "declared_symbols_sample": [
+          "TargetKind",
+          "RetrievalMethod",
+          "EpistemicStatus",
+          "OccurrenceRelation",
+          "EdgeRelation",
+          "Confidence",
+          "OriginStatus",
+          "Completeness",
+          "TemporalPrecision",
+          "TimeBounds",
+          "TargetSpec",
+          "EvidenceEvent",
+          "EvidenceRef",
+          "OccurrenceAssessment",
+          "LineageEdge",
+          "SourceAttempt",
+          "Gap",
+          "UnresolvedReference"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "datetime",
+          "enum",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "RSLinux",
@@ -1039,7 +2050,17 @@
       "veraos_binding": "Never PLC write/control authority",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/rslinux5000000/__main__.py",
+        "git_blob_sha": "13be635566e79adccc98892cc67a44e636908b35",
+        "source_sha256": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+        "bytes": 47,
+        "declared_symbols_sample": [],
+        "imports_sample": [],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "self",
@@ -1057,7 +2078,11 @@
       "veraos_binding": "Never auto-current identity",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "selfimage",
@@ -1075,7 +2100,11 @@
       "veraos_binding": "No unverified image/identity promotion",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "semanticatlas",
@@ -1093,7 +2122,27 @@
       "veraos_binding": "No semantic similarity as authority",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "build/split_source_ledger.py",
+        "git_blob_sha": "038ba9f817aee4c0e955f1cab0feee226bff38d1",
+        "source_sha256": "dd42a7b6c9b849701434dd8a3404d9e81dd07d22000999e32cd716e07e25eca5",
+        "bytes": 3665,
+        "declared_symbols_sample": [
+          "canonical_source_id",
+          "split_record",
+          "main"
+        ],
+        "imports_sample": [
+          "__future__",
+          "argparse",
+          "json",
+          "uuid",
+          "pathlib"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "semiotics",
@@ -1111,7 +2160,42 @@
       "veraos_binding": "No inferred truth/identity by matching",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/semiotics/engine.py",
+        "git_blob_sha": "1094d5bc99caa1e70988978cdb96ee9b63c4be1d",
+        "source_sha256": "ac429a99ed0030d6e3567f16e051873a9312025191fc67b41873f753e2f80b90",
+        "bytes": 14670,
+        "declared_symbols_sample": [
+          "RegistryError",
+          "Registry",
+          "load_registry",
+          "dump_registry",
+          "_source_dict",
+          "_source_registry_dict",
+          "_relation_dict",
+          "_interpretation_dict",
+          "_reject_unknown_keys",
+          "_optional_list_field",
+          "_list_field",
+          "_validate_entities",
+          "_validate_model_text",
+          "_validate_optional_model_text",
+          "_validate_model_tags",
+          "_require_unique",
+          "_required_text",
+          "_optional_text"
+        ],
+        "imports_sample": [
+          "__future__",
+          "json",
+          "dataclasses",
+          "pathlib",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "sexuality",
@@ -1129,7 +2213,11 @@
       "veraos_binding": "No auto-activation from text",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "skeletonkey",
@@ -1147,7 +2235,28 @@
       "veraos_binding": "No ambient privileged tools",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/skeletonkey/evidence.py",
+        "git_blob_sha": "bf9b4a7595a2de191e381bf0c59f03fb4057eacc",
+        "source_sha256": "6129b53ea42e9422031e518da347b81877618b998f06bb53f5b198e0e0b2733d",
+        "bytes": 5059,
+        "declared_symbols_sample": [
+          "EvidenceValidationError",
+          "EvidenceGraphError",
+          "_require_fields",
+          "validate_record",
+          "validate_evidence_graph"
+        ],
+        "imports_sample": [
+          "__future__",
+          "re",
+          "collections.abc",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "spk-packager",
@@ -1165,7 +2274,11 @@
       "veraos_binding": "Outside normal Linux guest",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "spm",
@@ -1183,7 +2296,35 @@
       "veraos_binding": "No unqualified interpretation authority",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/spm_bench/state_runtime.py",
+        "git_blob_sha": "188b90e89ff5d9bd557a5c32d6604bea215b79cb",
+        "source_sha256": "148c0198ae5dcd69b9a46fe169d0c270bac0a188f2d93f6312688cd63966f7ed",
+        "bytes": 19062,
+        "declared_symbols_sample": [
+          "_require_digest",
+          "payload_digest",
+          "_canonical_json",
+          "_normalize_json_value",
+          "canonical_prefix_digest",
+          "CheckpointEnvelope",
+          "InMemoryCheckpointStore",
+          "LineageRuntime"
+        ],
+        "imports_sample": [
+          "__future__",
+          "collections.abc",
+          "dataclasses",
+          "hashlib",
+          "json",
+          "re",
+          "threading",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "sql-connectome",
@@ -1201,7 +2342,34 @@
       "veraos_binding": "No second canonical memory database",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/sql_connectome/connectome/model.py",
+        "git_blob_sha": "9884c41cfbd2e9badfc1a924d83cf8ac7cabd84d",
+        "source_sha256": "b9ee435e52cba5eb6b9996482d56d282bae6906718f5a8a49ac47f513243bdd3",
+        "bytes": 5014,
+        "declared_symbols_sample": [
+          "SemanticDimension",
+          "TranslationFidelity",
+          "ParserCoverage",
+          "SemanticCoverage",
+          "TranslationCoverage",
+          "BehavioralCoverage",
+          "DialectCoverage",
+          "DialectGenome",
+          "RewriteRule",
+          "AppliedRewrite",
+          "TranslationPlan"
+        ],
+        "imports_sample": [
+          "__future__",
+          "collections.abc",
+          "dataclasses",
+          "enum"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "tattler",
@@ -1219,7 +2387,22 @@
       "veraos_binding": "Not resident oracle or boot dependency",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "internal/model/model.go",
+        "git_blob_sha": "f11c6e6f1c8e0fb8e331ab0d97e60ad0daf8ff82",
+        "source_sha256": "3dfa5ed7a534a217c960678bfe88abe0399a243d89b419ffa99e91c953e29584",
+        "bytes": 1843,
+        "declared_symbols_sample": [
+          "ProcessInfo",
+          "Connection",
+          "Event",
+          "NewEvent"
+        ],
+        "imports_sample": [],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "temporal",
@@ -1237,7 +2420,37 @@
       "veraos_binding": "Use Mono temporal evidence semantics",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "temporal.py",
+        "git_blob_sha": "f47895bb142a1d48f2981726ef10680974f0b9df",
+        "source_sha256": "2f55f91c23dded3ecb36fb2684fa2353d5af62a6765d753b19ba52866d4d838e",
+        "bytes": 9485,
+        "declared_symbols_sample": [
+          "parse_timestamp",
+          "canonical_timestamp",
+          "_validate_record",
+          "_event_files",
+          "load_events",
+          "append_event",
+          "list_events",
+          "resolve_endpoint",
+          "elapsed_seconds",
+          "_build_parser",
+          "_main"
+        ],
+        "imports_sample": [
+          "__future__",
+          "argparse",
+          "json",
+          "sys",
+          "datetime",
+          "pathlib",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "testament",
@@ -1255,7 +2468,11 @@
       "veraos_binding": "No current religious/identity authority",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "thebrazenbeard",
@@ -1273,7 +2490,11 @@
       "veraos_binding": "No runtime behavior",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "transcendence",
@@ -1291,7 +2512,33 @@
       "veraos_binding": "No full-system merge by resemblance",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "runtime/reference_kernel/durable_kernel.py",
+        "git_blob_sha": "3564c5bc2fc2050ca57db0834f883350acf874a5",
+        "source_sha256": "ba62fcbd92ad29f61e9bd6e33a371d8e3368caaa9ec796e2704eaa70942f5c96",
+        "bytes": 27282,
+        "declared_symbols_sample": [
+          "JournalIntegrityError",
+          "ReadOnlyInspectionError",
+          "_iso",
+          "_parse_dt",
+          "JournaledCurrentMemory",
+          "DurableReferenceKernel"
+        ],
+        "imports_sample": [
+          "__future__",
+          "datetime",
+          "hashlib",
+          "json",
+          "os",
+          "pathlib",
+          "typing",
+          "hc_kernel"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "trek-data-core",
@@ -1309,7 +2556,26 @@
       "veraos_binding": "No default ingestion",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "tools/validate_librarian_registry.py",
+        "git_blob_sha": "12f998e383dc1f5fef138ac8f7881b25a42b03a1",
+        "source_sha256": "4869b6c1511b45e265b1b05cf6aa9ea999077851af828067165e96d59ce5100e",
+        "bytes": 8676,
+        "declared_symbols_sample": [
+          "validate_registry",
+          "source_bound_pairs",
+          "load_fixture_file",
+          "main"
+        ],
+        "imports_sample": [
+          "argparse",
+          "collections",
+          "pathlib"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "unbound-sol",
@@ -1327,7 +2593,25 @@
       "veraos_binding": "Never merge with Vera",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "tools/validate_public_state.py",
+        "git_blob_sha": "aa7d111c61ac9c60483859a0ca86ddc7181e1ad7",
+        "source_sha256": "1b9ef3105fb2b2ba2cc3cfb1a145f394ab824b6707d30f36e2cb3690be720106",
+        "bytes": 2429,
+        "declared_symbols_sample": [
+          "fail"
+        ],
+        "imports_sample": [
+          "__future__",
+          "json",
+          "pathlib",
+          "re",
+          "sys"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "unvtrslr",
@@ -1345,7 +2629,30 @@
       "veraos_binding": "No universal-meaning claims by description",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/unvtrslr/bridge.py",
+        "git_blob_sha": "2a64a72c0ddcf3963659a70b6bded8c33e789a91",
+        "source_sha256": "7d78e5814aad5fb435659f20fdc9ecd140dfa26a646cbf1fb939f78185ec75a2",
+        "bytes": 10181,
+        "declared_symbols_sample": [
+          "Episode",
+          "RelationHypothesis",
+          "TokenInference",
+          "TranslationResult",
+          "ProbeSuggestion",
+          "_binary_mutual_information",
+          "BridgeLearner"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "math",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "v-e-r-a",
@@ -1363,7 +2670,36 @@
       "veraos_binding": "Not executable OS or canonical runtime",
       "in_os_snapshot": false,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "scripts/materialize.py",
+        "git_blob_sha": "4d92a059d41a7e45fb32babaf2a7e49b816eb36d",
+        "source_sha256": "ca41c4d0d0a079d322fca84a6ef268f29a06861a66dd7116c2924ac9a6019ada",
+        "bytes": 10349,
+        "declared_symbols_sample": [
+          "SnapshotError",
+          "git",
+          "read_registry",
+          "select",
+          "origin_head",
+          "check_origin",
+          "materialize_one",
+          "verify_one",
+          "main"
+        ],
+        "imports_sample": [
+          "__future__",
+          "argparse",
+          "json",
+          "pathlib",
+          "re",
+          "subprocess",
+          "sys",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "vera",
@@ -1381,7 +2717,24 @@
       "veraos_binding": "No sibling runtime imports",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "coordination_bus/core.py",
+        "git_blob_sha": "93c0d673fa6fd2a50028a28294d6419bc5ce410a",
+        "source_sha256": "9bcb2d5f00b9b4399eb9a854482560548f428c31d2f238d9ccd341836188ffe4",
+        "bytes": 15288,
+        "declared_symbols_sample": [
+          "_receipted",
+          "CoordinationBus"
+        ],
+        "imports_sample": [
+          "__future__",
+          "functools",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "vera-adapter",
@@ -1399,7 +2752,25 @@
       "veraos_binding": "Optional interface source, not second root",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "vera_adapter/core.py",
+        "git_blob_sha": "4cdf2d2232804b8c70b5c882d63cb22376247cca",
+        "source_sha256": "aeadf1bcab079a45657302afed142b077f6629c18aca6de82e9e57effb7c75b6",
+        "bytes": 991,
+        "declared_symbols_sample": [
+          "AdapterRequest",
+          "AdapterResponse",
+          "ModelAdapter",
+          "validate_response"
+        ],
+        "imports_sample": [
+          "dataclasses",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "vera-agi",
@@ -1417,7 +2788,26 @@
       "veraos_binding": "No AGI certification without proofs",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "scripts/validate_repo.py",
+        "git_blob_sha": "fd6b109389d77822c6341cf041a7f9510f06ee2a",
+        "source_sha256": "95957fbd1d3eee0a43c4264418bde2f1c349fdff2f1952bf55e61720fd94192d",
+        "bytes": 6876,
+        "declared_symbols_sample": [
+          "validate_record",
+          "main"
+        ],
+        "imports_sample": [
+          "__future__",
+          "json",
+          "re",
+          "sys",
+          "pathlib"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "vera-apk",
@@ -1435,7 +2825,11 @@
       "veraos_binding": "Not task/memory authority",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "vera-ark",
@@ -1453,7 +2847,39 @@
       "veraos_binding": "No live controller activation",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/vera_ark/controller.py",
+        "git_blob_sha": "65b9bad64b8ddc082e38c7c19ab3d4aa50225ca9",
+        "source_sha256": "00f1596f1ac32b52fa6c3614609ec28b62d5c6c54ae8e24b2e28850ad0dc446f",
+        "bytes": 21493,
+        "declared_symbols_sample": [
+          "ControllerError",
+          "DPad",
+          "DS4Button",
+          "button_mask_table",
+          "normalized_axis_to_u8",
+          "_u8",
+          "DS4State",
+          "DS4USBReportV1",
+          "VHFDS4SubmissionBatchV1",
+          "TransportReceipt",
+          "LoopbackDS4Transport",
+          "ControllerReceipt",
+          "intention_to_ds4_sequence",
+          "DryRunController"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "enum",
+          "hashlib",
+          "struct",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "vera-control-plane",
@@ -1471,7 +2897,31 @@
       "veraos_binding": "No competing in-guest control plane",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "protocol/veraport_controller_identity.py",
+        "git_blob_sha": "f8a63881da50e40bd8e869ab250050e9acec3cf4",
+        "source_sha256": "990b14829657f83c4891633d929f2c8d6006b57617cda65fb749babe710bd022",
+        "bytes": 4918,
+        "declared_symbols_sample": [
+          "ControllerIdentityError",
+          "KeyIdDerivationUnresolved",
+          "_read_der_length",
+          "_read_der_tlv",
+          "_validate_p256_point",
+          "_validate_p256_spki_der",
+          "controller_principal_from_spki_der",
+          "recovery_controller_principal",
+          "rotation_controller_principal",
+          "controller_key_id_from_spki_der"
+        ],
+        "imports_sample": [
+          "__future__",
+          "hashlib"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "vera-habitat",
@@ -1489,7 +2939,26 @@
       "veraos_binding": "No automatic external effects",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/vera_habitat/mapping_policy.py",
+        "git_blob_sha": "1eacda5040c11bf0a3a75e8a18cf5a0a5caa21df",
+        "source_sha256": "9fdb87164a9788de16bfbae147fe2de550757793a3524c942adf6961c967da85",
+        "bytes": 6393,
+        "declared_symbols_sample": [
+          "_edge",
+          "_segment_hits_bounds",
+          "MemoryMapPolicy"
+        ],
+        "imports_sample": [
+          "__future__",
+          "heapq",
+          "math",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "vera-mesh",
@@ -1507,7 +2976,36 @@
       "veraos_binding": "No mesh attachment as authority",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "gateway/veramesh-go/gateway/controller.go",
+        "git_blob_sha": "af36e8af3844d444ce605339568418376d3ac522",
+        "source_sha256": "59c9ebeec5c3d1f65f04fd39d404f57725682bd6370b2c854610a021d2730833",
+        "bytes": 21997,
+        "declared_symbols_sample": [
+          "veraportSession",
+          "veraportDial",
+          "livePath",
+          "remoteMirror",
+          "logicalReadLane",
+          "Controller",
+          "NewController",
+          "pathModePriority",
+          "qualifyDataPlane",
+          "requestFor",
+          "stringSlice",
+          "claimList",
+          "isReadOnlyLaneOpen",
+          "logicalLaneRef",
+          "cloneMap",
+          "ttlSeconds",
+          "newFenceEpoch",
+          "capabilityKeys"
+        ],
+        "imports_sample": [],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "vera-model",
@@ -1525,7 +3023,25 @@
       "veraos_binding": "Not selected provider on presence",
       "in_os_snapshot": false,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "runtime/ask_vera.py",
+        "git_blob_sha": "df591ac1e80abb6bf7d397688c7f6c4873936fb4",
+        "source_sha256": "fd095288b7587d56a69917261b6c736d5f3ab47d57c8d580303a9193723127f2",
+        "bytes": 973,
+        "declared_symbols_sample": [
+          "main"
+        ],
+        "imports_sample": [
+          "__future__",
+          "argparse",
+          "pathlib",
+          "sys",
+          "local_model"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "vera-mono",
@@ -1543,7 +3059,27 @@
       "veraos_binding": "Exactly one selected canonical runtime/state root",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "packages/portfolio_runtime/src/portfolio_runtime/attune/contracts.py",
+        "git_blob_sha": "f9879d354792a8d06542c10f44bee29dc79d2bce",
+        "source_sha256": "38d54236a506500e265c5a30491421ae98863338ee8151568a6ec6f75226528e",
+        "bytes": 5589,
+        "declared_symbols_sample": [
+          "MemoryEvidenceType",
+          "InfluenceDecision",
+          "MemoryEvidenceRecord",
+          "validate_influence_decision",
+          "validate_memory_reconciliation"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "enum"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "vera-os",
@@ -1561,7 +3097,11 @@
       "veraos_binding": "Host Vera Mono and no-provider GUI first",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE",
+        "scope": "no executable code candidate among sampled default-branch tree paths; PRs not excluded"
+      }
     },
     {
       "repository": "vera-R9A0",
@@ -1579,7 +3119,41 @@
       "veraos_binding": "No automatic active route",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "scripts/r9b0_memory_epoch_drive.py",
+        "git_blob_sha": "7a4e00b2f41406815a35943ea4d9c913f7445ca5",
+        "source_sha256": "bb84b681a7349af21f40b33f4e1ebb35d6b96add73c395b11b59a373245bada4",
+        "bytes": 76727,
+        "declared_symbols_sample": [
+          "resource_profile_sha256",
+          "ResourceBlocked",
+          "sha256_bytes",
+          "_lp",
+          "operation_identity",
+          "memory_epoch_operation_identity",
+          "_reject_duplicate_pairs",
+          "_reject_nonfinite",
+          "strict_json_loads",
+          "_canonical_json_bytes",
+          "_require_exact_keys",
+          "_require_str",
+          "_require_str_list",
+          "_require_int",
+          "_digest_document",
+          "_validate_document_digest",
+          "_parse_utc",
+          "_validate_current_observation"
+        ],
+        "imports_sample": [
+          "__future__",
+          "argparse",
+          "pathlib",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "vera-synology",
@@ -1597,7 +3171,38 @@
       "veraos_binding": "No normal resident boot dependency",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "payload/bin/veramesh_state.py",
+        "git_blob_sha": "7fe4c8f22d90d77f0da02945208c82d1d123b03d",
+        "source_sha256": "4d2f02da113b27c343bb98e07fa13807e764b515f0bd6e2945492b66797d8a08",
+        "bytes": 9401,
+        "declared_symbols_sample": [
+          "_canonical_bytes",
+          "_validate_shape",
+          "_read_regular_bytes_nofollow",
+          "read_state",
+          "_fsync_directory",
+          "_safe_remove_same_inode",
+          "_legacy_archive_path",
+          "_ensure_private_archive",
+          "_archive_legacy_file",
+          "_validate_existing_legacy_archive",
+          "_write_legacy_receipt",
+          "_migrate_exact_legacy",
+          "_recover_stale_temp",
+          "initialize",
+          "verify",
+          "main"
+        ],
+        "imports_sample": [
+          "__future__",
+          "hashlib",
+          "pathlib"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "vera-works",
@@ -1615,7 +3220,29 @@
       "veraos_binding": "No ambient financial/legal effects",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "vera_works/continuity_controller.py",
+        "git_blob_sha": "06cfd28e4e6464ba31849bf07b95ca5a81a026df",
+        "source_sha256": "28e4de1d748e5da4818ea6ffd5a4caa636d584371ef55105b0f77fc2c82e28f8",
+        "bytes": 4697,
+        "declared_symbols_sample": [
+          "ContinuityStage",
+          "ContinuityInputs",
+          "ContinuityAssessment",
+          "_amount",
+          "_fmt",
+          "assess_continuity"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "decimal",
+          "enum"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "vision",
@@ -1633,7 +3260,26 @@
       "veraos_binding": "No ambient camera/stream activation",
       "in_os_snapshot": false,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/vera_vision/cli.py",
+        "git_blob_sha": "b475f1eea633fab47db3b810ce540c5b60918309",
+        "source_sha256": "86fc858413383818218585a84ec6113727e978bcb86d42b1e125d5be5af1ee4a",
+        "bytes": 4259,
+        "declared_symbols_sample": [
+          "parser",
+          "main"
+        ],
+        "imports_sample": [
+          "__future__",
+          "argparse",
+          "json",
+          "sys",
+          "uuid"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "volition",
@@ -1651,7 +3297,25 @@
       "veraos_binding": "Compose only on qualified mode",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": true,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/volition/conation_bridge.py",
+        "git_blob_sha": "83f4bc44e32333203f3351599e39171c577dfe90",
+        "source_sha256": "2777169bfff421791199647e977f5d032720c2e4187bfd09aca6581baa78bc1f",
+        "bytes": 4294,
+        "declared_symbols_sample": [
+          "_unit",
+          "ConationRecord",
+          "ConationBridge"
+        ],
+        "imports_sample": [
+          "__future__",
+          "dataclasses",
+          "math"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "voss",
@@ -1669,7 +3333,25 @@
       "veraos_binding": "Review is not automatic truth",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "voss_core/adapter.py",
+        "git_blob_sha": "9d68cec5d632cd3c7797b45b55b3bb66ca5e8c4b",
+        "source_sha256": "732f1beb9a7f52c0b48b041e91640ac17fad268069365fb47707087d87b40390",
+        "bytes": 996,
+        "declared_symbols_sample": [
+          "ProjectSnapshot",
+          "ProjectAdapter"
+        ],
+        "imports_sample": [
+          "__future__",
+          "abc",
+          "dataclasses",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "wip",
@@ -1687,7 +3369,26 @@
       "veraos_binding": "No second work ledger",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "tools/discovery_effect.py",
+        "git_blob_sha": "fb7cd88bfe38b2c0de78133e75f28b2ac9bbf4cd",
+        "source_sha256": "020fb4a32bd7b4c058e88655e20a7a29321c290d2c38dbf2c92e7dfb3f5c9dc4",
+        "bytes": 5228,
+        "declared_symbols_sample": [
+          "_canonical_sha256",
+          "_retry_disposition",
+          "operation_event_envelope"
+        ],
+        "imports_sample": [
+          "__future__",
+          "hashlib",
+          "json",
+          "typing"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "workbridge",
@@ -1705,7 +3406,23 @@
       "veraos_binding": "Not default guest service",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "cmd/workbridge-mcp/main.go",
+        "git_blob_sha": "484e805986b209b6941b126e4d562c49e75b63de",
+        "source_sha256": "e8119bd935ba6e433bf9ad2d0f0d2d73fa078cdb13681b6dc35acc4a3fe0606b",
+        "bytes": 4475,
+        "declared_symbols_sample": [
+          "main",
+          "runHTTP",
+          "loadHTTPBearerToken",
+          "requireBearerToken",
+          "exactPath"
+        ],
+        "imports_sample": [],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "workbridgecommander",
@@ -1723,7 +3440,17 @@
       "veraos_binding": "Not normal resident PC authority",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/effect-ledger.ts",
+        "git_blob_sha": "09b09790ffbefe209c1dc81b92e92321c9540b54",
+        "source_sha256": "8692dce06cd33a719a51629ca1468b682b3d1192a9d678c031f75aafc488328d",
+        "bytes": 1621,
+        "declared_symbols_sample": [],
+        "imports_sample": [],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "WorkBridgeMCP",
@@ -1741,7 +3468,23 @@
       "veraos_binding": "Optional external effect transport",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "cmd/workbridge-mcp/main.go",
+        "git_blob_sha": "5f5b7b199ef66ff88208c822a3586cc4e75486bc",
+        "source_sha256": "3c72d91fd72be746ef6bd61cc227c291bb958f0b683e81422aec07efa1cf315f",
+        "bytes": 4481,
+        "declared_symbols_sample": [
+          "main",
+          "runHTTP",
+          "loadHTTPBearerToken",
+          "requireBearerToken",
+          "exactPath"
+        ],
+        "imports_sample": [],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "world-zero",
@@ -1759,7 +3502,22 @@
       "veraos_binding": "Simulation hypotheses not verified world state",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "src/worldzero/core/clock.py",
+        "git_blob_sha": "003b42fc3800aa241f98312d6c7988a78b22ad6b",
+        "source_sha256": "c261bb0e864850be8bed616ca2ca45cc3ea84c505f1742aff52eac07c49d136a",
+        "bytes": 1012,
+        "declared_symbols_sample": [
+          "SimulationClock"
+        ],
+        "imports_sample": [
+          "math",
+          "dataclasses"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     },
     {
       "repository": "wreckforge",
@@ -1777,7 +3535,25 @@
       "veraos_binding": "No resident boot dependency",
       "in_os_snapshot": true,
       "in_v_e_r_a_mirror": false,
-      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT"
+      "evidence_ceiling": "README_PLUS_GIT_TREE_AND_PR_METADATA_NOT_FULL_SOURCE_AUDIT",
+      "representative_source": {
+        "state": "SOURCE_READ",
+        "path": "tools/lore_search.py",
+        "git_blob_sha": "e16c2d1962eb473d1ff9aaeae16c17f1dc0c22bc",
+        "source_sha256": "96cde627821f8e56836c9b5b104cd35c02aaf61cf1c445696835cc4915bcfc30",
+        "bytes": 7858,
+        "declared_symbols_sample": [
+          "read_tsv",
+          "norm",
+          "snippet",
+          "main"
+        ],
+        "imports_sample": [
+          "pathlib",
+          "argparse"
+        ],
+        "scope": "one selected default-branch source file; not program/PR qualification"
+      }
     }
   ],
   "caveats": [
@@ -1785,6 +3561,7 @@
     "Per-repository source heads and READMEs are evidence, not full program verification",
     "PR branch mechanisms may exceed main",
     "Canonical Mono state/task/trust must not be duplicated by host adapters",
-    "No source mutation/host execution/granted effect follows from classification"
+    "No source mutation/host execution/granted effect follows from classification",
+    "76 representative source files were read individually; this does not equal an exhaustive codebase audit or actual execution"
   ]
 }

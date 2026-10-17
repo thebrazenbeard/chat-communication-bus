@@ -48,6 +48,18 @@ class PortfolioReviewTests(unittest.TestCase):
             self.assertNotIn(self.byname[name]["architecture_role"],("CORE","OS"))
         for name in ("brigit-unbound","bugops","build-team-2.0","conditioning"):
             self.assertTrue(self.byname[name]["archived"])
+    def test_representative_source_reads_have_exact_evidence(self):
+        self.assertEqual(self.doc["inventory"]["sampled_source_file_reads"],76)
+        self.assertEqual(self.doc["inventory"]["no_default_branch_source_candidates"],20)
+        for row in self.rows:
+            sample=row["representative_source"]
+            if sample["state"]=="SOURCE_READ":
+                self.assertRegex(sample["git_blob_sha"],r"^[0-9a-f]{40}$")
+                self.assertRegex(sample["source_sha256"],r"^[0-9a-f]{64}$")
+                self.assertGreater(sample["bytes"],0)
+                self.assertTrue(sample["path"])
+            else:
+                self.assertEqual(sample["state"],"NO_SOURCE_CANDIDATE_IN_TREE_SAMPLE")
     def test_evidence_source_remains_separate_from_admission(self):
         for name in ("deepmemorystorage","redworm","firesafe","semanticatlas","roots"):
             self.assertIn(self.byname[name]["architecture_role"],("EVIDENCE","RESEARCH","DONOR"))
