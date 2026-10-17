@@ -1,0 +1,103 @@
+{
+  "schema": "VERAOS_MINIMAL_BOM_V1",
+  "status": "PROPOSED_NOT_BUILT",
+  "architecture": "VERA_ECOSYSTEM_ARCHITECTURE_V1_CANDIDATE",
+  "platform": {
+    "source": "vera-os",
+    "os": "Linux x86_64 Buildroot",
+    "boot": "/sbin/vera-init",
+    "graphical_ui": "Cog loopback framebuffer",
+    "state": "local persistent VeraStateDirectory",
+    "network_required": false
+  },
+  "staged_sources": [
+    {
+      "repo": "vera-mono",
+      "files": 316,
+      "placement": "self-contained Python source, task/trust/memory APIs"
+    },
+    {
+      "repo": "portal",
+      "files": 89,
+      "placement": "selected route/advisory code only, NOT full host scheduler"
+    },
+    {
+      "repo": "pre-active",
+      "files": 18,
+      "placement": "durable source events + fixture guard"
+    },
+    {
+      "repo": "volition",
+      "files": 8,
+      "placement": "advisory initiative only"
+    }
+  ],
+  "staged_total_files": 431,
+  "target_dependencies": [
+    "Python 3.12.x",
+    "sqlite3",
+    "ssl",
+    "jsonschema",
+    "cryptography",
+    "PyYAML",
+    "target shared-library SONAME closure",
+    "Cog graphics/fonts/input",
+    "normal PID1 supervisor"
+  ],
+  "excluded_boot_dependencies": [
+    "GitHub",
+    "Executor",
+    "Synology",
+    "WorkBridge",
+    "Supabase",
+    "Google Drive",
+    "mobile Android",
+    "model weights",
+    "research sibling repositories",
+    "independent identities",
+    "physical device controllers"
+  ],
+  "acceptance": [
+    {
+      "gate": "SOURCE",
+      "status": "SOURCE_ONLY_GREEN",
+      "proof": "exact source/tree, 431-file stage receipt"
+    },
+    {
+      "gate": "KCONFIG",
+      "status": "UNQUALIFIED",
+      "proof": "effective real .config SHA and target packages"
+    },
+    {
+      "gate": "IMAGE",
+      "status": "NOT_BUILT",
+      "proof": "exact rootfs image hash + full ext2 member/byte audit"
+    },
+    {
+      "gate": "TARGET_IMPORT",
+      "status": "NOT_TESTED",
+      "proof": "target Python real import and ELF DT_NEEDED"
+    },
+    {
+      "gate": "NORMAL_GUI",
+      "status": "NOT_BOOTED",
+      "proof": "actual PID1/Cog frame/text intake"
+    },
+    {
+      "gate": "COLD_TWO_BOOT",
+      "status": "NOT_RUN",
+      "proof": "canonical no-provider HELD task source/head recovery"
+    },
+    {
+      "gate": "MODEL",
+      "status": "HOLD",
+      "proof": "actual loaded provider artifact/process/session/nonce"
+    },
+    {
+      "gate": "DISK_INSTALL",
+      "status": "NOT_AUTHORIZED",
+      "proof": "specific Patrick authorization and host/device identity"
+    }
+  ],
+  "image_produces_authority": false
+}
