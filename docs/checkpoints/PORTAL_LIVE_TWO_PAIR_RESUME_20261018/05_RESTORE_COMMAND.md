@@ -12,10 +12,10 @@ B = ONE existing Codex parent [Lappy], with native Codex child subagents as actu
 PORTAL coordinates/reviews both, maintains source/test/authority decisions. Codex owns the hardest actual concurrency, claim/fence, cold recovery and Mono↔Runner integration. No extra top-level Codex worker.
 
 FIRST:
-1. Fetch the complete private immutable new handoff from CCB docs/checkpoints/PORTAL_LIVE_TWO_PAIR_RESUME_20261018, ALL files 00–05, pinned at the exact final checkpoint commit supplied with this command. Read them IN FULL.
+1. Fetch the complete private immutable new handoff from CCB docs/checkpoints/PORTAL_LIVE_TWO_PAIR_RESUME_20261018, ALL files 00–06 (read late PR58 addendum LAST), pinned at the exact final checkpoint commit supplied with this command. Read them IN FULL.
 2. Restore predecessor original private CCB #376 all five 00–04 at d0f5564df4fc8da5f8a05740ce506a172c91864b. Follow its prior-source reference chain only as needed.
 3. Fresh-read vera-mono main exact head, repo interface/bootstrap/runtime-effect contract, README, manifest; all open owner PR heads/branches/delegations, CCB #371–#385 and successor checkpoint Draft, COMPLETE private Bus #368, actual Executor workstation connectivity.
-4. Bind newest Pair A Integration Mono #77 / VeraOS #38, Training #113/#114/#115; Pair B PORTAL #55/#56/#57, Codex actual parent thread 01a149be-396d-7ca1-a68d-c58b6696cb08 and children /root/canonical_abi, /root/durable_claims, /root/cold_composition, /root/adversarial_regression; independent VN1 exact-head findings. Check for a NEW committed successor Codex branch/PR; checkpoint observed only uncommitted local output.
+4. Bind newest Pair A Integration Mono #77 / VeraOS #38, Training #113/#114/#115; Pair B PORTAL #55/#56/#57, Codex actual parent thread 01a149be-396d-7ca1-a68d-c58b6696cb08 and children /root/canonical_abi, /root/durable_claims, /root/cold_composition, /root/adversarial_regression; independent VN1 exact-head findings. **PR58 now exists** at be8e4f1f3c4ae1390a62675d7461ddaf701c984c; refresh this pushed branch/manifest, actual new independent VN1 review and the two remaining collision REDs. Earlier files 01/03 predate this late readback.
 5. Respect current CCB #385 two-pair governance, superseding historical #383 overlapping lanes. Neither comments nor subagent delegation prove installed runtime or live unobserved host execution.
 
 EXECUTE:
