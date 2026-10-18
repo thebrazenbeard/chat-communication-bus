@@ -7,6 +7,27 @@ PAIRS = {
 RETURNS = {"each_partner_distinct_source_and_test","exact_pr_head_and_host",
 "commands_results_PASS_FAIL_SKIP_and_artifact_digest","cross_pair_disagreements_preserved",
 "source_runtime_effect_authority_ceiling","next_noncolliding_action"}
+# Immutable historical assignment snapshot: NOT automatic current head or host truth.
+# A changed baseline requires explicit external source binding and fresh review.
+FROZEN_BINDING_HEADS = {
+    "mono_main": "16a2828dfa7fb7e6c0e19004f014bc68fc47badf",
+    "mono_77": "a351d36274595cde26bc60df4c44c3b83a6d1f0a",
+    "veraos_38": "4346971cedab05a771a3e6e70fa56a613cc47e06",
+    "training_112": "59b46ce3dd96807e888b6a018ee6ab2de88c9a38",
+    "codex_portal_55": "88026ea85c1ebc480396b582cf473df5a30e031e",
+    "portal_architecture_384": "20ebec6d91419684d646da5deb53597b68c5970a",
+}
+FROZEN_EVIDENCE_CEILING = {
+    "catalog_repositories": 96,
+    "proposed_consumer_links": 147,
+    "staged_source_links": 4,
+    "selected_guest_source_files": 431,
+    "peer_acceptance": "HOLD",
+    "graphical_guest": "UNQUALIFIED",
+    "provider_admission": "HOLD",
+    "selected_runner_claim": "NOT_OBSERVED",
+}
+
 def check_two_pair_contract(s):
     e=[]
     if not isinstance(s,dict) or s.get("schema")!="VERA_PORTAL_LIVE_TWO_PAIR_V2":
@@ -48,5 +69,11 @@ def check_two_pair_contract(s):
         e.append("four workers, once each")
     if set(s.get("return_requirements",[]))!=RETURNS:e.append("incomplete two-person evidence")
     if set(s.get("connected_hosts_observed",[]))!={"Lappy","VN2","VERA-NODE-1"}:
-        e.append("device reachability claims incorrect")
+        e.append("historical device list differs")
+    if s.get("connected_hosts_snapshot_is_historical") is not True:
+        e.append("stale historical host snapshot incorrectly presented as current")
+    if s.get("heads_at_binding") != FROZEN_BINDING_HEADS:
+        e.append("source HEAD snapshot silently changed; reviewed rebind required")
+    if s.get("evidence_ceiling") != FROZEN_EVIDENCE_CEILING:
+        e.append("source/host/guest/provider qualification ceiling silently changed")
     return e
