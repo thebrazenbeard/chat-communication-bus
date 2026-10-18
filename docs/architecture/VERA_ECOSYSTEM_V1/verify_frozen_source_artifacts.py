@@ -28,8 +28,9 @@ def check_frozen_semantics(portfolio, typed, bom):
     for filename, incoming in zip(PINNED_BLOBS, (portfolio, typed, bom)):
         try:
             raw = (HERE / filename).read_bytes()
+            git_source = raw.replace(bytes([13, 10]), bytes([10]))
             git_sha = hashlib.sha1(
-                b"blob " + str(len(raw)).encode("ascii") + bytes([0]) + raw
+                b"blob " + str(len(git_source)).encode("ascii") + bytes([0]) + git_source
             ).hexdigest()
             frozen = json.loads(raw.decode("utf-8"))
         except (OSError, ValueError, UnicodeError, TypeError) as exc:
