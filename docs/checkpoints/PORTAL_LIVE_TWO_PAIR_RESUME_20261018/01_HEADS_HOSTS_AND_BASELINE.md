@@ -1,4 +1,5 @@
 # Live exact-head and device snapshot — refresh before use
+**TIME-SENSITIVE CORRECTION: Read 06_LATE_CODEX_PR58_READBACK.md after this file. PORTAL #58 was created and verified after this initial snapshot. Its exact HEAD is be8e4f1f3c4ae1390a62675d7461ddaf701c984c.**
 All are independently fetched mutable GitHub pointers at snapshot time (2026-10-18), not perpetual authority.
 - `vera-mono/main` `16a2828dfa7fb7e6c0e19004f014bc68fc47badf`.
 - `vera-mono#77` `a351d36274595cde26bc60df4c44c3b83a6d1f0a` OPEN/DRAFT (task-scoped conversation history).
