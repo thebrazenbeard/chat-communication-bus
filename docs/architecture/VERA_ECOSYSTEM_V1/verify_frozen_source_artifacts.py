@@ -49,3 +49,29 @@ def check_frozen_semantics(portfolio, typed, bom):
     if statuses != PINNED_GATE_STATUSES or len(bom.get("acceptance", [])) != len(PINNED_GATE_STATUSES):
         errors.append("guest/model acceptance statuses differ from pinned evidence ceiling")
     return errors
+
+
+def checkout_byte_evidence(filename, raw_checkout_bytes):
+    """Compare three separate propositions without upgrading source into guest bytes.
+
+    Both LF and checkout-CRLF can represent the same canonical Git source.
+    Raw checkout SHA remains distinct, and image membership is never inferred.
+    """
+    if filename not in PINNED_BLOBS or not isinstance(raw_checkout_bytes, bytes):
+        raise ValueError("frozen source filename and bytes required")
+    canonical_git_bytes = raw_checkout_bytes.replace(bytes([13, 10]), bytes([10]))
+    sha = hashlib.sha1(
+        b"blob " + str(len(canonical_git_bytes)).encode("ascii")
+        + bytes([0]) + canonical_git_bytes
+    ).hexdigest()
+    return {
+        "schema": "PORTAL_GIT_SOURCE_CHECKOUT_BYTE_DIFFERENCE_V1",
+        "filename": filename,
+        "git_source_blob_matches_pin": sha == PINNED_BLOBS[filename],
+        "raw_checkout_bytes_equal_git_source": raw_checkout_bytes == canonical_git_bytes,
+        "raw_checkout_sha256": hashlib.sha256(raw_checkout_bytes).hexdigest(),
+        "git_canonical_source_sha256": hashlib.sha256(canonical_git_bytes).hexdigest(),
+        "source_semantics_authenticated": False,
+        "staged_image_bytes_qualified": False,
+        "evidence_ceiling": "SOURCE_CHECKOUT_ONLY_NOT_STAGED_GUEST",
+    }
