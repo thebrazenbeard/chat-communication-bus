@@ -101,5 +101,6 @@
     "provider_admission": "HOLD",
     "selected_runner_claim": "NOT_OBSERVED"
   },
-  "next_frontier": "PORTAL source-test two-pair contract; obtain independent VN1 exact new-head A/B/A and #384 reviews; reconcile Pair A nonce issuer and Pair B diagnostic claim results."
+  "next_frontier": "PORTAL source-test two-pair contract; obtain independent VN1 exact new-head A/B/A and #384 reviews; reconcile Pair A nonce issuer and Pair B diagnostic claim results.",
+  "connected_hosts_snapshot_is_historical": true
 }
