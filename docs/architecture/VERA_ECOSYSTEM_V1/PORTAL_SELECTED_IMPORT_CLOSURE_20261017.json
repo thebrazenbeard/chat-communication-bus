@@ -1,0 +1,510 @@
+{
+  "buildroot_image_qualified": false,
+  "direct_resident_imports": [
+    "portal",
+    "portal.vera_task_handoff"
+  ],
+  "edges": [
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.adapters",
+      "importer_blob_sha1": "058e29f013f66b0bf7f8d1571613c7422d57c9a1",
+      "importer_file": "portal/__init__.py",
+      "importer_module": "portal",
+      "line": 3
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.coordinator",
+      "importer_blob_sha1": "058e29f013f66b0bf7f8d1571613c7422d57c9a1",
+      "importer_file": "portal/__init__.py",
+      "importer_module": "portal",
+      "line": 8
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.diagnostics",
+      "importer_blob_sha1": "058e29f013f66b0bf7f8d1571613c7422d57c9a1",
+      "importer_file": "portal/__init__.py",
+      "importer_module": "portal",
+      "line": 9
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.host_bridge",
+      "importer_blob_sha1": "058e29f013f66b0bf7f8d1571613c7422d57c9a1",
+      "importer_file": "portal/__init__.py",
+      "importer_module": "portal",
+      "line": 10
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.execution_router",
+      "importer_blob_sha1": "058e29f013f66b0bf7f8d1571613c7422d57c9a1",
+      "importer_file": "portal/__init__.py",
+      "importer_module": "portal",
+      "line": 15
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.host_pump",
+      "importer_blob_sha1": "058e29f013f66b0bf7f8d1571613c7422d57c9a1",
+      "importer_file": "portal/__init__.py",
+      "importer_module": "portal",
+      "line": 16
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.discovery",
+      "importer_blob_sha1": "058e29f013f66b0bf7f8d1571613c7422d57c9a1",
+      "importer_file": "portal/__init__.py",
+      "importer_module": "portal",
+      "line": 22
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.models",
+      "importer_blob_sha1": "058e29f013f66b0bf7f8d1571613c7422d57c9a1",
+      "importer_file": "portal/__init__.py",
+      "importer_module": "portal",
+      "line": 29
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.process_adapter",
+      "importer_blob_sha1": "058e29f013f66b0bf7f8d1571613c7422d57c9a1",
+      "importer_file": "portal/__init__.py",
+      "importer_module": "portal",
+      "line": 35
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.route_resolver",
+      "importer_blob_sha1": "058e29f013f66b0bf7f8d1571613c7422d57c9a1",
+      "importer_file": "portal/__init__.py",
+      "importer_module": "portal",
+      "line": 39
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.task_currentness",
+      "importer_blob_sha1": "058e29f013f66b0bf7f8d1571613c7422d57c9a1",
+      "importer_file": "portal/__init__.py",
+      "importer_module": "portal",
+      "line": 44
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.runtime",
+      "importer_blob_sha1": "058e29f013f66b0bf7f8d1571613c7422d57c9a1",
+      "importer_file": "portal/__init__.py",
+      "importer_module": "portal",
+      "line": 45
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.session",
+      "importer_blob_sha1": "058e29f013f66b0bf7f8d1571613c7422d57c9a1",
+      "importer_file": "portal/__init__.py",
+      "importer_module": "portal",
+      "line": 53
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.wave_runtime",
+      "importer_blob_sha1": "058e29f013f66b0bf7f8d1571613c7422d57c9a1",
+      "importer_file": "portal/__init__.py",
+      "importer_module": "portal",
+      "line": 58
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.models",
+      "importer_blob_sha1": "7cae1db379dc0b8b96fd02d89bf78d0572a2b89f",
+      "importer_file": "portal/coordinator.py",
+      "importer_module": "portal.coordinator",
+      "line": 12
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.host_bridge",
+      "importer_blob_sha1": "d252324651d629b3097b2781a32490445a56d5ad",
+      "importer_file": "portal/diagnostics.py",
+      "importer_module": "portal.diagnostics",
+      "line": 5
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.route_resolver",
+      "importer_blob_sha1": "d252324651d629b3097b2781a32490445a56d5ad",
+      "importer_file": "portal/diagnostics.py",
+      "importer_module": "portal.diagnostics",
+      "line": 6
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.adapters",
+      "importer_blob_sha1": "8fe30461756e620a468bc231723bda242e2ca153",
+      "importer_file": "portal/execution_router.py",
+      "importer_module": "portal.execution_router",
+      "line": 6
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.route_resolver",
+      "importer_blob_sha1": "8fe30461756e620a468bc231723bda242e2ca153",
+      "importer_file": "portal/execution_router.py",
+      "importer_module": "portal.execution_router",
+      "line": 11
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.session",
+      "importer_blob_sha1": "8fe30461756e620a468bc231723bda242e2ca153",
+      "importer_file": "portal/execution_router.py",
+      "importer_module": "portal.execution_router",
+      "line": 18
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.wave_runtime",
+      "importer_blob_sha1": "8fe30461756e620a468bc231723bda242e2ca153",
+      "importer_file": "portal/execution_router.py",
+      "importer_module": "portal.execution_router",
+      "line": 19
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.adapters",
+      "importer_blob_sha1": "bfa088935755f645ead4f1a4b691528cf8a16e35",
+      "importer_file": "portal/host_bridge.py",
+      "importer_module": "portal.host_bridge",
+      "line": 11
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.route_resolver",
+      "importer_blob_sha1": "bfa088935755f645ead4f1a4b691528cf8a16e35",
+      "importer_file": "portal/host_bridge.py",
+      "importer_module": "portal.host_bridge",
+      "line": 16
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.session",
+      "importer_blob_sha1": "bfa088935755f645ead4f1a4b691528cf8a16e35",
+      "importer_file": "portal/host_bridge.py",
+      "importer_module": "portal.host_bridge",
+      "line": 23
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.wave_runtime",
+      "importer_blob_sha1": "bfa088935755f645ead4f1a4b691528cf8a16e35",
+      "importer_file": "portal/host_bridge.py",
+      "importer_module": "portal.host_bridge",
+      "line": 24
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.host_bridge",
+      "importer_blob_sha1": "c98d2fd29e5baa883ece3eaf2b80cf72f10e66bc",
+      "importer_file": "portal/host_pump.py",
+      "importer_module": "portal.host_pump",
+      "line": 7
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.adapters",
+      "importer_blob_sha1": "596d146446be88e84b595db85813cfc087fea2f4",
+      "importer_file": "portal/process_adapter.py",
+      "importer_module": "portal.process_adapter",
+      "line": 10
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.execution_router",
+      "importer_blob_sha1": "596d146446be88e84b595db85813cfc087fea2f4",
+      "importer_file": "portal/process_adapter.py",
+      "importer_module": "portal.process_adapter",
+      "line": 15
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.models",
+      "importer_blob_sha1": "596d146446be88e84b595db85813cfc087fea2f4",
+      "importer_file": "portal/process_adapter.py",
+      "importer_module": "portal.process_adapter",
+      "line": 16
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.route_resolver",
+      "importer_blob_sha1": "596d146446be88e84b595db85813cfc087fea2f4",
+      "importer_file": "portal/process_adapter.py",
+      "importer_module": "portal.process_adapter",
+      "line": 17
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.wave_runtime",
+      "importer_blob_sha1": "596d146446be88e84b595db85813cfc087fea2f4",
+      "importer_file": "portal/process_adapter.py",
+      "importer_module": "portal.process_adapter",
+      "line": 18
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.worker_backend",
+      "importer_blob_sha1": "596d146446be88e84b595db85813cfc087fea2f4",
+      "importer_file": "portal/process_adapter.py",
+      "importer_module": "portal.process_adapter",
+      "line": 19
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.worker_runtime",
+      "importer_blob_sha1": "596d146446be88e84b595db85813cfc087fea2f4",
+      "importer_file": "portal/process_adapter.py",
+      "importer_module": "portal.process_adapter",
+      "line": 20
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.session",
+      "importer_blob_sha1": "596d146446be88e84b595db85813cfc087fea2f4",
+      "importer_file": "portal/process_adapter.py",
+      "importer_module": "portal.process_adapter",
+      "line": 23
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.adapters",
+      "importer_blob_sha1": "47b3375561694c8d1ea47bac97795f6df107fca3",
+      "importer_file": "portal/route_resolver.py",
+      "importer_module": "portal.route_resolver",
+      "line": 6
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.models",
+      "importer_blob_sha1": "f4b776951cc933be6857abe3fcd0f3e28bd553e9",
+      "importer_file": "portal/runtime.py",
+      "importer_module": "portal.runtime",
+      "line": 21
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.adapters",
+      "importer_blob_sha1": "1cdf844b968988583393b489c93cd7148b75db3b",
+      "importer_file": "portal/session.py",
+      "importer_module": "portal.session",
+      "line": 13
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.models",
+      "importer_blob_sha1": "1cdf844b968988583393b489c93cd7148b75db3b",
+      "importer_file": "portal/session.py",
+      "importer_module": "portal.session",
+      "line": 18
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.wave_runtime",
+      "importer_blob_sha1": "1cdf844b968988583393b489c93cd7148b75db3b",
+      "importer_file": "portal/session.py",
+      "importer_module": "portal.session",
+      "line": 19
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.route_resolver",
+      "importer_blob_sha1": "74eb55e213b031e986c8afe24a3321b43fc1aebe",
+      "importer_file": "portal/vera_task_handoff.py",
+      "importer_module": "portal.vera_task_handoff",
+      "line": 12
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.coordinator",
+      "importer_blob_sha1": "ff0a4347b90eb73b07f6da977ec0119a5f6f1b09",
+      "importer_file": "portal/wave_runtime.py",
+      "importer_module": "portal.wave_runtime",
+      "line": 45
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.models",
+      "importer_blob_sha1": "ff0a4347b90eb73b07f6da977ec0119a5f6f1b09",
+      "importer_file": "portal/wave_runtime.py",
+      "importer_module": "portal.wave_runtime",
+      "line": 46
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.source_proposal",
+      "importer_blob_sha1": "ff0a4347b90eb73b07f6da977ec0119a5f6f1b09",
+      "importer_file": "portal/wave_runtime.py",
+      "importer_module": "portal.wave_runtime",
+      "line": 47
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.models",
+      "importer_blob_sha1": "b1575ab7a3e11f67c8488f964beea6dc3873f5e4",
+      "importer_file": "portal/worker_runtime.py",
+      "importer_module": "portal.worker_runtime",
+      "line": 13
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.source_proposal",
+      "importer_blob_sha1": "b1575ab7a3e11f67c8488f964beea6dc3873f5e4",
+      "importer_file": "portal/worker_runtime.py",
+      "importer_module": "portal.worker_runtime",
+      "line": 14
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.wave_runtime",
+      "importer_blob_sha1": "b1575ab7a3e11f67c8488f964beea6dc3873f5e4",
+      "importer_file": "portal/worker_runtime.py",
+      "importer_module": "portal.worker_runtime",
+      "line": 15
+    },
+    {
+      "evidence_kind": "AST_IMPORT_FROM",
+      "imported_module": "portal.worker_backend",
+      "importer_blob_sha1": "b1575ab7a3e11f67c8488f964beea6dc3873f5e4",
+      "importer_file": "portal/worker_runtime.py",
+      "importer_module": "portal.worker_runtime",
+      "line": 19
+    }
+  ],
+  "hard_dependency_admitted": false,
+  "modules": [
+    {
+      "module": "portal",
+      "path": "portal/__init__.py",
+      "source_sha256": "f2cce6501c5f22ad8dfb310c08ca2d0d97adb7aefcb205450588fdfe4b365072"
+    },
+    {
+      "module": "portal.adapters",
+      "path": "portal/adapters.py",
+      "source_sha256": "d60d98df00a4f16ddd44a85062cd20e8fca7063671a598ec758a1a237a9b8fd4"
+    },
+    {
+      "module": "portal.coordinator",
+      "path": "portal/coordinator.py",
+      "source_sha256": "1e067112c1049960158522ce6edecc5da8c2441980a47d0298f0e7624e401d48"
+    },
+    {
+      "module": "portal.diagnostics",
+      "path": "portal/diagnostics.py",
+      "source_sha256": "acb7f54a6d4bead24a1e42a4ecb52d248cd245f1f93787f8c7e1f1162010c230"
+    },
+    {
+      "module": "portal.discovery",
+      "path": "portal/discovery.py",
+      "source_sha256": "0a17a033e5599d7e612f0e269def37ffa129abd6032b1d81674f8f0e94cae264"
+    },
+    {
+      "module": "portal.execution_router",
+      "path": "portal/execution_router.py",
+      "source_sha256": "43f905cdaf7f5598bfbed675a5687d9e8764b1f2380c0c0cff25b1d26ba9cf47"
+    },
+    {
+      "module": "portal.host_bridge",
+      "path": "portal/host_bridge.py",
+      "source_sha256": "eb596195c65061998b4a79d34207926982a3307bca9461d36653beb8c4cc79f3"
+    },
+    {
+      "module": "portal.host_pump",
+      "path": "portal/host_pump.py",
+      "source_sha256": "88e27e59da1e38155d987bcb6e6d1c8e75aabcc14ebbeac9a5ce81e4b464ef67"
+    },
+    {
+      "module": "portal.models",
+      "path": "portal/models.py",
+      "source_sha256": "cc33313705b53cf5087e000edde82870d2e5aa9fa52e8f7ac3995a26596634dd"
+    },
+    {
+      "module": "portal.process_adapter",
+      "path": "portal/process_adapter.py",
+      "source_sha256": "8f6609d0056c7674030ec92f737add9e3f619c584cae62b31b0b91e3ae356c27"
+    },
+    {
+      "module": "portal.route_resolver",
+      "path": "portal/route_resolver.py",
+      "source_sha256": "171f3e723f643ed0817f5881a50b9818afe39a6bbec19ea5f6b5a324015b00a6"
+    },
+    {
+      "module": "portal.runtime",
+      "path": "portal/runtime.py",
+      "source_sha256": "dac8a4942cab8059aa63e684f4a997a641a3d3c839ffa845062df7a995646dda"
+    },
+    {
+      "module": "portal.session",
+      "path": "portal/session.py",
+      "source_sha256": "775ccd79c00a133ad3c1552ccc9489dbd17dc8da30fee2208c0edfa0a444ac1b"
+    },
+    {
+      "module": "portal.source_proposal",
+      "path": "portal/source_proposal.py",
+      "source_sha256": "e54562262b5a7da93d882856f9eecd3bf0c7a1c2b76b53a12499c4b032761da5"
+    },
+    {
+      "module": "portal.task_currentness",
+      "path": "portal/task_currentness.py",
+      "source_sha256": "97d5d36b48232effde0c1ee850cab8cde025f9f791717515cf31ccbd9730af42"
+    },
+    {
+      "module": "portal.vera_task_handoff",
+      "path": "portal/vera_task_handoff.py",
+      "source_sha256": "434f698d4fe9e704d3329f00a243dc42935b9f8fc48db2c0f0f137579ffc96c5"
+    },
+    {
+      "module": "portal.wave_runtime",
+      "path": "portal/wave_runtime.py",
+      "source_sha256": "f42735c9f2564a7680eb8d4efdd490eeca9335a6ba561e0da07b80e8c825d75b"
+    },
+    {
+      "module": "portal.worker_backend",
+      "path": "portal/worker_backend.py",
+      "source_sha256": "3c30f0896911d4db13099d614fd6222e3cd36f51eee89344818c8bb0cbe2bf30"
+    },
+    {
+      "module": "portal.worker_runtime",
+      "path": "portal/worker_runtime.py",
+      "source_sha256": "e56692d6ec43ca03ab23ede0a962550cbe97051569b98f45e45df1a94efe2982"
+    }
+  ],
+  "reachable": [
+    "portal",
+    "portal.adapters",
+    "portal.coordinator",
+    "portal.diagnostics",
+    "portal.discovery",
+    "portal.execution_router",
+    "portal.host_bridge",
+    "portal.host_pump",
+    "portal.models",
+    "portal.process_adapter",
+    "portal.route_resolver",
+    "portal.runtime",
+    "portal.session",
+    "portal.source_proposal",
+    "portal.task_currentness",
+    "portal.vera_task_handoff",
+    "portal.wave_runtime",
+    "portal.worker_backend",
+    "portal.worker_runtime"
+  ],
+  "schema": "VERA_PORTAL_SELECTED_STATIC_IMPORT_CLOSURE_V1",
+  "selected_package": "portal",
+  "staged_modules": 43,
+  "status": "SOURCE_ONLY_AST_IMPORT_REACHABILITY",
+  "unresolved": [],
+  "verified_runtime_consumption": false
+}
