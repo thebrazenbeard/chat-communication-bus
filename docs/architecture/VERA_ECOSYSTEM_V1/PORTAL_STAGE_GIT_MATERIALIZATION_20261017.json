@@ -1,0 +1,204 @@
+{
+  "buildroot_image_verified": false,
+  "files": [
+    {
+      "commit_tree_blob_sha1": "3fc6f3f164936616d858a37ad4a7c41dbb3461c8",
+      "path": "portal/__init__.py",
+      "staged_crlf_count": 107,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "058e29f013f66b0bf7f8d1571613c7422d57c9a1",
+      "staged_sha256": "f2cce6501c5f22ad8dfb310c08ca2d0d97adb7aefcb205450588fdfe4b365072"
+    },
+    {
+      "commit_tree_blob_sha1": "0df298b0fd39486da32e03408da1a1478035339e",
+      "path": "portal/adapters.py",
+      "staged_crlf_count": 81,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "72fccf0746a92f28b75f0e84c3b2029579f4a3aa",
+      "staged_sha256": "d60d98df00a4f16ddd44a85062cd20e8fca7063671a598ec758a1a237a9b8fd4"
+    },
+    {
+      "commit_tree_blob_sha1": "0c9cec3b86c09827dd48f7801c0ba6d7b4ab1a59",
+      "path": "portal/coordinator.py",
+      "staged_crlf_count": 107,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "7cae1db379dc0b8b96fd02d89bf78d0572a2b89f",
+      "staged_sha256": "1e067112c1049960158522ce6edecc5da8c2441980a47d0298f0e7624e401d48"
+    },
+    {
+      "commit_tree_blob_sha1": "a466c2062b7f040fa94c9b2f4cc9baea6a870082",
+      "path": "portal/diagnostics.py",
+      "staged_crlf_count": 77,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "d252324651d629b3097b2781a32490445a56d5ad",
+      "staged_sha256": "acb7f54a6d4bead24a1e42a4ecb52d248cd245f1f93787f8c7e1f1162010c230"
+    },
+    {
+      "commit_tree_blob_sha1": "0aaebaff6ddfb3134fb227855be746aadf0b2b7d",
+      "path": "portal/discovery.py",
+      "staged_crlf_count": 356,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "360eb7524255d608ea9b8b93b071deab0380d47b",
+      "staged_sha256": "0a17a033e5599d7e612f0e269def37ffa129abd6032b1d81674f8f0e94cae264"
+    },
+    {
+      "commit_tree_blob_sha1": "be484095dcfbbaed46094515746c5623642c9af3",
+      "path": "portal/execution_router.py",
+      "staged_crlf_count": 260,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "8fe30461756e620a468bc231723bda242e2ca153",
+      "staged_sha256": "43f905cdaf7f5598bfbed675a5687d9e8764b1f2380c0c0cff25b1d26ba9cf47"
+    },
+    {
+      "commit_tree_blob_sha1": "63c0ab544f9a430727d744e3f95a7f0b64549706",
+      "path": "portal/host_bridge.py",
+      "staged_crlf_count": 1347,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "bfa088935755f645ead4f1a4b691528cf8a16e35",
+      "staged_sha256": "eb596195c65061998b4a79d34207926982a3307bca9461d36653beb8c4cc79f3"
+    },
+    {
+      "commit_tree_blob_sha1": "cfef5162096f2ef0f8da314c9f962d520cffd4ee",
+      "path": "portal/host_pump.py",
+      "staged_crlf_count": 280,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "c98d2fd29e5baa883ece3eaf2b80cf72f10e66bc",
+      "staged_sha256": "88e27e59da1e38155d987bcb6e6d1c8e75aabcc14ebbeac9a5ce81e4b464ef67"
+    },
+    {
+      "commit_tree_blob_sha1": "55ac3f3e0013cb4d2a262d3783a4aa0af03a812d",
+      "path": "portal/models.py",
+      "staged_crlf_count": 78,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "e955703abf3e2f3aa4de3bc36b4b318ed6465a72",
+      "staged_sha256": "cc33313705b53cf5087e000edde82870d2e5aa9fa52e8f7ac3995a26596634dd"
+    },
+    {
+      "commit_tree_blob_sha1": "6d9ac1d3fe073b3504633a475acfa33aec9050db",
+      "path": "portal/process_adapter.py",
+      "staged_crlf_count": 434,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "596d146446be88e84b595db85813cfc087fea2f4",
+      "staged_sha256": "8f6609d0056c7674030ec92f737add9e3f619c584cae62b31b0b91e3ae356c27"
+    },
+    {
+      "commit_tree_blob_sha1": "a6857246037f691d66199c0fd21251053fd055fd",
+      "path": "portal/route_resolver.py",
+      "staged_crlf_count": 190,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "47b3375561694c8d1ea47bac97795f6df107fca3",
+      "staged_sha256": "171f3e723f643ed0817f5881a50b9818afe39a6bbec19ea5f6b5a324015b00a6"
+    },
+    {
+      "commit_tree_blob_sha1": "4bcf4ca5fde63271ccc4fea568e1e5f11b60e8be",
+      "path": "portal/runtime.py",
+      "staged_crlf_count": 750,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "f4b776951cc933be6857abe3fcd0f3e28bd553e9",
+      "staged_sha256": "dac8a4942cab8059aa63e684f4a997a641a3d3c839ffa845062df7a995646dda"
+    },
+    {
+      "commit_tree_blob_sha1": "239192342ff08da41d68f227609035c5daa090f6",
+      "path": "portal/session.py",
+      "staged_crlf_count": 1352,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "1cdf844b968988583393b489c93cd7148b75db3b",
+      "staged_sha256": "775ccd79c00a133ad3c1552ccc9489dbd17dc8da30fee2208c0edfa0a444ac1b"
+    },
+    {
+      "commit_tree_blob_sha1": "e47c4994ecfd39f7587538014b17abd51d813ada",
+      "path": "portal/source_proposal.py",
+      "staged_crlf_count": 119,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "bd8893ad129b3b1810fcbe1bb8800826e30d582a",
+      "staged_sha256": "e54562262b5a7da93d882856f9eecd3bf0c7a1c2b76b53a12499c4b032761da5"
+    },
+    {
+      "commit_tree_blob_sha1": "aa8d7ac69375a642aeff67d2b557316ea39862d9",
+      "path": "portal/task_currentness.py",
+      "staged_crlf_count": 73,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "6ae49f7a5e6a0c00f1121b889f8373059e5a8a8a",
+      "staged_sha256": "97d5d36b48232effde0c1ee850cab8cde025f9f791717515cf31ccbd9730af42"
+    },
+    {
+      "commit_tree_blob_sha1": "0df90c41f6dcdd86b0496fab6688bd5eba52540d",
+      "path": "portal/vera_task_handoff.py",
+      "staged_crlf_count": 118,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "74eb55e213b031e986c8afe24a3321b43fc1aebe",
+      "staged_sha256": "434f698d4fe9e704d3329f00a243dc42935b9f8fc48db2c0f0f137579ffc96c5"
+    },
+    {
+      "commit_tree_blob_sha1": "05a7da6cfd6204b66e1f7b7a83189b0dc18b1122",
+      "path": "portal/wave_runtime.py",
+      "staged_crlf_count": 2610,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "ff0a4347b90eb73b07f6da977ec0119a5f6f1b09",
+      "staged_sha256": "f42735c9f2564a7680eb8d4efdd490eeca9335a6ba561e0da07b80e8c825d75b"
+    },
+    {
+      "commit_tree_blob_sha1": "37ec94dd6e71f0de051a312294936dfeae20989c",
+      "path": "portal/worker_backend.py",
+      "staged_crlf_count": 429,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "72dfeb8d734be25f402ab12af4471d5cd80112ab",
+      "staged_sha256": "3c30f0896911d4db13099d614fd6222e3cd36f51eee89344818c8bb0cbe2bf30"
+    },
+    {
+      "commit_tree_blob_sha1": "8ada2ebd0e5d478af721d62778be32c61de9afed",
+      "path": "portal/worker_runtime.py",
+      "staged_crlf_count": 551,
+      "staged_matches_checkout_bytes": true,
+      "staged_matches_committed_blob_bytes": false,
+      "staged_raw_git_object_sha1": "b1575ab7a3e11f67c8488f964beea6dc3873f5e4",
+      "staged_sha256": "e56692d6ec43ca03ab23ede0a962550cbe97051569b98f45e45df1a94efe2982"
+    }
+  ],
+  "not_same_as_committed_git_blob": [
+    "portal/__init__.py",
+    "portal/adapters.py",
+    "portal/coordinator.py",
+    "portal/diagnostics.py",
+    "portal/discovery.py",
+    "portal/execution_router.py",
+    "portal/host_bridge.py",
+    "portal/host_pump.py",
+    "portal/models.py",
+    "portal/process_adapter.py",
+    "portal/route_resolver.py",
+    "portal/runtime.py",
+    "portal/session.py",
+    "portal/source_proposal.py",
+    "portal/task_currentness.py",
+    "portal/vera_task_handoff.py",
+    "portal/wave_runtime.py",
+    "portal/worker_backend.py",
+    "portal/worker_runtime.py"
+  ],
+  "runtime_verified": false,
+  "schema": "VERA_PORTAL_CHECKOUT_TO_GIT_MATERIALIZATION_V1",
+  "source_commit": "36fa04da4e5eb383fecf463c72a43b94ca47d7e5",
+  "stage_equals_checkout_all": true,
+  "stage_equals_git_blob_all": false,
+  "staged_modules_checked": 19,
+  "status": "SOURCE_ONLY_REVIEW"
+}
