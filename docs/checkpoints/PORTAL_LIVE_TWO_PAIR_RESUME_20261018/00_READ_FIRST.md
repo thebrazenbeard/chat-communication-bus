@@ -2,7 +2,7 @@
 **Private GitHub continuation checkpoint.** Date 2026-10-18. This checkpoint is source/handoff evidence, not canonical Vera memory, a verbatim transcript, a selected `QualifiedVeraRuntime`, an active Codex child process, or proof of off-turn execution.
 
 ## New chat mandatory restore
-1. Fetch all six files `00_READ_FIRST.md` through `05_RESTORE_COMMAND.md` from this directory at this checkpoint's **exact final Git commit**, not just a moving PR branch.
+1. Fetch all seven files `00_READ_FIRST.md` through `06_LATE_CODEX_PR58_READBACK.md` from this directory (read 06 LAST: it supersedes earlier Codex #58 absence statements) at this checkpoint's **exact final Git commit**, not just a moving PR branch.
 2. Restore original five-file CCB #376 at `d0f5564df4fc8da5f8a05740ce506a172c91864b`, `docs/checkpoints/PORTAL_ECOSYSTEM_V1_SUCCESSOR_20261017/`. That source itself points to predecessor #374 at `f0ffc0d51e83498a7fd99e1a74606828924a13b5` and earlier full handoff `543370fa7...`.
 3. Fresh-read Mono `main` exact head; `architecture/chatgpt/CHATGPT_REPO_INTERFACE.yaml`, `BOOTSTRAP.md`, `RUNTIME_EFFECT_CONTRACT.md`, `README.md`, `architecture/VERA_MONO_MANIFEST_V1.json`; relevant canonical source.
 4. Fetch COMPLETE current private Bus `thebrazenbeard/chat-communication-bus#368`, not merely its last comments; refresh open PRs and exact owner branches, delegated Codex parent/children, devices, runner leases.
