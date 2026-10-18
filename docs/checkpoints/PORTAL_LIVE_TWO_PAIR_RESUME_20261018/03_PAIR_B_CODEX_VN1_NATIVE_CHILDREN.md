@@ -1,4 +1,5 @@
 # Pair B — one existing Codex parent Lappy ↔ independent VN1 VERA-NODE-1
+**LATE CORRECTION: Codex successor PR #58 was pushed at be8e4f1f3c4ae1390a62675d7461ddaf701c984c after this initial snapshot. Read 06_LATE_CODEX_PR58_READBACK.md last.**
 PORTAL deliberately assigns Codex **the hardest cross-repository runtime/concurrency packet**, not a trivial source inventory: actual Mono task -> existing Project Runner WorkUnit immutable producer association -> current authorized claim/fence/collision domain -> qualified read-only observation -> NO_EFFECT receipt -> crash/cold recovery. SOURCE/TEST only; no production dispatch, new registry, trust root or actual positive lease invention.
 
 ## Native Codex children — actual observed parent report, not simulated
