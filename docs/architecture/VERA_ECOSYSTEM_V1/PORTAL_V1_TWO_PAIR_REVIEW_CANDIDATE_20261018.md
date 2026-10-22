@@ -1,0 +1,41 @@
+# Vera ecosystem V1 — PORTAL live two-pair review candidate
+**Source cut:** 2026-10-18, private Draft CCB #385. **Disposition:** SOURCE CONSISTENCY PASS; CROSS-REPOSITORY SEMANTIC ACCEPTANCE HOLD; NORMAL GRAPHICAL GUEST / PROVIDER / EFFECT HOLD. This file is a versioned review candidate, NOT authoritative production architecture, canonical memory, a current host locator or acceptance vote.
+
+## Execution ownership and exact source cut
+PORTAL coordinates/reviews two live-paired native work surfaces. Pair A: Integration(VN2) ↔ Training(Lappy), owning runtime/VeraOS and cognition/provenance respectively. Pair B: ONE existing serial Codex parent(Lappy) ↔ independent VN1(VERA-NODE-1), owning difficult interoperability source and hostile verification respectively. Codex native children are internal to ONE parent, not alternative top-level workers or VN1 independent evidence; reported native child identities /root/canonical_abi, /root/durable_claims, /root/cold_composition, /root/adversarial_regression. Assignments and parent reports are NOT evidence of completed child results, installed runner, continuous ChatGPT work or physically connected secondary hosts.
+
+Current source refs observed for this historical cut:
+- Mono main `16a2828dfa7fb7e6c0e19004f014bc68fc47badf`; owner Mono #77 `a351d36274595cde26bc60df4c44c3b83a6d1f0a`.
+- Integration VeraOS #38 `b388061414b3231ff7cf0caea913683e8b451b0d`; Training #114 `7ad7088993249c00f718896c371eaa68c9013eb2` stacked on #113 `51bd9749c2bf77b9b2b3f9d94f55a56e3ef29896`.
+- Existing Codex A1 PORTAL #55 `88026ea85c1ebc480396b582cf473df5a30e031e`, read-only source #56 `6183aa7e8ded004054f185f62a0a40a5d55ffb10`, diagnostic #57 `f053fe916cc2a9965e134533cb0b5c48b86c8699`.
+- CCB #384 source lock `20ebec6d91419684d646da5deb53597b68c5970a`; #385 current two-pair contract and historical evidence snapshot, no scheduled activity.
+- Physical connectivity is a separate runtime observation: latest Executor list only Lappy generation36. Previous VN1 and VN2 receipts retain their exact historical host/source authority ceiling; their connection is not inferred from contract.
+
+## Component-level architecture boundary
+| Component/role | Evidence / selected relationship | Admission |
+|---|---|---|
+| Mono `QualifiedVeraRuntime` + `VeraStateDirectory` | Canonical TASK_OPENED, original source, task-scoped CAS/head, global journal verification, cold history and controlled effect/memory boundary | SOURCE/HOST tests only; project chat is not runtime installation |
+| External Windows PORTAL/Project Runner | Genuine existing WorkUnit/plan/admit, durable local claim/attempt/lease/fence, root-specific collision control | Optional EXTERNAL host service; no qualified immutable Mono→WorkUnit original producer/current selected shared claim |
+| Selected embedded PORTAL source | 89 source files staged in VeraOS | Source subset, NOT full Windows Project Runner or guest PID1 dependency |
+| Pre-Active / Volition | 18 durable event/run source files and 8 advisory source files in current guest stage | Pre-Active fixture DONE is NOT admitted provider result; Volition proposal is NOT effect authority |
+| Training/model/issuer | Research receiver nonce/preflight source and negative tests | Real issuer, selected loaded model bytes/process/session, atomic cross-task/host nonce, route and consent all HOLD |
+| VeraOS normal Cog/PID1 | Mono316 + embedded PORTAL89 + Pre-Active18 + Volition8 = 431 selected source files; locally tested no-provider UI | Not actual compiled target rootfs/image/graphical cold boot |
+| 96-source governed catalog | 96 dispositions, 147 PROPOSED_CONSUMER links, 4 STAGED_SOURCE_SNAPSHOT links | No 96 auto-installed guest packages, no promoted HARD_IMPORT without importer path/symbol + target bytes |
+
+## Cross-pair executable review
+1. **Mono/VeraOS A→B→replay A:** formerly GLOBAL vs TASK-scoped false HOLD; owners corrected Mono77+VeraOS38; VN1 previously independently reproduced current exact source in separate Windows processes. Retire that specific source RED, **not** model/guest authority. Preserve legacy VeraOS omitted conversation locator pending explicit compatibility decision.
+2. **Training #114:** Owner 27 source tests PASS on checkpoint marker poisoning and task-A TOCTOU research. PORTAL separately ran exact Training114 with Mono77 in isolated Lappy source: two targeted files **9 PASS**, one warning. These pass by EXPECTING unsafe stale synthetic preflight accept / untrusted task-checkpoint nonce poisoning. Actual admitted provider / cross-root consume-once remains RED/HOLD, not fixed. General TASK_CHECKPOINT must not become receiver-authenticated nonce store.
+3. **Runner #57 diagnostic:** owner 41 focused PASS; 823 PASS, 1 known unrelated #52 baseline FAIL, 1 opt-in SKIP in broader source. It creates a real fixture claim using FAKE source/currentness and always returns HOLD/NO_EFFECT; no positive legitimate Mono producer association exists. VN1 physically independent #57 exact-head review pending. PORTAL actual original diagnostic malformed-intake/request negative pytest **3 FAIL** (unhandled AttributeError before typed HOLD); parent owns fix. Codex child B source observed integer timestamp hash vs SQLite REAL readback false HOLD; source-only bounded correction approved, historical incompatible digests fail closed. Two roots or differing WorkUnit fingerprints sharing collision key have NO demonstrated common atomic collision owner.
+4. **VeraOS target closure:** owner #38 pinned Buildroot Kconfig and static ELF `PT_INTERP` parsing SOURCE PASS; new source rootfs symlink-escape confinement at b388 owner 24 PASS. No actual target Python+cryptography shared-library relocation, ext2 byte inventory, kernel/image, normal Cog DRM input/frame, two clean cold boots, or loaded model qualified. Upstream #32 completed oversized VirtIO frame parser RED still present.
+5. **PORTAL V1 checker:** #384 addressed VN1 seven in-memory false-green mutations under unchanged immutable authored pins; VN1 independently challenged raw LF/CRLF byte identity and changing verifier pins with data. #385 now separately presents raw checkout SHA, frozen historical typed heads and qualification ceilings, tested 71 architecture PASS. This is source assertion integrity, NOT independent semantically trusted ownership.
+
+## Next qualified VeraOS build dependency order
+A. Bind exact source heads and prove real importer path/symbol/type graph for all selected 431 files; maintain external optional services.
+B. Validate official pinned Buildroot effective Kconfig (51/51 requested and 19/19 mandatory previously source-checked) against actual selected target, then target Python3.12 and package/native `DT_NEEDED`/`PT_INTERP` closure including Rust/cryptography.
+C. Verify rootfs stage symlink confinement, exact normalized/RAW file byte hashes, ext2 member membership, kernel image, correct PID1/Cog/fonts/input dependencies.
+D. Only after explicit host/resource and QEMU authorization, boot a normal source-bound graphical guest, verify real pixels/text, TASK_OPENED→PENDING/HELD with no admitted provider, restart and recover on TWO clean boots without duplicate dispatch.
+E. Separately authorize any model load/training; admit a result only with actual independently trusted receiver issuer/host generation/process/loaded bytes/session, atomic nonce, one selected route, causal Pre-Active terminal completion and Mono CAS/readback. No memory proposal or protected effect without separate consent/authority.
+
+> **Cricket — ACCEPTED:** A frozen catalog plus green shape/integrity tests cannot authenticate the assertions. A local delegation ref or copied Runner lease cannot substitute for original producer identity, selected host/claim-domain ownership, or a cross-store atomic state transition. Both require independently verified owner-controlled evidence, not synchronized self-repinning.
+
+**Unreleased:** no main merge, deployment/install, scheduled monitoring, extra top-level Codex session, QEMU/target Buildroot heavy build, actual model/provider run, credentials/trust/canonical-memory mutation, paid compute or protected effects. Owner returns and VN1 dissent remain visible. Current reviewed source graph candidate stays HOLD until actual independent semantic acceptance.
