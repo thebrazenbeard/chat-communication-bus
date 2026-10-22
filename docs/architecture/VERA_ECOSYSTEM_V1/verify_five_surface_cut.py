@@ -7,6 +7,7 @@ Run: python docs/architecture/VERA_ECOSYSTEM_V1/verify_five_surface_cut.py
 import json
 from collections import Counter
 from pathlib import Path
+from verify_frozen_source_artifacts import check_frozen_semantics
 
 HERE = Path(__file__).resolve().parent
 EXPECTED_PLACEMENTS = {
@@ -36,7 +37,7 @@ def load_artifacts():
 
 
 def check_source_cut(portfolio, typed, bom):
-    errors = []
+    errors = check_frozen_semantics(portfolio, typed, bom)
     rows = portfolio.get("repositories", [])
     names = [row.get("repository") for row in rows]
     if len(rows) != 96 or len(set(names)) != 96 or set(names) != set(typed.get("repositories", [])):
