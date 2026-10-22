@@ -1,0 +1,122 @@
+{
+  "schema": "VERA_PORTAL_FOUR_LANE_PAIRED_ASSIGNMENT_V1",
+  "status": "USER_DIRECT_ASSIGNMENT_SOURCE_CONTRACT_NOT_WORKER_EXECUTION_ATTESTATION",
+  "execution_mode": "ONE_LIVE_INVOCATION_NO_SCHEDULED_AUTOMATION",
+  "governance": {
+    "coordinator": "PORTAL",
+    "coordinator_host": "Lappy",
+    "canonical_task_authority": "vera-mono/QualifiedVeraRuntime",
+    "accepted_architecture": "HOLD_PENDING_SOURCE_SEMANTICS_AND_OWNER_ACCEPTANCE",
+    "active_chats_not_inferred_from_comments": true,
+    "code_mutation_by_branch_owner_only": true,
+    "peer_review_never_substitutes_for_independent_falsification": true,
+    "one_serial_codex_worker": true,
+    "no_duplicate_scheduler": true,
+    "no_implicit_protected_effects": true
+  },
+  "lanes": [
+    {
+      "id": "L1",
+      "name": "Runtime and VeraOS integration",
+      "primary": {
+        "worker": "Integration",
+        "host": "VN2",
+        "role": "source_owner"
+      },
+      "second": {
+        "worker": "PORTAL",
+        "host": "Lappy",
+        "role": "integration_contract_and_coordination"
+      },
+      "owned_subjects": [
+        "vera-mono#77",
+        "vera-os#38"
+      ],
+      "handoff": "Integration delivers exact ABI/import/target evidence; PORTAL reconciles with ecosystem graph without editing owned source."
+    },
+    {
+      "id": "L2",
+      "name": "Cognition and runtime placement",
+      "primary": {
+        "worker": "Training",
+        "host": "Lappy",
+        "role": "cognitive_source_owner"
+      },
+      "second": {
+        "worker": "Integration",
+        "host": "VN2",
+        "role": "runtime_abi_reviewer"
+      },
+      "owned_subjects": [
+        "model-training#112",
+        "vera-os#38"
+      ],
+      "handoff": "Training tests receiver/provenance/cognition; Integration reviews task/head/import and target placement without editing Training owner code."
+    },
+    {
+      "id": "L3",
+      "name": "Independent falsification",
+      "primary": {
+        "worker": "VN1",
+        "host": "VERA-NODE-1",
+        "role": "independent_falsifier"
+      },
+      "second": {
+        "worker": "Training",
+        "host": "Lappy",
+        "role": "test_fixture_and_source_context_provider"
+      },
+      "owned_subjects": [
+        "independent_review",
+        "model-training#112"
+      ],
+      "handoff": "Training supplies artifacts and adverse cases; VN1 independently runs tests and owns the review verdict; Training cannot self-approve."
+    },
+    {
+      "id": "L4",
+      "name": "Canonical host interoperability",
+      "primary": {
+        "worker": "Codex",
+        "host": "Lappy",
+        "role": "single_serial_implementation_owner"
+      },
+      "second": {
+        "worker": "VN1",
+        "host": "VERA-NODE-1",
+        "role": "independent_falsifier"
+      },
+      "owned_subjects": [
+        "portal#55",
+        "future_portal_runner_seam_ONLY_AFTER_PORTAL_RELEASE"
+      ],
+      "handoff": "Codex completes its one owned packet and returns exact receipts; VN1 independently reproduces cold/replay/fence negatives and never co-edits Codex code."
+    }
+  ],
+  "live_binding_evidence": {
+    "executor_connected_devices": [
+      "Lappy",
+      "VERA-NODE-1",
+      "VN2"
+    ],
+    "integration_vn2_host": "CONNECTED_AND_OWNER_SOURCE_RETURNED_NOT_VERA_RUNTIME_ATTESTED",
+    "integration_veraos_pr38_head": "e087f3e144951a0acd834535868327a59921e258",
+    "integration_effective_kconfig": "PINNED_KCONFIG_RESOLVED_SOURCE_ONLY",
+    "integration_kconfig_owner_tests": "10_PASS",
+    "training_pr112_head": "59b46ce3dd96807e888b6a018ee6ab2de88c9a38",
+    "training_receiver_spoof_status": "HOLD_RESEARCH_ONLY",
+    "codex_portal_pr55_head": "88026ea85c1ebc480396b582cf473df5a30e031e",
+    "vn1_review_of_codex_head": "FOCUSED_PASS_NOT_INSTALLED",
+    "vn1_review_of_veraos_prior_head": "SOURCE_PASS_NOT_GUEST",
+    "vn1_architecture_guard": "7_OF_7_ADVERSARIAL_MUTATIONS_FALSE_GREEN_REQUIRE_PORTAL_REPAIR",
+    "last_verified_bus_issue": "thebrazenbeard/chat-communication-bus#368"
+  },
+  "prohibited_claims": [
+    "two active processes per lane established by source assignment",
+    "VN1 review is co-authorship or owner edit authority",
+    "PORTAL is continuously active between chat turns",
+    "four-lane scheme grants scheduled automation",
+    "Codex may spawn another worker",
+    "VN2 connected implies graphical VeraOS installed",
+    "source graph means reviewed V1 architecture locked"
+  ]
+}
