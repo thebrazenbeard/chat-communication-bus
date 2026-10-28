@@ -1,0 +1,31 @@
+{
+  "schema_version": "EXODUS_INTERFACE_TOPOLOGY_SOURCE_POINTER_V1",
+  "status": "NON_AUTHORITATIVE_SOURCE_POINTER_ONLY",
+  "owning_repository": "thebrazenbeard/bt2",
+  "source_commit": "81dc5c0ccda28e1f627ad49c2f81bcb56ff21e6b",
+  "source_bindings": {
+    "persistent_interfaces": {
+      "path": "native/project/BT2_PERSISTENT_INTERFACE_TOPOLOGY_V1.json",
+      "git_blob_sha1": "3825f51a67d736879d9d998e42bd4d1c802aab78"
+    },
+    "exodus_workers": {
+      "path": "native/project/BT2_EXODUS_WORKER_TOPOLOGY_V2.json",
+      "git_blob_sha1": "d7251d5f8c192e314d7de247e72b5a9e71171c1b"
+    }
+  },
+  "binding_rule": "Resolve both paths at source_commit in the owning repository, then compare exact Git blob identities. A missing or differing object is UNKNOWN; never silently resolve moving main or treat this pointer as a second topology registry.",
+  "authority": {
+    "may_override_bt2_topology": false,
+    "may_activate_receiver": false,
+    "may_issue_producer_grant": false,
+    "may_represent_authenticated_acknowledgment": false,
+    "may_represent_model_response": false,
+    "may_change_provider_state": false
+  },
+  "runtime_states": {
+    "receiver_identity": "NOT_ESTABLISHED",
+    "authenticated_delivery": "NOT_ESTABLISHED",
+    "recipient_model_execution": "NOT_ESTABLISHED"
+  },
+  "notes": "A source reference fixes the missing path only; it is not a relay, live receiver, delivered message, authenticated acknowledgment, or installed BT2 Project package. Private RADAR_TOPOLOGY_V1.json remains the private writer-lane registry."
+}
