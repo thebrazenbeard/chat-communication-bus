@@ -34,7 +34,7 @@ jobs:
         run: python -m pytest -q tests/radar/test_ccb_base_pin_contract.py
 
       - name: Validate dated portfolio source-only snapshot
-        run: python -m pytest -q tests/governance/test_project_unfuck_portfolio_snapshot.py
+        run: python -m unittest discover -s tests/governance -p 'test_project_unfuck_portfolio_snapshot.py'
 
       - name: Parse private topology contracts
         run: |
