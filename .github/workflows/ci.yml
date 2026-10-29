@@ -33,6 +33,9 @@ jobs:
       - name: Validate CCB Base pin and private overlay boundary
         run: python -m pytest -q tests/radar/test_ccb_base_pin_contract.py
 
+      - name: Validate dated portfolio source-only snapshot
+        run: python -m unittest discover -s tests/governance -p 'test_project_unfuck_portfolio_snapshot.py'
+
       - name: Parse private topology contracts
         run: |
           python -m json.tool architecture/contracts/CCB_BASE_CONTROL_PIN_V1.json >/dev/null
