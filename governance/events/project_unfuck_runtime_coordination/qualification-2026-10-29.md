@@ -1,4 +1,4 @@
-# Full GitHub owner inventory and sampled capability gates — 2026-10-29
+# Full GitHub portfolio source-capability inventory and qualification — 2026-10-29
 
 Event: `project_unfuck_runtime_coordination`  
 Coordination: [chat-communication-bus issue #397](https://github.com/thebrazenbeard/chat-communication-bus/issues/397)  
@@ -9,7 +9,7 @@ Evidence scope: **connected GitHub inventory and live default-branch SOURCE insp
 - Connected owner `thebrazenbeard`: **107 repositories** = **100 active + 7 archived**; **85 public + 22 private**.
 - Six disjoint native source-inventory lanes inspected all **100 active** repositories (16, 17, 17, 16, 17, 17). Six further native reviewers challenged inventory metadata, effect security, memory/privacy, cognition, architecture, and release evidence.
 - Seven archived: `build-team-2.0`, `skeletonkey`, `entropyinc`, `brigit-unbound`, `bugops`, `conditioning`, `ocd`. Archival is a status, not permission to reactivate.
-- Machine-readable snapshot: [portfolio-owner-snapshot-2026-10-29.csv](./portfolio-owner-snapshot-2026-10-29.csv). The exact-head manifest is **pending final publication and review**. This draft must remain on HOLD until every row is attached and checked. Fresh-check each affected head before mutation or deployment.
+- Machine-readable snapshot: [portfolio-owner-snapshot-2026-10-29.csv](./portfolio-owner-snapshot-2026-10-29.csv). [The exact-head manifest](./portfolio-exact-heads-2026-10-29.json) records all 107 point-in-time default heads; [the source-capability ledger](./portfolio-source-capabilities-100-2026-10-29.json) records 100 active source classifications with code paths, proposed adapters, effects, privacy, authority, blockers and evidence class. All must receive independent exact-head review before merging. Fresh-check each affected head before mutation or deployment.
 - The old `vera-control-plane` portfolio registry (2026-09-23; 59 entries, 24 public/35 private) is NOT authoritative today. Sixteen visibility flags disagree with current GitHub. Three names are absent verbatim: `project-achilles`, `vera_ark`, `vera_model_training`. Do not infer successor identity from similar names.
 
 ## Coordination contract
@@ -62,7 +62,7 @@ Source metadata does NOT authorize execution. Documentation-only and archived re
 - [STM Draft #15](https://github.com/thebrazenbeard/stm/pull/15) `6f9d8f218bf6f55f49ac0c495316f76535ef9994`: no hosted run visible; host memory integration HOLD.
 - [MemoryLedger Draft #1](https://github.com/thebrazenbeard/MemoryLedger/pull/1) `06fe39e602e7da67ab2a268450af3d019e9b4b40`: proposal-only; no memory runtime qualified.
 
-**Release decision:** 107-row owner metadata = independently reconciled. Full 100-row capability/entrypoint/effect evidence has not yet been committed, and PR #399 private-overlay-integrity workflow **FAILED** at initial head 33ab1ae (run 40908511451, precise failure reason UNKNOWN due inaccessible job log); therefore merge remains HOLD. Host installation, authority, durable peer/model proof, high-effect runtime and production deployment = HOLD. No model effect, CCB peer ACK, Lappy installation or production write is claimed by this audit. Repo documentation and source checks alone do not clear a deployment gate.
+**Release decision:** 107-row owner metadata was independently reconciled; 107 source heads and 100 source-capability rows have been committed and internally checked for uniqueness, active coverage and pinned SHA references. Fresh independent audit of these NEW files is still pending. PR #399 private-overlay-integrity workflow **FAILED** at earlier head 33ab1ae (run 40908511451, precise failure reason UNKNOWN due inaccessible job log); check the newest exact head separately. Merge remains HOLD until all checks and review pass. Host installation, authority, durable peer/model proof, high-effect runtime and production deployment = HOLD. No model effect, CCB peer ACK, Lappy installation or production write is claimed by this audit. Repo documentation and source checks alone do not clear a deployment gate.
 
 ## Next qualified slices
 
@@ -74,7 +74,7 @@ Source metadata does NOT authorize execution. Documentation-only and archived re
 
 ## Required per-repository capability ledger (not yet committed)
 
-The 107-row metadata CSV proves OWNER COVERAGE only. The six source-review lanes inspected 100 active repositories, but this report's selected-domain matrix is NOT a durable 100-row capability ledger. To graduate the artifact to full portfolio capability coverage, each active repo needs a row with: `repo`, `default_branch`, `head_sha`, `source_kind`, `actual_role`, `verified_entrypoint_paths`, `exposure_kind`, `proposed_adapter`, `side_effect_ceiling`, `privacy_scope`, `authority_source`, `installed_host_evidence`, `known_blockers`, `license_and_training_permission`, `evidence_class`, `reviewer`, `verified_at`. Unknown fields must say `UNKNOWN`, not be inferred from names or visibility. Include visual/audio (`vision`, `ears`, `mediaphile*`), safety (`firesafe`, `human-shield`, `driftguard`, `tattler`), devices (`RSLinux`, `vera-synology`), identity/cognition, research and creative domains. Public visibility does NOT imply open license or permission to train models.
+The 107-row owner metadata snapshot, 107 default heads and 100 per-active-repository source-capability rows are now committed in this Draft PR. The 100-row ledger is **internal native source review**, not installed-host qualification. Each active repo has a row with: `repo`, `default_branch`, `head_sha`, `source_kind`, `actual_role`, `verified_entrypoint_paths`, `exposure_kind`, `proposed_adapter`, `side_effect_ceiling`, `privacy_scope`, `authority_source`, `installed_host_evidence`, `known_blockers`, `license_and_training_permission`, `evidence_class`, `reviewer`, `verified_at`. Unknown fields must say `UNKNOWN`, not be inferred from names or visibility. Reviewer-defined labels are not a standardized validated registry schema; the source rows are audit evidence and adapter proposals, not executable descriptors. Coverage includes visual/audio (`vision`, `ears`, `mediaphile*`), safety (`firesafe`, `human-shield`, `driftguard`, `tattler`), devices (`RSLinux`, `vera-synology`), identity/cognition, research and creative domains. Public visibility does NOT imply open license or permission to train models.
 
 ## Hostile negative-test register (all pending runtime evidence)
 
