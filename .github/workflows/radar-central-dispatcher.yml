@@ -1,12 +1,13 @@
-name: Radar Central Dispatcher
+# PUBLIC TRANSITION HOLD (2026-10-29)
+# Previous automatic workflow_run and five-minute schedule were written for a
+# PRIVATE branch-vault trust model. Do not reactivate until the public GitHub
+# source/branch/issue exposure, provider OIDC trust and private mailbox custody
+# are independently assessed and authorized. A manual invocation is not itself
+# provider authority.
+name: Radar Central Dispatcher (public-transition manual hold)
 
 on:
-  workflow_run:
-    workflows: ["Writer Lane Guard"]
-    types: [completed]
-    branches: ["bus/**"]
-  schedule:
-    - cron: "*/5 * * * *"
+  workflow_dispatch:
 
 permissions:
   contents: read
