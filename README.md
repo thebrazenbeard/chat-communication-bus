@@ -1,33 +1,25 @@
 > **License:** Source-visible, not open source. Original material is proprietary. Commercial use, redistribution, hosted-service use, and commercial derivative products require written permission. See [LICENSE](LICENSE) and [COMMERCIAL_LICENSE.md](COMMERCIAL_LICENSE.md). Separately identified third-party components retain their own licenses.
 
-# Chat Communication Bus — Private Branch Vault
+# Chat Communication Bus — Public source and legacy coordination repository
 
-This private repository is no longer the reusable CCB/Radar code authority.
+**Visibility changed to PUBLIC on October 29, 2026.** Earlier descriptions of this GitHub repository as a **private branch vault** are obsolete. Treat **all reachable branches, commits, issues, PRs, Actions metadata, and attachments** as potentially publicly visible. Do not append private mailbox messages, credentials, private identity/relationship material, personal transcripts or unreleased operational data here.
 
-The operational source of truth is **CCB Base**, currently hosted at `thebrazenbeard/ccb-core`. Private branch automation is pinned to qualified CCB Base revisions rather than executing reusable control code from this repository.
+This GitHub repository is a historical source and coordination surface, **not** evidence of an installed or authenticated Bus runtime. The reusable CCB/Radar control-code authority is [CCB Base](https://github.com/thebrazenbeard/ccb-core). The currently recorded CCB Base control pin in this repository is `273c93bc46683580024c1521fd2c523a8a6593bd`; this is a **source pin**, not permission to deploy or invoke it.
 
-## What belongs here
+## Public-transition containment
 
-- private `bus/**` writer lanes and other private work branches;
-- private topology and cutover state;
-- private identity/deployment overlays, checkpoints, receipts, and recovery evidence;
-- OIDC/provider workflow context that must remain bound to this private repository;
-- retained historical source and branches for provenance.
+- Former private `bus/**` branch names and history have not been sanitized by a README update. **Do not use this public repository as a confidential coordination mailbox.**
+- The scheduled and event-triggered Radar central dispatcher is held **manual-only** pending a new public-repository trust, privacy and provider assessment. A manually run workflow still requires its own authorization and real provider qualification.
+- Branch contents and historical Git objects are not made private by editing `main`. A sensitive item once published may remain accessible in history, clones, caches, forks or other copies.
+- Historical topology and provider contracts are **source/provenance**, not authenticated or current routing credentials. In particular, a public configuration or branch name must not be treated as a host grant.
+- Never open an issue or PR containing a secret, private mailbox message or personal transcript. See [SECURITY.md](SECURITY.md) and [public-transition containment](docs/PUBLIC_TRANSITION_2026-10-29.md).
 
-## What does not become canonical here
+## Repository roles
 
-Generic runtime fixes, routing/admission changes, reusable migrations, provider-neutral scripts, and regression tests belong in CCB Base first. Existing copies in this repository are legacy/history unless a private overlay specifically requires them.
+Reusable runtime, routing/admission changes, generic migrations, provider-neutral scripts and tests belong in CCB Base first. This repository holds historical overlay material, protocol documents, and event discussions. Some old source copies remain for provenance but are not authoritative reusable runtime dependencies.
 
-Current qualified CCB Base pin for branch control: `273c93bc46683580024c1521fd2c523a8a6593bd`.
+The former writer-lane model and cutover evidence may be useful for reconstruction, but **public GitHub is not an acceptable privacy boundary** for those records. Any renewed private mailbox must use a separately governed private location and an authenticated host that proves its permissions and receipt path.
 
-## Flow
+## Qualification boundary
 
-A private branch can expose a defect, but the reusable fix is sanitized, tested, and committed to CCB Base. Private workflows then advance their explicit CCB Base pin. Private topology remains data; it is not a second implementation authority.
-
-No history is deleted by this role change.
-
-## Private-overlay qualification
-
-Private repository CI validates the overlay boundary, exact CCB Base control pin,
-and explicit private topology/cutover inputs. Reusable Python runtime, Edge, and
-SQL implementation qualification belongs to CCB Base and is not duplicated here.
+A source PR, GitHub Actions run, repository label or public visibility proves neither selected runtime installation nor actual delivery. All protected changes need exact source identity, independent authority, real-host verification, and effect readback. Public-transition review does **not** by itself authorize provider migrations, key rotation, deployment, historical branch deletion, or retrospective Git history rewriting.
