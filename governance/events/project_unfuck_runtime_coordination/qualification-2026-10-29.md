@@ -1,7 +1,9 @@
 # Full GitHub portfolio source-capability inventory and qualification — 2026-10-29
 
-Event: `project_unfuck_runtime_coordination`  
-Coordination: [chat-communication-bus issue #397](https://github.com/thebrazenbeard/chat-communication-bus/issues/397)  
+Event: `project_unfuck_runtime_coordination`
+
+Coordination: [chat-communication-bus issue #397](https://github.com/thebrazenbeard/chat-communication-bus/issues/397)
+
 Evidence scope: **connected GitHub inventory and live default-branch SOURCE inspection**, with internal native-subagent hostile review. Not an installed-host, real-model, peer-acknowledgment, or production qualification.
 
 ## Portfolio coverage
@@ -72,9 +74,9 @@ Source metadata does NOT authorize execution. Documentation-only and archived re
 4. Fix/reconcile device `OUTCOME_UNKNOWN` fence custody and CCB durable peer receipts before any write/device/replay capability.
 5. Verify a **real installed host + actual authorized model turn**, not merely CI, before claiming integration or deploying.
 
-## Required per-repository capability ledger (not yet committed)
+## Committed per-repository source-capability ledger
 
-The 107-row owner metadata snapshot, 107 default heads and 100 per-active-repository source-capability rows are now committed in this Draft PR. The 100-row ledger is **internal native source review**, not installed-host qualification. Each active repo has a row with: `repo`, `default_branch`, `head_sha`, `source_kind`, `actual_role`, `verified_entrypoint_paths`, `exposure_kind`, `proposed_adapter`, `side_effect_ceiling`, `privacy_scope`, `authority_source`, `installed_host_evidence`, `known_blockers`, `license_and_training_permission`, `evidence_class`, `reviewer`, `verified_at`. Unknown fields must say `UNKNOWN`, not be inferred from names or visibility. Reviewer-defined labels are not a standardized validated registry schema; the source rows are audit evidence and adapter proposals, not executable descriptors. Coverage includes visual/audio (`vision`, `ears`, `mediaphile*`), safety (`firesafe`, `human-shield`, `driftguard`, `tattler`), devices (`RSLinux`, `vera-synology`), identity/cognition, research and creative domains. Public visibility does NOT imply open license or permission to train models.
+The 107-row owner metadata snapshot, 107 default heads and 100 per-active-repository source-capability rows are now committed in this Draft PR. The 100-row ledger is **internal native source review**, not installed-host qualification. Each active repo has a row with: `repo`, `default_branch`, `head_sha`, `source_kind`, `actual_role`, `evidence_paths`, `exposure_kind`, `proposed_adapter`, `effect_class`, `privacy_risk`, `authority_source`, `installed_host_evidence`, `known_blockers`, `license_status`, `evidence_class`, `reviewer`, `observed_at`. These are source evidence *pointers*, not individually executed entrypoints. Unknown fields must say `UNKNOWN`, not be inferred from names or visibility. Reviewer-defined labels are not a standardized validated registry schema; the source rows are audit evidence and adapter proposals, not executable descriptors. Coverage includes visual/audio (`vision`, `ears`, `mediaphile*`), safety (`firesafe`, `human-shield`, `driftguard`, `tattler`), devices (`RSLinux`, `vera-synology`), identity/cognition, research and creative domains. Public visibility does NOT imply open license or permission to train models.
 
 ## Hostile negative-test register (all pending runtime evidence)
 
