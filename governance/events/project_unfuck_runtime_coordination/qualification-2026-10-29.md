@@ -94,3 +94,13 @@ The 107-row owner metadata snapshot, 107 default heads and 100 per-active-reposi
 | Crash after durable effect but before receipt | Exact trusted readback or `OUTCOME_UNKNOWN`; no blind retry |
 
 **Qualification discipline:** these are proposed tests and expected outcomes, not executions or passing results. No runtime effect, external provider review or host deployment is claimed.
+
+## Subsequent 2026-10-29 live-source corrections (snapshot successor)
+
+The 107-repository membership is unchanged: `orgasm` was renamed to `pleasure`, not supplemented by an eighth new subject. `pleasure`, `sexuality`, and `chat-communication-bus` are public source-visible repositories at the exact refreshed heads stored in this amendment. This is not a claim that historic private data is now safe for public reproduction.
+
+Patrick clarified the **intended generic, optional AI-model scope** of both Sexuality and Pleasure. Current source remains specialized historical research/provenance; generic executable interfaces, independently qualified model adapters, host authority, memory admission and runtime effects are **NOT IMPLEMENTED/NOT VERIFIED** by the inventory. Frozen `Orgasm V1` technical identifiers and named historic source references must remain intact.
+
+This four-file amendment is a **dated successor overlay to the frozen PR #399 commit `1e42b010...`**, not a rewrite of that commit's historical observations. Only three changed repositories were rechecked live; the other 104 head values remain **point-in-time metadata**, not newly reverified current heads. The public Bus source at `04d6100...` contains the source-level Radar auto-dispatch hold; installation, current provider effect and confidential-lane migration remain unverified.
+
+Follow-up exact-source review on 2026-10-29: Sexuality PR #11 merged at `875f2ff...` providing a model-agnostic research/qualification framework; Pleasure PR #11 merged at `7e6464c...` providing generic experimental positive-valence T0 source, and PR #12 at `9f7ab6f...` repaired frozen-blob Windows checkout. Fresh Lappy suites: Sexuality 9/9 and Pleasure 28/28 (including original hash tests), as of these specified heads. These are SOURCE and TEST claims, not provider/host/model runtime qualification; old 104 portfolio heads remain historical observations. Earlier overlapping #10 proposals and #13 duplicate repair are closed unmerged; historical Orgasm V1 technical identifiers remain frozen.
