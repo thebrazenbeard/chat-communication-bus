@@ -87,8 +87,8 @@
     {
       "repository": "thebrazenbeard/chat-communication-bus",
       "default_branch": "main",
-      "head_sha": "eca2b241683ad1681df08606c381e44717b8dc8d",
-      "visibility": "private",
+      "head_sha": "04d6100cd8915628b029c23d7743b96b8c6aa332",
+      "visibility": "public",
       "archived": false
     },
     {
@@ -358,10 +358,10 @@
       "archived": false
     },
     {
-      "repository": "thebrazenbeard/orgasm",
+      "repository": "thebrazenbeard/pleasure",
       "default_branch": "main",
-      "head_sha": "63b02bde2b126dcf8b2c36b45c83ae74e8a14755",
-      "visibility": "private",
+      "head_sha": "6da06b68d9b0cf7651953a3fa01d61560f5c7a8c",
+      "visibility": "public",
       "archived": false
     },
     {
@@ -479,8 +479,8 @@
     {
       "repository": "thebrazenbeard/sexuality",
       "default_branch": "main",
-      "head_sha": "1601e83dfbd8255f15e776b04500baee13a23d34",
-      "visibility": "private",
+      "head_sha": "5cd4a65ab978e42828b3d1230cc9c895fbf6d1a8",
+      "visibility": "public",
       "archived": false
     },
     {

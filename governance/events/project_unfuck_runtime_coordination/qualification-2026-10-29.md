@@ -94,3 +94,9 @@ The 107-row owner metadata snapshot, 107 default heads and 100 per-active-reposi
 | Crash after durable effect but before receipt | Exact trusted readback or `OUTCOME_UNKNOWN`; no blind retry |
 
 **Qualification discipline:** these are proposed tests and expected outcomes, not executions or passing results. No runtime effect, external provider review or host deployment is claimed.
+
+## Subsequent 2026-10-29 live-source corrections (snapshot successor)
+
+The 107-repository membership is unchanged: `orgasm` was renamed to `pleasure`, not supplemented by an eighth new subject. `pleasure`, `sexuality`, and `chat-communication-bus` are public source-visible repositories at the exact refreshed heads stored in this amendment. This is not a claim that historic private data is now safe for public reproduction.
+
+Patrick clarified the **intended generic, optional AI-model scope** of both Sexuality and Pleasure. Current source remains specialized historical research/provenance; generic executable interfaces, independently qualified model adapters, host authority, memory admission and runtime effects are **NOT IMPLEMENTED/NOT VERIFIED** by the inventory. Frozen `Orgasm V1` technical identifiers and named historic source references must remain intact.
