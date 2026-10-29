@@ -1,0 +1,651 @@
+{
+  "schema": "CCB_PUBLIC_ONLY_OWNER_INVENTORY_V1",
+  "event_id": "project_unfuck_runtime_coordination",
+  "evidence_class": "VERIFIED_LIVE_GITHUB_METADATA_SNAPSHOT",
+  "observed_at_utc": "2026-10-29T22:59:08.670Z",
+  "source": "authenticated GitHub owner repository metadata and exact default-branch readbacks",
+  "authority": "SOURCE_ONLY_NOT_RUNTIME_OR_DEPLOYMENT",
+  "coverage": {
+    "total_repositories": 107,
+    "active_repositories": 100,
+    "archived_repositories": 7,
+    "public_repositories": 89,
+    "public_active_repositories": 86,
+    "public_archived_repositories": 3,
+    "private_aggregate": {
+      "repositories": 18,
+      "active": 14,
+      "archived": 4
+    }
+  },
+  "public_repositories": [
+    {
+      "repository_full_name": "thebrazenbeard/abil",
+      "default_branch": "main",
+      "head_sha": "c842c9058d8a4d1e4caf4bf7cdfad7e3c678ce6b",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/achilles",
+      "default_branch": "main",
+      "head_sha": "1babd14d2da3736072c0e77eff68f50500f71b63",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/Attune",
+      "default_branch": "main",
+      "head_sha": "22d95e90f926ecd4bc39a1569d532077925127dd",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/axle",
+      "default_branch": "main",
+      "head_sha": "27596b3061199d85f5a03bab1e1c18ae8ff3d379",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/blotter",
+      "default_branch": "main",
+      "head_sha": "c31c93ce2abbc8b491e9a9458fb1efa0bbf6e18a",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/bt2",
+      "default_branch": "main",
+      "head_sha": "b3d2a0f9506af68b923ddf5628858f3b2efb3405",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/bugops",
+      "default_branch": "main",
+      "head_sha": "1d35bcbd16da24c7635a004845de1390de850b4e",
+      "archived": true,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/build-team-2.0",
+      "default_branch": "main",
+      "head_sha": "950112a697550b689049da807f2d8176a507c38f",
+      "archived": true,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/ccb-core",
+      "default_branch": "main",
+      "head_sha": "57b5bb97b923e43da0fb677b4e4a907bab222e37",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/chat-communication-bus",
+      "default_branch": "main",
+      "head_sha": "04d6100cd8915628b029c23d7743b96b8c6aa332",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/conations",
+      "default_branch": "main",
+      "head_sha": "8648ffbe53d2570f55662909b6369fde73deee73",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/cricket",
+      "default_branch": "main",
+      "head_sha": "e7b36034045874cdfbddaef23e65ad426fbd32d8",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/deepmemorystorage",
+      "default_branch": "main",
+      "head_sha": "47681d52923d05a66060e60a88c5e020e540f8c1",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/discovery",
+      "default_branch": "main",
+      "head_sha": "29c1bd95878f62486ece18ed48066050cc65960d",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/driftguard",
+      "default_branch": "main",
+      "head_sha": "0be63249e9e3edd1456dc03ea68777315b60d0f6",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/ears",
+      "default_branch": "main",
+      "head_sha": "6ee357d478bf44eb53e458281141918856e1b3db",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/empathy",
+      "default_branch": "main",
+      "head_sha": "4bb1bfd3c91dafd60e33c65738238ca17ce293fa",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/executor",
+      "default_branch": "main",
+      "head_sha": "c952180bc2eeb401df9a0a1bd33242d5237c9629",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/fuckup",
+      "default_branch": "main",
+      "head_sha": "2b048d5ca55edcfd6d8bf37d28f6e786a0b12548",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/god-brain",
+      "default_branch": "main",
+      "head_sha": "0aafac6f378e4bdd2618334eeb3c1b3d94800465",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/hc-brain",
+      "default_branch": "main",
+      "head_sha": "952af2038089730fc03ce434c6d563ec7b5eaebd",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/hephaestus",
+      "default_branch": "main",
+      "head_sha": "357803035b1501ab77ee0f45668b39d46585b9e6",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/humility",
+      "default_branch": "main",
+      "head_sha": "6c5a1f74d26099bfb91fec1c29c2f6af0678052f",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/ingest",
+      "default_branch": "main",
+      "head_sha": "8ffb70c75a42f900c9c645970131ffb0da834925",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/intranel",
+      "default_branch": "main",
+      "head_sha": "498357b551d7fd9247f868e85f94a84ab1256506",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/labyrinth",
+      "default_branch": "main",
+      "head_sha": "39a95ac1d12cce372de980b8cad2bc41016e1705",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/lgcm",
+      "default_branch": "main",
+      "head_sha": "883198795ef628e32397aa6498e28626f3bd7156",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/lou-pole",
+      "default_branch": "main",
+      "head_sha": "ab706c21b5eb991baa2754acf10a5db417046776",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/masamune",
+      "default_branch": "main",
+      "head_sha": "033900fa48656ebfa7b719cdac5af5e20301465d",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/mediaphile-client",
+      "default_branch": "main",
+      "head_sha": "830c24fa6699152ff03af9b61d53b3cf6e0bdfae",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/mediaphile-server",
+      "default_branch": "main",
+      "head_sha": "5844b092686d10694343c28b442f2ae808bcbcde",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/MemoryLedger",
+      "default_branch": "main",
+      "head_sha": "55b431b5257880f7b6636e5c6b3b7b9d3ec46792",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/memstack",
+      "default_branch": "main",
+      "head_sha": "0a2c3a9f4adee6147f61f63a3bb1b2b4bb611530",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/meso-crct",
+      "default_branch": "main",
+      "head_sha": "b3b3d97af1cc1c76473049e3d9990613ca8971a7",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/meta",
+      "default_branch": "main",
+      "head_sha": "f8f2a1b9009ab2f1b4a47131e39b765501104178",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/model-training",
+      "default_branch": "main",
+      "head_sha": "d1540985e151fb62d9f78df26c81dfa4a75e4d2c",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/mosaic",
+      "default_branch": "main",
+      "head_sha": "12536748f36ae899d3ff655e36613f3a995dae17",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/naijin-ryu",
+      "default_branch": "main",
+      "head_sha": "7bad9714feb26a74c53e12b0fb163bd21bfca7e2",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/noema",
+      "default_branch": "main",
+      "head_sha": "8f7b77482ff986d88fdaaa9f1e0a82f6fc23c581",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/num-ta-reen",
+      "default_branch": "main",
+      "head_sha": "3a3c59e3836def15112d6a6fda586491e5d2f113",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/ocd",
+      "default_branch": "main",
+      "head_sha": "ae2d86170c90c00394ad991c8c84f5ff77d0f779",
+      "archived": true,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/on-theo",
+      "default_branch": "main",
+      "head_sha": "5a86bc1949c01dfc4b20df55a026e26763287100",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/personification",
+      "default_branch": "main",
+      "head_sha": "e0c02c37df804e1f11884e489bd61922cbe28cb0",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/physica",
+      "default_branch": "main",
+      "head_sha": "b11dff8f2b48cdccc559625573b960624d7bb737",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/pleasure",
+      "default_branch": "main",
+      "head_sha": "db3d05da63b18193633a607b870e9942700602ff",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/portal",
+      "default_branch": "main",
+      "head_sha": "a27db806c064248cba5cf109aa8a4866df4fb8d1",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/pre-active",
+      "default_branch": "main",
+      "head_sha": "6c5ae243c62311eb6a750bd40c896a08ef1c2361",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/project-lantern",
+      "default_branch": "main",
+      "head_sha": "cc78ebfcddc194d208dcc1a62cb5f70c915e3996",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/project-runner",
+      "default_branch": "main",
+      "head_sha": "1103bc54ce94adad9311dc85a0238179e31bbcbd",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/RepairTracker",
+      "default_branch": "main",
+      "head_sha": "333539c598501773ac88d9419776e27239d142c4",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/rezon",
+      "default_branch": "main",
+      "head_sha": "b25518b525b8d31c8e8730a3b4d23088d2c66cdc",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/roots",
+      "default_branch": "main",
+      "head_sha": "d6166522611e0fa48cd246f63b4e74a6a39bb375",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/RSLinux",
+      "default_branch": "main",
+      "head_sha": "8ed9c81791bd630d25b71dcdfb418ebf104d63dc",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/self",
+      "default_branch": "main",
+      "head_sha": "b4003a56fe5f0ed845bb29d36bdac6467557638d",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/semanticatlas",
+      "default_branch": "main",
+      "head_sha": "e59d1845aefeb8bf2f650e95ef947b84e788c9db",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/semiotics",
+      "default_branch": "main",
+      "head_sha": "d3c9e4eb4b0fa8c306889dfaeccad1b3986499f2",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/sexuality",
+      "default_branch": "main",
+      "head_sha": "714b1b2e184b52637eef35fe84e9fa295479e924",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/spk-packager",
+      "default_branch": "main",
+      "head_sha": "9d3290dfb51f0e972ce519e9337b3c87a48f0475",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/spm",
+      "default_branch": "main",
+      "head_sha": "64e41c0f1a95cb563051680d46f78287e875ede5",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/sql-connectome",
+      "default_branch": "main",
+      "head_sha": "39a955302428da160f7a8517d15da358cd03cce2",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/stm",
+      "default_branch": "main",
+      "head_sha": "c40431c77e00a9b6b817641d07768d95bdd9c238",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/t-kal-in-ket",
+      "default_branch": "main",
+      "head_sha": "b0af150c2405b519fd921bac33e5f9f1f35f92d7",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/tattler",
+      "default_branch": "main",
+      "head_sha": "bda4500c6627cdd70734ecc620140e4298873ce6",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/temporal",
+      "default_branch": "main",
+      "head_sha": "f115b97f87782f2184508ec8f92c4e10b115aef5",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/testament",
+      "default_branch": "main",
+      "head_sha": "eba5874ee344259da8492ef81ca6c48dbe3e7128",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/thebrazenbeard",
+      "default_branch": "main",
+      "head_sha": "9c85a10991e6ae558cfc6870db5773e67407e8b6",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/transcendence",
+      "default_branch": "main",
+      "head_sha": "73eb00932400b4a143db66800e20adc8a6117bde",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/unbound-sol",
+      "default_branch": "main",
+      "head_sha": "1d937713154f9a6a57d7bc5ecbc986b9c080f15d",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/unvtrslr",
+      "default_branch": "main",
+      "head_sha": "848b9842f0d7b73c984458d875c4d23141838225",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/v-e-r-a",
+      "default_branch": "main",
+      "head_sha": "4c02f06e3c7fcccec3c681cb94cc087f1049235d",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/vera",
+      "default_branch": "main",
+      "head_sha": "6783c0ac8da9286db9b0094426d0c4f08822220f",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/vera-adapter",
+      "default_branch": "main",
+      "head_sha": "003d04f877f640791a3324eb360902f5db5eb5c9",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/vera-apk",
+      "default_branch": "main",
+      "head_sha": "73d0d844f896e5be90e31106a8ead117db6d9744",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/vera-ark",
+      "default_branch": "main",
+      "head_sha": "b2876c5bbb6cba95801797555960680d431bd6ad",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/vera-control-plane",
+      "default_branch": "main",
+      "head_sha": "6306f7009e933ed8a965146f9abf34a46caae490",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/vera-habitat",
+      "default_branch": "main",
+      "head_sha": "1814b7eb3d56965616bdd20690e23a2f66046be4",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/vera-mesh",
+      "default_branch": "main",
+      "head_sha": "20d487c1b99cd6ef066f23f93b2a7285468fd1d2",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/vera-model",
+      "default_branch": "main",
+      "head_sha": "a106bd2aabf8c9a819eea92c862d2609d04d25e7",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/vera-mono",
+      "default_branch": "main",
+      "head_sha": "5be71f4c9171417f8d492db341a058a7072822ae",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/vera-R9A0",
+      "default_branch": "main",
+      "head_sha": "3ede5a422d34c4a053b2c40c5ff4e4e271950707",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/vera-synology",
+      "default_branch": "main",
+      "head_sha": "7ea68b921979ed9b8aaec07094da9254b42626d0",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/vision",
+      "default_branch": "main",
+      "head_sha": "e3792a5cc8ae436010b3b9dc5f4628161a1ef681",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/volition",
+      "default_branch": "main",
+      "head_sha": "f622e564bf257b0ffc0b3c05130b62db1c201d3d",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/voss",
+      "default_branch": "main",
+      "head_sha": "88629cac6a3b7e5b03e5752e70407a5ba7be85cf",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/wip",
+      "default_branch": "main",
+      "head_sha": "5cbd28d20b05327a72d5dd8f2aaff88d545df644",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/workbridge",
+      "default_branch": "main",
+      "head_sha": "eb74be3003005edd4722107b6a046ce75e4c1b7e",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/workbridgecommander",
+      "default_branch": "main",
+      "head_sha": "27d83f47eb4e3a70eeb9db6e4e4661d1b0e37767",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/WorkBridgeMCP",
+      "default_branch": "main",
+      "head_sha": "3efd1b3d53de8909b141b4cd33aaae3273f81634",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/world-zero",
+      "default_branch": "main",
+      "head_sha": "ebb38d7a4083f827985b11ae5e0f8ea8c67dc460",
+      "archived": false,
+      "visibility": "public"
+    }
+  ],
+  "limitations": [
+    "Private repositories are represented ONLY by aggregate counts; no names, IDs, heads, paths or roles.",
+    "Snapshot observation is not live runtime qualification; HEADs and visibility may change after observed_at_utc.",
+    "Public branch ancestry must be checked independently for leakage; this manifest cannot scrub old public PR history."
+  ]
+}
