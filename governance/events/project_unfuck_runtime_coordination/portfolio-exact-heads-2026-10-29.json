@@ -360,7 +360,7 @@
     {
       "repository": "thebrazenbeard/pleasure",
       "default_branch": "main",
-      "head_sha": "6da06b68d9b0cf7651953a3fa01d61560f5c7a8c",
+      "head_sha": "9f7ab6f5aa5516f7fead2a8a1dd92dbf3802cf60",
       "visibility": "public",
       "archived": false
     },
@@ -479,7 +479,7 @@
     {
       "repository": "thebrazenbeard/sexuality",
       "default_branch": "main",
-      "head_sha": "5cd4a65ab978e42828b3d1230cc9c895fbf6d1a8",
+      "head_sha": "875f2ff410c1c62556ae59d02b0f3f1419376a3f",
       "visibility": "public",
       "archived": false
     },
