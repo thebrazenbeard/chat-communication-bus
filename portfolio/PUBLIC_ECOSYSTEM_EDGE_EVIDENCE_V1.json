@@ -1,0 +1,100 @@
+{
+  "schema": "CCB_PUBLIC_ECOSYSTEM_EDGE_EVIDENCE_V1",
+  "event_id": "project_unfuck_runtime_coordination",
+  "observed_at_utc": "2026-10-31T23:03:23Z",
+  "scope": "SAMPLED_PUBLIC_SOURCE_ONLY_NOT_EXHAUSTIVE",
+  "inventory": "portfolio/PUBLIC_ONLY_OWNER_INVENTORY_V1.json",
+  "relation_type_vocabulary": [
+    "DOC_LINK",
+    "DEPENDENCY",
+    "SOURCE_IMPORT",
+    "TEST",
+    "HOST_PROBE",
+    "UNKNOWN"
+  ],
+  "relations": [
+    {
+      "source": "thebrazenbeard/chat-communication-bus",
+      "target": "thebrazenbeard/ccb-core",
+      "relation_type": "DOC_LINK",
+      "evidence_class": "DOC",
+      "finding": "README identifies CCB Base as the reusable code authority, with this repository as historical coordination.",
+      "evidence": [
+        {
+          "repository": "thebrazenbeard/chat-communication-bus",
+          "head_sha": "eb315a5612ae99aadddb397891ffcf3a2b0433a6",
+          "path": "README.md",
+          "blob_sha": "a8eb1967a1ac30fb1260f98379603c5c54190597"
+        }
+      ],
+      "authority": "DOCUMENTATION_ONLY_NOT_HOST_RUNTIME"
+    },
+    {
+      "source": "thebrazenbeard/pleasure",
+      "target": "thebrazenbeard/sexuality",
+      "relation_type": "DOC_LINK",
+      "evidence_class": "DOC",
+      "finding": "Pleasure README names Sexuality as a separate model-neutral domain with optional, not assumed, integration.",
+      "evidence": [
+        {
+          "repository": "thebrazenbeard/pleasure",
+          "head_sha": "db3d05da63b18193633a607b870e9942700602ff",
+          "path": "README.md",
+          "blob_sha": "36f4c557329700f85418baefe39b484a6d0d634e"
+        }
+      ],
+      "authority": "DOCUMENTATION_ONLY_NOT_HOST_RUNTIME"
+    },
+    {
+      "source": "thebrazenbeard/portal",
+      "target": "thebrazenbeard/project-runner",
+      "relation_type": "UNKNOWN",
+      "evidence_class": "DEP_METADATA",
+      "finding": "Both pyproject manifests use the same Python distribution name and version and ship a runner package. They cannot be asserted as independent installable distributions; this is not a declared dependency edge.",
+      "evidence": [
+        {
+          "repository": "thebrazenbeard/portal",
+          "head_sha": "a27db806c064248cba5cf109aa8a4866df4fb8d1",
+          "path": "pyproject.toml",
+          "blob_sha": "753fd7ff204d968b3fbca84b9cc0d435505be3b7"
+        },
+        {
+          "repository": "thebrazenbeard/project-runner",
+          "head_sha": "44da26e02c39591118bf1fdfe7ec01bd1103fc66",
+          "path": "pyproject.toml",
+          "blob_sha": "3b56ff1ec5257ed5964ad46abadc6e3a47c3602a"
+        }
+      ],
+      "authority": "PACKAGE_METADATA_NOT_HOST_INSTALL"
+    },
+    {
+      "source": "thebrazenbeard/vera-mono",
+      "target": "thebrazenbeard/rezon",
+      "relation_type": "UNKNOWN",
+      "evidence_class": "DEP_METADATA",
+      "finding": "Vera Mono packages an embedded Python rezon namespace while standalone Rezon distributes a rezon kernel. The manifests do not establish a safe external dependency or an installed cross-repository adapter.",
+      "evidence": [
+        {
+          "repository": "thebrazenbeard/vera-mono",
+          "head_sha": "5be71f4c9171417f8d492db341a058a7072822ae",
+          "path": "pyproject.toml",
+          "blob_sha": "f7acb0e5c160dc694a842890ac79a42b27eb268f"
+        },
+        {
+          "repository": "thebrazenbeard/rezon",
+          "head_sha": "cdd36d0df2a6194dd2738fb29ee8931933bcef7b",
+          "path": "pyproject.toml",
+          "blob_sha": "3abf6d9531fcb78c5622410bb8866edaf2ab8002"
+        }
+      ],
+      "authority": "PACKAGE_METADATA_NOT_HOST_INSTALL"
+    }
+  ],
+  "limitations": [
+    "Four sampled public repository relationships are not a complete dependency or invocation graph of the 91 public repositories.",
+    "DOC_LINK is documentary association, not dependency, callable capability or authorization.",
+    "UNKNOWN explicitly forbids promoting a packaging overlap into a dependency or runtime integration claim.",
+    "No HOST_PROBE relation is recorded. All observed source, metadata, and tests remain distinct from real host supervision or authorization.",
+    "Neither this manifest nor a passing test can qualify private data release, cross-reader consent, or protected execution."
+  ]
+}
