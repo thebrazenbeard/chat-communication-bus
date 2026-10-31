@@ -37,4 +37,3 @@ jobs:
 
       - name: Validate public inventory and evidence axes
         run: python -m pytest -q tests/governance/test_public_only_owner_inventory.py tests/governance/test_public_ecosystem_edge_evidence.py
-
