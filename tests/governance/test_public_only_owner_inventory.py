@@ -72,8 +72,8 @@ def validate(payload):
 def test_snapshot_is_public_only_and_count_consistent():
     data = json.loads(INVENTORY.read_text(encoding="utf-8"))
     validate(data)
-    assert data["coverage"]["total_repositories"] == 107
-    assert data["coverage"]["public_repositories"] == 89
+    assert data["coverage"]["total_repositories"] == 109
+    assert data["coverage"]["public_repositories"] == 91
     assert data["coverage"]["private_aggregate"]["repositories"] == 18
 
 

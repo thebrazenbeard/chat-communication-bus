@@ -2,15 +2,15 @@
   "schema": "CCB_PUBLIC_ONLY_OWNER_INVENTORY_V1",
   "event_id": "project_unfuck_runtime_coordination",
   "evidence_class": "VERIFIED_LIVE_GITHUB_METADATA_SNAPSHOT",
-  "observed_at_utc": "2026-10-29T22:59:08.670Z",
+  "observed_at_utc": "2026-10-31T23:03:23Z",
   "source": "authenticated GitHub owner repository metadata and exact default-branch readbacks",
   "authority": "SOURCE_ONLY_NOT_RUNTIME_OR_DEPLOYMENT",
   "coverage": {
-    "total_repositories": 107,
-    "active_repositories": 100,
+    "total_repositories": 109,
+    "active_repositories": 102,
     "archived_repositories": 7,
-    "public_repositories": 89,
-    "public_active_repositories": 86,
+    "public_repositories": 91,
+    "public_active_repositories": 88,
     "public_archived_repositories": 3,
     "private_aggregate": {
       "repositories": 18,
@@ -34,6 +34,13 @@
       "visibility": "public"
     },
     {
+      "repository_full_name": "thebrazenbeard/aeonith",
+      "default_branch": "main",
+      "head_sha": "ab65f79cbcd9abe6cd190404c64a4cd0defc32e0",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
       "repository_full_name": "thebrazenbeard/Attune",
       "default_branch": "main",
       "head_sha": "22d95e90f926ecd4bc39a1569d532077925127dd",
@@ -43,7 +50,7 @@
     {
       "repository_full_name": "thebrazenbeard/axle",
       "default_branch": "main",
-      "head_sha": "27596b3061199d85f5a03bab1e1c18ae8ff3d379",
+      "head_sha": "5b0bf3e101706acc5f8fd0638a99822f4393bd97",
       "archived": false,
       "visibility": "public"
     },
@@ -85,14 +92,14 @@
     {
       "repository_full_name": "thebrazenbeard/chat-communication-bus",
       "default_branch": "main",
-      "head_sha": "04d6100cd8915628b029c23d7743b96b8c6aa332",
+      "head_sha": "eb315a5612ae99aadddb397891ffcf3a2b0433a6",
       "archived": false,
       "visibility": "public"
     },
     {
       "repository_full_name": "thebrazenbeard/conations",
       "default_branch": "main",
-      "head_sha": "8648ffbe53d2570f55662909b6369fde73deee73",
+      "head_sha": "73295039e7a1710c5bb73666e665cef80c40aa5d",
       "archived": false,
       "visibility": "public"
     },
@@ -113,7 +120,7 @@
     {
       "repository_full_name": "thebrazenbeard/discovery",
       "default_branch": "main",
-      "head_sha": "29c1bd95878f62486ece18ed48066050cc65960d",
+      "head_sha": "a8f3e7837e5e5bc75739bf1550a99665a13f2639",
       "archived": false,
       "visibility": "public"
     },
@@ -134,35 +141,35 @@
     {
       "repository_full_name": "thebrazenbeard/empathy",
       "default_branch": "main",
-      "head_sha": "4bb1bfd3c91dafd60e33c65738238ca17ce293fa",
+      "head_sha": "5b17eeae50cc91cc48a4dbfea169d3e2b7eec331",
       "archived": false,
       "visibility": "public"
     },
     {
       "repository_full_name": "thebrazenbeard/executor",
       "default_branch": "main",
-      "head_sha": "c952180bc2eeb401df9a0a1bd33242d5237c9629",
+      "head_sha": "9838c0f840e3bcf946d7ed6b767b00b89d5a5d86",
       "archived": false,
       "visibility": "public"
     },
     {
       "repository_full_name": "thebrazenbeard/fuckup",
       "default_branch": "main",
-      "head_sha": "2b048d5ca55edcfd6d8bf37d28f6e786a0b12548",
+      "head_sha": "a741dc29567fac94c59e9649a2d6630ba2590b77",
       "archived": false,
       "visibility": "public"
     },
     {
       "repository_full_name": "thebrazenbeard/god-brain",
       "default_branch": "main",
-      "head_sha": "0aafac6f378e4bdd2618334eeb3c1b3d94800465",
+      "head_sha": "7eec60b93b6d355f4c50e5bcb4cc23a19eb2291c",
       "archived": false,
       "visibility": "public"
     },
     {
       "repository_full_name": "thebrazenbeard/hc-brain",
       "default_branch": "main",
-      "head_sha": "952af2038089730fc03ce434c6d563ec7b5eaebd",
+      "head_sha": "4caabd3334f0d24e4d52123d9541928489a36536",
       "archived": false,
       "visibility": "public"
     },
@@ -183,14 +190,14 @@
     {
       "repository_full_name": "thebrazenbeard/ingest",
       "default_branch": "main",
-      "head_sha": "8ffb70c75a42f900c9c645970131ffb0da834925",
+      "head_sha": "5a33541001eb93529439829b0e766e366117e944",
       "archived": false,
       "visibility": "public"
     },
     {
       "repository_full_name": "thebrazenbeard/intranel",
       "default_branch": "main",
-      "head_sha": "498357b551d7fd9247f868e85f94a84ab1256506",
+      "head_sha": "6c69f69d2ad74a0c45a395fac323bea60eb75407",
       "archived": false,
       "visibility": "public"
     },
@@ -204,7 +211,7 @@
     {
       "repository_full_name": "thebrazenbeard/lgcm",
       "default_branch": "main",
-      "head_sha": "883198795ef628e32397aa6498e28626f3bd7156",
+      "head_sha": "9cb8cff4d0635ccad8d1c8d7486f3eea9e2ae83e",
       "archived": false,
       "visibility": "public"
     },
@@ -218,7 +225,14 @@
     {
       "repository_full_name": "thebrazenbeard/masamune",
       "default_branch": "main",
-      "head_sha": "033900fa48656ebfa7b719cdac5af5e20301465d",
+      "head_sha": "0556201e10dbb591179001058e3445980c347025",
+      "archived": false,
+      "visibility": "public"
+    },
+    {
+      "repository_full_name": "thebrazenbeard/Max-Compression",
+      "default_branch": "main",
+      "head_sha": "ccec2c85ff1be7b4eba42fc125d6aeaccea0635f",
       "archived": false,
       "visibility": "public"
     },
@@ -253,7 +267,7 @@
     {
       "repository_full_name": "thebrazenbeard/meso-crct",
       "default_branch": "main",
-      "head_sha": "b3b3d97af1cc1c76473049e3d9990613ca8971a7",
+      "head_sha": "86c15a633daafd27cb4c3273e228f786dd54dc41",
       "archived": false,
       "visibility": "public"
     },
@@ -274,7 +288,7 @@
     {
       "repository_full_name": "thebrazenbeard/mosaic",
       "default_branch": "main",
-      "head_sha": "12536748f36ae899d3ff655e36613f3a995dae17",
+      "head_sha": "5816b2e6ac19ed5050efb746a864c5280dc28371",
       "archived": false,
       "visibility": "public"
     },
@@ -288,7 +302,7 @@
     {
       "repository_full_name": "thebrazenbeard/noema",
       "default_branch": "main",
-      "head_sha": "8f7b77482ff986d88fdaaa9f1e0a82f6fc23c581",
+      "head_sha": "5751746eebeb83b9b886115ec5d2abba180a380d",
       "archived": false,
       "visibility": "public"
     },
@@ -316,7 +330,7 @@
     {
       "repository_full_name": "thebrazenbeard/personification",
       "default_branch": "main",
-      "head_sha": "e0c02c37df804e1f11884e489bd61922cbe28cb0",
+      "head_sha": "223ad72ca1fff27e0fcb6ce6c8952e7d9964fa94",
       "archived": false,
       "visibility": "public"
     },
@@ -344,7 +358,7 @@
     {
       "repository_full_name": "thebrazenbeard/pre-active",
       "default_branch": "main",
-      "head_sha": "6c5ae243c62311eb6a750bd40c896a08ef1c2361",
+      "head_sha": "e306c251a4da44125ee58c311a35120084da8e4b",
       "archived": false,
       "visibility": "public"
     },
@@ -358,7 +372,7 @@
     {
       "repository_full_name": "thebrazenbeard/project-runner",
       "default_branch": "main",
-      "head_sha": "1103bc54ce94adad9311dc85a0238179e31bbcbd",
+      "head_sha": "44da26e02c39591118bf1fdfe7ec01bd1103fc66",
       "archived": false,
       "visibility": "public"
     },
@@ -372,21 +386,21 @@
     {
       "repository_full_name": "thebrazenbeard/rezon",
       "default_branch": "main",
-      "head_sha": "b25518b525b8d31c8e8730a3b4d23088d2c66cdc",
+      "head_sha": "cdd36d0df2a6194dd2738fb29ee8931933bcef7b",
       "archived": false,
       "visibility": "public"
     },
     {
       "repository_full_name": "thebrazenbeard/roots",
       "default_branch": "main",
-      "head_sha": "d6166522611e0fa48cd246f63b4e74a6a39bb375",
+      "head_sha": "e21884602b3c1955d76c5adc09025da7ef508357",
       "archived": false,
       "visibility": "public"
     },
     {
       "repository_full_name": "thebrazenbeard/RSLinux",
       "default_branch": "main",
-      "head_sha": "8ed9c81791bd630d25b71dcdfb418ebf104d63dc",
+      "head_sha": "a94233d0b4694969051ff93f74a94bc559316db5",
       "archived": false,
       "visibility": "public"
     },
@@ -400,7 +414,7 @@
     {
       "repository_full_name": "thebrazenbeard/semanticatlas",
       "default_branch": "main",
-      "head_sha": "e59d1845aefeb8bf2f650e95ef947b84e788c9db",
+      "head_sha": "a2b2070ed3c66a92b31d8f8f0c3360e4edf1eddf",
       "archived": false,
       "visibility": "public"
     },
@@ -414,7 +428,7 @@
     {
       "repository_full_name": "thebrazenbeard/sexuality",
       "default_branch": "main",
-      "head_sha": "714b1b2e184b52637eef35fe84e9fa295479e924",
+      "head_sha": "99529e2032935beaac3aeac5930732d19069b45c",
       "archived": false,
       "visibility": "public"
     },
@@ -428,7 +442,7 @@
     {
       "repository_full_name": "thebrazenbeard/spm",
       "default_branch": "main",
-      "head_sha": "64e41c0f1a95cb563051680d46f78287e875ede5",
+      "head_sha": "697a2ac4d4c5b8261f70f1bc74ecdd49fa88a221",
       "archived": false,
       "visibility": "public"
     },
@@ -463,7 +477,7 @@
     {
       "repository_full_name": "thebrazenbeard/temporal",
       "default_branch": "main",
-      "head_sha": "f115b97f87782f2184508ec8f92c4e10b115aef5",
+      "head_sha": "1cd2a5b15bd0a4e8c20f70a5f507a409e237945e",
       "archived": false,
       "visibility": "public"
     },
@@ -477,21 +491,21 @@
     {
       "repository_full_name": "thebrazenbeard/thebrazenbeard",
       "default_branch": "main",
-      "head_sha": "9c85a10991e6ae558cfc6870db5773e67407e8b6",
+      "head_sha": "b07f83855e4f935353471fb5ded27d8e11dbd7e6",
       "archived": false,
       "visibility": "public"
     },
     {
       "repository_full_name": "thebrazenbeard/transcendence",
       "default_branch": "main",
-      "head_sha": "73eb00932400b4a143db66800e20adc8a6117bde",
+      "head_sha": "140ba0346135188306f15de2079cfacc5729c0bd",
       "archived": false,
       "visibility": "public"
     },
     {
       "repository_full_name": "thebrazenbeard/unbound-sol",
       "default_branch": "main",
-      "head_sha": "1d937713154f9a6a57d7bc5ecbc986b9c080f15d",
+      "head_sha": "1749586848429f845ace22b2b0fa84d9e7a0ddf0",
       "archived": false,
       "visibility": "public"
     },
@@ -547,21 +561,21 @@
     {
       "repository_full_name": "thebrazenbeard/vera-habitat",
       "default_branch": "main",
-      "head_sha": "1814b7eb3d56965616bdd20690e23a2f66046be4",
+      "head_sha": "2a30a56eef52b67f2c308f74fe506c7c74427721",
       "archived": false,
       "visibility": "public"
     },
     {
       "repository_full_name": "thebrazenbeard/vera-mesh",
       "default_branch": "main",
-      "head_sha": "20d487c1b99cd6ef066f23f93b2a7285468fd1d2",
+      "head_sha": "90cb1a3d584c9902ead61ced3821c048216faf93",
       "archived": false,
       "visibility": "public"
     },
     {
       "repository_full_name": "thebrazenbeard/vera-model",
       "default_branch": "main",
-      "head_sha": "a106bd2aabf8c9a819eea92c862d2609d04d25e7",
+      "head_sha": "e7ce59f8487eff251879c62b6d7e272969d093b0",
       "archived": false,
       "visibility": "public"
     },
@@ -603,7 +617,7 @@
     {
       "repository_full_name": "thebrazenbeard/voss",
       "default_branch": "main",
-      "head_sha": "88629cac6a3b7e5b03e5752e70407a5ba7be85cf",
+      "head_sha": "61fb97b8657db32fb73652df263336747a8980ed",
       "archived": false,
       "visibility": "public"
     },
@@ -638,7 +652,7 @@
     {
       "repository_full_name": "thebrazenbeard/world-zero",
       "default_branch": "main",
-      "head_sha": "ebb38d7a4083f827985b11ae5e0f8ea8c67dc460",
+      "head_sha": "58a2e9f1ce331b991ddbdfafa193959e4d20f4e1",
       "archived": false,
       "visibility": "public"
     }
