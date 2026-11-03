@@ -104,6 +104,43 @@ class SourceEquivalenceTests(unittest.TestCase):
         path.write_text("dirty", encoding="utf-8")
         with self.assertRaises(InvalidObservation):
             compare_source_files(self.root, self.head, self.snapshot())
+
+    def test_git_assume_unchanged_cannot_forge_committed_source_bytes(self) -> None:
+        path = self.source / "handler.ts"
+        subprocess.run(
+            ["git", "update-index", "--assume-unchanged",
+             "supabase/functions/github-bus-ingest/handler.ts"],
+            cwd=self.root, check=True, capture_output=True,
+        )
+        # Git status now lies by omission: the worktree byte mutation is hidden.
+        altered = self.snapshot()
+        altered["files"][1]["content"] = "UNCOMMITTED_MUTABLE_HANDLER\n"
+        path.write_text(altered["files"][1]["content"], encoding="utf-8")
+        status = subprocess.check_output(
+            ["git", "status", "--porcelain", "--", "supabase/functions/github-bus-ingest"],
+            cwd=self.root, text=True,
+        )
+        self.assertEqual(status, "")
+        with self.assertRaises(InvalidObservation):
+            compare_source_files(self.root, self.head, altered)
+
+    def test_git_skip_worktree_cannot_forge_committed_source_bytes(self) -> None:
+        path = self.source / "handler.ts"
+        subprocess.run(
+            ["git", "update-index", "--skip-worktree",
+             "supabase/functions/github-bus-ingest/handler.ts"],
+            cwd=self.root, check=True, capture_output=True,
+        )
+        altered = self.snapshot()
+        altered["files"][1]["content"] = "UNCOMMITTED_MUTABLE_HANDLER\n"
+        path.write_text(altered["files"][1]["content"], encoding="utf-8")
+        status = subprocess.check_output(
+            ["git", "status", "--porcelain", "--", "supabase/functions/github-bus-ingest"],
+            cwd=self.root, text=True,
+        )
+        self.assertEqual(status, "")
+        with self.assertRaises(InvalidObservation):
+            compare_source_files(self.root, self.head, altered)
         path.unlink()
         path.symlink_to(self.source / "index.ts")
         with self.assertRaises(InvalidObservation):

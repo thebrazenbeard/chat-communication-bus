@@ -40,6 +40,19 @@ def _git(root: Path, *args: str) -> str:
         raise InvalidObservation("SOURCE_GIT_CHECK_UNAVAILABLE") from exc
 
 
+def _committed_bytes(root: Path, filename: str) -> bytes:
+    # The index can hide modifications using assume-unchanged/skip-worktree.
+    # Read the immutable HEAD tree object rather than trusting git status.
+    object_name = f"HEAD:{SOURCE_REL.as_posix()}/{filename}"
+    try:
+        return subprocess.check_output(
+            ["git", "-C", str(root), "cat-file", "blob", object_name],
+            stderr=subprocess.DEVNULL,
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise InvalidObservation("COMMITTED_SOURCE_BLOB_UNAVAILABLE") from exc
+
+
 def _require_source_head(root: Path, expected_head: str) -> None:
     if not isinstance(expected_head, str) or HEX40.fullmatch(expected_head) is None:
         raise InvalidObservation("EXPECTED_SOURCE_HEAD_INVALID")
@@ -94,11 +107,18 @@ def compare_source_files(
     mismatches: list[str] = []
     for filename in sorted(REQUIRED_FILES):
         path = root / SOURCE_REL / filename
+        cursor = root
+        for part in SOURCE_REL.parts:
+            cursor = cursor / part
+            if cursor.is_symlink():
+                raise InvalidObservation("SOURCE_PATH_REDIRECTED")
         if path.is_symlink() or not path.is_file():
             raise InvalidObservation("SOURCE_FILE_MISSING_OR_REDIRECTED")
         data = path.read_bytes()
         if len(data) > MAX_SOURCE_FILE_BYTES:
             raise InvalidObservation("SOURCE_FILE_OVERSIZE")
+        if data != _committed_bytes(root, filename):
+            raise InvalidObservation("SOURCE_BYTES_DIVERGE_FROM_IMMUTABLE_HEAD")
         actual_hash = hashlib.sha256(data).digest()
         observed_hash = hashlib.sha256(observed[filename].encode("utf-8")).digest()
         if actual_hash != observed_hash:
