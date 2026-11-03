@@ -1,0 +1,29 @@
+name: radar-provider-observation-tests
+
+on:
+  pull_request:
+    paths:
+      - scripts/radar_provider_observation.py
+      - tests/radar/test_radar_provider_observation.py
+      - .github/workflows/radar-provider-observation.yml
+
+permissions:
+  contents: read
+
+jobs:
+  source-only-observation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out pull request source without credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+
+      - name: Exercise source-only provider observation contract
+        run: env -u PYTHONPATH python -m unittest discover -s tests/radar -p 'test_radar_provider_observation.py' -v
