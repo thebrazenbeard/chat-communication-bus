@@ -1,5 +1,5 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "status": "RADAR_ANCHOR_E_FROZEN_PROVIDER_RECOVERY_PENDING",
   "repository": "thebrazenbeard/chat-communication-bus",
   "canonical_default_branch": "main",
@@ -120,7 +120,9 @@
     "post_anchor_d_source_repairs_pending_successor_anchor": false,
     "successor_anchor_status": "FROZEN_QUALIFIED_SOURCE_ONLY",
     "immutable_code_reads_current_main_as_inert_data": true,
-    "status": "ANCHOR_E_FROZEN_QUALIFIED_SOURCE_ONLY_NOT_DEPLOYED"
+    "status": "ANCHOR_E_FROZEN_QUALIFIED_SOURCE_ONLY_DEPLOYMENT_UNQUALIFIED",
+    "legacy_source_release_status": "ANCHOR_E_FROZEN_QUALIFIED_SOURCE_ONLY_NOT_DEPLOYED",
+    "legacy_status_role": "HISTORICAL_RELEASE_HOLD_LABEL_NOT_CURRENT_PROVIDER_READBACK"
   },
   "parallax": {
     "branch": "bus/parallax-v1",
@@ -157,12 +159,20 @@
   ],
   "known_provider_drift": [
     {
-      "code": "PROJECTION_ANCHOR_E_NOT_DEPLOYED",
+      "code": "PROJECTION_ANCHOR_E_DEPLOYMENT_UNQUALIFIED",
       "severity": "HIGH",
       "evidence_role": "SOURCE_RELEASE_HOLD_NOT_A_PROVIDER_EXECUTION_FINDING",
       "current_deployment_status": "UNKNOWN_UNQUALIFIED",
-      "code_interpretation": "LEGACY_RELEASE_HOLD_IDENTIFIER_NOT_PROOF_OF_ABSENT_DEPLOYMENT",
+      "code_interpretation": "CURRENT_RELEASE_HOLD_WITHOUT_VERIFIED_DEPLOYMENT_OR_NONDEPLOYMENT",
       "detail": "Immutable projection anchor E is frozen qualified source, not a verified deployed route. The 2026-11-03 observation finds an Edge implementation matching historical commit b14175c rather than canonical main; it does not establish trusted projector runtime consumption, provider trust-anchor configuration, safe cursor custody, or successful delivery."
+    }
+  ],
+  "legacy_release_hold_code_aliases": [
+    {
+      "legacy_code": "PROJECTION_ANCHOR_E_NOT_DEPLOYED",
+      "current_code": "PROJECTION_ANCHOR_E_DEPLOYMENT_UNQUALIFIED",
+      "alias_role": "HISTORICAL_RELEASE_HOLD_IDENTIFIER_NOT_CURRENT_PROVIDER_DRIFT",
+      "compatibility_warning": "Do not interpret the legacy code as attested nondeployment. Consumers that match only known_provider_drift[].code must explicitly migrate; this version 4 contract cannot guarantee compatibility with unverified external code-only readers."
     }
   ],
   "historical_cutover": {

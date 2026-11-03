@@ -27,6 +27,31 @@ The current Radar source chain, through 2026-09-08, is:
 
 ## Provider readback boundary
 
+### Currentness contract V4 compatibility warning
+
+`RADAR_CURRENT.json` schema version 4 names the active source-only release hold
+`PROJECTION_ANCHOR_E_DEPLOYMENT_UNQUALIFIED`; it **does not** assert either
+deployment or nondeployment of the trusted projector. The older
+`PROJECTION_ANCHOR_E_NOT_DEPLOYED` identifier is preserved only in
+`legacy_release_hold_code_aliases` as historical release-hold vocabulary, not
+in `known_provider_drift`. The `projection_source.status` is likewise qualified
+without asserting present nondeployment. Immutable Anchor-E V4 trust source
+is unchanged; its historical `provider_trust_status` is not a current readback.
+
+**Consumer compatibility is not proven:** in-repository consumers and tests
+are updated, but an external reader that keys solely on the old drift code
+must migrate explicitly. Retain Draft/HOLD until the owner resolves that
+reader-contract risk and supplies fresh, exact-current deployment/runtime
+evidence. No provider mutation, deployment, or delivery result is implied.
+
+**Separate remaining hazard:** the legacy `RADAR_CURRENT.json.provider` subtree
+still contains September `projection_anchor_e_deployed=false`, Edge v3, and
+other historical values. Its `readback_role` explicitly says
+`HISTORICAL_SNAPSHOT_NOT_CURRENT_PROVIDER_STATE`; readers that ignore that
+boundary may also mistake those values for live facts. Moving that subtree to
+an explicitly historical key is a larger breaking change requiring a separate
+owner-reviewed consumer migration. Schema v4 does **not** solve this risk.
+
 ### Most recent observation (2026-11-03; read only)
 
 `architecture/contracts/RADAR_PROVIDER_OBSERVATION_20261103_V1.json` is the

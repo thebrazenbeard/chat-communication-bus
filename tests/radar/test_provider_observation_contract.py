@@ -201,15 +201,33 @@ def test_historical_drift_not_promoted_as_present_provider_state() -> None:
         assert "September historical snapshot" in historical_drift[code]["detail"]
         assert "2026-11-03" in historical_drift[code]["detail"]
 
-    assert current_drift["PROJECTION_ANCHOR_E_NOT_DEPLOYED"]["evidence_role"] == (
+    assert current_drift["PROJECTION_ANCHOR_E_DEPLOYMENT_UNQUALIFIED"]["evidence_role"] == (
         "SOURCE_RELEASE_HOLD_NOT_A_PROVIDER_EXECUTION_FINDING"
     )
-    assert current_drift["PROJECTION_ANCHOR_E_NOT_DEPLOYED"]["current_deployment_status"] == (
+    assert current_drift["PROJECTION_ANCHOR_E_DEPLOYMENT_UNQUALIFIED"]["current_deployment_status"] == (
         "UNKNOWN_UNQUALIFIED"
     )
-    assert current_drift["PROJECTION_ANCHOR_E_NOT_DEPLOYED"]["code_interpretation"] == (
-        "LEGACY_RELEASE_HOLD_IDENTIFIER_NOT_PROOF_OF_ABSENT_DEPLOYMENT"
+    assert current_drift["PROJECTION_ANCHOR_E_DEPLOYMENT_UNQUALIFIED"]["code_interpretation"] == (
+        "CURRENT_RELEASE_HOLD_WITHOUT_VERIFIED_DEPLOYMENT_OR_NONDEPLOYMENT"
     )
+    assert current["schema_version"] == 4
+    assert current["projection_source"]["status"] == (
+        "ANCHOR_E_FROZEN_QUALIFIED_SOURCE_ONLY_DEPLOYMENT_UNQUALIFIED"
+    )
+    assert current["projection_source"]["legacy_status_role"] == (
+        "HISTORICAL_RELEASE_HOLD_LABEL_NOT_CURRENT_PROVIDER_READBACK"
+    )
+    assert current["legacy_release_hold_code_aliases"] == [
+        {
+            "legacy_code": "PROJECTION_ANCHOR_E_NOT_DEPLOYED",
+            "current_code": "PROJECTION_ANCHOR_E_DEPLOYMENT_UNQUALIFIED",
+            "alias_role": "HISTORICAL_RELEASE_HOLD_IDENTIFIER_NOT_CURRENT_PROVIDER_DRIFT",
+            "compatibility_warning": current["legacy_release_hold_code_aliases"][0]["compatibility_warning"],
+        }
+    ]
+    assert "cannot guarantee compatibility" in current["legacy_release_hold_code_aliases"][0][
+        "compatibility_warning"
+    ]
     date_conflict = current["historical_provider_readback_date_conflict"]
     assert date_conflict["current_json_readback_at"] == current["provider"]["readback_at"] == "2026-09-09"
     assert date_conflict["provider_contract_last_readback_at"] == "2026-09-06"
@@ -220,3 +238,22 @@ def test_historical_drift_not_promoted_as_present_provider_state() -> None:
     assert observation["provider"]["edge_function"]["version"] == 7
     assert observation["provider"]["edge_function"]["verify_jwt"] is False
     assert observation["provider"]["journal_row_counts"]["projection_batches"] == 0
+
+
+def test_unknown_current_provider_status_never_emits_definite_non_deployment_drift_code() -> None:
+    current = json.loads(CURRENT.read_text(encoding="utf-8"))
+    # This is a negative semantic test, not a claim of present provider state.
+    # A dated observation of Edge source bytes is not a positive attestation that
+    # the independent trusted projector was deployed OR was absent.
+    assert current["provider"]["readback_role"] == "HISTORICAL_SNAPSHOT_NOT_CURRENT_PROVIDER_STATE"
+    assert current["provider"]["projection_anchor_e_deployed"] is False  # dated September evidence ONLY
+    assert current["provider"]["readback_at"] == "2026-09-09"
+    assert current["latest_provider_observation_contract"] == OBSERVATION.relative_to(ROOT).as_posix()
+    assert current["known_provider_drift"]
+    for finding in current["known_provider_drift"]:
+        if finding.get("current_deployment_status") == "UNKNOWN_UNQUALIFIED":
+            assert "NOT_DEPLOYED" not in finding["code"]
+            assert "DEPLOYED" not in finding["code"]
+            assert finding["evidence_role"] == "SOURCE_RELEASE_HOLD_NOT_A_PROVIDER_EXECUTION_FINDING"
+    legacy = current["legacy_release_hold_code_aliases"]
+    assert all(item["legacy_code"] not in {d["code"] for d in current["known_provider_drift"]} for item in legacy)
