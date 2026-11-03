@@ -43,8 +43,9 @@ def test_anchor_d_is_not_current_or_deployment_target_after_anchor_e_freeze() ->
     assert source["successor_anchor_status"] == "FROZEN_QUALIFIED_SOURCE_ONLY"
     assert ANCHOR_E in dispatcher
     assert ANCHOR_D not in dispatcher
-    assert current["provider"]["projection_anchor_d_deployed"] is False
-    assert current["provider"]["projection_anchor_e_deployed"] is False
+    assert current["historical_provider_snapshot"]["projection_anchor_d_deployed"] is False
+    assert current["historical_provider_snapshot"]["projection_anchor_e_deployed"] is False
+    assert current["provider_claims"]["trusted_projector_deployment_status"] == "UNKNOWN_UNQUALIFIED"
 
     drift_codes = {item["code"] for item in current["known_provider_drift"]}
     assert "PROJECTION_ANCHOR_D_KNOWN_PROTOCOL_DEFECT" not in drift_codes

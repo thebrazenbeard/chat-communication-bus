@@ -27,9 +27,50 @@ The current Radar source chain, through 2026-09-08, is:
 
 ## Provider readback boundary
 
-### Currentness contract V4 compatibility warning
+### Currentness contract V5 successor candidate (source only; Draft/HOLD)
 
-`RADAR_CURRENT.json` schema version 4 names the active source-only release hold
+`RADAR_CURRENT.json` schema version 5 removes the overloaded top-level
+`provider` key to prevent code-only readers from silently interpreting old
+September `projection_anchor_e_deployed=false`, Edge v3, and source migration
+flags as current provider facts. The original readback is preserved byte-for-
+byte as `historical_provider_snapshot`, including its explicit historical
+role and unresolved date disagreement. The new `provider_claims` holds only
+`UNKNOWN_UNQUALIFIED` statuses and an explicit `runtime_effects_attested=false`
+source-currentness gate. It makes no affirmative claim of live deployment,
+nondeployment, or successful delivery. The 2026-11-03 dated provider observation
+remains separate evidence, not a continuously refreshed provider state.
+
+**Intentionally breaking contract:** existing readers of
+`RADAR_CURRENT.json.provider.*` must migrate either to the historical namespace
+for archival display (never for current decisions), or to `provider_claims`
+for explicit qualified/unknown runtime status. No verified inventory of
+external/private consumers exists. Do not merge schema V5 without owner review
+of that migration and exact-head source qualification.
+
+Known in-repository consumer mapping (default-branch GitHub search and
+the candidate's full checkout; not an inventory of private consumers):
+
+| Schema V4 reader | Schema V5 replacement | Permitted interpretation |
+| --- | --- | --- |
+| `provider.readback_at` / `provider.readback_role` | `historical_provider_snapshot.readback_at` / `.readback_role` | September provenance only |
+| `provider.projection_anchor_{c,d,e}_deployed` | `historical_provider_snapshot.projection_anchor_{c,d,e}_deployed` | Historical booleans, never current deployment decisions |
+| `provider.applied_source_state`, `provider.unapplied_source_migrations` | Matching fields under `historical_provider_snapshot` | Historical ledger comparison only |
+| `provider.edge_function.*`, `provider.projection_journal_seeded`, `provider.edge_body_bound_oidc_deployed` | Matching fields under `historical_provider_snapshot` | Historical readback only; no active route claim |
+| Current trusted-projector deployment/consumption/delivery decision inferred from any V4 historical Boolean | `provider_claims` statuses (all `UNKNOWN_UNQUALIFIED` until exact-current independent qualification) | Explicit unresolved currentness; do not coerce `UNKNOWN` to `false` |
+| Dated Edge migration/source/journal observation | `latest_provider_observation_contract` and the referenced observation's `provider.*` | Bounded 2026-11-03 observation, not continuously current state |
+
+Direct in-repository test readers migrated in the candidate:
+`tests/radar/test_currentness_recovery_contract.py`,
+`tests/radar/test_provider_observation_contract.py`,
+`tests/security/test_projection_anchor_d_consistency.py`, and
+`tests/security/test_projection_anchor_e_consistency.py`. Recovery/operator
+documents reference `RADAR_CURRENT.json` but do not parse the old provider
+subtree in executable code. External clients, old branches, and private
+installations remain **UNKNOWN**; this source mapping is not proof they work.
+
+### Currentness contract V4 legacy alias warning
+
+Schema version 4 introduced the active source-only release hold
 `PROJECTION_ANCHOR_E_DEPLOYMENT_UNQUALIFIED`; it **does not** assert either
 deployment or nondeployment of the trusted projector. The older
 `PROJECTION_ANCHOR_E_NOT_DEPLOYED` identifier is preserved only in
@@ -44,13 +85,10 @@ must migrate explicitly. Retain Draft/HOLD until the owner resolves that
 reader-contract risk and supplies fresh, exact-current deployment/runtime
 evidence. No provider mutation, deployment, or delivery result is implied.
 
-**Separate remaining hazard:** the legacy `RADAR_CURRENT.json.provider` subtree
-still contains September `projection_anchor_e_deployed=false`, Edge v3, and
-other historical values. Its `readback_role` explicitly says
-`HISTORICAL_SNAPSHOT_NOT_CURRENT_PROVIDER_STATE`; readers that ignore that
-boundary may also mistake those values for live facts. Moving that subtree to
-an explicitly historical key is a larger breaking change requiring a separate
-owner-reviewed consumer migration. Schema v4 does **not** solve this risk.
+The legacy version-4 `RADAR_CURRENT.json.provider` subtree retained September
+historical values and remained dangerous for code-only readers. Version 5
+proposes the separate migration described immediately above; its own external
+consumer compatibility remains unverified and requires owner acceptance.
 
 ### Most recent observation (2026-11-03; read only)
 
