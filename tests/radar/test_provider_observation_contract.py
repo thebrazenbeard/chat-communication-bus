@@ -132,14 +132,45 @@ def assert_rejected(data: dict) -> None:
     raise AssertionError("invalid observation was accepted")
 
 
+def validate_schema_v5_provider_claims(data: dict) -> None:
+    """Reject promotion of a historical Boolean or source observation into current provider state."""
+    assert data["schema_version"] == 5
+    assert "provider" not in data
+    claims = data["provider_claims"]
+    assert set(claims) == {
+        "claim_role", "trusted_projector_deployment_status", "trusted_projector_execution_status",
+        "github_oidc_delivery_status", "projection_cursor_custody_status", "latest_dated_observation",
+        "runtime_effects_attested",
+    }
+    assert claims["claim_role"] == "SOURCE_CURRENTNESS_GATE_NOT_LIVE_PROVIDER_SNAPSHOT"
+    for field in (
+        "trusted_projector_deployment_status", "trusted_projector_execution_status",
+        "github_oidc_delivery_status", "projection_cursor_custody_status",
+    ):
+        assert claims[field] == "UNKNOWN_UNQUALIFIED"
+    assert claims["runtime_effects_attested"] is False
+    assert claims["latest_dated_observation"] == OBSERVATION.relative_to(ROOT).as_posix()
+    old = data["historical_provider_snapshot"]
+    assert old["readback_role"] == "HISTORICAL_SNAPSHOT_NOT_CURRENT_PROVIDER_STATE"
+    assert old["readback_at"] == "2026-09-09"
+
+
+def assert_invalid_schema_v5_provider_claims(data: dict) -> None:
+    try:
+        validate_schema_v5_provider_claims(data)
+    except (AssertionError, KeyError):
+        return
+    raise AssertionError("misleading provider-currentness contract was accepted")
+
+
 def test_dated_source_observation_is_bound_but_does_not_supersede_release_authority() -> None:
     current = json.loads(CURRENT.read_text(encoding="utf-8"))
     observation = json.loads(OBSERVATION.read_text(encoding="utf-8"))
     custody = json.loads(CUSTODY.read_text(encoding="utf-8"))
     path = OBSERVATION.relative_to(ROOT).as_posix()
 
-    assert current["provider"]["readback_role"] == "HISTORICAL_SNAPSHOT_NOT_CURRENT_PROVIDER_STATE"
-    assert current["provider"]["readback_at"] < observation["observed_on_utc"]
+    assert current["historical_provider_snapshot"]["readback_role"] == "HISTORICAL_SNAPSHOT_NOT_CURRENT_PROVIDER_STATE"
+    assert current["historical_provider_snapshot"]["readback_at"] < observation["observed_on_utc"]
     assert current["latest_provider_observation_contract"] == path
     assert path in custody["paths"]
     assert path in PROVIDER_DOC.read_text(encoding="utf-8")
@@ -210,7 +241,7 @@ def test_historical_drift_not_promoted_as_present_provider_state() -> None:
     assert current_drift["PROJECTION_ANCHOR_E_DEPLOYMENT_UNQUALIFIED"]["code_interpretation"] == (
         "CURRENT_RELEASE_HOLD_WITHOUT_VERIFIED_DEPLOYMENT_OR_NONDEPLOYMENT"
     )
-    assert current["schema_version"] == 4
+    assert current["schema_version"] == 5
     assert current["projection_source"]["status"] == (
         "ANCHOR_E_FROZEN_QUALIFIED_SOURCE_ONLY_DEPLOYMENT_UNQUALIFIED"
     )
@@ -229,7 +260,7 @@ def test_historical_drift_not_promoted_as_present_provider_state() -> None:
         "compatibility_warning"
     ]
     date_conflict = current["historical_provider_readback_date_conflict"]
-    assert date_conflict["current_json_readback_at"] == current["provider"]["readback_at"] == "2026-09-09"
+    assert date_conflict["current_json_readback_at"] == current["historical_provider_snapshot"]["readback_at"] == "2026-09-09"
     assert date_conflict["provider_contract_last_readback_at"] == "2026-09-06"
     assert date_conflict["resolution"] == "UNRESOLVED_HISTORICAL_METADATA_DATE_DISCREPANCY"
     assert date_conflict["currentness_evidence"] is False
@@ -242,12 +273,15 @@ def test_historical_drift_not_promoted_as_present_provider_state() -> None:
 
 def test_unknown_current_provider_status_never_emits_definite_non_deployment_drift_code() -> None:
     current = json.loads(CURRENT.read_text(encoding="utf-8"))
+    validate_schema_v5_provider_claims(current)
     # This is a negative semantic test, not a claim of present provider state.
     # A dated observation of Edge source bytes is not a positive attestation that
     # the independent trusted projector was deployed OR was absent.
-    assert current["provider"]["readback_role"] == "HISTORICAL_SNAPSHOT_NOT_CURRENT_PROVIDER_STATE"
-    assert current["provider"]["projection_anchor_e_deployed"] is False  # dated September evidence ONLY
-    assert current["provider"]["readback_at"] == "2026-09-09"
+    assert "provider" not in current  # no overloaded field that exposes historical bool as current
+    assert current["historical_provider_snapshot"]["readback_role"] == "HISTORICAL_SNAPSHOT_NOT_CURRENT_PROVIDER_STATE"
+    assert current["historical_provider_snapshot"]["projection_anchor_e_deployed"] is False  # historical only
+    assert current["historical_provider_snapshot"]["readback_at"] == "2026-09-09"
+    assert current["provider_claims"]["trusted_projector_deployment_status"] == "UNKNOWN_UNQUALIFIED"
     assert current["latest_provider_observation_contract"] == OBSERVATION.relative_to(ROOT).as_posix()
     assert current["known_provider_drift"]
     for finding in current["known_provider_drift"]:
@@ -257,3 +291,33 @@ def test_unknown_current_provider_status_never_emits_definite_non_deployment_dri
             assert finding["evidence_role"] == "SOURCE_RELEASE_HOLD_NOT_A_PROVIDER_EXECUTION_FINDING"
     legacy = current["legacy_release_hold_code_aliases"]
     assert all(item["legacy_code"] not in {d["code"] for d in current["known_provider_drift"]} for item in legacy)
+
+
+def test_schema_v5_rejects_provider_boolean_promotion_or_fabricated_runtime_attestation() -> None:
+    current = json.loads(CURRENT.read_text(encoding="utf-8"))
+    validate_schema_v5_provider_claims(current)
+
+    stale_alias = deepcopy(current)
+    stale_alias["provider"] = {"projection_anchor_e_deployed": False}
+    assert_invalid_schema_v5_provider_claims(stale_alias)
+
+    for status in ("NOT_DEPLOYED", "DEPLOYED", "ACTIVE", True, False):
+        fabricated = deepcopy(current)
+        fabricated["provider_claims"]["trusted_projector_deployment_status"] = status
+        assert_invalid_schema_v5_provider_claims(fabricated)
+
+    fabricated_delivery = deepcopy(current)
+    fabricated_delivery["provider_claims"]["github_oidc_delivery_status"] = "PASS"
+    assert_invalid_schema_v5_provider_claims(fabricated_delivery)
+
+    imported_legacy_boolean = deepcopy(current)
+    imported_legacy_boolean["provider_claims"]["projection_anchor_e_deployed"] = False
+    assert_invalid_schema_v5_provider_claims(imported_legacy_boolean)
+
+    forged_effect = deepcopy(current)
+    forged_effect["provider_claims"]["runtime_effects_attested"] = True
+    assert_invalid_schema_v5_provider_claims(forged_effect)
+
+    unscoped_snapshot = deepcopy(current)
+    unscoped_snapshot["historical_provider_snapshot"]["readback_role"] = "CURRENT"
+    assert_invalid_schema_v5_provider_claims(unscoped_snapshot)
