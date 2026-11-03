@@ -1,0 +1,66 @@
+{
+  "contract": "RADAR_PROVIDER_OBSERVATION_V1",
+  "schema_version": 1,
+  "evidence_type": "READ_ONLY_PROVIDER_OBSERVATION",
+  "observed_on_utc": "2026-11-03",
+  "provider_alias": "Vera Supabase",
+  "project_id_included": false,
+  "canonical_repository": "thebrazenbeard/chat-communication-bus",
+  "canonical_main_at_observation": "eb315a5612ae99aadddb397891ffcf3a2b0433a6",
+  "provider": {
+    "status": "ACTIVE_HEALTHY",
+    "migration_ledger_total": 99,
+    "radar_migration_ledger_count": 15,
+    "radar_migration_ledger_versions": [
+      "20260902120716_radar_control_plane_v1",
+      "20260902120826_radar_realtime_v1",
+      "20260902203610_radar_visual_identity_v1",
+      "20260902204759_radar_live_message_projection_v1",
+      "20260902231445_radar_live_message_collision_v1",
+      "20260903000603_radar_receipt_plane_v1",
+      "20260903001906_radar_assignment_plane_v1",
+      "20260903113314_radar_operator_views_v1",
+      "20260921202213_20260903214334_radar_thread_closure_v1",
+      "20260921202217_20260905230823_radar_oidc_replay_guard_v1",
+      "20260921202221_20260906133630_radar_node_routing_hardening_v1",
+      "20260921202226_20260906154101_radar_projection_journal_v1",
+      "20260921202232_20260906165117_radar_projection_journal_api_v1",
+      "20260921202237_20260908010500_radar_projection_atomic_file_v1",
+      "20260922171230_radar_oidc_replay_guard_rls_v1"
+    ],
+    "edge_function": {
+      "slug": "github-bus-ingest",
+      "status": "ACTIVE",
+      "version": 7,
+      "verify_jwt": false,
+      "bundle_sha256": "781265b5bf05f02a3420e2eb33fff5ce780a0e1fbb9499a8706e685142397f51",
+      "deployed_source_commit_match": "b14175c992f93088b763822add6cc7baa7990a53",
+      "canonical_main_source_match": false,
+      "source_file_git_blobs": {
+        "index.ts": "2972c6915b0fec2b8b6082e6da9d7a3c87be929b",
+        "handler.ts": "ce6c32be44d482a0216f4f397a8bf1a9ab8564f9",
+        "provider_503_log.ts": "4dcb94eb42bc81e843fd5986cd96400222e0faba",
+        "deno.json": "b717027d0dbca1ed7cf7f362f16a33cfc5c6da99"
+      },
+      "source_comparison": "ALL_FOUR_DEPLOYED_FILE_BYTES_EQUAL_TO_COMMIT",
+      "oidc_runtime_execution_qualified": false
+    },
+    "journal_row_counts": {
+      "projection_lane_state": 0,
+      "projection_batches": 0,
+      "projection_batch_files": 0
+    }
+  },
+  "release_boundary": {
+    "source_only_observation": true,
+    "migration_installation_claim": false,
+    "canonical_main_deployment_claim": false,
+    "trusted_projector_execution_claim": false,
+    "batch_delivery_claim": false,
+    "provider_recovery_complete_claim": false,
+    "projection_delivery_status": "NOT_ESTABLISHED_BY_THIS_OBSERVATION",
+    "provider_configuration_attested": false,
+    "runtime_success_attested": false,
+    "effect_authority_granted": false
+  }
+}

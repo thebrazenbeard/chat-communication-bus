@@ -54,4 +54,5 @@ def test_anchor_d_is_historical_and_explicitly_not_deployment_eligible_after_anc
     drift_codes = {item["code"] for item in current["known_provider_drift"]}
     assert "PROJECTION_ANCHOR_D_KNOWN_PROTOCOL_DEFECT" not in drift_codes
     assert "PROJECTION_ANCHOR_D_KNOWN_ATOMICITY_DEFECT" not in drift_codes
-    assert "PROJECTION_ANCHOR_E_NOT_DEPLOYED" in drift_codes
+    assert "PROJECTION_ANCHOR_E_DEPLOYMENT_UNQUALIFIED" in drift_codes
+    assert "PROJECTION_ANCHOR_E_NOT_DEPLOYED" not in drift_codes

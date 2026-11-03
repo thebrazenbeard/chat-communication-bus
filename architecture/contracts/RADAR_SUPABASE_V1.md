@@ -27,6 +27,56 @@ The current Radar source chain, through 2026-09-08, is:
 
 ## Provider readback boundary
 
+### Currentness contract V4 compatibility warning
+
+`RADAR_CURRENT.json` schema version 4 names the active source-only release hold
+`PROJECTION_ANCHOR_E_DEPLOYMENT_UNQUALIFIED`; it **does not** assert either
+deployment or nondeployment of the trusted projector. The older
+`PROJECTION_ANCHOR_E_NOT_DEPLOYED` identifier is preserved only in
+`legacy_release_hold_code_aliases` as historical release-hold vocabulary, not
+in `known_provider_drift`. The `projection_source.status` is likewise qualified
+without asserting present nondeployment. Immutable Anchor-E V4 trust source
+is unchanged; its historical `provider_trust_status` is not a current readback.
+
+**Consumer compatibility is not proven:** in-repository consumers and tests
+are updated, but an external reader that keys solely on the old drift code
+must migrate explicitly. Retain Draft/HOLD until the owner resolves that
+reader-contract risk and supplies fresh, exact-current deployment/runtime
+evidence. No provider mutation, deployment, or delivery result is implied.
+
+**Separate remaining hazard:** the legacy `RADAR_CURRENT.json.provider` subtree
+still contains September `projection_anchor_e_deployed=false`, Edge v3, and
+other historical values. Its `readback_role` explicitly says
+`HISTORICAL_SNAPSHOT_NOT_CURRENT_PROVIDER_STATE`; readers that ignore that
+boundary may also mistake those values for live facts. Moving that subtree to
+an explicitly historical key is a larger breaking change requiring a separate
+owner-reviewed consumer migration. Schema v4 does **not** solve this risk.
+
+### Most recent observation (2026-11-03; read only)
+
+`architecture/contracts/RADAR_PROVIDER_OBSERVATION_20261103_V1.json` is the
+dated, public-safe source-custody record of a fresh management-plane and narrowly
+bounded data-plane read. It supersedes the **factual provider snapshot** below,
+but does not supersede source authorization, the immutable Anchor-E qualification
+receipt, or the protected effect boundary.
+
+- Provider migration history contains 99 entries, 15 involving Radar. The six
+  migration subjects described as absent in the old September snapshot now
+  have applied ledger entries under newer wrapper versions; there is also a
+  subsequent Radar replay-guard RLS entry. A ledger row is not proof that a
+  complete source/runtime/delivery qualification has passed.
+- `github-bus-ingest` is ACTIVE v7 with gateway `verify_jwt=false`. All four
+  deployed files match Git commit `b14175c992f93088b763822add6cc7baa7990a53`
+  byte-for-byte; that deployed bundle is **not identical** to current `main`
+  at observation head `eb315a5612ae99aadddb397891ffcf3a2b0433a6`.
+- `radar.projection_lane_state`, `radar.projection_batches`, and
+  `radar.projection_batch_files` each contain zero rows at this read.
+- No active trusted-projector execution, complete live route, delivery, or
+  provider recovery is established by these observations. No Edge deployment,
+  SQL mutation, cursor seed, or provider-configuration change occurred here.
+
+### Historical September provider snapshot (not current)
+
 The last recorded provider readback is dated 2026-09-06. At that readback, the provider migration ledger contained Radar migrations only through `20260903113314_radar_operator_views_v1`. Six later source migrations in the current Git chain are therefore unapplied relative to that recorded provider state:
 
 - thread-closure semantics;
