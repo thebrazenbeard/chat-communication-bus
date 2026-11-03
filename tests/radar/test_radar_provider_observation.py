@@ -78,4 +78,3 @@ class ProviderObservationTests(TestCase):
         result = compare_provider_observation(self.contract, self.observation)
         self.assertEqual(result["status"], "HOLD")
         self.assertIn("DELIVERY_UNVERIFIED", result["reasons"])
-
