@@ -1,6 +1,6 @@
 {
   "contract": "RADAR_SOURCE_CUSTODY_V1",
-  "version": 19,
+  "version": 20,
   "status": "SOURCE_ONLY_VERIFICATION_CONTRACT",
   "required_globs": [
     "supabase/migrations/*_radar_*.sql",
@@ -14,6 +14,7 @@
     ".github/workflows/radar-trusted-projector.yml",
     "architecture/contracts/RADAR_AUTHORITY_V1.md",
     "architecture/contracts/RADAR_CURRENT.json",
+    "architecture/contracts/RADAR_PROVIDER_OBSERVATION_20261103_V1.json",
     "architecture/contracts/RADAR_QUALIFICATION_V1.json",
     "architecture/contracts/RADAR_SELF_REGISTRATION_V1.json",
     "architecture/contracts/RADAR_SUPABASE_V1.md",
@@ -33,6 +34,7 @@
     "tests/fixtures/bus_message_grammar_v1.json",
     "tests/radar/test_message_grammar.py",
     "tests/radar/test_currentness_recovery_contract.py",
+    "tests/radar/test_provider_observation_contract.py",
     "tests/radar/test_edge_projection_result_contract.py",
     "tests/radar/test_remote_ref_reconciler.py",
     "tests/security/test_body_bound_edge_ordering.py",

@@ -27,6 +27,31 @@ The current Radar source chain, through 2026-09-08, is:
 
 ## Provider readback boundary
 
+### Most recent observation (2026-11-03; read only)
+
+`architecture/contracts/RADAR_PROVIDER_OBSERVATION_20261103_V1.json` is the
+dated, public-safe source-custody record of a fresh management-plane and narrowly
+bounded data-plane read. It supersedes the **factual provider snapshot** below,
+but does not supersede source authorization, the immutable Anchor-E qualification
+receipt, or the protected effect boundary.
+
+- Provider migration history contains 99 entries, 15 involving Radar. The six
+  migration subjects described as absent in the old September snapshot now
+  have applied ledger entries under newer wrapper versions; there is also a
+  subsequent Radar replay-guard RLS entry. A ledger row is not proof that a
+  complete source/runtime/delivery qualification has passed.
+- `github-bus-ingest` is ACTIVE v7 with gateway `verify_jwt=false`. All four
+  deployed files match Git commit `b14175c992f93088b763822add6cc7baa7990a53`
+  byte-for-byte; that deployed bundle is **not identical** to current `main`
+  at observation head `eb315a5612ae99aadddb397891ffcf3a2b0433a6`.
+- `radar.projection_lane_state`, `radar.projection_batches`, and
+  `radar.projection_batch_files` each contain zero rows at this read.
+- No active trusted-projector execution, complete live route, delivery, or
+  provider recovery is established by these observations. No Edge deployment,
+  SQL mutation, cursor seed, or provider-configuration change occurred here.
+
+### Historical September provider snapshot (not current)
+
 The last recorded provider readback is dated 2026-09-06. At that readback, the provider migration ledger contained Radar migrations only through `20260903113314_radar_operator_views_v1`. Six later source migrations in the current Git chain are therefore unapplied relative to that recorded provider state:
 
 - thread-closure semantics;
