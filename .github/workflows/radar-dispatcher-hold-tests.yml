@@ -1,0 +1,45 @@
+name: radar-dispatcher-public-transition-hold-tests
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/radar-dispatcher-hold-tests.yml"
+      - ".github/workflows/radar-central-dispatcher.yml"
+      - "tests/security/test_radar_central_dispatcher.py"
+      - "architecture/contracts/RADAR_TRUST_ANCHOR_V1.json"
+      - "architecture/contracts/RADAR_PROJECTION_TRUST_ANCHOR_V4.json"
+
+permissions:
+  contents: read
+
+jobs:
+  source-only-manual-hold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out reviewed PR source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Run exact dispatcher hold contracts without dependencies
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from runpy import run_path
+
+          namespace = run_path("tests/security/test_radar_central_dispatcher.py")
+          required = [
+              "test_dispatcher_remains_manual_only_during_public_transition_hold",
+              "test_public_transition_hold_detects_synthetic_automatic_triggers",
+              "test_dispatcher_pins_exact_projection_anchor_and_passes_no_authority_inputs",
+              "test_projection_anchor_receipt_preserves_source_only_provider_ceiling",
+              "test_validate_only_anchor_a_remains_historical_and_distinct_from_current_projection_anchor",
+          ]
+          actual = sorted(name for name, fn in namespace.items() if name.startswith("test_") and callable(fn))
+          assert actual == sorted(required), (actual, sorted(required))
+          for name in required:
+              namespace[name]()
+              print(f"PASS {name}")
+          print(f"PASS {len(required)} source-only dispatcher hold contracts")
+          PY
