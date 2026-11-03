@@ -10,13 +10,58 @@ PROJECTION_ANCHOR = ROOT / "architecture" / "contracts" / "RADAR_PROJECTION_TRUS
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 
 
-def test_dispatcher_has_workflow_run_wakeup_and_five_minute_backstop() -> None:
+def _assert_public_transition_manual_hold(source: str) -> None:
+    """Fail closed if any automatic trigger returns to the public Bus."""
+    assert "# PUBLIC TRANSITION HOLD" in source
+
+    lines = source.splitlines()
+    top_level_keys = []
+    for line in lines:
+        if not line.strip() or line.startswith("#"):
+            continue
+        if line[0] not in " \t":
+            # Reject duplicate/quoted event keys, YAML merge keys, and any
+            # unexpected top-level construct instead of interpreting YAML 1.1.
+            match = re.match(r"^([a-z_]+):", line)
+            assert match is not None, line
+            top_level_keys.append(match.group(1))
+
+    assert top_level_keys == ["name", "on", "permissions", "jobs"]
+    assert "on:" in lines
+    assert "permissions:" in lines
+    event_start = lines.index("on:") + 1
+    event_end = lines.index("permissions:")
+    event_block = [line for line in lines[event_start:event_end] if line.strip() and not line.lstrip().startswith("#")]
+    # Exact whitelist: aliases, anchors, merges and extra trigger events fail.
+    assert event_block == ["  workflow_dispatch:"], event_block
+
+
+def test_dispatcher_remains_manual_only_during_public_transition_hold() -> None:
+    _assert_public_transition_manual_hold(DISPATCHER.read_text(encoding="utf-8"))
+
+
+def test_public_transition_hold_detects_synthetic_automatic_triggers() -> None:
     source = DISPATCHER.read_text(encoding="utf-8")
-    assert 'workflows: ["Writer Lane Guard"]' in source
-    assert "types: [completed]" in source
-    assert 'branches: ["bus/**"]' in source
-    assert 'cron: "*/5 * * * *"' in source
-    assert "workflow_dispatch:" not in source
+    assert source.count("  workflow_dispatch:\n") == 1
+    mutants = [
+        source.replace(
+            "  workflow_dispatch:\n", f"  {trigger}:\n  workflow_dispatch:\n", 1
+        )
+        for trigger in ("schedule", "workflow_run", "push", "repository_dispatch")
+    ]
+    mutants += [
+        source + '\n"on":\n  schedule:\n    - cron: "*/5 * * * *"\n',
+        source + "\n'on':\n  workflow_run:\n",
+        source + "\n<<: *events\n",
+        source.replace("on:\n", "on: *events\n", 1),
+        source.replace("  workflow_dispatch:\n", "  <<: *events\n  workflow_dispatch:\n", 1),
+    ]
+    for unsafe in mutants:
+        try:
+            _assert_public_transition_manual_hold(unsafe)
+        except AssertionError:
+            continue
+        raise AssertionError("Unsafe event/alias/duplicate-key mutant escaped public-transition test")
 
 
 def test_dispatcher_pins_exact_projection_anchor_and_passes_no_authority_inputs() -> None:
