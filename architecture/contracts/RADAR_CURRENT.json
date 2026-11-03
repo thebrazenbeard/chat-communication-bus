@@ -160,6 +160,8 @@
       "code": "PROJECTION_ANCHOR_E_NOT_DEPLOYED",
       "severity": "HIGH",
       "evidence_role": "SOURCE_RELEASE_HOLD_NOT_A_PROVIDER_EXECUTION_FINDING",
+      "current_deployment_status": "UNKNOWN_UNQUALIFIED",
+      "code_interpretation": "LEGACY_RELEASE_HOLD_IDENTIFIER_NOT_PROOF_OF_ABSENT_DEPLOYMENT",
       "detail": "Immutable projection anchor E is frozen qualified source, not a verified deployed route. The 2026-11-03 observation finds an Edge implementation matching historical commit b14175c rather than canonical main; it does not establish trusted projector runtime consumption, provider trust-anchor configuration, safe cursor custody, or successful delivery."
     }
   ],

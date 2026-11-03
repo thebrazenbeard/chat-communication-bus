@@ -204,6 +204,12 @@ def test_historical_drift_not_promoted_as_present_provider_state() -> None:
     assert current_drift["PROJECTION_ANCHOR_E_NOT_DEPLOYED"]["evidence_role"] == (
         "SOURCE_RELEASE_HOLD_NOT_A_PROVIDER_EXECUTION_FINDING"
     )
+    assert current_drift["PROJECTION_ANCHOR_E_NOT_DEPLOYED"]["current_deployment_status"] == (
+        "UNKNOWN_UNQUALIFIED"
+    )
+    assert current_drift["PROJECTION_ANCHOR_E_NOT_DEPLOYED"]["code_interpretation"] == (
+        "LEGACY_RELEASE_HOLD_IDENTIFIER_NOT_PROOF_OF_ABSENT_DEPLOYMENT"
+    )
     date_conflict = current["historical_provider_readback_date_conflict"]
     assert date_conflict["current_json_readback_at"] == current["provider"]["readback_at"] == "2026-09-09"
     assert date_conflict["provider_contract_last_readback_at"] == "2026-09-06"
