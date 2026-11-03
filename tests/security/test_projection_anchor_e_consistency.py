@@ -48,7 +48,8 @@ def test_anchor_d_is_historical_and_explicitly_not_deployment_eligible_after_anc
     assert trust["superseded_projection_anchor_sha"] == ANCHOR_D
     assert current["projection_source"]["historical_projection_anchor_d"] == ANCHOR_D
     assert ANCHOR_D not in dispatcher
-    assert current["provider"]["projection_anchor_e_deployed"] is False
+    assert current["historical_provider_snapshot"]["projection_anchor_e_deployed"] is False
+    assert current["provider_claims"]["trusted_projector_deployment_status"] == "UNKNOWN_UNQUALIFIED"
     assert current["projection_source"]["post_anchor_d_source_repairs_pending_successor_anchor"] is False
 
     drift_codes = {item["code"] for item in current["known_provider_drift"]}
