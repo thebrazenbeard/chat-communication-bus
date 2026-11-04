@@ -39,5 +39,12 @@ jobs:
           python -m json.tool architecture/contracts/RADAR_TOPOLOGY_V1.json >/dev/null
           python -m json.tool architecture/contracts/RADAR_WRITER_LANE_V2_CUTOVER.json >/dev/null
 
+      - name: Check ACTIVE Vera lane has a current structural mailbox (release hold)
+        env:
+          PYTHONPATH: src
+        run: |
+          python -m pytest -q tests/radar/test_active_lane_mailbox_audit.py
+          python scripts/radar_check_active_mailboxes.py --identity vera
+
       - name: Reject whitespace errors
         run: git diff --check HEAD^ HEAD
