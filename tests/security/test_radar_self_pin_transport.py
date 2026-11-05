@@ -6,8 +6,10 @@ No real Actions token, provider, workflow dispatch, or external network access.
 from __future__ import annotations
 
 import ast
+import base64
 from contextlib import ExitStack
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -15,6 +17,7 @@ import sys
 from tempfile import TemporaryDirectory
 from threading import Thread
 import unittest
+from unittest.mock import patch
 import urllib.request
 
 
@@ -45,6 +48,20 @@ class _RedirectSink(BaseHTTPRequestHandler):
 
     def log_message(self, *_args):
         return
+
+
+class _MockHttpsResponse:
+    def __init__(self, data):
+        self.data = data
+
+    def read(self, limit):
+        return self.data[:limit]
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_args):
+        return False
 
 
 class WorkflowSelfPinTransportTests(unittest.TestCase):
@@ -104,6 +121,55 @@ class WorkflowSelfPinTransportTests(unittest.TestCase):
             )
         self.assertEqual(self.origin.auth_headers, ["Bearer synthetic-only"])
         self.assertEqual(self.sink.auth_headers, [])
+
+    def test_inline_https_response_shapes_and_valid_claims(self):
+        sha = "a" * 40
+        claims = {
+            "repository": "thebrazenbeard/chat-communication-bus",
+            "job_workflow_sha": sha,
+            "job_workflow_ref": (
+                "thebrazenbeard/chat-communication-bus/.github/workflows/"
+                f"radar-trusted-projector.yml@{sha}"
+            ),
+        }
+
+        def jwt(claims_raw):
+            segment = base64.urlsafe_b64encode(claims_raw).decode().rstrip("=")
+            return json.dumps({"value": f"synthetic.{segment}.signature"}).encode()
+
+        cases = (
+            (b"[]", "RADAR_SELF_PIN_OIDC_RESPONSE_INVALID"),
+            (jwt(b"[]"), "RADAR_SELF_PIN_CLAIMS_INVALID"),
+            (b'{"value":"synthetic.*.signature"}', "RADAR_SELF_PIN_CLAIMS_INVALID"),
+            (jwt(b'{"'), "RADAR_SELF_PIN_CLAIMS_INVALID"),
+            (b"x" * (64 * 1024 + 1), "RADAR_SELF_PIN_OIDC_RESPONSE_TOO_LARGE"),
+            (jwt(json.dumps(claims).encode()), None),
+        )
+        for raw, expected_error in cases:
+            with self.subTest(expected_error=expected_error):
+                with TemporaryDirectory() as tmp:
+                    output_path = Path(tmp) / "output"
+                    env = {
+                        "ACTIONS_ID_TOKEN_REQUEST_URL": "https://pipelines.actions.githubusercontent.com/oidc",
+                        "ACTIONS_ID_TOKEN_REQUEST_TOKEN": "synthetic-runner-secret",
+                        "GITHUB_OUTPUT": str(output_path),
+                    }
+                    response = _MockHttpsResponse(raw)
+
+                    class _FakeOpener:
+                        def open(self, request, *, timeout):
+                            return response
+
+                    with patch.dict(os.environ, env), patch(
+                        "urllib.request.build_opener", return_value=_FakeOpener()
+                    ):
+                        if expected_error:
+                            with self.assertRaises(SystemExit) as raised:
+                                exec(_inline_bootstrap(), {"__name__": "__main__"})
+                            self.assertEqual(str(raised.exception), expected_error)
+                        else:
+                            exec(_inline_bootstrap(), {"__name__": "__main__"})
+                            self.assertEqual(output_path.read_text(), f"sha={sha}\n")
 
 
 if __name__ == "__main__":
