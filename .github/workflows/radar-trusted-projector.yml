@@ -18,6 +18,7 @@ jobs:
         run: |
           python - <<'PY'
           import base64
+          import binascii
           import json
           import os
           import re
@@ -82,6 +83,8 @@ jobs:
               body = json.loads(raw.decode("utf-8"))
           except (UnicodeDecodeError, json.JSONDecodeError):
               raise SystemExit("RADAR_SELF_PIN_OIDC_RESPONSE_INVALID") from None
+          if not isinstance(body, dict):
+              raise SystemExit("RADAR_SELF_PIN_OIDC_RESPONSE_INVALID")
 
           token = body.get("value")
           if not isinstance(token, str):
@@ -90,7 +93,13 @@ jobs:
           if len(parts) != 3:
               raise SystemExit("RADAR_SELF_PIN_TOKEN_INVALID")
           payload_segment = parts[1] + "=" * (-len(parts[1]) % 4)
-          claims = json.loads(base64.urlsafe_b64decode(payload_segment).decode("utf-8"))
+          try:
+              claims_raw = base64.b64decode(payload_segment, altchars=b"-_", validate=True)
+              claims = json.loads(claims_raw.decode("utf-8"))
+          except (ValueError, UnicodeDecodeError, binascii.Error):
+              raise SystemExit("RADAR_SELF_PIN_CLAIMS_INVALID") from None
+          if not isinstance(claims, dict):
+              raise SystemExit("RADAR_SELF_PIN_CLAIMS_INVALID")
 
           job_workflow_ref = claims.get("job_workflow_ref")
           job_workflow_sha = claims.get("job_workflow_sha")
