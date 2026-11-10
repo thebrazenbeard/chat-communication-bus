@@ -52,6 +52,7 @@
     "supabase/seed/radar_v1.sql",
     "supabase/functions/github-bus-ingest/index.ts",
     "supabase/functions/github-bus-ingest/handler.ts",
+    "supabase/functions/github-bus-ingest/provider_503_log.ts",
     "supabase/functions/github-bus-ingest/deno.json",
     "supabase/functions/github-bus-ingest/deno.lock",
     "pyproject.toml",
