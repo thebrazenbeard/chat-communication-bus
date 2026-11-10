@@ -1,5 +1,5 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "status": "RADAR_ANCHOR_E_FROZEN_PROVIDER_RECOVERY_PENDING",
   "repository": "thebrazenbeard/chat-communication-bus",
   "canonical_default_branch": "main",
@@ -66,7 +66,16 @@
     "20260906165117_radar_projection_journal_api_v1.sql",
     "20260908010500_radar_projection_atomic_file_v1.sql"
   ],
-  "provider": {
+  "provider_claims": {
+    "claim_role": "SOURCE_CURRENTNESS_GATE_NOT_LIVE_PROVIDER_SNAPSHOT",
+    "trusted_projector_deployment_status": "UNKNOWN_UNQUALIFIED",
+    "trusted_projector_execution_status": "UNKNOWN_UNQUALIFIED",
+    "github_oidc_delivery_status": "UNKNOWN_UNQUALIFIED",
+    "projection_cursor_custody_status": "UNKNOWN_UNQUALIFIED",
+    "latest_dated_observation": "architecture/contracts/RADAR_PROVIDER_OBSERVATION_20261103_V1.json",
+    "runtime_effects_attested": false
+  },
+  "historical_provider_snapshot": {
     "project_id": "klmbpaigzeguvnpccqzz",
     "schema": "radar",
     "canonical": false,
@@ -185,5 +194,5 @@
     "currentness_role": "HISTORICAL_EVIDENCE_ONLY"
   },
   "self_registration_contract": "architecture/contracts/RADAR_SELF_REGISTRATION_V1.json",
-  "currentness_note": "GitHub is canonical. Anchor E remains the frozen locally qualified source cut, not proof of provider execution. The provider block above is a HISTORICAL September snapshot and is no longer current; its date metadata conflicts (RADAR_CURRENT.json 2026-09-09 versus RADAR_SUPABASE_V1.md 2026-09-06) and is not independently resolved. Consult latest_provider_observation_contract for the 2026-11-03 read-only provider evidence (15 Radar migration ledger entries, live Edge v7 with verify_jwt=false, four deployed source files matching b14175c, and zero projection journal rows). Deployed Edge code does not byte-match current canonical main. No successful GitHub-to-Radar delivery, trusted projector execution, final provider configuration, or recovery closure is established. Any protected deployment/configuration/projection effect still requires separate authority and an exact-current verification."
+  "currentness_note": "GitHub is canonical. Anchor E remains the frozen locally qualified source cut, not proof of provider execution. provider_claims is an explicit UNKNOWN_UNQUALIFIED source-currentness gate, NOT a live provider attestation. historical_provider_snapshot is the HISTORICAL September snapshot, never a current provider state; its date metadata conflicts (RADAR_CURRENT.json 2026-09-09 versus RADAR_SUPABASE_V1.md 2026-09-06) and is not independently resolved. Consult latest_provider_observation_contract for the 2026-11-03 dated read-only provider evidence (15 Radar migration ledger entries, Edge v7 with verify_jwt=false, four deployed source files matching b14175c, and zero projection journal rows). Observed Edge code did not byte-match canonical main at the observation head. No successful GitHub-to-Radar delivery, trusted projector execution, final provider configuration, or recovery closure is established. Protected deployment/configuration/projection effects require separate authority and exact-current verification. Schema-v5 consumers must migrate away from the removed overloaded provider key."
 }
