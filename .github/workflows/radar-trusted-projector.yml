@@ -18,6 +18,7 @@ jobs:
         run: |
           python - <<'PY'
           import base64
+          import binascii
           import json
           import os
           import re
@@ -32,6 +33,35 @@ jobs:
           if not request_url or not request_token or not output_path:
               raise SystemExit("RADAR_SELF_PIN_OIDC_CONTEXT_MISSING")
 
+          # This is executed BEFORE the immutable CCB Base checkout, so its
+          # runner-bearer transport must be independently fail-closed.
+          allowed_oidc_hosts = {
+              "pipelines.actions.githubusercontent.com",
+              "token.actions.githubusercontent.com",
+              "vstoken.actions.githubusercontent.com",
+          }
+          try:
+              destination = urllib.parse.urlsplit(request_url)
+              host = destination.hostname
+              port = destination.port
+          except ValueError:
+              raise SystemExit("RADAR_SELF_PIN_OIDC_URL_INVALID") from None
+          if (
+              request_url != request_url.strip()
+              or any(char.isspace() for char in request_url)
+              or destination.scheme.lower() != "https"
+              or host not in allowed_oidc_hosts
+              or port not in (None, 443)
+              or destination.username is not None
+              or destination.password is not None
+              or destination.fragment
+          ):
+              raise SystemExit("RADAR_SELF_PIN_OIDC_ORIGIN_UNTRUSTED")
+
+          class RejectRunnerBearerRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl):
+                  raise RuntimeError("RADAR_SELF_PIN_OIDC_REDIRECT_FORBIDDEN")
+
           separator = "&" if "?" in request_url else "?"
           url = request_url + separator + urllib.parse.urlencode(
               {"audience": "radar-trusted-projector-self-pin-v1"}
@@ -40,8 +70,21 @@ jobs:
               url,
               headers={"Authorization": f"bearer {request_token}"},
           )
-          with urllib.request.urlopen(request, timeout=10) as response:
-              body = json.load(response)
+          try:
+              with urllib.request.build_opener(RejectRunnerBearerRedirect()).open(
+                  request, timeout=10
+              ) as response:
+                  raw = response.read(64 * 1024 + 1)
+          except Exception:
+              raise SystemExit("RADAR_SELF_PIN_OIDC_REQUEST_FAILED") from None
+          if len(raw) > 64 * 1024:
+              raise SystemExit("RADAR_SELF_PIN_OIDC_RESPONSE_TOO_LARGE")
+          try:
+              body = json.loads(raw.decode("utf-8"))
+          except (UnicodeDecodeError, json.JSONDecodeError):
+              raise SystemExit("RADAR_SELF_PIN_OIDC_RESPONSE_INVALID") from None
+          if not isinstance(body, dict):
+              raise SystemExit("RADAR_SELF_PIN_OIDC_RESPONSE_INVALID")
 
           token = body.get("value")
           if not isinstance(token, str):
@@ -50,7 +93,13 @@ jobs:
           if len(parts) != 3:
               raise SystemExit("RADAR_SELF_PIN_TOKEN_INVALID")
           payload_segment = parts[1] + "=" * (-len(parts[1]) % 4)
-          claims = json.loads(base64.urlsafe_b64decode(payload_segment).decode("utf-8"))
+          try:
+              claims_raw = base64.b64decode(payload_segment, altchars=b"-_", validate=True)
+              claims = json.loads(claims_raw.decode("utf-8"))
+          except (ValueError, UnicodeDecodeError, binascii.Error):
+              raise SystemExit("RADAR_SELF_PIN_CLAIMS_INVALID") from None
+          if not isinstance(claims, dict):
+              raise SystemExit("RADAR_SELF_PIN_CLAIMS_INVALID")
 
           job_workflow_ref = claims.get("job_workflow_ref")
           job_workflow_sha = claims.get("job_workflow_sha")
