@@ -34,13 +34,21 @@ def test_current_contract_names_present_mailbox_full_source_chain_and_anchor_e()
     current = json.loads(CURRENT.read_text(encoding="utf-8"))
     assert current["current_mailbox_branch"] == "bus/radar-v2"
     assert current["source_migration_chain"] == EXPECTED_MIGRATIONS
-    assert current["provider"]["applied_source_state"] == "PARTIAL_NOT_CURRENT"
-    assert current["provider"]["projection_anchor_c_deployed"] is False
-    assert current["provider"]["projection_anchor_d_deployed"] is False
-    assert current["provider"]["projection_anchor_e_deployed"] is False
-    assert current["provider"]["projection_journal_seeded"] is False
-    assert current["provider"]["edge_body_bound_oidc_deployed"] is False
-    assert current["provider"]["unapplied_source_migrations"] == EXPECTED_MIGRATIONS[8:]
+    assert "provider" not in current
+    assert current["schema_version"] == 5
+    claims = current["provider_claims"]
+    assert claims["claim_role"] == "SOURCE_CURRENTNESS_GATE_NOT_LIVE_PROVIDER_SNAPSHOT"
+    assert claims["trusted_projector_deployment_status"] == "UNKNOWN_UNQUALIFIED"
+    assert claims["runtime_effects_attested"] is False
+    historical = current["historical_provider_snapshot"]
+    assert historical["readback_role"] == "HISTORICAL_SNAPSHOT_NOT_CURRENT_PROVIDER_STATE"
+    assert historical["applied_source_state"] == "PARTIAL_NOT_CURRENT"
+    assert historical["projection_anchor_c_deployed"] is False
+    assert historical["projection_anchor_d_deployed"] is False
+    assert historical["projection_anchor_e_deployed"] is False
+    assert historical["projection_journal_seeded"] is False
+    assert historical["edge_body_bound_oidc_deployed"] is False
+    assert historical["unapplied_source_migrations"] == EXPECTED_MIGRATIONS[8:]
     assert current["projection_source"]["current_projection_anchor_e_deployment_eligible"] is True
     assert current["projection_source"]["post_anchor_d_source_repairs_pending_successor_anchor"] is False
     assert current["projection_source"]["successor_anchor_status"] == "FROZEN_QUALIFIED_SOURCE_ONLY"
